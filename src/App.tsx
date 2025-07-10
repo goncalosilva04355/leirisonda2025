@@ -869,6 +869,35 @@ function App() {
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
   const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
 
+  // Load settings from localStorage on startup
+  useEffect(() => {
+    const loadSettings = () => {
+      try {
+        const savedMapsRedirect = localStorage.getItem("enableMapsRedirect");
+        if (savedMapsRedirect !== null) {
+          setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
+          console.log(
+            "✅ Configuração Google Maps carregada:",
+            JSON.parse(savedMapsRedirect),
+          );
+        }
+
+        const savedPhoneDialer = localStorage.getItem("enablePhoneDialer");
+        if (savedPhoneDialer !== null) {
+          setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
+          console.log(
+            "✅ Configuração Phone Dialer carregada:",
+            JSON.parse(savedPhoneDialer),
+          );
+        }
+      } catch (error) {
+        console.error("❌ Erro ao carregar configurações:", error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
     poolId: "",
@@ -1809,7 +1838,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
           console.log("�� Notifications enabled successfully");
         } else {
-          console.warn("�� Notification permission denied or dismissed");
+          console.warn("❌ Notification permission denied or dismissed");
         }
         return permission;
       } catch (error) {
@@ -5849,7 +5878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����������o criada para nova piscina:",
+                                "Futura manutenç�������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7083,7 +7112,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica��ões no seu navegador
+                                        notifica���ões no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -10830,7 +10859,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Cliente
                         </label>
                         <p className="text-gray-900">
-                          {selectedWork.client || "N��o especificado"}
+                          {selectedWork.client || "Não especificado"}
                         </p>
                         {selectedWork.contact && (
                           <button
