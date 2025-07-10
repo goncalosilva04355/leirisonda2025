@@ -2719,11 +2719,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return (
-                              isNotCompleted &&
-                              noSheetGenerated &&
-                              isAssignedToUser
-                            );
+                            return isNotCompleted && noSheetGenerated;
                           });
                           return worksWithoutSheets.length;
                         })()}
@@ -4251,7 +4247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Viaturas e Técnicos */}
+                    {/* Viaturas e T��cnicos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
