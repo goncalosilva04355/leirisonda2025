@@ -1113,7 +1113,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    // console.log("��� Initializing notifications...");
+    // console.log("���� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("������ Current notification permission:", permission);
@@ -3909,7 +3909,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -4041,7 +4041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                �������‍🔧 {maint.technician}
+                                ���������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -4412,7 +4412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "✅ PARSED USERS:",
+                                  "�� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -6688,11 +6688,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                           </div>
 
-                          <UserPermissionsManager />
+                                                    <UserPermissionsManager />
                         </div>
                       )}
                   </div>
                 </div>
+              </div>
+            </div>
+          );
+
+        case "relatorios":
+          return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+              <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="h-8 w-8 text-blue-600" />
+                </div>
+                <h1 className="text-xl font-bold text-gray-900 mb-2">
+                  Relatórios Movidos
+                </h1>
+                <p className="text-gray-600 mb-4">
+                  Os relatórios agora estão na página de Configurações.
+                </p>
+                <button
+                  onClick={() => {
+                    setActiveAdminTab("relatorios");
+                    navigateToSection("configuracoes");
+                  }}
+                  className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+                >
+                  Ir para Configurações
+                </button>
               </div>
             </div>
           );
@@ -7557,7 +7583,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Obras
+                          Relat��rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
                           Projetos e construções
