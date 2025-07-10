@@ -192,13 +192,15 @@ class AuthService {
 
   // Logout
   async logout(): Promise<void> {
-    if (!(await this.initialize())) {
-      return;
-    }
-
     try {
-      await signOut(this.auth);
-      console.log("✅ User logged out successfully");
+      await firebaseService.retryOperation(async () => {
+        if (!(await this.initialize())) {
+          return;
+        }
+
+        await signOut(this.auth);
+        console.log("✅ User logged out successfully");
+      });
     } catch (error) {
       console.error("❌ Logout error:", error);
     }
