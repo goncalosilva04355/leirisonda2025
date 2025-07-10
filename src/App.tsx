@@ -355,7 +355,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade simplificadas
+  // Fun��ões de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -1328,7 +1328,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenção realizada",
+      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -2735,17 +2735,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista de Todas as Obras */}
-                {works.length > 0 && (
-                  <div className="bg-white rounded-lg shadow-sm">
-                    <div className="flex items-center p-4 border-b border-gray-100">
-                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        Todas as Obras
-                      </h2>
-                    </div>
-                    <div className="p-4 space-y-3">
-                      {works.map((work) => (
+                                {/* Lista das Últimas 3 Obras Atribuídas */}
+                {(() => {
+                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
+                  const assignedWorks = works.filter((w) => {
+                    const isNotCompleted = w.status !== "completed" && w.status !== "concluida";
+                    const isAssignedToUser = currentUser && (
+                      // Verificar assignedTo (campo legacy)
+                      (w.assignedTo && (
+                        w.assignedTo === currentUser.name ||
+                        w.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+                        currentUser.name.toLowerCase().includes(w.assignedTo.toLowerCase())
+                      )) ||
+                      // Verificar assignedUsers array
+                      (w.assignedUsers && w.assignedUsers.some(user =>
+                        user.name === currentUser.name ||
+                        user.id === currentUser.id
+                      )) ||
+                      // Verificar assignedUserIds array
+                      (w.assignedUserIds && w.assignedUserIds.includes(currentUser.id))
+                    );
+                    return isNotCompleted && isAssignedToUser;
+                  }).slice(0, 3); // Pegar apenas as últimas 3 obras
+
+                  return assignedWorks.length > 0 ? (
+                    <div className="bg-white rounded-lg shadow-sm">
+                      <div className="flex items-center p-4 border-b border-gray-100">
+                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Últimas 3 Obras Atribuídas
+                        </h2>
+                      </div>
+                      <div className="p-4 space-y-3">
+                        {assignedWorks.map((work) => (
                         <div
                           key={work.id}
                           className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
