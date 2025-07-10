@@ -1145,7 +1145,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTEN��ÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -1400,7 +1400,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n����� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n������� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -5662,7 +5662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                          ����
+                          🔧
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between mb-2">
@@ -5871,7 +5871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Hist��rico de intervenç��es
+                          Hist���rico de intervenç��es
                         </p>
                       </div>
                     </div>
@@ -6276,7 +6276,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  ���� {client.phone}
+                                  📞 {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -8379,40 +8379,38 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing - ENABLED FOR DEBUG
-  useEffect(() => {
-    if (!currentUser && !isAuthenticated) {
-      const testUser = {
-        id: 1,
-        name: "Gonçalo Fonseca",
-        email: "gongonsilva@gmail.com",
-        role: "super_admin",
-        permissions: {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          admin: { view: true, create: true, edit: true, delete: true },
-          dashboard: { view: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-          configuracoes: { view: true, edit: true },
-        },
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        lastLogin: new Date().toISOString(),
-      };
-      console.log(
-        "🔧 DEBUG: Auto-login enabled for debugging - creating test user",
-      );
-      setCurrentUser(testUser);
-      setIsAuthenticated(true);
-      localStorage.setItem("currentUser", JSON.stringify(testUser));
-      localStorage.setItem("isAuthenticated", "true");
-    } else if (currentUser && isAuthenticated) {
-      console.log("🔧 DEBUG: User already authenticated:", currentUser.email);
-    }
-  }, [currentUser, isAuthenticated]);
+  // TEMPORARY: Bypass authentication for testing - DISABLED
+  // useEffect(() => {
+  //   if (!currentUser && !isAuthenticated) {
+  //     const testUser = {
+  //       id: 1,
+  //       name: "Gonçalo Fonseca",
+  //       email: "gongonsilva@gmail.com",
+  //       role: "super_admin",
+  //       permissions: {
+  //         obras: { view: true, create: true, edit: true, delete: true },
+  //         manutencoes: { view: true, create: true, edit: true, delete: true },
+  //         piscinas: { view: true, create: true, edit: true, delete: true },
+  //         relatorios: { view: true, create: true, edit: true, delete: true },
+  //         utilizadores: { view: true, create: true, edit: true, delete: true },
+  //         admin: { view: true, create: true, edit: true, delete: true },
+  //         dashboard: { view: true },
+  //         clientes: { view: true, create: true, edit: true, delete: true },
+  //         configuracoes: { view: true, edit: true },
+  //       },
+  //       isActive: true,
+  //       createdAt: new Date().toISOString(),
+  //       lastLogin: new Date().toISOString(),
+  //     };
+  //     console.log("🔧 DEBUG: Auto-login enabled for debugging - creating test user");
+  //     setCurrentUser(testUser);
+  //     setIsAuthenticated(true);
+  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     localStorage.setItem("isAuthenticated", "true");
+  //   } else if (currentUser && isAuthenticated) {
+  //     console.log("🔧 DEBUG: User already authenticated:", currentUser.email);
+  //   }
+  // }, [currentUser, isAuthenticated]);
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
@@ -9100,7 +9098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��es Detalhadas
+                          Informaç���es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
