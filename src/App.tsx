@@ -2642,7 +2642,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser;
+                            return isInProgress; // Mostrar todas as obras em progresso
                           });
                           return inProgressWorks.length;
                         })()}
@@ -6716,7 +6716,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 • Todas as piscinas ({pools.length} registos)
                               </li>
                               <li>
-                                🔥 Dados do Firebase e armazenamento local
+                                ���� Dados do Firebase e armazenamento local
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
@@ -8827,7 +8827,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenção</option>
+                          <option value="Manutenç�����o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
