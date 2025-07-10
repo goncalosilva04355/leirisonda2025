@@ -229,7 +229,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verifica��ões autom��ticas desabilitadas para resolver instabilidade
+    // Verificações autom��ticas desabilitadas para resolver instabilidade
     // Sistema funcionará normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -790,6 +790,7 @@ function App() {
           console.log("✅ Sincronização automática ativa!");
 
           // Adicionar indicador visual
+          setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
           console.error("❌ Erro ao iniciar sincronização automática:", error);
@@ -3501,7 +3502,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç��es agendadas e programadas
@@ -6186,7 +6187,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>���� Trabalhos realizados</li>
+                        <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
