@@ -86,6 +86,7 @@ import {
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
 import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
+import AppStabilityStatus from "./components/AppStabilityStatus";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1348,7 +1349,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom����ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notifica��ões nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -1597,7 +1598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // You can add a toast notification here if needed
     if (enabled) {
       console.log(
-        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
+        "�������� Agora pode clicar em qualquer morada para abrir no Google Maps!",
       );
     }
   };
@@ -5529,7 +5530,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Configurações de Localiza�����ão Individual - Apenas para super_admin */}
+                    {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
                     {currentUser?.role === "super_admin" && (
                       <PersonalLocationSettings />
                     )}
@@ -8390,7 +8391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "��� Access denied: User management requires authentication",
+                  "����� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",
