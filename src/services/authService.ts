@@ -61,11 +61,8 @@ class AuthService {
     rememberMe: boolean = false,
   ): { success: boolean; error?: string; user?: UserProfile } {
     // Simple local authentication for development
-    // Accept any email with password "123" or specific user credentials
-    if (
-      password === "123" ||
-      (email === "goncalo@leirisonda.pt" && password === "goncalo123")
-    ) {
+    // Accept any email with password "123"
+    if (password === "123") {
       const localUser: UserProfile = {
         uid: `local-${email.replace("@", "-").replace(".", "-")}`,
         email: email,
