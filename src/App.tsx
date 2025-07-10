@@ -39,7 +39,7 @@ import {
   Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
-import { FirebaseConfig } from "./components/FirebaseConfig";
+// import { FirebaseConfig } from "./components/FirebaseConfig"; // Disabled - not used
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Now lazy loaded
 import { InstallPromptFixed } from "./components/InstallPromptFixed";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
@@ -894,7 +894,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç������o Regular",
+      type: "Manutenç����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -5754,7 +5754,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As definições são guardadas localmente no
+                              �� As definições são guardadas localmente no
                               dispositivo
                             </li>
                             <li>
@@ -5912,7 +5912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Manutenções
+                          Relat���rio de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Hist��rico de intervenç��es
@@ -5963,7 +5963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>����� Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
