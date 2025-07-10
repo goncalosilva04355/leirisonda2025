@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import WorkAssignmentNotificationsSimple from "./components/WorkAssignmentNotificationsSimple";
 import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -782,7 +782,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç�����o Regular",
+      type: "Manutenç����o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -5902,7 +5902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>��� Equipas responsáveis</li>
+                        <li>�� Equipas responsáveis</li>
                         <li>��� Estados de progresso</li>
                       </ul>
                     </div>
@@ -7124,7 +7124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠���� Nenhum utilizador encontrado. Vá à Área
+                                ⚠����� Nenhum utilizador encontrado. Vá à Área
                                 de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -9226,7 +9226,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de Criação
+                          Data de Criaç��o
                         </label>
                         <p className="text-gray-900 text-sm">
                           {new Date(
