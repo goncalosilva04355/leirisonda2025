@@ -3959,11 +3959,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           )}
                         </div>
 
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuarios Atribuidos ({users.length} utilizadores
-                            disponiveis)
-                          </label>
+                                                <UserAssignmentHelper
+                          assignedUsers={assignedUsers}
+                          onAssignUser={(user) => {
+                            console.log("🔗 Assigning user via UserAssignmentHelper:", user);
+                            setAssignedUsers(prev => [...prev, user]);
+                          }}
+                          onRemoveUser={(index) => {
+                            console.log("❌ Removing user at index:", index);
+                            setAssignedUsers(prev => prev.filter((_, i) => i !== index));
+                          }}
                           {(() => {
                             console.log(
                               "📊 TOTAL UTILIZADORES CARREGADOS:",
@@ -4142,7 +4147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
