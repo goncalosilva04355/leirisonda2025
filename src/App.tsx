@@ -229,7 +229,7 @@ function App() {
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  // FIREBASE AUTO-CORREÇÃO - Monitorização autom��tica
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -2735,28 +2735,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                                {/* Lista das Últimas 3 Obras Atribuídas */}
+                {/* Lista das Últimas 3 Obras Atribuídas */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
-                  const assignedWorks = works.filter((w) => {
-                    const isNotCompleted = w.status !== "completed" && w.status !== "concluida";
-                    const isAssignedToUser = currentUser && (
-                      // Verificar assignedTo (campo legacy)
-                      (w.assignedTo && (
-                        w.assignedTo === currentUser.name ||
-                        w.assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
-                        currentUser.name.toLowerCase().includes(w.assignedTo.toLowerCase())
-                      )) ||
-                      // Verificar assignedUsers array
-                      (w.assignedUsers && w.assignedUsers.some(user =>
-                        user.name === currentUser.name ||
-                        user.id === currentUser.id
-                      )) ||
-                      // Verificar assignedUserIds array
-                      (w.assignedUserIds && w.assignedUserIds.includes(currentUser.id))
-                    );
-                    return isNotCompleted && isAssignedToUser;
-                  }).slice(0, 3); // Pegar apenas as últimas 3 obras
+                  const assignedWorks = works
+                    .filter((w) => {
+                      const isNotCompleted =
+                        w.status !== "completed" && w.status !== "concluida";
+                      const isAssignedToUser =
+                        currentUser &&
+                        // Verificar assignedTo (campo legacy)
+                        ((w.assignedTo &&
+                          (w.assignedTo === currentUser.name ||
+                            w.assignedTo
+                              .toLowerCase()
+                              .includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name
+                              .toLowerCase()
+                              .includes(w.assignedTo.toLowerCase()))) ||
+                          // Verificar assignedUsers array
+                          (w.assignedUsers &&
+                            w.assignedUsers.some(
+                              (user) =>
+                                user.name === currentUser.name ||
+                                user.id === currentUser.id,
+                            )) ||
+                          // Verificar assignedUserIds array
+                          (w.assignedUserIds &&
+                            w.assignedUserIds.includes(currentUser.id)));
+                      return isNotCompleted && isAssignedToUser;
+                    })
+                    .slice(0, 3); // Pegar apenas as últimas 3 obras
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
@@ -2768,139 +2777,140 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="p-4 space-y-3">
                         {assignedWorks.map((work) => (
-                        <div
-                          key={work.id}
-                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
-                        >
-                          <div className="space-y-3">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                📍 Morada:
-                              </span>
-                              {work.location ? (
-                                <button
-                                  onClick={() =>
-                                    handleAddressClick(work.location)
-                                  }
-                                  className={`text-sm cursor-pointer hover:opacity-80 ${
-                                    enableMapsRedirect
-                                      ? "text-blue-600 hover:text-blue-800 underline"
-                                      : "text-gray-900 hover:text-blue-600"
-                                  }`}
-                                >
-                                  {work.location}
-                                </button>
-                              ) : (
-                                <span className="text-sm text-gray-500">
-                                  N��o especificada
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                👤 Cliente:
-                              </span>
-                              <span className="text-sm text-gray-900">
-                                {work.client || "Não especificado"}
-                              </span>
-                            </div>
-                            {work.contact && (
+                          <div
+                            key={work.id}
+                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
+                          >
+                            <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📞 Contacto:
+                                  📍 Morada:
                                 </span>
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (enablePhoneDialer) {
-                                      window.location.href = `tel:${work.contact}`;
+                                {work.location ? (
+                                  <button
+                                    onClick={() =>
+                                      handleAddressClick(work.location)
                                     }
-                                  }}
-                                  className={`text-sm ${
-                                    enablePhoneDialer
-                                      ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                      : "text-gray-900"
-                                  }`}
-                                >
-                                  {work.contact}
-                                </button>
+                                    className={`text-sm cursor-pointer hover:opacity-80 ${
+                                      enableMapsRedirect
+                                        ? "text-blue-600 hover:text-blue-800 underline"
+                                        : "text-gray-900 hover:text-blue-600"
+                                    }`}
+                                  >
+                                    {work.location}
+                                  </button>
+                                ) : (
+                                  <span className="text-sm text-gray-500">
+                                    N��o especificada
+                                  </span>
+                                )}
                               </div>
-                            )}
-                            <div className="flex items-center space-x-2">
-                              <span className="text-sm font-medium text-gray-600">
-                                ���� Trabalho:
-                              </span>
-                              <span className="text-sm text-gray-900">
-                                {work.workPerformed ||
-                                  work.type ||
-                                  "Não especificado"}
-                              </span>
-                            </div>
-
-                            {/* Estado e Ações */}
-                            <div className="flex items-center justify-between pt-2 border-t border-purple-200">
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                  work.status === "pending"
-                                    ? "bg-red-100 text-red-700"
-                                    : work.status === "in_progress"
-                                      ? "bg-orange-100 text-orange-700"
-                                      : work.status === "completed"
-                                        ? "bg-green-100 text-green-700"
-                                        : "bg-gray-100 text-gray-700"
-                                }`}
-                              >
-                                {work.status === "pending"
-                                  ? "Pendente"
-                                  : work.status === "in_progress"
-                                    ? "Em Progresso"
-                                    : work.status === "completed"
-                                      ? "Conclu��da"
-                                      : work.status}
-                              </span>
-
                               <div className="flex items-center space-x-2">
-                                {/* Botão Visualizar */}
-                                <button
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedWork(work);
-                                    setViewingWork(true);
-                                  }}
-                                  className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
-                                  title="Visualizar detalhes"
-                                >
-                                  <Eye className="h-4 w-4" />
-                                </button>
-
-                                {/* Botão Iniciar Obra (só se pendente) */}
-                                {work.status === "pending" && (
+                                <span className="text-sm font-medium text-gray-600">
+                                  👤 Cliente:
+                                </span>
+                                <span className="text-sm text-gray-900">
+                                  {work.client || "Não especificado"}
+                                </span>
+                              </div>
+                              {work.contact && (
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm font-medium text-gray-600">
+                                    📞 Contacto:
+                                  </span>
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      dataSync.updateWork(work.id, {
-                                        status: "in_progress",
-                                      });
-                                      showNotification(
-                                        "Obra Iniciada",
-                                        `A obra "${work.client}" foi iniciada`,
-                                        "success",
-                                      );
+                                      if (enablePhoneDialer) {
+                                        window.location.href = `tel:${work.contact}`;
+                                      }
                                     }}
-                                    className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
-                                    title="Iniciar obra"
+                                    className={`text-sm ${
+                                      enablePhoneDialer
+                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                        : "text-gray-900"
+                                    }`}
                                   >
-                                    <Play className="h-4 w-4" />
+                                    {work.contact}
                                   </button>
-                                )}
+                                </div>
+                              )}
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-600">
+                                  ���� Trabalho:
+                                </span>
+                                <span className="text-sm text-gray-900">
+                                  {work.workPerformed ||
+                                    work.type ||
+                                    "Não especificado"}
+                                </span>
+                              </div>
+
+                              {/* Estado e Ações */}
+                              <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                    work.status === "pending"
+                                      ? "bg-red-100 text-red-700"
+                                      : work.status === "in_progress"
+                                        ? "bg-orange-100 text-orange-700"
+                                        : work.status === "completed"
+                                          ? "bg-green-100 text-green-700"
+                                          : "bg-gray-100 text-gray-700"
+                                  }`}
+                                >
+                                  {work.status === "pending"
+                                    ? "Pendente"
+                                    : work.status === "in_progress"
+                                      ? "Em Progresso"
+                                      : work.status === "completed"
+                                        ? "Conclu��da"
+                                        : work.status}
+                                </span>
+
+                                <div className="flex items-center space-x-2">
+                                  {/* Botão Visualizar */}
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedWork(work);
+                                      setViewingWork(true);
+                                    }}
+                                    className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
+                                    title="Visualizar detalhes"
+                                  >
+                                    <Eye className="h-4 w-4" />
+                                  </button>
+
+                                  {/* Botão Iniciar Obra (só se pendente) */}
+                                  {work.status === "pending" && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        dataSync.updateWork(work.id, {
+                                          status: "in_progress",
+                                        });
+                                        showNotification(
+                                          "Obra Iniciada",
+                                          `A obra "${work.client}" foi iniciada`,
+                                          "success",
+                                        );
+                                      }}
+                                      className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
+                                      title="Iniciar obra"
+                                    >
+                                      <Play className="h-4 w-4" />
+                                    </button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  ) : null;
+                })()}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
