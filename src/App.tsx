@@ -663,7 +663,7 @@ function App() {
         await authService.logout();
         console.log("🔒 Firebase auth cleared");
       } catch (error) {
-        console.log("🔒 Firebase logout error (expected):", error);
+        console.log("��� Firebase logout error (expected):", error);
       }
 
       // Ensure user starts in unauthenticated state
@@ -4009,6 +4009,93 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                             </div>
                           )}
+
+                          {/* Botão para recarregar utilizadores quando lista está vazia */}
+                          {users.length === 0 && (
+                            <div className="mb-3">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  console.log(
+                                    "🔄 Recarregando utilizadores...",
+                                  );
+                                  const savedUsers =
+                                    localStorage.getItem("app-users");
+                                  if (savedUsers) {
+                                    try {
+                                      const parsedUsers =
+                                        JSON.parse(savedUsers);
+                                      setUsers(parsedUsers);
+                                      alert(
+                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
+                                      );
+                                    } catch (error) {
+                                      console.error("Erro:", error);
+                                      alert("❌ Erro ao carregar utilizadores");
+                                    }
+                                  } else {
+                                    const defaultUser = {
+                                      id: 1,
+                                      name: "Gonçalo Fonseca",
+                                      email: "gongonsilva@gmail.com",
+                                      active: true,
+                                      role: "super_admin",
+                                      password: "19867gsf",
+                                      permissions: {
+                                        obras: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        manutencoes: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        piscinas: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        utilizadores: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        relatorios: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                        clientes: {
+                                          view: true,
+                                          create: true,
+                                          edit: true,
+                                          delete: true,
+                                        },
+                                      },
+                                      createdAt: new Date().toISOString(),
+                                    };
+                                    setUsers([defaultUser]);
+                                    localStorage.setItem(
+                                      "app-users",
+                                      JSON.stringify([defaultUser]),
+                                    );
+                                    alert("✅ Utilizador padrão criado!");
+                                  }
+                                }}
+                                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                              >
+                                🔄 Recarregar Utilizadores
+                              </button>
+                            </div>
+                          )}
+
                           <div className="flex space-x-2">
                             <select
                               value={currentAssignedUser}
@@ -5194,7 +5281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��������o criada para nova piscina:",
+                                "Futura manutenç����������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
