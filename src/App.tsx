@@ -2420,7 +2420,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="text-center py-8">
                             <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
-                              N��o há dados para pesquisar
+                              Não há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
                               Adicione obras, piscinas, manutenções ou clientes
@@ -3269,7 +3269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manutenç��es aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -5305,7 +5305,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observa���������es, recomendações, próxima manutenção..."
+                          placeholder="Observa����������es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -5730,7 +5730,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                         <div className="flex-1">
                           <h4 className="font-medium text-gray-900 mb-2">
-                            Instruções
+                            Instruç��es
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
@@ -7909,7 +7909,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do t����cnico"
+                          placeholder="Nome do t��cnico"
                           required
                         />
                       </div>
@@ -8688,7 +8688,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          <HotReloadTest />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
@@ -9188,7 +9187,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N����o especificado"}
+                                  : "N������o especificado"}
                               </p>
                             </div>
                             <div>
