@@ -1018,7 +1018,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincroniza��ão automática ativa!");
+          console.log("✅ Sincronização automática ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -1671,7 +1671,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu�����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -2613,7 +2613,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Concluídas - REMOVIDO do Dashboard conforme solicitado */}
+                  {/* Concluídas */}
+                  <button
+                    onClick={() => navigateToSection("obras")}
+                    className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="text-left">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Concluídas
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                          Obras finalizadas
+                        </p>
+                      </div>
+                      <div className="text-4xl font-bold text-gray-900">
+                        {
+                          works.filter(
+                            (w) =>
+                              w.status === "completed" ||
+                              w.status === "concluida",
+                          ).length
+                        }
+                      </div>
+                    </div>
+                  </button>
 
                   {/* Falta de Folhas de Obra */}
                   <button
@@ -4276,7 +4300,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo��o Santos"
+                              placeholder="Ex: Jo���o Santos"
                             />
                             <button
                               type="button"
@@ -4943,7 +4967,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Jo��o Silva"]',
+                                'input[placeholder*="João Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
@@ -5422,7 +5446,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 currentUser?.permissions,
                               );
                               console.log(
-                                "🔍 hasPermission clientes create:",
+                                "���� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -5453,7 +5477,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "✅ Cliente adicionado com sucesso:",
+                                    "�� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -5758,7 +5782,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 description:
                                   "Manuten��ão programada durante criação da piscina",
                                 notes:
-                                  "Agendada automaticamente na criação da piscina",
+                                  "Agendada automaticamente na criaç��o da piscina",
                                 clientName: poolData.client,
                                 clientContact: poolData.contact || "",
                                 location: poolData.location,
@@ -8810,7 +8834,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Estimada (horas)
+                          Duraç��o Estimada (horas)
                         </label>
                         <input
                           type="number"
@@ -10141,7 +10165,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N��o especificado"}
+                                  : "N���o especificado"}
                               </p>
                             </div>
                             <div>
