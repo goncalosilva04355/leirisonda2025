@@ -33,7 +33,7 @@ import {
 import jsPDF from "jspdf";
 import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
-import { InstallPrompt } from "./components/InstallPrompt";
+import InstallPromptSimple from "./components/InstallPromptSimple";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { RegisterForm } from "./components/RegisterForm";
@@ -49,20 +49,28 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import WorkAssignmentNotificationsSimple from "./components/WorkAssignmentNotificationsSimple";
+import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
+import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
+import "./utils/autoMigrationDemo"; // Passo 3: Migração automática de demonstração
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
-import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
+import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
 import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
-import { authService, UserProfile } from "./services/authService";
+import {
+  hybridAuthService as authService,
+  UserProfile,
+} from "./services/hybridAuthService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
@@ -71,14 +79,14 @@ import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
+import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
 import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotification from "./components/UserRestoreNotification";
+import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -167,7 +175,7 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSafe();
+  const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -347,7 +355,7 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const autoSyncData = useAutoSyncSafe();
+  const autoSyncData = useAutoSyncSimple();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
@@ -498,8 +506,8 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Firebase Auth listener for automatic login restoration
-    console.log("🔥 Setting up Firebase Auth auto-login...");
+    // Local Auth listener for automatic login restoration
+    console.log("🔒 Setting up Local Auth auto-login...");
 
     const initializeAuth = async () => {
       try {
@@ -1546,7 +1554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.warn("⚠️ Maps redirect is disabled");
       }
       if (!address) {
-        console.warn("⚠️ No address provided");
+        console.warn("⚠��� No address provided");
       }
     }
   };
@@ -1797,18 +1805,63 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    // Add loading state check with timeout
+    // Show login page when user not authenticated
     if (!currentUser || !isAuthenticated) {
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
-            <p className="mt-2 text-sm text-gray-500">
-              Se esta mensagem persistir, recarregue a página
-            </p>
-          </div>
-        </div>
+        <LoginPage
+          onLogin={async (
+            email: string,
+            password: string,
+            rememberMe: boolean = false,
+          ) => {
+            console.log("🔐 Login attempt for:", email);
+
+            // Clear any previous errors
+            setLoginError("");
+
+            // Basic validation
+            if (!email?.trim() || !password?.trim()) {
+              setLoginError("Por favor, preencha todos os campos");
+              return;
+            }
+
+            try {
+              const result = await authService.login(
+                email.trim(),
+                password,
+                rememberMe,
+              );
+
+              console.log("🔐 Auth result:", result);
+
+              if (result.success && result.user) {
+                console.log("✅ Login successful for:", result.user.email);
+
+                // Update state
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+
+                // Navigate to dashboard or requested section
+                const hash = window.location.hash.substring(1);
+                if (hash && hash !== "login") {
+                  setActiveSection(hash);
+                } else {
+                  navigateToSection("dashboard");
+                }
+
+                console.log("✅ Login state updated successfully");
+              } else {
+                console.warn("❌ Login failed:", result.error);
+                setLoginError(result.error || "Credenciais inválidas");
+              }
+            } catch (error: any) {
+              console.error("❌ Login error:", error);
+              setLoginError("Erro de sistema. Por favor, tente novamente.");
+            }
+          }}
+          loginError={loginError}
+          isLoading={false}
+        />
       );
     }
 
@@ -2325,7 +2378,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">📅</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -2692,7 +2745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ).length === 0 && (
                                 <div className="text-center py-8">
                                   <div className="text-gray-400 mb-2">
-                                    �����
+                                    �������
                                   </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
@@ -3594,9 +3647,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. V�� à Área de
-                                Administração → "🔧 Corre��ão de Atribuiç��o de
-                                Obras" para corrigir este problema.
+                                ���� Nenhum utilizador encontrado. V�� à Área de
+                                Administração → "🔧 Corre�����ão de Atribuiç��o
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -3700,7 +3753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    �� {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -4702,7 +4755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create pools
                           if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
-                              "Não tem permissão para criar piscinas. Contacte o administrador.",
+                              "Não tem permiss��o para criar piscinas. Contacte o administrador.",
                             );
                             return;
                           }
@@ -5482,7 +5535,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   });
                                 } else {
                                   alert(
-                                    "Notifica��ões foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                    "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                   );
                                 }
                               } else {
@@ -7012,7 +7065,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda não terminou
+                              Deixe vazio se ainda n��o terminou
                             </p>
                           </div>
                         </div>
@@ -7809,7 +7862,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -8271,7 +8324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -8455,7 +8508,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     return (
       <div>
         <LoginPage
-          onLogin={async (email: string, password: string) => {
+          onLogin={async (
+            email: string,
+            password: string,
+            rememberMe: boolean = false,
+          ) => {
             console.log("🔐 Login attempt for:", email);
 
             // Clear any previous errors
@@ -8471,7 +8528,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // Auto-check Firebase before login attempt
               await firebaseAutoFix.checkOnUserAction();
 
-              const result = await authService.login(email.trim(), password);
+              const result = await authService.login(
+                email.trim(),
+                password,
+                rememberMe,
+              );
 
               console.log("🔐 Auth result:", result);
 
@@ -8533,6 +8594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
+              currentUser={currentUser}
               onLogout={() => {
                 setIsAdminAuthenticated(false);
                 setShowAdminLogin(false);
@@ -9214,7 +9276,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </main>
 
           {/* Install Prompt for Mobile */}
-          <InstallPrompt />
+          <InstallPromptSimple />
 
           {/* Data Sharing Fix Manager */}
 
@@ -9237,6 +9299,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {isAdminAuthenticated && (
             <div className="fixed inset-0 bg-white z-50">
               <AdminPage
+                currentUser={currentUser}
                 onLogout={() => {
                   setIsAdminAuthenticated(false);
                   setShowAdminLogin(false);
@@ -9250,16 +9313,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
+        <WorkAssignmentNotificationsSimple currentUser={currentUser} />
 
         {/* User Restore Notification */}
-        <UserRestoreNotification />
+        <UserRestoreNotificationSimple />
 
         {/* Firebase Auto-Monitor - Discrete indicator */}
         <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
+
+        {/* Firestore Status Indicator - Passo 3 */}
+        <FirestoreStatusIndicator />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );

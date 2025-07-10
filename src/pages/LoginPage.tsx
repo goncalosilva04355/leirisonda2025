@@ -3,7 +3,11 @@ import { Settings, Bug } from "lucide-react";
 import LoginDebugHelper from "../components/LoginDebugHelper";
 
 interface LoginPageProps {
-  onLogin: (email: string, password: string) => Promise<void>;
+  onLogin: (
+    email: string,
+    password: string,
+    rememberMe?: boolean,
+  ) => Promise<void>;
   loginError: string;
   isLoading?: boolean;
 }
@@ -89,7 +93,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     try {
       console.log("📤 LoginPage: Calling onLogin function...");
-      await onLogin(loginForm.email.trim(), loginForm.password);
+      await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
       console.log("✅ LoginPage: onLogin completed");
     } catch (error) {
       console.error("❌ LoginPage: Login form error:", error);
@@ -107,6 +111,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
             />
+          </div>
+        </div>
+
+        {/* Authorized Users Info */}
+        <div className="text-center mb-4">
+          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            🔐 Apenas emails autorizados podem fazer login
           </div>
         </div>
 

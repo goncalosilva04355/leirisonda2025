@@ -1,240 +1,127 @@
-/**
- * Simplified Firebase Configuration
- * Fixes getImmediate errors by providing a single, clean initialization path
- */
-
+// Simple, direct Firebase configuration to avoid app destruction errors
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
 
-// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-  authDomain: "leirisonda-16f8b.firebaseapp.com",
-  projectId: "leirisonda-16f8b",
-  storageBucket: "leirisonda-16f8b.firebasestorage.app",
-  messagingSenderId: "540456875574",
-  appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-  measurementId: "G-R9W43EHH2C",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
+  databaseURL:
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
-// Global instances
-let app: FirebaseApp | null = null;
-let db: Firestore | null = null;
+// Simple singleton pattern without complex async initialization
+let firebaseApp: FirebaseApp | null = null;
 let auth: Auth | null = null;
+let firestore: Firestore | null = null;
 
-// Initialization state
-let isInitializing = false;
-let initializationPromise: Promise<boolean> | null = null;
-
-// Mutex to prevent concurrent service access
-let serviceAccessMutex = false;
-
-/**
- * Initialize Firebase safely
- */
-async function initializeFirebase(): Promise<boolean> {
-  if (isInitializing && initializationPromise) {
-    return initializationPromise;
-  }
-
-  if (app && db && auth) {
-    return true;
-  }
-
-  isInitializing = true;
-
-  initializationPromise = (async () => {
-    try {
-      console.log("🔥 Initializing Firebase...");
-      console.log("📋 Project ID:", firebaseConfig.projectId);
-      console.log("📋 Auth Domain:", firebaseConfig.authDomain);
-
-      // Test network connectivity first
-      try {
-        console.log("🌐 Testing network connectivity...");
-        const connectivityTest = await fetch(
-          "https://www.google.com/favicon.ico",
-          {
-            method: "HEAD",
-            mode: "no-cors",
-          },
-        );
-        console.log("✅ Network connectivity OK");
-      } catch (networkError) {
-        console.warn("⚠️ Network connectivity issues:", networkError);
-      }
-
-      // Check if an app already exists
+// Initialize Firebase immediately and simply
+function initializeFirebase(): boolean {
+  try {
+    // Only initialize if not already done
+    if (!firebaseApp) {
       const existingApps = getApps();
       if (existingApps.length > 0) {
-        app = existingApps[0];
-        console.log("✅ Using existing Firebase app:", app.name);
-        console.log("📋 App options:", app.options);
+        firebaseApp = existingApps[0];
+        console.log("✅ Using existing Firebase app");
       } else {
-        console.log("🚀 Creating new Firebase app...");
-        app = initializeApp(firebaseConfig);
-        console.log("✅ Created new Firebase app:", app.name);
-        console.log("📋 App options:", app.options);
+        firebaseApp = initializeApp(firebaseConfig);
+        console.log("✅ Firebase app initialized");
       }
-
-      // Wait a moment for the app to be fully ready
-      await new Promise((resolve) => setTimeout(resolve, 100));
-
-      // Initialize Auth
-      try {
-        console.log("🔐 Initializing Firebase Auth...");
-        auth = getAuth(app);
-        console.log("✅ Firebase Auth initialized successfully");
-        console.log("📋 Auth instance:", !!auth);
-      } catch (error) {
-        console.error("❌ Firebase Auth failed:", error);
-        console.error("📋 Error details:", error);
-        auth = null;
-      }
-
-      // Initialize Firestore with proper timing
-      try {
-        console.log("🔄 Initializing Firestore...");
-
-        // Add extra delay to ensure app is fully ready
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // Verify app is still valid before proceeding
-        if (!app || !app.options || !app.name) {
-          throw new Error("Firebase app became invalid during initialization");
-        }
-
-        // Double-check app is in getApps() list
-        const { getApps } = await import("firebase/app");
-        const currentApps = getApps();
-        const appExists = currentApps.find(
-          (existingApp) => existingApp.name === app.name,
-        );
-
-        if (!appExists) {
-          throw new Error("Firebase app no longer exists in apps list");
-        }
-
-        console.log("🔍 App verification passed, initializing Firestore...");
-        db = getFirestore(app);
-        console.log("✅ Firestore initialized successfully");
-        console.log("📋 Firestore instance:", !!db);
-      } catch (error) {
-        console.error("❌ Firestore failed:", error);
-        console.error("📋 Error details:", error);
-
-        // If it's the getImmediate error, try alternative approach
-        if (error instanceof Error && error.message.includes("getImmediate")) {
-          console.log("🔧 Detected getImmediate error, trying recovery...");
-
-          try {
-            // Wait longer and try again
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-
-            // Try to get a fresh app instance
-            const { getApps } = await import("firebase/app");
-            const apps = getApps();
-
-            if (apps.length > 0) {
-              const freshApp = apps[0];
-              console.log("🔄 Trying with fresh app instance...");
-              db = getFirestore(freshApp);
-              console.log("✅ Firestore initialized with recovery method");
-            } else {
-              console.log("❌ No Firebase apps available for recovery");
-              db = null;
-            }
-          } catch (recoveryError) {
-            console.error("❌ Recovery attempt failed:", recoveryError);
-            db = null;
-          }
-        } else {
-          db = null;
-        }
-      }
-
-      const success = !!(app && (auth || db));
-      isInitializing = false;
-
-      if (success) {
-        console.log("🎉 Firebase initialized successfully");
-
-        // Notify components that Firebase is ready
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(
-            new CustomEvent("firebaseSimpleReady", {
-              detail: { app, auth, db },
-            }),
-          );
-        }
-      }
-
-      return success;
-    } catch (error) {
-      console.error("❌ Firebase initialization failed:", error);
-      isInitializing = false;
-      return false;
     }
-  })();
 
-  return initializationPromise;
+    // Initialize Auth if not already done
+    if (!auth && firebaseApp) {
+      try {
+        auth = getAuth(firebaseApp);
+        console.log("✅ Firebase Auth ready");
+      } catch (error) {
+        console.warn("⚠️ Firebase Auth not available:", error);
+      }
+    }
+
+    // Initialize Firestore if not already done
+    if (!firestore && firebaseApp) {
+      try {
+        firestore = getFirestore(firebaseApp);
+        console.log("✅ Firebase Firestore ready");
+      } catch (error) {
+        console.warn("⚠️ Firebase Firestore not available:", error);
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.error("❌ Firebase initialization failed:", error);
+    return false;
+  }
 }
 
-// Removed duplicate getFirebaseApp declaration - using safe fallback version below
+// Initialize immediately
+initializeFirebase();
 
-// Removed duplicate getFirebaseDB declaration - using safe fallback version below
-
-// Removed duplicate getFirebaseAuth declaration - using safe fallback version below
-
-// Removed duplicate isFirebaseInitialized declaration - using safe fallback version below
-
-// Removed duplicate getFirebaseStatus declaration - using safe fallback version below
-
-// TEMPORARY RESTORE: Basic functionality to prevent white screen
-console.log("🔄 simpleConfig restored with safe fallbacks");
-
-// Safe fallback functions that don't break the app
-export async function getFirebaseDB(): Promise<any> {
-  console.log("⚠️ simpleConfig.getFirebaseDB() called - returning null safely");
-  return null;
+// Simple getters that always return current instances
+export function getFirebaseAuth(): Auth | null {
+  if (!auth) {
+    initializeFirebase();
+  }
+  return auth;
 }
 
-export async function getFirebaseAuth(): Promise<any> {
-  console.log(
-    "⚠️ simpleConfig.getFirebaseAuth() called - returning null safely",
-  );
-  return null;
+export function getFirebaseFirestore(): Firestore | null {
+  if (!firestore) {
+    initializeFirebase();
+  }
+  return firestore;
 }
 
-export function isFirebaseInitialized(): boolean {
-  console.log(
-    "⚠️ simpleConfig.isFirebaseInitialized() called - returning false safely",
-  );
-  return false;
+export function getFirebaseApp(): FirebaseApp | null {
+  if (!firebaseApp) {
+    initializeFirebase();
+  }
+  return firebaseApp;
 }
 
-export function getFirebaseStatus() {
-  return {
-    app: false,
-    auth: false,
-    db: false,
-    ready: false,
-    initializing: false,
-    mode: "safe-fallback",
-  };
+export function isFirebaseAvailable(): boolean {
+  return !!(firebaseApp && auth);
 }
 
-export async function getFirebaseApp() {
-  console.log(
-    "⚠️ simpleConfig.getFirebaseApp() called - returning null safely",
-  );
-  return null;
-}
+// Legacy compatibility exports
+export const getAuthService = () => Promise.resolve(getFirebaseAuth());
+export const attemptFirestoreInit = () =>
+  Promise.resolve(getFirebaseFirestore());
+export const getDB = () => Promise.resolve(getFirebaseFirestore());
+export const isFirebaseReady = () => isFirebaseAvailable();
+export const waitForFirebaseInit = () => Promise.resolve(isFirebaseAvailable());
 
-export async function waitForFirebaseInit() {
-  console.log(
-    "⚠️ simpleConfig.waitForFirebaseInit() called - returning false safely",
-  );
-  return false;
-}
+// Direct exports for immediate use
+export { auth as firebaseAuth, firestore as firebaseFirestore, firebaseApp };
+
+// Legacy db export for backward compatibility
+export const db = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      const firestoreInstance = getFirebaseFirestore();
+      if (!firestoreInstance) return null;
+
+      try {
+        return (firestoreInstance as any)[prop];
+      } catch (error) {
+        console.warn("⚠️ Firestore db proxy error:", error);
+        return null;
+      }
+    },
+  },
+);
+
+// Legacy auth export for backward compatibility
+export { auth };
+
+// Legacy app export for backward compatibility
+export const app = firebaseApp;

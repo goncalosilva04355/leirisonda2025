@@ -28,6 +28,8 @@ import { DataSharingStatus } from "../components/DataSharingStatus";
 import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import { UserManagement } from "../components/UserManagement";
+import UserManager from "../components/UserManager";
+import MigrationTester from "../components/MigrationTester";
 import { MobileSettings } from "../components/MobileSettings";
 import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
 import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
@@ -41,12 +43,14 @@ import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 
 interface AdminPageProps {
   onLogout: () => void;
+  currentUser?: any;
 }
 
 type AdminSection =
   | "overview"
   | "complete-activation"
   | "user-management"
+  | "data-migration"
   | "work-assignment-fix"
   | "works-data-diagnostic"
   | "auth-diagnostic"
@@ -69,14 +73,17 @@ type AdminSection =
   | "nuclear-cleanup"
   | "data-sharing-status";
 
-export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
+export const AdminPage: React.FC<AdminPageProps> = ({
+  onLogout,
+  currentUser,
+}) => {
   const [currentSection, setCurrentSection] =
     useState<AdminSection>("overview");
 
   const adminSections = [
     {
       id: "complete-activation" as AdminSection,
-      title: "🚀 ATIVAÇÃO COMPLETA DO DISPOSITIVO",
+      title: "�� ATIVAÇÃO COMPLETA DO DISPOSITIVO",
       description:
         "ATIVA TUDO: Notificações, localização, sincronização, utilizadores, PWA - tudo num só botão!",
       icon: Zap,
@@ -88,6 +95,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       description: "Criar, editar e gerir utilizadores do sistema",
       icon: Users,
       color: "bg-indigo-600",
+    },
+    {
+      id: "data-migration" as AdminSection,
+      title: "🔄 Migração de Dados",
+      description: "Migrar dados do localStorage para Firestore e testar",
+      icon: Database,
+      color: "bg-purple-600",
     },
     {
       id: "work-assignment-fix" as AdminSection,
@@ -192,7 +206,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     {
       id: "phone-settings" as AdminSection,
       title: "Telefone & Navegação",
-      description: "Marcação automática e redirecionamento para Maps",
+      description: "Marcação autom��tica e redirecionamento para Maps",
       icon: Settings,
       color: "bg-blue-500",
     },
@@ -220,7 +234,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
     },
     {
       id: "firebase-quota" as AdminSection,
-      title: "🚨 Gestão de Quota Firebase",
+      title: "🚨 Gest��o de Quota Firebase",
       description: "CRÍTICO: Monitorizar e gerir quota do Firebase",
       icon: AlertTriangle,
       color: "bg-red-600",
@@ -246,7 +260,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onLogout }) => {
       case "complete-activation":
         return <CompleteDeviceActivation />;
       case "user-management":
-        return <UserManagement />;
+        return <UserManager currentUser={currentUser} />;
+      case "data-migration":
+        return <MigrationTester />;
       case "work-assignment-fix":
         return <WorkAssignmentFix />;
       case "works-data-diagnostic":

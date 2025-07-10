@@ -10,7 +10,11 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  attemptFirestoreInit,
+  isFirebaseReady,
+  waitForFirebaseInit,
+} from "../firebase/config";
 import { FirebaseErrorFix } from "../utils/firebaseErrorFix";
 
 export interface SharedDataState {
@@ -127,7 +131,13 @@ class GlobalDataShareService {
     collection: string,
     data: any,
   ): Promise<void> {
-    if (!db) return;
+    const db = await attemptFirestoreInit();
+    if (!db) {
+      console.warn(
+        "⚠️ Firestore not available, cannot save to global collection",
+      );
+      return;
+    }
 
     const id = data.id || `${collection}-${Date.now()}-${Math.random()}`;
     await setDoc(doc(db, collection, id), {
@@ -149,9 +159,25 @@ class GlobalDataShareService {
     onMaintenanceChange: (maintenance: any[]) => void;
     onClientsChange: (clients: any[]) => void;
   }): () => void {
-    if (!isFirebaseReady() || !db) {
+    this.initializeListeners(callbacks);
+    return () => this.cleanup();
+  }
+
+  private async initializeListeners(callbacks: {
+    onPoolsChange: (pools: any[]) => void;
+    onWorksChange: (works: any[]) => void;
+    onMaintenanceChange: (maintenance: any[]) => void;
+    onClientsChange: (clients: any[]) => void;
+  }): Promise<void> {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       console.error("❌ Firebase não disponível para listeners globais");
-      return () => {};
+      // Provide empty arrays as fallback
+      callbacks.onPoolsChange([]);
+      callbacks.onWorksChange([]);
+      callbacks.onMaintenanceChange([]);
+      callbacks.onClientsChange([]);
+      return;
     }
 
     console.log("📡 CONFIGURANDO LISTENERS GLOBAIS COM PROTEÇÃO");
@@ -243,7 +269,7 @@ class GlobalDataShareService {
             try {
               const clients = snapshot.docs.map((doc) => doc.data());
               console.log(
-                `👥 CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
+                `��� CLIENTS GLOBAIS: ${clients.length} disponíveis para todos`,
               );
               callbacks.onClientsChange(clients);
             } catch (error) {
@@ -294,7 +320,8 @@ class GlobalDataShareService {
     type: "pools" | "works" | "maintenance" | "clients",
     data: any,
   ): Promise<string> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
@@ -324,7 +351,8 @@ class GlobalDataShareService {
     id: string,
     data: any,
   ): Promise<void> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
@@ -346,7 +374,8 @@ class GlobalDataShareService {
     type: "pools" | "works" | "maintenance" | "clients",
     id: string,
   ): Promise<void> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
@@ -360,7 +389,8 @@ class GlobalDataShareService {
    * Obter todos os dados globais
    */
   async getAllGlobalData(): Promise<SharedDataState> {
-    if (!isFirebaseReady() || !db) {
+    const db = await attemptFirestoreInit();
+    if (!db) {
       throw new Error("Firebase não disponível");
     }
 
