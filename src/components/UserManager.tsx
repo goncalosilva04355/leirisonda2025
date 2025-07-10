@@ -18,7 +18,7 @@ interface UserManagerProps {
 }
 
 const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
-  const [users, setUsers] = useState<AuthorizedUser[]>([]);
+  const { users, updateUsers, isLoading } = useAuthorizedUsers();
   const [editingUser, setEditingUser] = useState<AuthorizedUser | null>(null);
   const [newUser, setNewUser] = useState<AuthorizedUser>({
     email: "",
@@ -28,25 +28,9 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
 
-  // Carregar utilizadores do localStorage ou configuração padrão
-  useEffect(() => {
-    const savedUsers = localStorage.getItem("authorizedUsers");
-    if (savedUsers) {
-      try {
-        setUsers(JSON.parse(savedUsers));
-      } catch (error) {
-        console.error("Erro ao carregar utilizadores:", error);
-        setUsers([...AUTHORIZED_USERS]);
-      }
-    } else {
-      setUsers([...AUTHORIZED_USERS]);
-    }
-  }, []);
-
-  // Salvar utilizadores no localStorage
+  // Salvar utilizadores
   const saveUsers = (updatedUsers: AuthorizedUser[]) => {
-    setUsers(updatedUsers);
-    localStorage.setItem("authorizedUsers", JSON.stringify(updatedUsers));
+    updateUsers(updatedUsers);
     console.log("✅ Utilizadores atualizados:", updatedUsers.length);
   };
 
