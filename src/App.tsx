@@ -4791,7 +4791,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create works
-                          if (!currentUser?.permissions?.obras?.create) {
+                          if (!hasPermission("obras", "create")) {
                             alert(
                               "Não tem permissão para criar obras. Contacte o administrador.",
                             );
