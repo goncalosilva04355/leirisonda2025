@@ -79,7 +79,7 @@ import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotification from "./components/UserRestoreNotification";
+import { UserRestoreNotification } from "./components/UserRestoreNotification";
 
 // Production users - only real admin account
 const initialUsers = [
