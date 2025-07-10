@@ -5425,7 +5425,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type="button"
                             onClick={() => {
                               console.log(
-                                "🔍 DEBUG: Tentando adicionar cliente...",
+                                "���� DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
@@ -6504,7 +6504,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Histórico de intervenções
+                                  Hist��rico de intervenções
                                 </p>
                               </div>
                             </div>
@@ -10047,25 +10047,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span>Clientes</span>
                   </button>
                 )}
-
-                {/* Administração - Single Unified Page */}
-                <button
-                  onClick={() => {
-                    navigateToSection("administracao");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "administracao" ||
-                    activeSection === "relatorios" ||
-                    activeSection === "configuracoes" ||
-                    activeSection === "utilizadores"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Shield className="h-5 w-5" />
-                  <span>Administração</span>
-                </button>
 
                 {/* Localizações - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
