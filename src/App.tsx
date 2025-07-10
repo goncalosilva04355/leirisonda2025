@@ -33,12 +33,12 @@ import {
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig"; // Disabled - not used
 // import { AdvancedSettings } from "./components/AdvancedSettings"; // Now lazy loaded
-// import { InstallPromptFixed } from "./components/InstallPromptFixed"; // Temporarily disabled
+import { InstallPromptFixed } from "./components/InstallPromptFixed";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
-// import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager"; // Temporarily disabled
-// import { RegisterForm } from "./components/RegisterForm"; // Temporarily disabled
-// import { LocationPage } from "./components/LocationPage"; // Temporarily disabled
-// import { PersonalLocationSettings } from "./components/PersonalLocationSettings"; // Temporarily disabled
+import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
+import { RegisterForm } from "./components/RegisterForm";
+import { LocationPage } from "./components/LocationPage";
+import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -46,51 +46,51 @@ import "./utils/clearModalStates";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-// import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe"; // Temporarily disabled
-// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe"; // Temporarily disabled
-// import { RealtimeNotifications } from "./components/RealtimeNotifications"; // Temporarily disabled
-// import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed"; // Temporarily disabled
-// import { syncManager } from "./utils/syncManager"; // Temporarily disabled
-// import { clearQuotaProtection } from "./utils/clearQuotaProtection"; // Temporarily disabled
+import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+import { RealtimeNotifications } from "./components/RealtimeNotifications";
+import { WorkAssignmentNotificationsFixed } from "./components/WorkAssignmentNotificationsFixed";
+import { syncManager } from "./utils/syncManager";
+import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/configWithoutFirestore";
-// import "./firebase/realtimeDatabase"; // Initialize Realtime Database - Temporarily disabled
+import "./firebase/realtimeDatabase"; // Initialize Realtime Database
 
 // SECURITY: RegisterForm removed - only super admin can create users
 // import { AdminLogin } from "./admin/AdminLogin"; // Now lazy loaded
 // import { AdminPage } from "./admin/AdminPage"; // Now lazy loaded
 // Imports diretos para evitar problemas de lazy loading
 import { LoginPage } from "./pages/LoginPage";
-// import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug"; // Temporarily disabled
+import SimpleFirebaseDebug from "./components/SimpleFirebaseDebug";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 // import HotReloadTest from "./components/HotReloadTest"; // Removed test component
 
-// import { useDataSyncSafe } from "./hooks/useDataSyncSafe"; // Temporarily disabled
-// import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe"; // Temporarily disabled
-// import { useUniversalDataSync } from "./hooks/useUniversalDataSync"; // Temporarily disabled
+import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
+import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
+import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
 import { authService, UserProfile } from "./services/authService";
-// import { DataProtectionService } from "./utils/dataProtection"; // Temporarily disabled
-// import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery"; // Temporarily disabled
+import { DataProtectionService } from "./utils/dataProtection";
+import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
 // Firebase works silently in background - no diagnostics or UI needed
 // Removed problematic import that was using old project
-// import { ForceInitialization } from "./utils/forceInitialization"; // Temporarily disabled
+import { ForceInitialization } from "./utils/forceInitialization";
 
-// import { useDataCleanup } from "./hooks/useDataCleanup"; // Temporarily disabled
-// import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe"; // Temporarily disabled
+import { useDataCleanup } from "./hooks/useDataCleanup";
+import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
 // import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix"; // Disabled - Firestore not available
 // import { useAutoUserMigration } from "./hooks/useAutoUserMigration"; // Disabled - Firestore not available
-// import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor"; // Temporarily disabled
-// import UserMigrationIndicator from "./components/UserMigrationIndicator"; // Temporarily disabled
-// import RealtimeDatabaseTester from "./components/RealtimeDatabaseTester"; // Temporarily disabled
-// import StabilityMonitor from "./utils/stabilityMonitor"; // Temporarily disabled
-// import PerformanceOptimizer from "./utils/performanceOptimizer"; // Temporarily disabled
+import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+import UserMigrationIndicator from "./components/UserMigrationIndicator";
+import RealtimeDatabaseTester from "./components/RealtimeDatabaseTester";
+import StabilityMonitor from "./utils/stabilityMonitor";
+import PerformanceOptimizer from "./utils/performanceOptimizer";
 // import { useSafeEffect, useThrottledLog, useRenderCounter } from "./hooks/useSafeEffect"; // Temporarily disabled
 // Firebase components removed - Firebase works automatically in background
-// import { userRestoreService } from "./services/userRestoreService"; // Temporarily disabled
-// import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed"; // Temporarily disabled
-// import AppStabilityStatus from "./components/AppStabilityStatus"; // Temporarily disabled
+import { userRestoreService } from "./services/userRestoreService";
+import { UserRestoreNotificationFixed } from "./components/UserRestoreNotificationFixed";
+import AppStabilityStatus from "./components/AppStabilityStatus";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -114,12 +114,17 @@ const initialUsers = [
 ];
 
 function App() {
-  // Inicializar monitores de estabilidade e performance - Temporarily disabled
+  // Inicializar monitores de estabilidade e performance
   useEffect(() => {
     try {
-      // StabilityMonitor.initialize(); // Temporarily disabled
-      // PerformanceOptimizer.initialize(); // Temporarily disabled
-      console.log("🛡️ Monitors temporarily disabled - working in safe mode");
+      StabilityMonitor.initialize();
+      PerformanceOptimizer.initialize();
+      console.log(
+        "🛡️ Stability Monitor ativo - previne crashes e loops infinitos",
+      );
+      console.log(
+        "🚀 Performance Optimizer ativo - melhora velocidade drasticamente",
+      );
     } catch (error) {
       console.error("Error initializing monitors:", error);
     }
@@ -131,10 +136,10 @@ function App() {
 
   // Debug logging disabled for production
 
-  // Monitoramento de integridade de dados e restauração de utilizadores - Temporarily disabled
+  // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
-    // userRestoreService.autoRestore(); // Temporarily disabled
+    userRestoreService.autoRestore();
 
     // Cleanup ao desmontar componente
     return () => {
@@ -860,7 +865,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manutenç��o realizada",
+      description: maintenanceForm.workPerformed || "Manutenção realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1402,7 +1407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n������ Ative as notifica��ões nas configura������es para receber alertas autom���ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n������ Ative as notifica��ões nas configura������es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -3810,7 +3815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��������ões do Furo
+                              Medi������ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4213,7 +4218,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="Nível da ��gua"]',
+                                    'input[placeholder*="Nível da Água"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
@@ -4632,7 +4637,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
                           <option value="manutencao">Em Manutenção</option>
-                          <option value="construcao">Em Construç��o</option>
+                          <option value="construcao">Em Construção</option>
                         </select>
                       </div>
                     </div>
@@ -4735,7 +4740,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenç��o
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
