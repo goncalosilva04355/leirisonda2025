@@ -73,10 +73,14 @@ export const db = new Proxy(
   {},
   {
     get(target, prop) {
-      const dbInstance = firebaseService.getFirestore();
-      if (!dbInstance) return null;
-
       try {
+        if (!firebaseService.isInitialized()) {
+          return null;
+        }
+
+        const dbInstance = firebaseService.getFirestore();
+        if (!dbInstance) return null;
+
         return (dbInstance as any)[prop];
       } catch (error) {
         console.warn("⚠️ Firestore proxy error:", error);
