@@ -14,7 +14,11 @@ import {
   Trash2,
   Plus,
   ExternalLink,
+  Download,
+  Copy,
+  X,
 } from "lucide-react";
+import AppDiagnostics from "../utils/appDiagnostics";
 
 interface FirebaseStatus {
   app: boolean;
