@@ -1,20 +1,11 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  getDocs,
-  query,
-  orderBy,
-  onSnapshot,
-  Unsubscribe,
-  deleteDoc,
-  updateDoc,
-  writeBatch,
-} from "firebase/firestore";
+// Firestore disabled - import only safe functions
 import {
   isFirebaseReady,
   getFirestoreSafe,
 } from "../firebase/configWithoutFirestore";
+
+// Define types to avoid import errors
+type Unsubscribe = () => void;
 
 export interface UniversalDataState {
   obras: any[];
