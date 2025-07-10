@@ -7,7 +7,7 @@ export const HotReloadTest: React.FC = () => {
         position: "fixed",
         top: 10,
         left: 10,
-        background: "green",
+        background: "blue",
         color: "white",
         padding: "5px",
         zIndex: 9999,
