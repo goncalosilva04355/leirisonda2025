@@ -30,6 +30,10 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
+  const [editingPermissions, setEditingPermissions] = useState<string | null>(
+    null,
+  );
+  const [tempPermissions, setTempPermissions] = useState<any>(null);
 
   // Salvar utilizadores
   const saveUsers = (updatedUsers: AuthorizedUser[]) => {
