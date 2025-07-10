@@ -106,6 +106,7 @@ import DataInputTutorial from "./components/DataInputTutorial";
 
 // Monitor de erros Firebase para detectar e corrigir automaticamente
 import "./utils/firebaseErrorMonitor";
+import FirebaseFixButton from "./components/FirebaseFixButton";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -4208,7 +4209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç������o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -4893,7 +4894,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condi���ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -7183,7 +7184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </button>
                                     </div>
                                     <p className="text-green-700 text-sm mb-3">
-                                      Quando ativado, clicar numa morada abrirá
+                                      Quando ativado, clicar numa morada abrir��
                                       o Google Maps para navegação.
                                     </p>
                                     <p className="text-green-600 text-xs">
@@ -7646,7 +7647,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informaç���es de clientes</li>
+                        <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
