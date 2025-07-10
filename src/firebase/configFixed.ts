@@ -57,32 +57,29 @@ export const getAuthSafe = async () => {
 export const getFirestoreSafe = async () => {
   try {
     const app = getFirebaseApp();
-    if (!app) return null;
+    if (!app) {
+      console.warn("Firebase App not available for Firestore");
+      return null;
+    }
 
-    // Método mais seguro que evita getImmediate
-    const { initializeFirestore, getFirestore } = await import(
+    console.log("🔥 Getting Firestore for app:", app.name);
+
+    const { getFirestore, connectFirestoreEmulator } = await import(
       "firebase/firestore"
     );
 
-    try {
-      // Tentar obter instância existente primeiro
-      return getFirestore(app);
-    } catch (error: any) {
-      if (error.message?.includes("getImmediate")) {
-        // Se erro getImmediate, tentar inicializar manualmente
-        try {
-          return initializeFirestore(app, {
-            ignoreUndefinedProperties: true,
-          });
-        } catch (initError) {
-          console.warn("Firestore initialization failed:", initError);
-          return null;
-        }
-      }
-      throw error;
+    // Simple direct initialization
+    const db = getFirestore(app);
+
+    if (db) {
+      console.log("✅ Firestore instance obtained successfully");
+      return db;
+    } else {
+      console.warn("❌ Failed to get Firestore instance");
+      return null;
     }
-  } catch (error) {
-    console.warn("Firestore não disponível:", error);
+  } catch (error: any) {
+    console.error("❌ Firestore initialization error:", error.message);
     return null;
   }
 };
