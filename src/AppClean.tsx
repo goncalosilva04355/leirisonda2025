@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { LogOut, Settings } from "lucide-react";
-import { LoginPage } from "./pages/LoginPage";
 
 function AppClean() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
