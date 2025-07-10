@@ -1877,7 +1877,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ����� ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBU��DA: "${workTitle}" ������ ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2640,18 +2640,46 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas n��o geradas
+                          Folhas não geradas (atribuídas)
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
-                              !w.folhaGerada &&
+                        {(() => {
+                          // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir concluídas)
+                          const worksWithoutSheets = works.filter((w) => {
+                            const isNotCompleted =
                               w.status !== "completed" &&
-                              w.status !== "concluida",
-                          ).length
-                        }
+                              w.status !== "concluida";
+                            const noSheetGenerated = !w.folhaGerada;
+                            const isAssignedToUser =
+                              currentUser &&
+                              // Verificar assignedTo (campo legacy)
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                // Verificar assignedUsers array
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                // Verificar assignedUserIds array
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return (
+                              isNotCompleted &&
+                              noSheetGenerated &&
+                              isAssignedToUser
+                            );
+                          });
+                          return worksWithoutSheets.length;
+                        })()}
                       </div>
                     </div>
                   </button>
