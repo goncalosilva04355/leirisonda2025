@@ -54,6 +54,7 @@ import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -1167,7 +1168,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
