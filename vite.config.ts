@@ -18,11 +18,6 @@ export default defineConfig({
           "react-vendor": ["react", "react-dom"],
           "ui-vendor": ["lucide-react", "framer-motion"],
           "pdf-vendor": ["jspdf", "html2canvas"],
-          "firebase-vendor": [
-            "firebase/app",
-            "firebase/auth",
-            "firebase/database",
-          ],
         },
       },
       external: ["firebase/firestore", "@firebase/firestore"],
