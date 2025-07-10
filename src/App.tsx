@@ -1251,7 +1251,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç�����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -5883,7 +5883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç��es
+                        <strong>{maintenance.length}</strong> manuten����es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -7416,7 +7416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec��ficas do Furo
+                          Observaç��es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -8879,29 +8879,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔍 Diagnosing Firestore connection...");
-                const { diagnoseFirestoreConnection } = await import(
-                  "./utils/firestoreConnectionTest"
-                );
+                console.log("🧪 Running isolated Firebase test...");
+                const { testIsolatedFirebase, createFreshFirebaseInstance } =
+                  await import("./utils/isolatedFirebaseTest");
 
-                const results = await diagnoseFirestoreConnection();
-                console.log("📊 Firestore Connection Diagnosis:", results);
+                // First try the isolated test
+                const results = await testIsolatedFirebase();
+                console.log("📊 Isolated Firebase Test Results:", results);
 
-                let message = `Firestore Diagnosis:\n✅ Config: ${results.configCheck}\n✅ Network: ${results.networkCheck}\n✅ Rules: ${results.rulesCheck}\n✅ Success: ${results.connectionSuccess}`;
+                if (!results.firestore) {
+                  // If that fails, try completely fresh instance
+                  console.log("🆕 Trying fresh Firebase instance...");
+                  const freshResult = await createFreshFirebaseInstance();
+                  console.log("📊 Fresh Instance Result:", freshResult);
 
-                if (results.projectId) {
-                  message += `\n\nProject: ${results.projectId}`;
+                  if (freshResult.success) {
+                    alert(
+                      `✅ SUCCESS!\nFresh Firebase instance working!\nProject: ${freshResult.project}\nFirestore: ✅ Working`,
+                    );
+                  } else {
+                    alert(
+                      `❌ BOTH TESTS FAILED\n\nIsolated Test:\n- Project: ${results.project}\n- Firestore: ${results.firestore}\n- Errors: ${results.errors.join(", ")}\n\nFresh Instance:\n- Error: ${freshResult.error}`,
+                    );
+                  }
+                } else {
+                  alert(
+                    `✅ SUCCESS!\nIsolated Firebase test passed!\nProject: ${results.project}\nFirestore: ✅ Working`,
+                  );
                 }
-
-                if (results.errors.length > 0) {
-                  message += `\n\n❌ Errors:\n${results.errors.join("\n")}`;
-                }
-
-                if (results.suggestions.length > 0) {
-                  message += `\n\n💡 Suggestions:\n${results.suggestions.join("\n")}`;
-                }
-
-                alert(message);
               }}
               className="bg-green-500 text-white p-2 rounded-md shadow-md text-xs font-bold"
               title="Test Firebase Connectivity"
