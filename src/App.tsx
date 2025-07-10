@@ -1836,20 +1836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   ];
 
   const renderContent = () => {
-    // Add loading state check with timeout
-    if (!currentUser || !isAuthenticated) {
-      return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
-            <p className="mt-2 text-sm text-gray-500">
-              Se esta mensagem persistir, recarregue a página
-            </p>
-          </div>
-        </div>
-      );
-    }
+    // Render content based on authentication state
 
     // Add error boundary
     try {
@@ -3169,7 +3156,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenç����es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5741,7 +5728,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </li>
                             </ul>
                             <p className="text-red-700 text-sm font-medium mb-3">
-                              ���️ ATENÇÃO: Esta operação é irrevers��vel!
+                              �����️ ATENÇÃO: Esta operação é irrevers��vel!
                             </p>
                             <button
                               onClick={handleDataCleanup}
@@ -5956,7 +5943,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Resumo executivo</li>
+                        <li>��� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
                         <li>• Análise de performance</li>
@@ -7214,7 +7201,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa��ões
+                          Observa���ões
                         </h3>
                       </div>
 
