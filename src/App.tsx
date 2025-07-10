@@ -918,7 +918,7 @@ function App() {
   // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
+      console.log("�� Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -1642,7 +1642,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1732,7 +1732,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç����es Conclu�����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu������das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2730,8 +2730,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras Atribuídas
+                                                <h2 className="text-lg font-semibold text-gray-900">
+                          Últimas 3 Obras
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
@@ -6958,7 +6958,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                       <div className="text-2xl font-bold text-green-600">
                         {maintenance.length}
                       </div>
-                      <div className="text-sm text-gray-600">Manutenções</div>
+                      <div className="text-sm text-gray-600">Manutenç��es</div>
                     </div>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-orange-600">
@@ -9064,7 +9064,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte����do. Por favor, tente
+              Ocorreu um erro ao carregar o conte������do. Por favor, tente
               novamente.
             </p>
             <button
