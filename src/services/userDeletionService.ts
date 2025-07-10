@@ -8,7 +8,6 @@ import {
 } from "firebase/firestore";
 import { deleteUser as deleteFirebaseUser } from "firebase/auth";
 import { db, auth, isFirebaseReady } from "../firebase/config";
-import { mockAuthService } from "./mockAuthService";
 
 export interface UserDeletionResult {
   success: boolean;
@@ -318,9 +317,8 @@ class UserDeletionService {
     console.log("🔧 Starting mock auth users deletion...");
 
     try {
-      // Get all users from mock auth
-      const allMockUsers = mockAuthService.getAllUsers();
-      console.log(`Found ${allMockUsers.length} users in mock auth service`);
+      // Mock auth service removed - using only Firebase
+      console.log("Mock auth service disabled - using only Firebase");
 
       let deletedFromMockAuth = 0;
 
@@ -351,9 +349,8 @@ class UserDeletionService {
         }
       }
 
-      // Force reload mock auth users from cleaned localStorage
-      mockAuthService.reloadUsers();
-      result.details.mockAuthUsersDeleted = deletedFromMockAuth;
+      // Mock auth service removed
+      result.details.mockAuthUsersDeleted = 0;
 
       console.log(
         `✅ Mock auth deletion complete: ${result.details.mockAuthUsersDeleted} users deleted`,
@@ -431,8 +428,7 @@ class UserDeletionService {
       localStorage.setItem("mock-users", JSON.stringify(mockUsers));
     }
 
-    // Force reload mock auth to pick up changes
-    mockAuthService.reloadUsers();
+    // Mock auth service removed
 
     result.details.superAdminPreserved = true;
     console.log("✅ Super admin ensured in all systems");
@@ -601,8 +597,8 @@ class UserDeletionService {
 
       // Count mock auth users
       try {
-        const allMockUsers = mockAuthService.getAllUsers();
-        stats.mockAuth = allMockUsers.length;
+        // Mock auth service removed
+        stats.mockAuth = 0;
       } catch (e) {
         console.error("Error counting mock auth users:", e);
       }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Settings, Bug } from "lucide-react";
-import LoginDebugHelper from "../components/LoginDebugHelper";
+import { Settings } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (
@@ -22,7 +21,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     password: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
-  const [showDiagnostic, setShowDiagnostic] = useState(false);
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
@@ -78,7 +76,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
     if (rememberMe) {
-      console.log("💾 Saving credentials for auto-login");
+      console.log("�� Saving credentials for auto-login");
       sessionStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
@@ -111,13 +109,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
             />
-          </div>
-        </div>
-
-        {/* Authorized Users Info */}
-        <div className="text-center mb-4">
-          <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            🔐 Apenas emails autorizados podem fazer login
           </div>
         </div>
 
@@ -210,39 +201,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           <Settings className="h-5 w-5" />
         </button>
       </div>
-
-      {/* Diagnostic Modal */}
-      {showDiagnostic && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 flex items-center">
-                  <Bug className="h-6 w-6 mr-2 text-purple-600" />
-                  Diagnóstico de Login
-                </h2>
-                <button
-                  onClick={() => setShowDiagnostic(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <LoginDebugHelper />
-
-              <div className="flex justify-end mt-6 pt-4 border-t border-gray-200">
-                <button
-                  onClick={() => setShowDiagnostic(false)}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
-                >
-                  Fechar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

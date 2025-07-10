@@ -8,7 +8,7 @@ import {
   Users,
   Smartphone,
 } from "lucide-react";
-import { useUniversalDataSync } from "../hooks/useUniversalDataSync";
+import { useUniversalDataSyncSafe as useUniversalDataSync } from "../hooks/useUniversalDataSyncSafe";
 
 export function UniversalSyncNotification() {
   const universalSync = useUniversalDataSync();

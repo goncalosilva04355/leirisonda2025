@@ -7,7 +7,6 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { mockAuthService } from "./mockAuthService";
 
 export interface SyncResult {
   success: boolean;
@@ -278,9 +277,8 @@ class FullSyncService {
         `☁️ Firebase atualizado com ${finalUsers.length} utilizadores`,
       );
 
-      // Force reload mockAuthService
-      mockAuthService.reloadUsers();
-      details.push("🔄 MockAuthService recarregado");
+      // Mock auth service removed
+      details.push("🔄 Mock auth service disabled");
 
       return { details, stats };
     } catch (error: any) {

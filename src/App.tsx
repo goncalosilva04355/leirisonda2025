@@ -36,7 +36,7 @@ import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
 import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
-import { RegisterForm } from "./components/RegisterForm";
+
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 
@@ -54,10 +54,17 @@ import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
+import {
+  isFirestoreReady,
+  testFirestore,
+  getFirebaseFirestore,
+} from "./firebase/firestoreConfig";
+import { firestoreService } from "./services/firestoreService";
+import { firebaseStorageService } from "./services/firebaseStorageService";
+import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
-import "./utils/autoMigrationDemo"; // Passo 3: Migração automática de demonstração
+import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -65,8 +72,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
-import { useUniversalDataSync } from "./hooks/useUniversalDataSync";
+import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
 import {
   hybridAuthService as authService,
   UserProfile,
@@ -304,22 +310,58 @@ function App() {
   );
 
   // Funções de compatibilidade simplificadas
-  const addPool = (data: any) => addPiscina(data);
+  const addPool = async (data: any) => {
+    try {
+      console.log("🏊 addPool iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createPiscina(data);
+
+      if (firestoreId) {
+        console.log("✅ Piscina criada no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addPiscina(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addPiscina(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de piscinas:", error);
+      return await addPiscina(data);
+    }
+  };
   const addWork = async (data: any) => {
     try {
-      console.log("🔧 addWork iniciado com Firebase ativo");
+      console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // Use Firebase through universal sync but with better error handling
-      const result = await addObra(data);
-      // Log removed for performance
+      // Usar o novo FirestoreService
+      const firestoreId = await firestoreService.createObra(data);
 
-      // Delay removed for faster performance
+      if (firestoreId) {
+        console.log("✅ Obra criada no Firestore:", firestoreId);
 
-      return result;
+        // Sincronizar com sistema universal também
+        try {
+          await addObra(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        // Fallback para sistema atual se Firestore falhar
+        console.warn("��️ Firestore não disponível, usando sistema atual");
+        return await addObra(data);
+      }
     } catch (error) {
-      console.error("❌ Erro no Firebase, tentando fallback:", error);
+      console.error("❌ Erro no sistema de obras:", error);
 
-      // Fallback to localStorage if Firebase fails
+      // Fallback final para localStorage
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const newWork = {
         ...data,
@@ -331,14 +373,62 @@ function App() {
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        // Log removed for performance
+        console.log("💾 Obra guardada no localStorage como fallback");
       }
 
       return newWork.id;
     }
   };
-  const addMaintenance = (data: any) => addManutencao(data);
-  const addClient = (data: any) => addCliente(data);
+  const addMaintenance = async (data: any) => {
+    try {
+      console.log("🔧 addMaintenance iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createManutencao(data);
+
+      if (firestoreId) {
+        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addManutencao(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addManutencao(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de manutenções:", error);
+      return await addManutencao(data);
+    }
+  };
+  const addClient = async (data: any) => {
+    try {
+      console.log("👥 addClient iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createCliente(data);
+
+      if (firestoreId) {
+        console.log("✅ Cliente criado no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addCliente(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addCliente(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de clientes:", error);
+      return await addCliente(data);
+    }
+  };
   const syncWithFirebase = () => forceSyncAll();
   const enableSync = (enabled: boolean) => {
     console.log("Sync is always enabled in Universal Sync mode:", enabled);
@@ -364,66 +454,125 @@ function App() {
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
 
-  // Load users from localStorage on app start
+  // Load users from Firestore and localStorage on app start
   useEffect(() => {
-    console.log("🔄 Loading users from localStorage on app start...");
+    const loadUsers = async () => {
+      console.log("🔄 Loading users from Firestore + localStorage...");
 
-    try {
-      // Load users from localStorage (app-users)
-      const savedUsers = localStorage.getItem("app-users");
-      if (savedUsers) {
-        const parsedUsers = JSON.parse(savedUsers);
-        console.log(
-          "✅ Users loaded successfully:",
-          parsedUsers.length,
-          parsedUsers,
-        );
-        setUsers(parsedUsers);
-      } else {
-        console.log("📝 No saved users found, initializing with default users");
-        // Initialize with default admin user and save to localStorage
-        const defaultUsers = [
-          {
-            id: 1,
-            name: "Gonçalo Fonseca",
-            email: "gongonsilva@gmail.com",
-            active: true,
-            role: "super_admin",
-            password: "19867gsf",
-            permissions: {
-              obras: { view: true, create: true, edit: true, delete: true },
-              manutencoes: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
+      try {
+        // Aguardar Firestore estar pronto
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if (isFirestoreReady()) {
+          console.log("📱 Carregando utilizadores do Firestore...");
+
+          // Tentar carregar do Firestore
+          const firestoreUsers = await firestoreService.getUtilizadores();
+
+          if (firestoreUsers.length > 0) {
+            console.log(
+              "✅ Utilizadores carregados do Firestore:",
+              firestoreUsers.length,
+            );
+            setUsers(firestoreUsers);
+            return;
+          }
+        }
+
+        // Fallback para localStorage se Firestore não tiver dados
+        const savedUsers = localStorage.getItem("app-users");
+        if (savedUsers) {
+          const parsedUsers = JSON.parse(savedUsers);
+          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+          setUsers(parsedUsers);
+
+          // Sincronizar com Firestore se disponível
+          if (isFirestoreReady()) {
+            console.log(
+              "🔄 Sincronizando utilizadores locais para Firestore...",
+            );
+            for (const user of parsedUsers) {
+              if (!user.firestoreId) {
+                const firestoreId =
+                  await firestoreService.createUtilizador(user);
+                if (firestoreId) {
+                  user.firestoreId = firestoreId;
+                }
+              }
+            }
+          }
+        } else {
+          console.log(
+            "📝 No saved users found, initializing with default users",
+          );
+
+          // Initialize with default admin user
+          const defaultUsers = [
+            {
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              active: true,
+              role: "super_admin",
+              password: "19867gsf",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
               },
-              piscinas: { view: true, create: true, edit: true, delete: true },
-              utilizadores: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
-              },
-              relatorios: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true,
-              },
-              clientes: { view: true, create: true, edit: true, delete: true },
+              createdAt: new Date().toISOString(),
             },
-            createdAt: "2024-01-01",
-          },
-        ];
-        setUsers(defaultUsers);
-        localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+          ];
+
+          setUsers(defaultUsers);
+          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+
+          // Criar no Firestore também
+          if (isFirestoreReady()) {
+            for (const user of defaultUsers) {
+              const firestoreId = await firestoreService.createUtilizador(user);
+              if (firestoreId) {
+                user.firestoreId = firestoreId;
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.error("❌ Error loading users:", error);
+        // Fallback to initial users
+        setUsers(initialUsers);
       }
-    } catch (error) {
-      console.error("❌ Error loading users:", error);
-      // Fallback to initial users
-      setUsers(initialUsers);
-    }
+    };
+
+    loadUsers();
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
@@ -466,6 +615,7 @@ function App() {
   const [assignedUsers, setAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
+  const [autoSyncActive, setAutoSyncActive] = useState(false);
   const [editAssignedUsers, setEditAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -506,64 +656,207 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // Local Auth listener for automatic login restoration
-    console.log("🔒 Setting up Local Auth auto-login...");
-
-    const initializeAuth = async () => {
+    // SECURITY: Force complete logout on app start
+    const forceLogout = async () => {
       try {
-        // Set up Firebase Auth state listener for automatic login
-        const unsubscribe = authService.onAuthStateChanged((user) => {
-          if (user) {
-            console.log(
-              "���� Firebase Auth: User automatically restored",
-              user.email,
-            );
-            setCurrentUser(user);
-            setIsAuthenticated(true);
-
-            // Auto-navegação removida para evitar loop de login
-            console.log(
-              "✅ User authenticated - avoiding auto-navigation loop",
-            );
-          } else {
-            console.log("🔒 Firebase Auth: No user session found");
-            setCurrentUser(null);
-            setIsAuthenticated(false);
-          }
-        });
-
-        return unsubscribe;
+        // Clear Firebase auth state
+        await authService.logout();
+        console.log("🔒 Firebase auth cleared");
       } catch (error) {
-        console.error("��� Firebase Auth setup error:", error);
-        setIsAuthenticated(false);
-        setCurrentUser(null);
-        return () => {}; // Return empty cleanup function
+        console.log("🔒 Firebase logout error (expected):", error);
+      }
+
+      // Ensure user starts in unauthenticated state
+      setCurrentUser(null);
+      setIsAuthenticated(false);
+
+      // Clear any stored auth data
+      localStorage.removeItem("currentUser");
+      sessionStorage.removeItem("savedLoginCredentials");
+
+      // Clear all mock and test data
+      localStorage.removeItem("mock-users");
+      localStorage.removeItem("mock-current-user");
+      localStorage.removeItem("test-data");
+      localStorage.removeItem("sample-data");
+
+      console.log(
+        "🔒 SECURITY: Forced logout completed - manual login required",
+      );
+      console.log("🧹 All mock and test data cleared");
+    };
+
+    forceLogout();
+  }, []);
+
+  // Passo 3: Teste completo do Firestore com operações reais
+  useEffect(() => {
+    const testFirestoreStep3 = async () => {
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
+
+      // Aguardar um pouco para Firebase se inicializar
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      try {
+        const firestoreResult = await testFirestore();
+
+        if (firestoreResult) {
+          console.log("✅ Passo 3: Firestore ativo e funcional!");
+
+          // Teste prático: tentar escrever e ler dados
+          const db = getFirebaseFirestore();
+          if (db) {
+            try {
+              // Importar funções do Firestore dinamicamente
+              const { doc, setDoc, getDoc } = await import(
+                "firebase/firestore"
+              );
+
+              // Documento de teste
+              const testDoc = doc(db, "system_tests", "firestore_test");
+              const testData = {
+                message: "Firestore funcional!",
+                timestamp: new Date().toISOString(),
+                step: "Passo 3 completado",
+              };
+
+              // Escrever teste
+              await setDoc(testDoc, testData);
+              console.log(
+                "📝 Passo 3: Dados escritos no Firestore com sucesso",
+              );
+
+              // Ler teste
+              const docSnap = await getDoc(testDoc);
+              if (docSnap.exists()) {
+                console.log(
+                  "📖 Passo 3: Dados lidos do Firestore:",
+                  docSnap.data(),
+                );
+                console.log(
+                  "🎉 PASSO 3 COMPLETADO: Firestore totalmente funcional!",
+                );
+              }
+            } catch (writeError) {
+              console.warn(
+                "⚠️ Passo 3: Erro nas operaç��es Firestore:",
+                writeError,
+              );
+              console.log(
+                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+              );
+            }
+          }
+        } else {
+          console.log(
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+          );
+        }
+      } catch (error) {
+        console.warn("❌ Passo 3: Erro no teste Firestore:", error);
       }
     };
 
-    // Initialize auth
-    const authPromise = initializeAuth();
+    testFirestoreStep3();
+  }, []);
 
-    // Cleanup on unmount
-    return () => {
-      authPromise
-        .then((unsubscribe) => {
-          if (unsubscribe && typeof unsubscribe === "function") {
-            unsubscribe();
-          }
-        })
-        .catch(console.error);
+  // Sincronização inicial de todos os dados com Firestore
+  useEffect(() => {
+    const syncAllData = async () => {
+      // Aguardar um pouco para o Firestore estar pronto
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      if (isFirestoreReady()) {
+        console.log("🔄 Iniciando sincronização inicial com Firestore...");
+
+        try {
+          await firestoreService.syncAll();
+          console.log("✅ Sincronização inicial completa!");
+        } catch (error) {
+          console.error("❌ Erro na sincronização inicial:", error);
+        }
+      }
     };
-    // Firebase auth code removed to fix syntax errors
 
-    // DO NOT initialize default admin automatically - this was causing the security issue
-    // Users must always login manually for security
-    console.log(
-      "🔒 SECURITY: No automatic admin initialization - manual login required",
-    );
+    syncAllData();
+  }, []);
 
-    // Return empty cleanup function since unsubscribe is handled inside the promise
-    return () => {};
+  // Inicializar sincronização automática em tempo real
+  useEffect(() => {
+    const initAutoSync = async () => {
+      // Aguardar Firestore estar pronto
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+
+      if (isFirestoreReady()) {
+        console.log("🔄 Iniciando sincronização automática em tempo real...");
+
+        try {
+          await autoSyncService.startAutoSync();
+          console.log("✅ Sincronização automática ativa!");
+
+          // Adicionar indicador visual
+          setAutoSyncActive(true);
+          window.dispatchEvent(new CustomEvent("autoSyncStarted"));
+        } catch (error) {
+          console.error("❌ Erro ao iniciar sincronização automática:", error);
+        }
+      }
+    };
+
+    initAutoSync();
+
+    // Cleanup quando componente for desmontado
+    return () => {
+      autoSyncService.stopAutoSync();
+    };
+  }, []);
+
+  // Listeners para atualizações automáticas da UI
+  useEffect(() => {
+    const handleDataUpdate = (event: CustomEvent) => {
+      const { data, collection } = event.detail;
+      console.log(
+        `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      );
+
+      // Forçar re-render dos dados universais se necessário
+      if (collection === "obras") {
+        // Trigger re-fetch das obras
+        window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
+      } else if (collection === "utilizadores") {
+        // Atualizar lista de utilizadores
+        setUsers(data);
+        window.dispatchEvent(new CustomEvent("usersUpdated"));
+      }
+    };
+
+    // Adicionar listeners para todas as coleções
+    const collections = [
+      "obras",
+      "piscinas",
+      "manutencoes",
+      "utilizadores",
+      "clientes",
+      "localizacoes",
+      "notificacoes",
+    ];
+
+    collections.forEach((collection) => {
+      window.addEventListener(
+        `${collection}Updated`,
+        handleDataUpdate as EventListener,
+      );
+    });
+
+    // Cleanup listeners
+    return () => {
+      collections.forEach((collection) => {
+        window.removeEventListener(
+          `${collection}Updated`,
+          handleDataUpdate as EventListener,
+        );
+      });
+    };
   }, []);
 
   // Auth state check disabled to prevent errors
@@ -1519,7 +1812,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Permission check function
   const hasPermission = (module: string, action: string): boolean => {
-    if (!currentUser || !currentUser.permissions) return false;
+    if (!currentUser) return false;
+
+    // Super admins have access to everything
+    if (currentUser.role === "super_admin") return true;
+
+    // Check specific permissions for other roles
+    if (!currentUser.permissions) return false;
     return currentUser.permissions[module]?.[action] || false;
   };
 
@@ -1551,7 +1850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠️ Maps redirect is disabled");
+        console.warn("⚠��� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -1604,28 +1903,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     try {
       if (editingUser) {
         // Update existing user
-        setUsers(
-          users.map((u) =>
-            u.id === editingUser.id
-              ? {
-                  ...u,
-                  ...userForm,
-                }
-              : u,
-          ),
+        console.log(
+          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
-        console.log(`Utilizador ${userForm.name} atualizado com sucesso`);
+        const updatedUser = {
+          ...editingUser,
+          ...userForm,
+          updatedAt: new Date().toISOString(),
+        };
+
+        // Atualizar no Firestore
+        const firestoreSuccess = await firestoreService.updateUtilizador(
+          editingUser.id?.toString() || editingUser.id,
+          updatedUser,
+        );
+
+        if (firestoreSuccess) {
+          console.log("✅ Utilizador atualizado no Firestore");
+        }
+
+        // Atualizar estado local
+        setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
+
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
           id: Math.max(...users.map((u) => u.id)) + 1,
           ...userForm,
-          createdAt: new Date().toISOString().split("T")[0],
+          createdAt: new Date().toISOString(),
         };
+
+        console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
+
+        // Criar no Firestore primeiro
+        const firestoreId = await firestoreService.createUtilizador(newUser);
+
+        if (firestoreId) {
+          console.log("✅ Utilizador criado no Firestore:", firestoreId);
+          newUser.firestoreId = firestoreId;
+        }
+
+        // Atualizar estado local
         setUsers([...users, newUser]);
 
-        // Try to register with Firebase for automatic synchronization
+        // Try to register with Firebase Auth for automatic synchronization
         try {
           const result = await authService.register(
             userForm.email,
@@ -1636,7 +1959,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `���� Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
+              `🔥 Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase Auth + Firestore`,
             );
 
             // Show success message
@@ -1647,12 +1970,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `⚠��� Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado localmente. Erro de sincronização:`,
+            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
             syncError,
           );
         }
@@ -1660,7 +1983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("Erro ao salvar utilizador:", error);
+      console.error("❌ Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -1765,42 +2088,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     { id: "obras", icon: Building2, label: "Obras", path: "/obras" },
     { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
     {
-      id: "nova-manutencao",
+      id: "manutencoes",
       icon: Wrench,
+      label: "Manutenções",
+      path: "/manutencoes",
+    },
+    {
+      id: "nova-manutencao",
+      icon: Plus,
       label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
-      id: "futuras-manutencoes",
+      id: "piscinas",
       icon: Waves,
       label: "Piscinas",
       path: "/piscinas",
     },
     {
-      id: "utilizadores",
-      icon: UserCheck,
-      label: "Utilizadores",
-      path: "/utilizadores",
-    },
-    {
-      id: "relatorios",
-      icon: BarChart3,
-      label: "Relatorios",
-      path: "/relatorios",
-    },
-    { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
-    {
-      id: "configuracoes",
-      icon: Settings,
-      label: "Configuracoes",
-      path: "/configuracoes",
-    },
-    {
-      id: "admin",
-      icon: Shield,
-      label: "Administração",
-      path: "/admin",
-      requiresAuth: true,
+      id: "localizacoes",
+      icon: MapPin,
+      label: "Localizações",
+      path: "/localizacoes",
     },
   ];
 
@@ -1920,7 +2229,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
-                  {/* Firebase Status LED - Bottom Right Corner */}
+                  {/* Firebase, Firestore & AutoSync Status LEDs - Bottom Right Corner */}
                   <div className="absolute bottom-2 right-2 z-20">
                     <div className="flex items-center space-x-1">
                       <div
@@ -1931,6 +2240,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           isFirebaseReady()
                             ? "Firebase Ativo"
                             : "Firebase Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isFirestoreReady() ? "bg-blue-500" : "bg-orange-500"
+                        }`}
+                        title={
+                          isFirestoreReady()
+                            ? "Firestore Ativo"
+                            : "Firestore Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          autoSyncActive
+                            ? "bg-purple-500 animate-pulse"
+                            : "bg-gray-400"
+                        }`}
+                        title={
+                          autoSyncActive
+                            ? "Sincronização Automática Ativa"
+                            : "Sincronização Automática Inativa"
                         }
                       ></div>
                     </div>
@@ -2037,7 +2368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas n��o geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -2818,7 +3149,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -2977,7 +3308,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç��o</span>
+                      <span>Nova Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -3096,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������� {maint.clientContact}
+                                        ������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3943,7 +4274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monofásico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -4838,7 +5169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����o criada para nova piscina:",
+                                "Futura manutenç��������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -4882,7 +5213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manuten��ão
+                        Registar intervenção de manuten���ão
                       </p>
                     </div>
                   </div>
@@ -5201,7 +5532,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentação",
+                          "Verificação alimenta��ão",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -5421,7 +5752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
@@ -5540,7 +5871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } else {
                                 alert(
-                                  "Este navegador não suporta notificaç��es.",
+                                  "Este navegador não suporta notificaç���es.",
                                 );
                               }
                             }}
@@ -5566,7 +5897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h4>
                           <ul className="text-gray-700 text-sm space-y-1">
                             <li>
-                              • As notificaç��es funcionam apenas com HTTPS
+                              • As notificaç���es funcionam apenas com HTTPS
                             </li>
                             <li>
                               • Certifique-se de que permite notifica��ões no
@@ -5678,7 +6009,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </p>
                           <p className="text-green-600 text-xs">
                             Estado:{" "}
-                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                            {enableMapsRedirect ? "�� Ativo" : "⭕ Inativo"}
                           </p>
                         </div>
                       </div>
@@ -5937,7 +6268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>• Histórico de serviços</li>
+                        <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -6104,7 +6435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o da base de dados de clientes
+                          Gest���o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -6772,7 +7103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ����� {work.contact}
+                                        ������� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -6822,7 +7153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  ���{work.budget}
+                                  �����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -6996,7 +7327,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instala��ão</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -7400,7 +7731,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -8811,12 +9142,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             >
               <Menu className="h-6 w-6 text-gray-600" />
             </button>
-            <button
-              onClick={handleGoBack}
-              className="bg-white p-2 rounded-md shadow-md"
-            >
-              <ArrowLeft className="h-6 w-6 text-gray-600" />
-            </button>
+            {activeSection !== "dashboard" && (
+              <button
+                onClick={handleGoBack}
+                className="bg-white p-2 rounded-md shadow-md"
+              >
+                <ArrowLeft className="h-6 w-6 text-gray-600" />
+              </button>
+            )}
           </div>
 
           {/* Mobile Overlay */}
@@ -8911,7 +9244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enableMapsRedirect}
                         >
-                          📍 {selectedWork.location}
+                          �� {selectedWork.location}
                         </button>
                       </div>
                       <div>

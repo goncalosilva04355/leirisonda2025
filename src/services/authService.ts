@@ -54,6 +54,43 @@ class AuthService {
     }
   }
 
+  // Local authentication for development mode
+  private localLogin(
+    email: string,
+    password: string,
+    rememberMe: boolean = false,
+  ): { success: boolean; error?: string; user?: UserProfile } {
+    // Simple local authentication for development
+    // Accept any email with password "123"
+    if (password === "123") {
+      const localUser: UserProfile = {
+        uid: `local-${email.replace("@", "-").replace(".", "-")}`,
+        email: email,
+        name:
+          email.includes("goncalo") || email.includes("gongonsilva")
+            ? "Gonçalo Fonseca"
+            : email.split("@")[0],
+        role: "super_admin",
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Store in localStorage for persistence
+      const storageKey = rememberMe
+        ? "leirisonda-user"
+        : "leirisonda-session-user";
+      localStorage.setItem(storageKey, JSON.stringify(localUser));
+
+      console.log("✅ Local login successful for:", email);
+      return { success: true, user: localUser };
+    }
+
+    return {
+      success: false,
+      error: "Credenciais inválidas (use password: 123)",
+    };
+  }
+
   // Login
   async login(
     email: string,
@@ -61,6 +98,13 @@ class AuthService {
     rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
     try {
+      // Local development authentication fallback
+      // When Firebase is not available, use localStorage authentication
+      if (!(await this.initialize())) {
+        console.log("🔧 Firebase not available - using local authentication");
+        return this.localLogin(email, password, rememberMe);
+      }
+
       // Use retry mechanism for the entire login operation
       return await firebaseService.retryOperation(async () => {
         if (!(await this.initialize())) {
@@ -277,10 +321,36 @@ class AuthService {
   // Get current user
   async getCurrentUserProfile(): Promise<UserProfile | null> {
     if (!(await this.initialize())) {
+      // Check for local user when Firebase is not available
+      const localUser =
+        localStorage.getItem("leirisonda-user") ||
+        localStorage.getItem("leirisonda-session-user");
+      if (localUser) {
+        try {
+          return JSON.parse(localUser) as UserProfile;
+        } catch (error) {
+          console.error("❌ Error parsing local user:", error);
+          return null;
+        }
+      }
       return null;
     }
 
-    if (!this.auth.currentUser) return null;
+    if (!this.auth.currentUser) {
+      // Also check for local user if no Firebase user
+      const localUser =
+        localStorage.getItem("leirisonda-user") ||
+        localStorage.getItem("leirisonda-session-user");
+      if (localUser) {
+        try {
+          return JSON.parse(localUser) as UserProfile;
+        } catch (error) {
+          console.error("❌ Error parsing local user:", error);
+          return null;
+        }
+      }
+      return null;
+    }
 
     try {
       if (this.db) {
