@@ -486,7 +486,7 @@ export const FirebaseDebugUtility: React.FC = () => {
                       rel="noopener noreferrer"
                       className="flex items-center w-full px-3 py-2 bg-purple-50 text-purple-700 rounded text-sm hover:bg-purple-100"
                     >
-                      <Storage className="h-4 w-4 mr-2" />
+                      <HardDrive className="h-4 w-4 mr-2" />
                       Open Storage
                     </a>
                   </div>
