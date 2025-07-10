@@ -1,20 +1,9 @@
-// Load polyfills first
-import "./polyfills";
-
-// Block Firestore initialization before anything else
-import "./utils/firestoreInterceptor";
-
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
-// Restauração imediata de utilizadores
-import "./utils/immediateUserRestore";
-
-// Firestore error monitoring
-import "./utils/firestoreErrorCheck";
+console.log("🚀 Main.tsx loaded - starting app");
 
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
