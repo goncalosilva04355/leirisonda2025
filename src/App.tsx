@@ -1251,7 +1251,7 @@ RESUMO EXECUTIVO:
 
 ESTAT��STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç�����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç����es Conclu����das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -5883,7 +5883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten����es
+                        <strong>{maintenance.length}</strong> manutenç��es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -7416,7 +7416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec��ficas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -8879,32 +8879,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🧪 Running isolated Firebase test...");
-                const { testIsolatedFirebase, createFreshFirebaseInstance } =
-                  await import("./utils/isolatedFirebaseTest");
+                console.log("🔍 Testing optional Firestore...");
+                const { createOptionalFirestore } = await import(
+                  "./utils/optionalFirestore"
+                );
 
-                // First try the isolated test
-                const results = await testIsolatedFirebase();
-                console.log("📊 Isolated Firebase Test Results:", results);
+                const result = await createOptionalFirestore();
+                console.log("📊 Optional Firestore Result:", result);
 
-                if (!results.firestore) {
-                  // If that fails, try completely fresh instance
-                  console.log("🆕 Trying fresh Firebase instance...");
-                  const freshResult = await createFreshFirebaseInstance();
-                  console.log("📊 Fresh Instance Result:", freshResult);
-
-                  if (freshResult.success) {
-                    alert(
-                      `✅ SUCCESS!\nFresh Firebase instance working!\nProject: ${freshResult.project}\nFirestore: ✅ Working`,
-                    );
-                  } else {
-                    alert(
-                      `❌ BOTH TESTS FAILED\n\nIsolated Test:\n- Project: ${results.project}\n- Firestore: ${results.firestore}\n- Errors: ${results.errors.join(", ")}\n\nFresh Instance:\n- Error: ${freshResult.error}`,
-                    );
-                  }
-                } else {
+                if (result.available) {
                   alert(
-                    `✅ SUCCESS!\nIsolated Firebase test passed!\nProject: ${results.project}\nFirestore: ✅ Working`,
+                    `✅ FIRESTORE WORKING!\n\n${result.message}\n\nYour app is fully functional!`,
+                  );
+                } else {
+                  const projectId = "leiria-1cfc9";
+                  alert(
+                    `⚠️ FIRESTORE NOT ENABLED\n\n${result.message}\n\nTO ENABLE FIRESTORE:\n1. Go to: https://console.firebase.google.com/project/${projectId}/firestore\n2. Click "Create database"\n3. Choose "Test mode"\n4. Select "europe-west1"\n5. Click "Done"\n\nYour app works without Firestore, but you'll need it for data storage.`,
                   );
                 }
               }}
