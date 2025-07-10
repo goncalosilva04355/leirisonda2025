@@ -1,0 +1,48 @@
+/**
+ * Serviço Firebase-Only - DESABILITADO
+ * Remove dependência do localStorage
+ * Sistema simplificado usando apenas Firebase como fonte única da verdade
+ */
+
+import {
+  collection,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+  getDoc,
+} from "firebase/firestore";
+import { UnifiedSafeFirebase } from "../firebase/unifiedSafeFirebase";
+
+export class FirebaseOnlyService {
+  private static db: any = null;
+
+  // Inicializar conexão com Firebase usando sistema unificado
+  static async initialize(): Promise<boolean> {
+    try {
+      console.log("🔄 FirebaseOnlyService usando UnifiedSafeFirebase...");
+      const success = await UnifiedSafeFirebase.initialize();
+
+      if (success) {
+        this.db = await UnifiedSafeFirebase.getDB();
+        if (this.db) {
+          console.log("✅ FirebaseOnlyService inicializado com UnifiedSafe");
+          return true;
+        }
+      }
+
+      console.error("❌ Firebase não disponível via UnifiedSafe");
+      return false;
+    } catch (error) {
+      console.error("❌ Erro ao inicializar Firebase via UnifiedSafe:", error);
+      return false;
+    }
+  }
+
+  // Rest of the file...
+}
