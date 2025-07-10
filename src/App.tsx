@@ -1111,7 +1111,7 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    console.log("��� Initializing notifications...");
+    // console.log("��� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
       console.log("������ Current notification permission:", permission);
@@ -10232,7 +10232,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Diâmetro da Coluna
+                                Di��metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
