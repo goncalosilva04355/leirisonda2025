@@ -2779,7 +2779,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras Atribuídas */}
+                {/* Lista das Últimas 3 Obras */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
                   const assignedWorks = works
@@ -4519,7 +4519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                🔄 Recarregar Utilizadores
+                                ���� Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -8701,7 +8701,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observa����ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -9301,7 +9301,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
