@@ -8462,7 +8462,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div className="relative">
-        <FirebaseDebugUtility />
+        <SimpleFirebaseDebug />
         <LoginPage
           onLogin={async (email: string, password: string) => {
             console.log("🔐 Login attempt for:", email);
@@ -8920,7 +8920,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In������cio
+                          Data de In����cio
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
