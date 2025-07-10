@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Settings, Bug } from "lucide-react";
-import LoginDebugHelper from "../components/LoginDebugHelper";
 
 interface LoginPageProps {
   onLogin: (
