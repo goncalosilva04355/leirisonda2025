@@ -421,7 +421,7 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `���️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
@@ -3975,7 +3975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ������‍🔧 {maint.technician}
+                                �������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5184,7 +5184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Diagnóstico de Permissões */}
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                   <h3 className="text-sm font-medium text-yellow-800 mb-2">
-                    🔍 Diagnóstico de Permissões
+                    🔍 Diagn��stico de Permissões
                   </h3>
                   <div className="text-xs text-yellow-700 space-y-1">
                     <div>Usuário: {currentUser?.name || "Não logado"}</div>
@@ -8047,8 +8047,8 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠���� Nenhum utilizador encontrado. Vá à Área
-                                de Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
+                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -9682,6 +9682,78 @@ Super Admin: ${currentUser?.role === "super_admin"}
                 )}
 
                 {/* Localizações - Para super_admin e admin */}
+                {/* Clientes */}
+                {hasPermission("clientes", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("clientes");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "clientes"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Users className="h-5 w-5" />
+                    <span>Clientes</span>
+                  </button>
+                )}
+
+                {/* Relatórios */}
+                {hasPermission("relatorios", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("relatorios");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "relatorios"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <BarChart3 className="h-5 w-5" />
+                    <span>Relatórios</span>
+                  </button>
+                )}
+
+                {/* Configurações */}
+                <button
+                  onClick={() => {
+                    navigateToSection("configuracoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "configuracoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Settings className="h-5 w-5" />
+                  <span>Configurações</span>
+                </button>
+
+                {/* Gestão de Utilizadores - Para super_admin e admin */}
+                {(currentUser?.role === "super_admin" ||
+                  currentUser?.role === "admin") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("utilizadores");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "utilizadores"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <UserPlus className="h-5 w-5" />
+                    <span>Utilizadores</span>
+                  </button>
+                )}
+
+                {/* Localizações - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
                   currentUser?.role === "admin") && (
                   <button
@@ -9696,7 +9768,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                     }`}
                   >
                     <MapPin className="h-5 w-5" />
-                    <span>Localizacoes</span>
+                    <span>Localizações</span>
                   </button>
                 )}
               </nav>
