@@ -353,7 +353,7 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
-  const autoSyncData = useAutoSyncSafe();
+  const autoSyncData = useAutoSyncSimple();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
@@ -5901,7 +5901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>���� Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -6752,7 +6752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    ��� Cliente:
+                                    �� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.clientName || work.client}
@@ -8414,7 +8414,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "��� Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder �� gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
