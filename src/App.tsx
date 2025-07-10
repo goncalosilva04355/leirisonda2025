@@ -8773,6 +8773,94 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span>Localizacoes</span>
                   </button>
                 )}
+
+                {/* Utilizadores */}
+                {hasPermission("utilizadores", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("utilizadores");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "utilizadores"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <UserCheck className="h-5 w-5" />
+                    <span>Utilizadores</span>
+                  </button>
+                )}
+
+                {/* Relatórios */}
+                {hasPermission("relatorios", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("relatorios");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "relatorios"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <BarChart3 className="h-5 w-5" />
+                    <span>Relatorios</span>
+                  </button>
+                )}
+
+                {/* Clientes */}
+                {hasPermission("clientes", "view") && (
+                  <button
+                    onClick={() => {
+                      navigateToSection("clientes");
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      activeSection === "clientes"
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Users className="h-5 w-5" />
+                    <span>Clientes</span>
+                  </button>
+                )}
+
+                {/* Configurações */}
+                <button
+                  onClick={() => {
+                    navigateToSection("configuracoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "configuracoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Settings className="h-5 w-5" />
+                  <span>Configuracoes</span>
+                </button>
+
+                {/* Administração - Super Admin apenas */}
+                {currentUser?.role === "super_admin" && (
+                  <button
+                    onClick={() => {
+                      setShowAdminLogin(true);
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                      showAdminLogin || isAdminAuthenticated
+                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    <Shield className="h-5 w-5" />
+                    <span>Administracao</span>
+                  </button>
+                )}
               </nav>
 
               {/* User Section */}
