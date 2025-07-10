@@ -76,11 +76,45 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       return;
     }
 
+    // Atualizar sistema de AuthorizedUsers
     const updatedUsers = [
       ...users,
-      { ...newUser, email: newUser.email.toLowerCase() },
+      {
+        email: newUser.email.toLowerCase(),
+        name: newUser.name,
+        role: newUser.role,
+      },
     ];
     saveUsers(updatedUsers);
+
+    // Adicionar ao sistema principal de utilizadores (com password)
+    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const newMainUser = {
+      id: Date.now(),
+      name: newUser.name,
+      email: newUser.email.toLowerCase(),
+      password: newUser.password,
+      role: newUser.role,
+      permissions: {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        clientes: { view: true, create: true, edit: true, delete: true },
+      },
+      active: true,
+      createdAt: new Date().toISOString(),
+    };
+
+    mainUsers.push(newMainUser);
+    localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+    // Triggerar evento para atualizar outros componentes
+    window.dispatchEvent(new CustomEvent("usersUpdated"));
+
+    console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+
     setNewUser({ email: "", name: "", role: "technician", password: "" });
     setShowAddForm(false);
     setErrors("");
