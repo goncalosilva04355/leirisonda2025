@@ -739,7 +739,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠️ Passo 3: Erro nas operações Firestore:",
+                "⚠️ Passo 3: Erro nas operaç��es Firestore:",
                 writeError,
               );
               console.log(
@@ -2082,42 +2082,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     { id: "obras", icon: Building2, label: "Obras", path: "/obras" },
     { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
     {
-      id: "nova-manutencao",
+      id: "manutencoes",
       icon: Wrench,
+      label: "Manutenções",
+      path: "/manutencoes",
+    },
+    {
+      id: "nova-manutencao",
+      icon: Plus,
       label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
-      id: "futuras-manutencoes",
+      id: "piscinas",
       icon: Waves,
       label: "Piscinas",
       path: "/piscinas",
     },
     {
-      id: "utilizadores",
-      icon: UserCheck,
-      label: "Utilizadores",
-      path: "/utilizadores",
-    },
-    {
-      id: "relatorios",
-      icon: BarChart3,
-      label: "Relatorios",
-      path: "/relatorios",
-    },
-    { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
-    {
-      id: "configuracoes",
-      icon: Settings,
-      label: "Configuracoes",
-      path: "/configuracoes",
-    },
-    {
-      id: "admin",
-      icon: Shield,
-      label: "Administração",
-      path: "/admin",
-      requiresAuth: true,
+      id: "localizacoes",
+      icon: MapPin,
+      label: "Localizações",
+      path: "/localizacoes",
     },
   ];
 
@@ -3316,7 +3302,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç��o</span>
+                      <span>Nova Manutenç����o</span>
                     </button>
                   </div>
                 </div>
@@ -5177,7 +5163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�������o criada para nova piscina:",
+                                "Futura manutenç��������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5540,7 +5526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentação",
+                          "Verificação alimenta��ão",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
