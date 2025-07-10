@@ -6,11 +6,11 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
-// Configuração Firebase
+// Configuração Firebase - Updated to match correct project
 const firebaseConfig = {
   apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
   authDomain: "leiria-1cfc9.firebaseapp.com",
-  projectId: "leiria-1cfc9",
+  projectId: "leiria-1cfc9", // Using leiria-1cfc9 where Firestore is enabled
   storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
   appId: "1:632599887141:web:6027bf35a9d908b264eecc",
