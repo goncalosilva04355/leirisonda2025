@@ -3373,7 +3373,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Jo��o Silva"
+                            placeholder="Ex: João Silva"
                             required
                           />
                         </div>
@@ -5542,7 +5542,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               • As notificaç����es funcionam apenas com HTTPS
                             </li>
                             <li>
-                              ��� Certifique-se de que permite notifica��ões no
+                              • Certifique-se de que permite notifica��ões no
                               seu navegador
                             </li>
                             <li>
@@ -9033,7 +9033,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Seç��es Expandidas */}
+                    {/* Detalhes Completos - Seções Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
