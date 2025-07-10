@@ -181,6 +181,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
   const [activeAdminTab, setActiveAdminTab] = useState("relatorios");
+  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
   // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
@@ -3035,7 +3036,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>���</span>
+                                      <span>�����</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -4857,7 +4858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa���ões sobre a obra..."
                           />
                         </div>
 
@@ -6445,7 +6446,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relatórios do Sistema
+                            Relat��rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -8879,7 +8880,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localização da piscina"
+                          placeholder="Localizaç��o da piscina"
                           required
                         />
                       </div>
