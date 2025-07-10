@@ -310,7 +310,31 @@ function App() {
   );
 
   // Funções de compatibilidade simplificadas
-  const addPool = (data: any) => addPiscina(data);
+  const addPool = async (data: any) => {
+    try {
+      console.log("🏊 addPool iniciado com Firestore ativo");
+
+      const firestoreId = await firestoreService.createPiscina(data);
+
+      if (firestoreId) {
+        console.log("✅ Piscina criada no Firestore:", firestoreId);
+
+        // Sincronizar com sistema universal
+        try {
+          await addPiscina(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        return await addPiscina(data);
+      }
+    } catch (error) {
+      console.error("❌ Erro no sistema de piscinas:", error);
+      return await addPiscina(data);
+    }
+  };
   const addWork = async (data: any) => {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
@@ -3291,7 +3315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção agendada
+                        Nenhuma manutenç��o agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -6002,7 +6026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>�� Hist��rico de serviços</li>
+                        <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -6325,7 +6349,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  �� {client.phone}
+                                  📞 {client.phone}
                                 </button>
                               </div>
                               <div>
