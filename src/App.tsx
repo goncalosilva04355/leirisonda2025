@@ -417,7 +417,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("��️ Erro na sincronização universal:", syncError);
+          console.warn("����� Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -457,7 +457,7 @@ function App() {
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from Firestore + localStorage...");
+      console.log("��� Loading users from Firestore + localStorage...");
 
       try {
         // Aguardar Firestore estar pronto
@@ -1850,7 +1850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠����� Maps redirect is disabled");
+        console.warn("⚠��� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -2474,7 +2474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             )}
                             <div className="flex items-center space-x-2">
                               <span className="text-sm font-medium text-gray-600">
-                                ������ Trabalho:
+                                ���� Trabalho:
                               </span>
                               <span className="text-sm text-gray-900">
                                 {work.workPerformed ||
@@ -5975,7 +5975,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Interven��ão</span>
+                        <span>Guardar Intervenção</span>
                       </button>
                     </div>
                   </form>
@@ -6383,7 +6383,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>🔍 Estado e localização</li>
+                        <li>���� Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
                         <li>• Histórico de manuten������es</li>
                         <li>• Próximas interven��ões</li>
