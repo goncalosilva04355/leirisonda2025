@@ -5321,7 +5321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observa����es Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -8602,8 +8602,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         >
           <SimpleFirebaseDebug />
         </Suspense>
-        */}
-                        <Suspense
+                */}
+        <Suspense
           fallback={
             <div className="min-h-screen bg-blue-600 flex items-center justify-center text-white">
               A carregar...
