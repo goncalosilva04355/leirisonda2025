@@ -58,6 +58,7 @@ import { isFirebaseReady } from "./firebase/config";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
+import { FirebaseDebugUtility } from "./components/FirebaseDebugUtility";
 
 import { useDataSyncSafe } from "./hooks/useDataSyncSafe";
 import { useUniversalDataSyncSafe } from "./hooks/useUniversalDataSyncSafe";
@@ -7765,7 +7766,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten����o
+                        Editar Manuten�����o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
