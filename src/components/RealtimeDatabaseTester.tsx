@@ -22,6 +22,7 @@ interface RealtimeTestResult {
 export const RealtimeDatabaseTester: React.FC = () => {
   const [testResult, setTestResult] = useState<RealtimeTestResult | null>(null);
   const [testing, setTesting] = useState(false);
+  const [showRulesGuide, setShowRulesGuide] = useState(false);
 
   const runRealtimeTest = async () => {
     setTesting(true);
