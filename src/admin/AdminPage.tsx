@@ -32,7 +32,7 @@ import MigrationTester from "../components/MigrationTester";
 import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
 import { LoginFixer } from "../components/LoginFixer";
 import { DataBackupManager } from "../components/DataBackupManager";
-import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
+
 import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
