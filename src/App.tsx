@@ -77,7 +77,7 @@ import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSafe } from "./hooks/useAutoSyncSafe";
+import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
 import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
@@ -5901,7 +5901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>�� Equipas responsáveis</li>
-                        <li>��� Estados de progresso</li>
+                        <li>���� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -6752,7 +6752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    �� Cliente:
+                                    ��� Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.clientName || work.client}
