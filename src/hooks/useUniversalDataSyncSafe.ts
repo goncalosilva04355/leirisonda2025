@@ -284,7 +284,7 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
   }, []);
 
   const resetSync = useCallback(async (): Promise<void> => {
-    console.log("resetSync called");
+    // console.log("resetSync called");
   }, []);
 
   return useMemo(
