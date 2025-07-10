@@ -320,22 +320,30 @@ export const UserPermissionsManager: React.FC = () => {
     setError(null);
 
     try {
-      // Check if Firebase/Firestore is properly initialized
-      if (
-        db &&
-        typeof db === "object" &&
-        db.constructor &&
-        db.constructor.name !== "Object"
-      ) {
-        // Load from Firebase
-        const usersCollection = collection(db, "users");
-        const usersSnapshot = await getDocs(usersCollection);
-        const firebaseUsers = usersSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          uid: doc.id,
-        })) as UserProfile[];
-        setUsers(firebaseUsers);
-      } else {
+      let firebaseSuccess = false;
+
+      // Try to load from Firebase first
+      if (db) {
+        try {
+          // Attempt to create collection reference and get data
+          const usersCollection = collection(db, "users");
+          const usersSnapshot = await getDocs(usersCollection);
+          const firebaseUsers = usersSnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            uid: doc.id,
+          })) as UserProfile[];
+          setUsers(firebaseUsers);
+          firebaseSuccess = true;
+          console.log("✅ Users loaded from Firebase successfully");
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ Firebase/Firestore error, falling back to local storage:",
+            firestoreError,
+          );
+        }
+      }
+
+      if (!firebaseSuccess) {
         // Fallback to mock users if Firebase not available
         const mockUsers = localStorage.getItem("mock-users");
         if (mockUsers) {
