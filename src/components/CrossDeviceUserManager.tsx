@@ -122,7 +122,7 @@ export const CrossDeviceUserManager: React.FC = () => {
             };
           default: // technician
             return {
-              obras: { view: true, create: false, edit: true, delete: false },
+              obras: { view: true, create: true, edit: true, delete: false },
               manutencoes: {
                 view: true,
                 create: true,
@@ -131,7 +131,7 @@ export const CrossDeviceUserManager: React.FC = () => {
               },
               piscinas: {
                 view: true,
-                create: false,
+                create: true,
                 edit: true,
                 delete: false,
               },

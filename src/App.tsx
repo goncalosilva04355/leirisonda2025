@@ -1258,7 +1258,7 @@ function App() {
 
   const handleSaveIntervention = () => {
     // SECURITY: Check if user has permission to create maintenance
-    if (!currentUser?.permissions?.manutencoes?.create) {
+    if (!hasPermission("manutencoes", "create")) {
       alert(
         "N��o tem permissão para criar manutenç���es. Contacte o administrador.",
       );
@@ -2215,7 +2215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `�����️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `������️ Utilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
             );
           }
         } catch (syncError) {
@@ -4791,7 +4791,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create works
-                          if (!currentUser?.permissions?.obras?.create) {
+                          if (!hasPermission("obras", "create")) {
                             alert(
                               "Não tem permissão para criar obras. Contacte o administrador.",
                             );
@@ -5081,6 +5081,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {hasPermission("piscinas", "create")
                         ? "✅ Sim"
                         : "❌ Não"}
+                    </div>
+                    <div>
+                      Obras - Create:{" "}
+                      {hasPermission("obras", "create") ? "✅ Sim" : "❌ Não"}
                     </div>
                   </div>
                   <button
@@ -5552,7 +5556,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create pools
-                          if (!currentUser?.permissions?.piscinas?.create) {
+                          if (!hasPermission("piscinas", "create")) {
                             alert(
                               "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
@@ -5627,7 +5631,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutenção programada durante criação da piscina",
+                                  "Manuten��ão programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6220,7 +6224,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
@@ -6540,7 +6544,7 @@ Super Admin: ${currentUser?.role === "super_admin"}
                             </p>
                             <ul className="text-red-700 text-sm space-y-1 mb-4">
                               <li>
-                                • Todas as obras ({works.length} registos)
+                                �� Todas as obras ({works.length} registos)
                               </li>
                               <li>
                                 • Todas as manutenções ({maintenance.length}{" "}

@@ -103,14 +103,9 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
           obras: { view: true, create: true, edit: true, delete: true },
           manutencoes: { view: true, create: true, edit: true, delete: true },
           piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: {
-            view: true,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: true, edit: true, delete: false },
-          clientes: { view: true, create: true, edit: true, delete: false },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
         };
       case "manager":
         return {
@@ -128,9 +123,9 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
         };
       default: // technician
         return {
-          obras: { view: true, create: false, edit: true, delete: false },
+          obras: { view: true, create: true, edit: true, delete: false },
           manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: false, edit: true, delete: false },
+          piscinas: { view: true, create: true, edit: true, delete: false },
           utilizadores: {
             view: false,
             create: false,
@@ -377,14 +372,9 @@ export const UserPermissionsManager: React.FC = () => {
           obras: { view: true, create: true, edit: true, delete: true },
           manutencoes: { view: true, create: true, edit: true, delete: true },
           piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: {
-            view: true,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: true, edit: true, delete: false },
-          clientes: { view: true, create: true, edit: true, delete: false },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
         };
       case "manager":
         return {
@@ -402,9 +392,9 @@ export const UserPermissionsManager: React.FC = () => {
         };
       default:
         return {
-          obras: { view: true, create: false, edit: true, delete: false },
+          obras: { view: true, create: true, edit: true, delete: false },
           manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: false, edit: true, delete: false },
+          piscinas: { view: true, create: true, edit: true, delete: false },
           utilizadores: {
             view: false,
             create: false,
