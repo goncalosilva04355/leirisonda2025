@@ -3973,7 +3973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ões Específicas do Furo */}
+                          {/* Observa��ões Espec��ficas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -5945,7 +5945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Clientes
+                          Relat��rio de Clientes
                         </h3>
                         <p className="text-sm text-gray-600">
                           Base de dados de clientes
@@ -8879,22 +8879,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </button>
             <button
               onClick={async () => {
-                console.log("🔍 Testing optional Firestore...");
-                const { createOptionalFirestore } = await import(
-                  "./utils/optionalFirestore"
-                );
+                console.log("🧹 Clearing old Firebase data and refreshing...");
+                const { clearOldFirebaseData, forceFirebaseRefresh } =
+                  await import("./utils/clearOldFirebaseData");
 
-                const result = await createOptionalFirestore();
-                console.log("📊 Optional Firestore Result:", result);
+                const cleared = clearOldFirebaseData();
 
-                if (result.available) {
+                if (cleared > 0) {
                   alert(
-                    `✅ FIRESTORE WORKING!\n\n${result.message}\n\nYour app is fully functional!`,
+                    `🧹 CLEARING OLD DATA\n\nCleared ${cleared} old Firebase entries.\n\nThe page will reload to apply changes with the correct project (leiria-1cfc9).`,
                   );
+                  await forceFirebaseRefresh();
                 } else {
-                  const projectId = "leiria-1cfc9";
                   alert(
-                    `⚠️ FIRESTORE NOT ENABLED\n\n${result.message}\n\nTO ENABLE FIRESTORE:\n1. Go to: https://console.firebase.google.com/project/${projectId}/firestore\n2. Click "Create database"\n3. Choose "Test mode"\n4. Select "europe-west1"\n5. Click "Done"\n\nYour app works without Firestore, but you'll need it for data storage.`,
+                    "🔍 No old Firebase data found. If still showing wrong project, try refreshing manually.",
                   );
                 }
               }}
