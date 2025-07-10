@@ -64,8 +64,6 @@ import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/createSampleData"; // Criar dados de exemplo para demonstração
-import "./utils/autoMigrationDemo"; // Passo 3: Migração automática de demonstração
 
 // SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
@@ -1614,7 +1612,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
+            `🔔 Nova Obra Atribu��da!\n\n📋 ${workTitle}\n\n��� Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configura����es para receber alertas autom��ticos.`,
           );
         }, 1000);
       }
@@ -5172,7 +5170,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç������o criada para nova piscina:",
+                                "Futura manutenç�������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -9245,7 +9243,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enableMapsRedirect}
                         >
-                          📍 {selectedWork.location}
+                          �� {selectedWork.location}
                         </button>
                       </div>
                       <div>
