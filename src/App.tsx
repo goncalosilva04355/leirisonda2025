@@ -313,19 +313,31 @@ function App() {
   const addPool = (data: any) => addPiscina(data);
   const addWork = async (data: any) => {
     try {
-      console.log("🔧 addWork iniciado com Firebase ativo");
+      console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // Use Firebase through universal sync but with better error handling
-      const result = await addObra(data);
-      // Log removed for performance
+      // Usar o novo FirestoreService
+      const firestoreId = await firestoreService.createObra(data);
 
-      // Delay removed for faster performance
+      if (firestoreId) {
+        console.log("✅ Obra criada no Firestore:", firestoreId);
 
-      return result;
+        // Sincronizar com sistema universal também
+        try {
+          await addObra(data);
+        } catch (syncError) {
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
+        }
+
+        return firestoreId;
+      } else {
+        // Fallback para sistema atual se Firestore falhar
+        console.warn("⚠️ Firestore não disponível, usando sistema atual");
+        return await addObra(data);
+      }
     } catch (error) {
-      console.error("❌ Erro no Firebase, tentando fallback:", error);
+      console.error("❌ Erro no sistema de obras:", error);
 
-      // Fallback to localStorage if Firebase fails
+      // Fallback final para localStorage
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       const newWork = {
         ...data,
@@ -337,7 +349,7 @@ function App() {
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        // Log removed for performance
+        console.log("💾 Obra guardada no localStorage como fallback");
       }
 
       return newWork.id;
@@ -5990,7 +6002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>�� Histórico de serviços</li>
+                        <li>�� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -6313,7 +6325,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  📞 {client.phone}
+                                  �� {client.phone}
                                 </button>
                               </div>
                               <div>
