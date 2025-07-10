@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import WorkAssignmentNotificationsSimple from "./components/WorkAssignmentNotificationsSimple";
+import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 import FirestoreStatusIndicator from "./components/FirestoreStatusIndicator";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -4604,7 +4604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa��ões sobre a obra..."
+                            placeholder="Observa���ões sobre a obra..."
                           />
                         </div>
 
