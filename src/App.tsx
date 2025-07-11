@@ -397,7 +397,7 @@ function App() {
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
-      localStorage.setItem(
+      safeLocalStorage.setItem(
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
@@ -801,7 +801,7 @@ function App() {
   const isWorkAssignedToCurrentUser = (work: any) => {
     if (!currentUser) return false;
 
-    // Se é super admin (Gonçalo), mostrar todas as obras
+    // Se é super admin (Gon��alo), mostrar todas as obras
     if (
       currentUser.role === "super_admin" ||
       currentUser.email === "gongonsilva@gmail.com"
@@ -2140,7 +2140,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -3427,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Próximas Manuten��ões
                     </h2>
                   </div>
 
@@ -8298,7 +8298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>���� Equipas responsáveis</li>
+                        <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
