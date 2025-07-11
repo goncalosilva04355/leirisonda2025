@@ -1201,7 +1201,7 @@ function App() {
         // Verificar se auto-login está ativo
         const autoLoginEnabled = safeLocalStorage.getItem("autoLoginEnabled");
         const rememberMe = safeLocalStorage.getItem("rememberMe");
-        const savedCredentials = sessionStorage.getItem(
+        const savedCredentials = safeSessionStorage.getItem(
           "savedLoginCredentials",
         );
 
@@ -8274,7 +8274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observaç��es</li>
+                        <li>• Estados e observações</li>
                       </ul>
                     </div>
                     <button
@@ -11518,7 +11518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ����� {selectedWork.contact}
+                            ������ {selectedWork.contact}
                           </button>
                         )}
                       </div>
