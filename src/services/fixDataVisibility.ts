@@ -6,7 +6,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { getDB } from "../firebase/basicConfig";
 
 /**
  * Serviço para corrigir dados existentes que podem estar isolados por utilizador
