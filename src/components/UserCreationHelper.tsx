@@ -59,7 +59,7 @@ export const UserCreationHelper: React.FC<UserCreationHelperProps> = ({
       }
 
       // Create new user
-      const result = await authService.register(
+      const result = await robustLoginService.register(
         formData.email,
         formData.password,
         formData.name,
