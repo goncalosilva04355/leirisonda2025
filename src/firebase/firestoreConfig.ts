@@ -72,6 +72,10 @@ export function isFirestoreReady(): boolean {
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
+  console.log("🚫 BYPASS: Teste Firestore desativado - modo local ativo");
+  return false;
+
+  /* CÓDIGO ORIGINAL COMENTADO:
   try {
     const db = getFirebaseFirestore();
     if (!db) {
@@ -85,6 +89,7 @@ export async function testFirestore(): Promise<boolean> {
     console.warn("⚠️ Teste Firestore falhou:", error);
     return false;
   }
+  */
 }
 
 // Inicializar Firestore automaticamente após um pequeno delay
