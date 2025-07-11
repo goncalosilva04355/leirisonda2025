@@ -168,7 +168,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "��� Não foi possível reparar a persistência automaticamente",
+              "⚠️ Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
