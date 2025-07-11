@@ -684,11 +684,12 @@ function App() {
         // Aguardar Firestore estar pronto
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        if (isFirestoreReady()) {
+        if (false) {
+          // Disabled Firestore loading
           console.log("📱 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
-          const firestoreUsers = await firestoreService.getUtilizadores();
+          // const firestoreUsers = await firestoreService.getUtilizadores();
 
           if (firestoreUsers.length > 0) {
             console.log(
