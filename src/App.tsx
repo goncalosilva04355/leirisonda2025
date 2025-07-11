@@ -285,7 +285,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificaç��es automáticas desabilitadas para resolver instabilidade
+    // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
