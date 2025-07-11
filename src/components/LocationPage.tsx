@@ -43,7 +43,7 @@ export const LocationPage: React.FC<LocationPageProps> = ({
       </div>
 
       {/* User Location Map */}
-      <UserLocationMap currentUser={currentUser} />
+      <UserLocationMap currentUser={currentUser} allUsers={allUsers} />
     </div>
   );
 };
