@@ -2896,7 +2896,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return true; // Mostrar todas as obras (não apenas atribuídas)
+                            return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
                           });
                           return assignedWorks.length;
                         })()}
