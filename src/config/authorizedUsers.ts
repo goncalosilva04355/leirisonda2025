@@ -58,11 +58,13 @@ export function getAuthorizedUser(email: string): AuthorizedUser | null {
   return isEmailAuthorized(email);
 }
 
-// Função para sincronizar authorizedUsers para app-users
-function syncToAppUsers(authorizedUsers: AuthorizedUser[]): void {
+// Função para sincronizar authorizedUsers para app-users E Firestore
+async function syncToAppUsers(
+  authorizedUsers: AuthorizedUser[],
+): Promise<void> {
   try {
     const appUsers = authorizedUsers.map((user, index) => ({
-      id: index + 1,
+      id: (index + 1).toString(),
       name: user.name,
       email: user.email,
       active: true,
@@ -79,8 +81,25 @@ function syncToAppUsers(authorizedUsers: AuthorizedUser[]): void {
       createdAt: new Date().toISOString(),
     }));
 
+    // Sincronizar para localStorage
     localStorage.setItem("app-users", JSON.stringify(appUsers));
-    console.log("✅ app-users sincronizados:", appUsers.length);
+    console.log("✅ app-users sincronizados (localStorage):", appUsers.length);
+
+    // Sincronizar para Firestore se disponível
+    try {
+      const { firestoreService } = await import("../services/firestoreService");
+
+      // Trigger Firebase sync que irá fazer a sincronização bidirecional
+      await firestoreService.getUtilizadores();
+      console.log(
+        "✅ Sincronização Firebase/Firestore ativada para utilizadores",
+      );
+    } catch (error) {
+      console.warn(
+        "⚠️ Firebase não disponível, utilizando apenas localStorage:",
+        error,
+      );
+    }
   } catch (error) {
     console.error("❌ Erro ao sincronizar app-users:", error);
   }
