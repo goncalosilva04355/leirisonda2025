@@ -10,6 +10,7 @@ export interface UserPermissions {
 }
 
 export interface UserProfile {
+  id?: string | number;
   uid: string;
   email: string;
   name: string;
