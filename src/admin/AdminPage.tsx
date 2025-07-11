@@ -28,6 +28,7 @@ import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import UserManager from "../components/UserManager";
 import MigrationTester from "../components/MigrationTester";
+import { UserDiagnostic } from "../components/UserDiagnostic";
 
 import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
 import { LoginFixer } from "../components/LoginFixer";
