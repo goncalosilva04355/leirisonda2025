@@ -389,7 +389,7 @@ function App() {
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, n��o enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
         );
         return;
       }
@@ -541,7 +541,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notificaç��o para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -1175,7 +1175,7 @@ function App() {
     // console.log("���� Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("������ Current notification permission:", permission);
+      console.log("������� Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -6691,7 +6691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
-                            Gerir configurações da aplica��ão, notificações e
+                            Gerir configurações da aplicação, notificações e
                             preferências.
                           </p>
                         </div>
