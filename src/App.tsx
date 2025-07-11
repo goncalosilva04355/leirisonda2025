@@ -561,7 +561,7 @@ function App() {
       const firestoreId = await firestoreService.createObra(data);
 
       if (firestoreId) {
-        console.log("��� Obra criada no Firestore:", firestoreId);
+        console.log("✅ Obra criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal também
         try {
@@ -1026,7 +1026,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas opera��€es Firestore:",
+                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -4157,7 +4157,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                €aint.technician}
+                                                                 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -6632,7 +6632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔧 Trabalhos realizados</li>
                                 <li>👷 Técnicos responsáveis</li>
-                                <li>• Datas e durações</li>
+                                <li>• Datas e duraç��es</li>
                                 <li>• Estados e observações</li>
                               </ul>
                             </div>
@@ -8258,7 +8258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  📞 {client.phone}
+                                  ��� {client.phone}
                                 </button>
                               </div>
                               <div>
