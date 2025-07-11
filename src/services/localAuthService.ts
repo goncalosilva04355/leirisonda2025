@@ -143,6 +143,13 @@ class LocalAuthService {
     try {
       this.currentUser = null;
       this.clearUserFromStorage();
+
+      // Limpar configurações de auto-login
+      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("autoLoginEnabled");
+      sessionStorage.removeItem("savedLoginCredentials");
+      console.log("🔒 Configurações de auto-login removidas");
+
       this.notifyListeners();
       console.log("✅ Local logout successful");
     } catch (error) {
