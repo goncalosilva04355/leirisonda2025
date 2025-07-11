@@ -223,7 +223,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("��� Firebase handles auth state automatically");
+    console.log("€ Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -594,7 +594,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificaç��o para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -1110,7 +1110,7 @@ function App() {
     status: "completed",
   });
 
-  // Initialize authentication state with security checks
+  // Initialize authentication state with auto-login check
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
@@ -11576,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
