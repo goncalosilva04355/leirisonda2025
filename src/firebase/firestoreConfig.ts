@@ -1,6 +1,10 @@
 // Passo 3: Configuração Firestore - base de dados na nuvem
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getFirebaseApp } from "./basicConfig";
+import {
+  getGlobalFirestore,
+  forceInitializeFirestore,
+} from "../utils/firebaseInitFix";
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
