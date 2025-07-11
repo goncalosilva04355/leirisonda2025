@@ -256,7 +256,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       setSyncTest({
         status: "error",
         message: "Erro ao ativar sincronização",
-        details: ["❌ Verifique a configuração Firebase"],
+        details: ["❌ Verifique a configuraç��o Firebase"],
       });
     }
   };
@@ -924,6 +924,44 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   <li>5. Teste com o botão "Testar" ou "Simular"</li>
                   <li>6. Adicione a app ao ecrã inicial (opcional)</li>
                 </ol>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "notifications" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <Bell className="w-16 h-16 text-blue-500 mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  Notificações Push FCM
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Configure Firebase Cloud Messaging para notificações push em
+                  tempo real
+                </p>
+              </div>
+
+              {/* FCM Setup Component */}
+              <FCMNotificationSetup currentUser={currentUser} />
+
+              {/* Info Box */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 className="font-medium text-blue-900 mb-2">
+                  🔔 Como funciona o FCM:
+                </h4>
+                <ul className="text-sm text-blue-800 space-y-1">
+                  <li>
+                    • FCM (Firebase Cloud Messaging) envia notificações push
+                    reais
+                  </li>
+                  <li>• Funciona mesmo com a aplicação fechada</li>
+                  <li>• Cada dispositivo recebe um token único</li>
+                  <li>
+                    • Quando uma obra é atribuída, o FCM envia notificação
+                    automaticamente
+                  </li>
+                  <li>• Fallback para notificações locais se FCM falhar</li>
+                </ul>
               </div>
             </div>
           )}
