@@ -541,7 +541,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            `�� Erro ao enviar notificação para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("�� All mock and test data cleared");
+      console.log("���� All mock and test data cleared");
     };
 
     forceLogout();
@@ -1175,7 +1175,7 @@ function App() {
     // console.log("€Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("��rrent notification permission:", permission);
+      console.log("€rrent notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -1523,7 +1523,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("�� Navigating to dashboard");
+            console.log("📞 Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1824,7 +1824,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -5114,7 +5114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="Jo��o Silva"]',
+                                'input[placeholder*="João Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
@@ -10531,7 +10531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
+                // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
