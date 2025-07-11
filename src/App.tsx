@@ -1541,7 +1541,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("��� Initiating logout process...");
+      console.log("🚪 Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -1676,7 +1676,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -4549,7 +4549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ��️ Nenhum utilizador encontrado. Vá à Área de de
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
                                 Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
@@ -8820,7 +8820,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €k.budget}
+                                                                     €{work.budget}
                                 </div>
                               )}
                             </div>
@@ -10623,7 +10623,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p��gina de login */}
+        {/* Admin Page - tamb��m funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -10948,7 +10948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T���tulo
+                          T��tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
@@ -11084,7 +11084,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? selectedWork.assignedUsers
                                 .map((u) => u.name)
                                 .join(", ")
-                            : selectedWork.assignedTo || "Não atribu��da"}
+                            : selectedWork.assignedTo || "Não atribuída"}
                         </p>
                       </div>
                       {selectedWork.technicians &&
