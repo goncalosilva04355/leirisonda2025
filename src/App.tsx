@@ -988,7 +988,7 @@ function App() {
         const firestoreResult = await testFirestore();
 
         if (firestoreResult) {
-          console.log("��� Passo 3: Firestore ativo e funcional!");
+          console.log("✅ Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
           const db = getFirebaseFirestore();
@@ -5753,7 +5753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G���s</option>
+                          <option value="gas">Aquecimento a G��s</option>
                         </select>
                       </div>
                     </div>
@@ -7830,7 +7830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                                                 <li>• Informações de clientes</li>
-                        <li>• Histórico de manuten€li>
+                                                 <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -10038,7 +10038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Altera��ões
+                        Guardar Alterações
                       </button>
                     </div>
                   </form>
