@@ -988,7 +988,7 @@ function App() {
         const firestoreResult = await testFirestore();
 
         if (firestoreResult) {
-          console.log("✅ Passo 3: Firestore ativo e funcional!");
+          console.log("��� Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
           const db = getFirebaseFirestore();
@@ -4742,7 +4742,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    €ssignedUser.name}
+                                                                         👤 {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5753,7 +5753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G��s</option>
+                          <option value="gas">Aquecimento a G���s</option>
                         </select>
                       </div>
                     </div>
@@ -6632,7 +6632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔧 Trabalhos realizados</li>
                                 <li>👷 Técnicos responsáveis</li>
-                                <li>• Datas e duraç��es</li>
+                                <li>• Datas e durações</li>
                                 <li>• Estados e observações</li>
                               </ul>
                             </div>
@@ -8258,7 +8258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  ��� {client.phone}
+                                  📞 {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -10038,7 +10038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alterações
+                        Guardar Altera��ões
                       </button>
                     </div>
                   </form>
