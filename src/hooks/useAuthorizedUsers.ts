@@ -48,7 +48,7 @@ export function useAuthorizedUsers() {
 
   // Função para atualizar utilizadores
   const updateUsers = (newUsers: AuthorizedUser[]) => {
-    localStorage.setItem("authorizedUsers", JSON.stringify(newUsers));
+    storageUtils.setJson("authorizedUsers", newUsers);
     setUsers(newUsers);
 
     // Disparar evento personalizado para outros componentes
