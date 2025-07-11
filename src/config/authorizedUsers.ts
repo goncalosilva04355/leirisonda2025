@@ -37,7 +37,9 @@ export function getCurrentAuthorizedUsers(): AuthorizedUser[] {
     console.warn("⚠️ Erro ao carregar utilizadores do localStorage:", error);
   }
 
-  console.log("📝 Usando utilizadores padrão");
+  console.log("📝 Inicializando utilizadores padrão no localStorage");
+  // Guardar utilizadores padrão no localStorage para serem detetados pelo diagnóstico
+  localStorage.setItem("authorizedUsers", JSON.stringify(AUTHORIZED_USERS));
   return [...AUTHORIZED_USERS];
 }
 
