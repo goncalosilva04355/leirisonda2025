@@ -223,7 +223,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("€ Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -594,7 +594,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notificaç��o para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -1115,36 +1115,98 @@ function App() {
     console.log("🔒 SECURITY: App initialization started");
 
     // SECURITY: Force complete logout on app start
-    const forceLogout = async () => {
+    const initializeAuth = async () => {
       try {
-        // Clear Firebase auth state
-        await authService.logout();
-        console.log("🔒 Firebase auth cleared");
+        // Verificar se auto-login está ativo
+        const autoLoginEnabled = localStorage.getItem("autoLoginEnabled");
+        const rememberMe = localStorage.getItem("rememberMe");
+        const savedCredentials = sessionStorage.getItem(
+          "savedLoginCredentials",
+        );
+
+        if (
+          autoLoginEnabled === "true" &&
+          rememberMe === "true" &&
+          savedCredentials
+        ) {
+          console.log("🔄 Auto-login detectado, tentando restaurar sessão...");
+
+          try {
+            const credentials = JSON.parse(savedCredentials);
+            if (
+              credentials.email &&
+              credentials.password &&
+              credentials.rememberMe
+            ) {
+              console.log("📧 Tentando auto-login para:", credentials.email);
+
+              const result = await authService.login(
+                credentials.email,
+                credentials.password,
+                true,
+              );
+
+              if (result.success && result.user) {
+                console.log(
+                  "✅ Auto-login bem-sucedido para:",
+                  result.user.email,
+                );
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+                return; // Não fazer logout se auto-login funcionou
+              } else {
+                console.warn("❌ Auto-login falhou:", result.error);
+                // Limpar credenciais inválidas
+                sessionStorage.removeItem("savedLoginCredentials");
+                localStorage.removeItem("autoLoginEnabled");
+                localStorage.removeItem("rememberMe");
+              }
+            }
+          } catch (autoLoginError) {
+            console.error("❌ Erro no auto-login:", autoLoginError);
+            // Limpar credenciais corrompidas
+            sessionStorage.removeItem("savedLoginCredentials");
+            localStorage.removeItem("autoLoginEnabled");
+            localStorage.removeItem("rememberMe");
+          }
+        }
+
+        // Se chegou aqui, fazer logout normal (sem auto-login ou auto-login falhou)
+        console.log("🔒 Iniciando estado não autenticado");
+
+        // Clear Firebase auth state se não há auto-login
+        try {
+          await authService.logout();
+          console.log("🔒 Firebase auth cleared");
+        } catch (error) {
+          console.log("⚠️ Firebase logout error (expected):", error);
+        }
+
+        // Ensure user starts in unauthenticated state se não há auto-login ativo
+        if (!autoLoginEnabled || !rememberMe) {
+          setCurrentUser(null);
+          setIsAuthenticated(false);
+          localStorage.removeItem("currentUser");
+          localStorage.removeItem("isAuthenticated");
+        }
+
+        // Clear all mock and test data
+        localStorage.removeItem("mock-users");
+        localStorage.removeItem("mock-current-user");
+        localStorage.removeItem("test-data");
+        localStorage.removeItem("sample-data");
+
+        console.log("✅ App initialization completed");
+        console.log("🗑️ Mock and test data cleared");
       } catch (error) {
-        console.log("€ Firebase logout error (expected):", error);
+        console.error("❌ Erro na inicialização:", error);
+        // Em caso de erro, forçar logout completo
+        setCurrentUser(null);
+        setIsAuthenticated(false);
       }
-
-      // Ensure user starts in unauthenticated state
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-
-      // Clear any stored auth data
-      localStorage.removeItem("currentUser");
-      sessionStorage.removeItem("savedLoginCredentials");
-
-      // Clear all mock and test data
-      localStorage.removeItem("mock-users");
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("test-data");
-      localStorage.removeItem("sample-data");
-
-      console.log(
-        "🔒 SECURITY: Forced logout completed - manual login required",
-      );
-      console.log("🗑️ All mock and test data cleared");
     };
 
-    forceLogout();
+    initializeAuth();
   }, []);
 
   // Passo 3: Teste completo do Firestore com operações reais
@@ -11514,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
