@@ -57,6 +57,7 @@ export const isFirebaseAuthReady = () => auth !== null;
 // Exports diretos para compatibilidade com imports antigos
 export { auth };
 export { db };
+export { app };
 
 // Inicializar automaticamente
 initializeFirebase();
