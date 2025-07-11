@@ -113,6 +113,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
       const newMainUser = {
         id: Date.now(),
+        uid: `user_${Date.now()}`, // Adicionar uid para compatibilidade
         name: newUser.name,
         email: newUser.email.toLowerCase(),
         password: newUser.password,
@@ -131,6 +132,19 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
       mainUsers.push(newMainUser);
       localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+      // Sincronizar com mock-users para compatibilidade
+      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
+      mockUsers[newMainUser.uid] = {
+        uid: newMainUser.uid,
+        email: newMainUser.email,
+        name: newMainUser.name,
+        role: newMainUser.role,
+        permissions: newMainUser.permissions,
+        active: newMainUser.active,
+        createdAt: newMainUser.createdAt,
+      };
+      localStorage.setItem("mock-users", JSON.stringify(mockUsers));
 
       // Triggerar evento para atualizar outros componentes
       window.dispatchEvent(new CustomEvent("usersUpdated"));
