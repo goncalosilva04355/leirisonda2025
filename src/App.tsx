@@ -235,13 +235,52 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
-  // Firebase ativo como solicitado
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  // SINCRONIZAÇÃO UNIVERSAL - Versão defensiva
+  let universalSync;
+  let dataSync;
+  let firebaseAutoFix;
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  try {
+    universalSync = useUniversalDataSync();
+  } catch (error) {
+    console.warn("⚠️ useUniversalDataSync falhou:", error);
+    universalSync = {
+      obras: [],
+      piscinas: [],
+      manutencoes: [],
+      clientes: [],
+      utilizadores: [],
+      localizacoes: [],
+      notificacoes: [],
+      syncStatus: "idle",
+      lastSync: null,
+      isOnline: true,
+      errors: [],
+      syncAll: () => Promise.resolve(),
+      forceSyncAll: () => Promise.resolve(),
+      resetErrors: () => {},
+      initializeSync: () => Promise.resolve(),
+    };
+  }
+
+  try {
+    dataSync = useDataSyncSimple();
+  } catch (error) {
+    console.warn("⚠️ useDataSyncSimple falhou:", error);
+    dataSync = { syncStatus: "idle", lastSync: null };
+  }
+
+  try {
+    firebaseAutoFix = useAutoFirebaseFix();
+  } catch (error) {
+    console.warn("⚠️ useAutoFirebaseFix falhou:", error);
+    firebaseAutoFix = {
+      isFixing: false,
+      lastFix: null,
+      fixCount: 0,
+      performFix: () => Promise.resolve(),
+    };
+  }
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
@@ -10323,7 +10362,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç€s e próxima manutenção</span>
+                  <span>Observa��€s e próxima manutenção</span>
                 </div>
               </div>
             </div>
