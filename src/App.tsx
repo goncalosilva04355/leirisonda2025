@@ -1143,7 +1143,7 @@ function App() {
         if (savedMapsRedirect !== null) {
           setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
           console.log(
-            "�� Configuração Google Maps carregada:",
+            "✅ Configuração Google Maps carregada:",
             JSON.parse(savedMapsRedirect),
           );
         }
@@ -2270,7 +2270,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           safeLocalStorage.setItem("notificationsEnabled", "true");
           showNotification(
-            "Notificaç��es Ativadas",
+            "Notificações Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -5304,7 +5304,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa���ções Específicas do Furo */}
+                          {/* Observa📞ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -7324,7 +7324,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                <UserPermissionsManager />
                 <EmergencyLogoutManager />
               </div>
             </div>
