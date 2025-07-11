@@ -3027,7 +3027,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras
+                          Obras Atribuídas
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
@@ -3988,7 +3988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manutenç��o registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
