@@ -172,12 +172,14 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          // Trigger update event
-          window.dispatchEvent(
-            new CustomEvent("obrasUpdated", {
-              detail: { data: updatedObras, collection: "obras" },
-            }),
-          );
+          // Trigger update event (only on client side)
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("obrasUpdated", {
+                detail: { data: updatedObras, collection: "obras" },
+              }),
+            );
+          }
         }
 
         return id;
