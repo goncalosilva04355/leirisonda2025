@@ -182,7 +182,7 @@ export const userService = {
     }
 
     const q = query(
-      collection(db, COLLECTIONS.USERS),
+      collection(getFirestore(), COLLECTIONS.USERS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -216,11 +216,14 @@ export const userService = {
     }
 
     return await safeFirebaseOperation(async () => {
-      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
-        ...userData,
-        createdAt: new Date().toISOString(),
-        updatedAt: Timestamp.now(),
-      });
+      const docRef = await addDoc(
+        collection(getFirestore(), COLLECTIONS.USERS),
+        {
+          ...userData,
+          createdAt: new Date().toISOString(),
+          updatedAt: Timestamp.now(),
+        },
+      );
 
       console.log(
         `✅ Usuário ${userData.name} (${userData.email}) adicionado no Firebase`,
@@ -272,7 +275,9 @@ export const userService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS));
+    const usersSnapshot = await getDocs(
+      collection(getFirestore(), COLLECTIONS.USERS),
+    );
     if (usersSnapshot.empty) {
       const realAdmin = {
         name: "Gonçalo Fonseca",
@@ -653,7 +658,7 @@ export const syncService = {
         localStorage.setItem("users", JSON.stringify(usersData));
       }
     } catch (error) {
-      console.error("❌ Falha ao sincronizar usuário:", error);
+      console.error("��� Falha ao sincronizar usuário:", error);
     }
   },
 
