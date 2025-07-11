@@ -505,7 +505,7 @@ function App() {
                 );
               } else {
                 console.warn(
-                  `���€ Permissão de notificação negada para ${assignedUser.name}`,
+                  `⚠€ Permissão de notificação negada para ${assignedUser.name}`,
                 );
               }
 
@@ -2519,7 +2519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   navigateToSection("dashboard");
                 }
 
-                // console.log("�� Login state updated successfully");
+                // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -10935,7 +10935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N���specificado"}
+                          {selectedWork.type || "Não especificado"}
                         </p>
                       </div>
                       <div>
