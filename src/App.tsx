@@ -2188,19 +2188,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   };
 
-    
-
-    
-
-    
-
-    // You can add a toast notification here if needed
-    if (enabled) {
-      console.log(
-        "�����️ Agora pode clicar em qualquer morada para abrir no Google Maps!",
-      );
-    }
-  };
 
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
