@@ -82,7 +82,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
+import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -274,35 +274,8 @@ function App() {
     useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
-  // Firebase ativo como solicitado
-  // Temporarily disabled to debug React error
-  // const universalSync = useUniversalDataSync();
-  const universalSync = {
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    totalItems: 0,
-    lastSync: "",
-    isGloballyShared: false,
-    isLoading: false,
-    error: null,
-    syncStatus: "disconnected" as const,
-    addObra: async (obra: any) => "",
-    updateObra: async (id: string, obra: any) => {},
-    deleteObra: async (id: string) => {},
-    addManutencao: async (manutencao: any) => "",
-    updateManutencao: async (id: string, manutencao: any) => {},
-    deleteManutencao: async (id: string) => {},
-    addPiscina: async (piscina: any) => "",
-    updatePiscina: async (id: string, piscina: any) => {},
-    deletePiscina: async (id: string) => {},
-    addCliente: async (cliente: any) => "",
-    updateCliente: async (id: string, cliente: any) => {},
-    deleteCliente: async (id: string) => {},
-    forceSyncAll: async () => {},
-    resetSync: async () => {},
-  };
+  // Firebase ativo como solicitado - Fixed version
+  const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
@@ -318,7 +291,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -7066,7 +7039,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configuraç��es.
+                  Os relatórios agora estão na página de Configura����es.
                 </p>
                 <button
                   onClick={() => {
