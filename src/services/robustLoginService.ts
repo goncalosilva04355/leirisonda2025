@@ -170,15 +170,31 @@ class RobustLoginService {
     email: string,
     password: string,
   ): Promise<void> {
-    // DESABILITAR sync background para evitar erros checkDestroyed
-    console.log(
-      "💾 Background sync desabilitado - usando apenas sistema local por estabilidade",
-    );
+    // SYNC BACKGROUND INTELIGENTE - ativa quando Firebase estável
+    console.log("🧠 Iniciando background sync inteligente...");
 
-    // Firebase sync será apenas manual ou quando explicitamente solicitado
-    // Isso evita os erros checkDestroyed que podem aparecer em background
+    // Usar novo serviço que detecta estabilidade antes de tentar sync
+    setTimeout(async () => {
+      try {
+        const { intelligentFirebaseSync } = await import(
+          "./intelligentFirebaseSync"
+        );
+        const syncResult = await intelligentFirebaseSync.tryActivateFirebase(
+          email,
+          password,
+        );
 
-    return; // Early return - sem background sync
+        if (syncResult.success) {
+          console.log("✅ Firebase ativado automaticamente!");
+        } else {
+          console.log("ℹ️", syncResult.message);
+        }
+      } catch (error) {
+        console.log("ℹ️ Background sync aguardando estabilidade Firebase");
+      }
+    }, 3000); // Delay para não interferir com login
+
+    return; // Manter return para evitar execução do código comentado
 
     // Código original comentado:
     /*
