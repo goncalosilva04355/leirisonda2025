@@ -54,14 +54,14 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
-// import {
-//   isFirestoreReady,
-//   testFirestore,
-//   getFirebaseFirestore,
-// } from "./firebase/firestoreConfig";
-// import { firestoreService } from "./services/firestoreService";
+import {
+  isFirestoreReady,
+  testFirestore,
+  getFirebaseFirestore,
+} from "./firebase/firestoreConfig";
+import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
-// import { autoSyncService } from "./services/autoSyncService";
+import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -4526,7 +4526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "��� Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7054,7 +7054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                                   new Notification(
                                                     "Leirisonda",
                                                     {
-                                                      body: "Notifica��ões ativadas com sucesso!",
+                                                      body: "Notificações ativadas com sucesso!",
                                                       icon: "/icon.svg",
                                                     },
                                                   );
@@ -7367,7 +7367,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Autom��tica
+                                  Sincronização Automática
                                 </span>
                                 <button
                                   onClick={() =>
@@ -7837,7 +7837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>��� Piscinas associadas</li>
+                        <li>�� Piscinas associadas</li>
                         <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
