@@ -317,7 +317,7 @@ export const poolService = {
     }
 
     const q = query(
-      collection(db, COLLECTIONS.POOLS),
+      collection(getFirestore(), COLLECTIONS.POOLS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -335,7 +335,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
+    const docRef = await addDoc(collection(getFirestore(), COLLECTIONS.POOLS), {
       ...poolData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -539,7 +539,7 @@ export const workService = {
       const works = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        // Garantir que todas as obras são marcadas como globalmente vis��veis
+        // Garantir que todas as obras são marcadas como globalmente visíveis
         sharedGlobally: true,
         visibleToAllUsers: true,
       })) as Work[];
