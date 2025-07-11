@@ -40,7 +40,7 @@ export function FirestoreStatus() {
     switch (status) {
       case "connected":
         return "green";
-      case "disconnected":
+      case "error":
         return "red";
       default:
         return "orange";
