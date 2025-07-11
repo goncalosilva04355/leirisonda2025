@@ -46,16 +46,28 @@ class RobustLoginService {
       };
     }
 
-    // Método 1: Tentar Firebase/authService
+    // Método 1: Tentar Firebase/authService (com timeout)
     try {
       console.log("🔥 Tentando login via Firebase...");
-      const firebaseResult = await authService.signIn(
-        email,
-        password,
-        rememberMe,
+
+      // Adicionar timeout para evitar hang
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Firebase timeout")), 5000),
       );
 
-      if (firebaseResult.success && firebaseResult.user) {
+      const firebasePromise = authService.signIn(email, password, rememberMe);
+
+      const firebaseResult = await Promise.race([
+        firebasePromise,
+        timeoutPromise,
+      ]);
+
+      if (
+        firebaseResult &&
+        typeof firebaseResult === "object" &&
+        firebaseResult.success &&
+        firebaseResult.user
+      ) {
         console.log("✅ Login Firebase bem-sucedido");
 
         // Converter Firebase User para UserProfile
@@ -86,7 +98,10 @@ class RobustLoginService {
 
       console.log("⚠️ Firebase falhou, tentando fallback...");
     } catch (error) {
-      console.warn("❌ Erro no Firebase:", error);
+      console.warn(
+        "❌ Erro no Firebase (passando para autenticação local):",
+        error,
+      );
     }
 
     // Método 2: Autenticação local direta
