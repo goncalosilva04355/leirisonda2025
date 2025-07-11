@@ -4551,7 +4551,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Corre��ão de Atribuição de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�������������o criada para nova piscina:",
+                                "Futura manutenç��������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7830,9 +7830,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informaç��es de clientes</li>
+                        <li>• Informações de clientes</li>
                         <li>• Histórico de manuten�������es</li>
-                        <li>• Próximas interven��ões</li>
+                        <li>• Próximas interven����ões</li>
                       </ul>
                     </div>
                     <button
@@ -7866,7 +7866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>�� T���cnicos responsáveis</li>
+                        <li>�� T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -9125,7 +9125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ������� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão ��� "🔧 Correção de Atribuição
+                                de Administra��ão → "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
