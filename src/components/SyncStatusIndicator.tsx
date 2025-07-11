@@ -98,11 +98,11 @@ export const SyncStatusIndicator: React.FC = () => {
     }
 
     return {
-      icon: AlertTriangle,
-      text: "Conectando",
-      color: "text-amber-500",
-      bgColor: "bg-amber-50",
-      borderColor: "border-amber-200",
+      icon: RefreshCw,
+      text: "Online",
+      color: "text-blue-500",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
     };
   };
 
