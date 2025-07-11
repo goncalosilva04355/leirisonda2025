@@ -282,8 +282,18 @@ function App() {
     };
   }
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Versão defensiva
+  let userMigration;
+  try {
+    userMigration = useAutoUserMigration();
+  } catch (error) {
+    console.warn("⚠️ useAutoUserMigration falhou:", error);
+    userMigration = {
+      status: { completed: false, migrated: 0, errors: [] },
+      startMigration: () => Promise.resolve(),
+      resetMigration: () => {},
+    };
+  }
 
   // Log migration status changes
   useEffect(() => {
@@ -320,7 +330,7 @@ function App() {
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
-      "🛡️ Data protection initialized (checks disabled for performance)",
+      "🛡��� Data protection initialized (checks disabled for performance)",
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
@@ -411,7 +421,7 @@ function App() {
       console.log("🏊 addPool iniciado com sistema local");
       return await addPiscina(data);
     } catch (error) {
-      console.error("❌ Erro no sistema de piscinas:", error);
+      console.error("�� Erro no sistema de piscinas:", error);
       return await addPiscina(data);
     }
   };
@@ -4795,7 +4805,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
@@ -6625,7 +6635,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔍 Estado e localização</li>
-                                <li>• Informações de clientes</li>
+                                <li>• Informa��ões de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
                               </ul>
@@ -8800,7 +8810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ��� {work.contact}
                                       </button>
                                     </div>
                                   )}
