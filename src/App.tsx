@@ -57,6 +57,8 @@ import {
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import { FCMNotificationSetup } from "./components/FCMNotificationSetup";
+import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -418,7 +420,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se h�� utilizadores atribuídos
+      // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -452,14 +454,38 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `€️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
 
-          // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notifica��ão local para o utilizador
+          // 1. Enviar notificação FCM (notificação push real)
+          const fcmSuccess = await fcmService.sendNotificationToUser(
+            assignedUser.id,
+            {
+              title: "🔔 Nova Obra Atribuída",
+              body: `${workData.title} - ${workData.client}`,
+              icon: "/icon.svg",
+              clickAction: "/#obras",
+              data: {
+                workId: workData.id,
+                workTitle: workData.title,
+                client: workData.client,
+                location: workData.location,
+                type: "work_assignment",
+              },
+            },
+          );
+
+          if (fcmSuccess) {
+            console.log(`✅ Notificação FCM enviada para ${assignedUser.name}`);
+          } else {
+            console.warn(`⚠️ Falha no envio FCM para ${assignedUser.name}`);
+          }
+
+          // 2. Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -487,7 +513,7 @@ function App() {
             JSON.stringify(limitedNotifications),
           );
 
-          // Disparar evento customizado para atualizar UI em tempo real
+          // 3. Disparar evento customizado para atualizar UI em tempo real
           const customEvent = new CustomEvent("worksUpdated", {
             detail: {
               type: "assignment",
@@ -501,16 +527,17 @@ function App() {
           });
           window.dispatchEvent(customEvent);
 
-          // Tentar enviar notificação push via Firebase (se disponível)
-          if ("serviceWorker" in navigator && "PushManager" in window) {
+          // 4. Fallback: notificação local se FCM falhar e app estiver aberta
+          if (
+            !fcmSuccess &&
+            "serviceWorker" in navigator &&
+            "PushManager" in window
+          ) {
             try {
-              const registration = await navigator.serviceWorker.ready;
-
-              // Verificar se o utilizador tem permissão para notificações
               const permission = await Notification.requestPermission();
 
               if (permission === "granted") {
-                // Mostrar notificação local imediatamente
+                // Mostrar notificação local como fallback
                 const notification = new Notification(notificationData.title, {
                   body: notificationData.body,
                   icon: notificationData.icon,
@@ -529,22 +556,16 @@ function App() {
                 notification.onclick = () => {
                   window.focus();
                   notification.close();
-                  // Opcional: navegar para a obra
+                  // Navegar para obras
+                  window.location.hash = "#obras";
                 };
 
                 console.log(
-                  `€ Notificação local enviada para ${assignedUser.name}`,
-                );
-              } else {
-                console.warn(
-                  `⚠€ Permissão de notificação negada para ${assignedUser.name}`,
+                  `✅ Notificação local (fallback) enviada para ${assignedUser.name}`,
                 );
               }
-
-              // TODO: Implementar FCM para notificações push quando app está fechada
-              // Isso requer configuração adicional do Firebase Messaging
             } catch (pushError) {
-              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
+              console.warn("⚠️ Erro ao enviar notificação local:", pushError);
             }
           }
 
