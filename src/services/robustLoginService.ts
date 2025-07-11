@@ -1,5 +1,4 @@
-// Serviço de login robusto que funciona em qualquer situação
-import { authService } from "./firebaseAuthService";
+// Serviço de login robusto que funciona sem Firebase para evitar erros
 
 export interface UserPermissions {
   [module: string]: {
@@ -27,7 +26,7 @@ export interface LoginResult {
   success: boolean;
   error?: string;
   user?: UserProfile;
-  method?: "firebase" | "local" | "fallback";
+  method?: "local" | "fallback";
 }
 
 class RobustLoginService {
@@ -36,7 +35,7 @@ class RobustLoginService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<LoginResult> {
-    console.log("🔐 RobustLoginService: Iniciando login para", email);
+    console.log("🔐 RobustLoginService: Iniciando login LOCAL para", email);
 
     // Validação básica
     if (!email || !password) {
@@ -46,99 +45,40 @@ class RobustLoginService {
       };
     }
 
-    // Método 1: Tentar Firebase/authService (com timeout)
-    try {
-      console.log("🔥 Tentando login via Firebase...");
+    // Método 1: Autenticação local direta (password "123")
+    console.log("🔧 Tentando autenticação local...");
+    const localResult = this.localAuthentication(email, password, rememberMe);
 
-      // Adicionar timeout para evitar hang
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error("Firebase timeout")), 5000),
-      );
-
-      const firebasePromise = authService.signIn(email, password, rememberMe);
-
-      const firebaseResult = await Promise.race([
-        firebasePromise,
-        timeoutPromise,
-      ]);
-
-      if (
-        firebaseResult &&
-        typeof firebaseResult === "object" &&
-        firebaseResult.success &&
-        firebaseResult.user
-      ) {
-        console.log("✅ Login Firebase bem-sucedido");
-
-        // Converter Firebase User para UserProfile
-        const userProfile: UserProfile = {
-          uid: firebaseResult.user.uid,
-          email: firebaseResult.user.email || email,
-          name:
-            firebaseResult.user.displayName ||
-            this.generateNameFromEmail(email),
-          role: this.determineRole(email),
-          permissions: this.getDefaultPermissions(),
-          active: true,
-          createdAt: new Date().toISOString(),
-        };
-
-        // Salvar no localStorage
-        const storageKey = rememberMe
-          ? "leirisonda-user"
-          : "leirisonda-session-user";
-        localStorage.setItem(storageKey, JSON.stringify(userProfile));
-
-        return {
-          success: true,
-          user: userProfile,
-          method: "firebase",
-        };
-      }
-
-      console.log("⚠️ Firebase falhou, tentando fallback...");
-    } catch (error) {
-      console.warn(
-        "❌ Erro no Firebase (passando para autenticação local):",
-        error,
-      );
+    if (localResult.success) {
+      console.log("✅ Login local bem-sucedido");
+      return {
+        ...localResult,
+        method: "local",
+      };
     }
 
-    // Método 2: Autenticação local direta
-    try {
-      console.log("🔧 Tentando autenticação local...");
-      const localResult = this.localAuthentication(email, password, rememberMe);
+    // Método 2: Fallback final - aceitar qualquer credencial válida
+    console.log("🆘 Usando fallback final...");
+    const fallbackResult = this.fallbackAuthentication(
+      email,
+      password,
+      rememberMe,
+    );
 
-      if (localResult.success) {
-        console.log("✅ Login local bem-sucedido");
-        return {
-          ...localResult,
-          method: "local",
-        };
-      }
-    } catch (error) {
-      console.warn("❌ Erro na autenticação local:", error);
-    }
-
-    // Método 3: Fallback final - aceitar qualquer credencial válida
-    try {
-      console.log("🆘 Usando fallback final...");
-      const fallbackResult = this.fallbackAuthentication(
-        email,
-        password,
-        rememberMe,
-      );
+    if (fallbackResult.success) {
+      console.log("✅ Login fallback bem-sucedido");
       return {
         ...fallbackResult,
         method: "fallback",
       };
-    } catch (error) {
-      console.error("❌ Todos os métodos falharam:", error);
-      return {
-        success: false,
-        error: "Erro interno do sistema de autenticação",
-      };
     }
+
+    // Se chegou aqui, credenciais inválidas
+    console.error("❌ Credenciais inválidas");
+    return {
+      success: false,
+      error: "Email ou password incorretos",
+    };
   }
 
   private localAuthentication(
@@ -262,13 +202,6 @@ class RobustLoginService {
   }
 
   async logout(): Promise<void> {
-    try {
-      // Tentar logout do authService primeiro
-      await authService.signOut();
-    } catch (error) {
-      console.warn("⚠️ Erro no logout do authService:", error);
-    }
-
     // Limpar localStorage
     localStorage.removeItem("leirisonda-user");
     localStorage.removeItem("leirisonda-session-user");
@@ -276,11 +209,11 @@ class RobustLoginService {
     // Limpar outras chaves relacionadas
     localStorage.removeItem("savedLoginCredentials");
 
-    console.log("✅ Logout completo realizado");
+    console.log("✅ Logout completo realizado (local)");
   }
 
   getCurrentUser(): UserProfile | null {
-    // Verificar localStorage primeiro
+    // Verificar localStorage
     const localUser =
       localStorage.getItem("leirisonda-user") ||
       localStorage.getItem("leirisonda-session-user");
