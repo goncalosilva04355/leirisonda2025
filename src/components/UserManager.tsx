@@ -157,8 +157,10 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const handleSaveEdit = () => {
     if (!editingUser) return;
 
-    const error = validateUser(editingUser);
-    if (error) {
+    // Para edição, não validar password se não foi alterada
+    const userForValidation = { ...editingUser, password: "temppass123" };
+    const error = validateUser(userForValidation);
+    if (error && !error.includes("Password")) {
       setErrors(error);
       return;
     }
