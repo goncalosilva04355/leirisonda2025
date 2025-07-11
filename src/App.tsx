@@ -696,6 +696,62 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
+  // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
+  const isWorkAssignedToCurrentUser = (work: any) => {
+    if (!currentUser) return false;
+
+    // Se é super admin (Gonçalo), mostrar todas as obras
+    if (
+      currentUser.role === "super_admin" ||
+      currentUser.email === "gongonsilva@gmail.com"
+    ) {
+      return true;
+    }
+
+    // Verificar assignedTo (campo legacy)
+    if (
+      work.assignedTo &&
+      (work.assignedTo === currentUser.name ||
+        work.assignedTo
+          .toLowerCase()
+          .includes(currentUser.name.toLowerCase()) ||
+        currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase()))
+    ) {
+      return true;
+    }
+
+    // Verificar assignedUsers array
+    if (
+      work.assignedUsers &&
+      work.assignedUsers.some(
+        (user) =>
+          user.name === currentUser.name ||
+          user.id === currentUser.id ||
+          user.id === currentUser.id.toString(),
+      )
+    ) {
+      return true;
+    }
+
+    // Verificar assignedUserIds array
+    if (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id)) {
+      return true;
+    }
+
+    // Se não há utilizadores atribuídos, mostrar para super admin
+    if (
+      !work.assignedTo &&
+      (!work.assignedUsers || work.assignedUsers.length === 0) &&
+      (!work.assignedUserIds || work.assignedUserIds.length === 0) &&
+      (currentUser.role === "super_admin" ||
+        currentUser.email === "gongonsilva@gmail.com")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   // Debug logging removed to prevent re-render loops
 
   // Keep local users state for user management
@@ -9098,7 +9154,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
+                            <option value="instalacao">Instalaç��o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
