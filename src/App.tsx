@@ -88,6 +88,7 @@ import("./firebase/ultimateSimpleFirebase");
 // import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 // import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceManagerMock";
+import { testFirestore } from "./utils/testFirestoreMock";
 // import "./utils/testDataPersistence";
 
 // Hooks temporariamente desativados para diagnóstico
