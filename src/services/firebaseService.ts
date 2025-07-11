@@ -404,7 +404,7 @@ export const maintenanceService = {
     }
 
     const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
+      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
       orderBy("scheduledDate", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -432,7 +432,7 @@ export const maintenanceService = {
 
     const today = new Date().toISOString().split("T")[0];
     const q = query(
-      collection(db, COLLECTIONS.MAINTENANCE),
+      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
       where("scheduledDate", ">=", today),
       orderBy("scheduledDate", "asc"),
     );
@@ -453,16 +453,19 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.MAINTENANCE), {
-      ...maintenanceData,
-      createdAt: Timestamp.now(),
-      updatedAt: Timestamp.now(),
-      // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
-      sharedGlobally: true,
-      visibleToAllUsers: true,
-      isGlobalData: true,
-      dataSharing: "all_users",
-    });
+    const docRef = await addDoc(
+      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
+      {
+        ...maintenanceData,
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+        // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
+        sharedGlobally: true,
+        visibleToAllUsers: true,
+        isGlobalData: true,
+        dataSharing: "all_users",
+      },
+    );
 
     // Trigger automatic synchronization
     console.log(
