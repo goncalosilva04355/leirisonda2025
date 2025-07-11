@@ -372,24 +372,8 @@ function App() {
   // Fun��ões de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
-      console.log("🏊 addPool iniciado com Firestore ativo");
-
-      const firestoreId = await firestoreService.createPiscina(data);
-
-      if (firestoreId) {
-        console.log("✅ Piscina criada no Firestore:", firestoreId);
-
-        // Sincronizar com sistema universal
-        try {
-          await addPiscina(data);
-        } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        return await addPiscina(data);
-      }
+      console.log("🏊 addPool iniciado com sistema local");
+      return await addPiscina(data);
     } catch (error) {
       console.error("❌ Erro no sistema de piscinas:", error);
       return await addPiscina(data);
@@ -8424,7 +8408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic�����vel)
+                            Pessoa de Contacto (se aplic����vel)
                           </label>
                           <input
                             type="text"
@@ -8694,7 +8678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������� {work.contact}
+                                        ����������� {work.contact}
                                       </button>
                                     </div>
                                   )}
