@@ -126,14 +126,28 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
 
       // Try to save to Firebase first
       try {
-        const { firestoreService } = await import(
-          "../services/firestoreService"
+        const { isFirestoreReady } = await import(
+          "../firebase/firestoreConfig"
         );
-        const firestoreId = await firestoreService.createObra(obra);
-        if (firestoreId) {
-          console.log("✅ Obra criada no Firestore:", firestoreId);
-          // Firebase will trigger sync automatically via observers
-          return firestoreId;
+        if (isFirestoreReady()) {
+          const { firestoreService } = await import(
+            "../services/firestoreService"
+          );
+          const firestoreId = await firestoreService.createObra(obra);
+          if (firestoreId) {
+            console.log("✅ Obra criada no Firestore:", firestoreId);
+            // Also save to localStorage as backup
+            const existingObras = JSON.parse(
+              localStorage.getItem("works") || "[]",
+            );
+            const workExists = existingObras.some((w: any) => w.id === obra.id);
+            if (!workExists) {
+              existingObras.push(obra);
+              localStorage.setItem("works", JSON.stringify(existingObras));
+            }
+            // Firebase will trigger sync automatically via observers
+            return firestoreId;
+          }
         }
       } catch (firebaseError) {
         console.warn(
