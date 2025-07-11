@@ -48,6 +48,11 @@ import "./utils/clearModalStates";
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+import {
+  safeLocalStorage,
+  safeSessionStorage,
+  storageUtils,
+} from "./utils/storageUtils";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
@@ -164,7 +169,7 @@ function App() {
     };
     initUsers();
 
-    const savedUsers = localStorage.getItem("app-users");
+    const savedUsers = safeLocalStorage.getItem("app-users");
     if (!savedUsers) {
       console.log("🔧 Criando utilizador padrão no localStorage");
       const defaultUser = {
@@ -184,7 +189,7 @@ function App() {
         },
         createdAt: new Date().toISOString(),
       };
-      localStorage.setItem("app-users", JSON.stringify([defaultUser]));
+      storageUtils.setJson("app-users", [defaultUser]);
     }
   }, []);
 
@@ -1246,7 +1251,7 @@ function App() {
         // Clear Firebase auth state se não há auto-login
         try {
           await authService.logout();
-          console.log("🔒 Firebase auth cleared");
+          console.log("��� Firebase auth cleared");
         } catch (error) {
           console.log("⚠️ Firebase logout error (expected):", error);
         }
@@ -4103,7 +4108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr���xima manutenção:{" "}
+                                Pr���xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -9227,7 +9232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Concluída"
+                                      ? "Conclu��da"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
