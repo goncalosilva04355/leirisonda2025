@@ -2190,15 +2190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     
 
-    // Save to localStorage
-    try {
-      localStorage.setItem("enableMapsRedirect", JSON.stringify(enabled));
-      console.log(
-        `✅ Configuração Google Maps guardada: ${enabled ? "ativado" : "desativado"}`,
-      );
-    } catch (error) {
-      console.error("❌ Erro ao guardar configuração Google Maps:", error);
-    }
+    
 
     // Show notification
     console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
@@ -4130,7 +4122,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manutenç��es aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -7266,7 +7258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <p className="text-green-700 text-sm mb-3">
                                       Quando ativado, clicar numa morada abrirá
-                                      o Google Maps para navegação.
+                                      o Google Maps para navegaç��o.
                                     </p>
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
