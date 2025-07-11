@@ -66,9 +66,6 @@ export const UserDiagnostic: React.FC = () => {
         </button>
       </div>
 
-      {/* Teste de Sincronização */}
-      <UserSyncTest />
-
       <div className="space-y-6">
         {/* Utilizadores Autorizados */}
         <div className="bg-gray-50 rounded-lg p-4">
