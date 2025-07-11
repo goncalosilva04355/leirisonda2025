@@ -2192,8 +2192,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     
 
-    // Show notification
-    console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
+    
 
     // You can add a toast notification here if needed
     if (enabled) {
@@ -10331,7 +10330,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
