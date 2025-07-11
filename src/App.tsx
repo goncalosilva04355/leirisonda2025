@@ -9114,6 +9114,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <Edit2 className="h-5 w-5" />
                               </button>
                             )}
+                            {/* Botão Iniciar Obra (só se pendente) */}
+                            {(work.status === "pending" ||
+                              work.status === "pendente") &&
+                              hasPermission("obras", "edit") && (
+                                <button
+                                  onClick={() => {
+                                    const updatedWork = {
+                                      ...work,
+                                      status: "in_progress",
+                                    };
+
+                                    // Atualizar no localStorage
+                                    const existingWorks = JSON.parse(
+                                      localStorage.getItem("works") || "[]",
+                                    );
+                                    const workIndex = existingWorks.findIndex(
+                                      (w: any) => w.id === work.id,
+                                    );
+                                    if (workIndex !== -1) {
+                                      existingWorks[workIndex] = updatedWork;
+                                      localStorage.setItem(
+                                        "works",
+                                        JSON.stringify(existingWorks),
+                                      );
+                                      setWorks(existingWorks);
+                                    }
+
+                                    // Atualizar via dataSync se disponível
+                                    if (dataSync && dataSync.updateWork) {
+                                      dataSync.updateWork(work.id, {
+                                        status: "in_progress",
+                                      });
+                                    }
+
+                                    showNotification(
+                                      "Obra Iniciada",
+                                      `A obra "${work.title || work.client}" foi iniciada`,
+                                      "success",
+                                    );
+                                  }}
+                                  className="p-3 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg border border-green-200 transition-colors"
+                                  title="Iniciar obra"
+                                >
+                                  <Play className="h-5 w-5" />
+                                </button>
+                              )}
                             {hasPermission("obras", "delete") && (
                               <button
                                 onClick={() =>
@@ -10121,7 +10167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç€">Reparação</option>
+                          <option value="Reparaç���">Reparação</option>
                         </select>
                       </div>
                       <div>
