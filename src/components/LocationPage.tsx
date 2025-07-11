@@ -9,6 +9,13 @@ interface LocationPageProps {
     name: string;
     email: string;
   };
+  allUsers?: Array<{
+    id: number | string;
+    name: string;
+    email: string;
+    role: string;
+    active: boolean;
+  }>;
 }
 
 export const LocationPage: React.FC<LocationPageProps> = ({
