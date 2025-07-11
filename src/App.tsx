@@ -1060,7 +1060,7 @@ function App() {
           await firestoreService.syncAll();
           console.log("€ Sincronização inicial completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronizaç��o inicial:", error);
+          console.error("❌ Erro na sincronização inicial:", error);
         }
       }
     };
@@ -1432,7 +1432,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -2621,7 +2621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronizaç��o Automática Ativa"
+                            ? "Sincronização Automática Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -4927,7 +4927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof��sico)
+                                    230V (monof���sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5403,7 +5403,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
 
                               console.log(
-                                "✅ Mostrando formulário de novo cliente",
+                                "✅ Mostrando formul��rio de novo cliente",
                               );
                               setShowNewClientForm(true);
                             }
@@ -5620,7 +5620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç��o Completa *
+                        Localização Completa *
                       </label>
                       <input
                         type="text"
@@ -7237,7 +7237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <p className="text-green-700 text-sm mb-3">
                                       Quando ativado, clicar numa morada abrirá
-                                      o Google Maps para navegaç��o.
+                                      o Google Maps para navegação.
                                     </p>
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
@@ -7382,7 +7382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          ���� Todas as obras ({works.length}{" "}
+                                          �� Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -7895,7 +7895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>��� Equipas responsáveis</li>
+                        <li>�� Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
@@ -9232,7 +9232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descriç��o do trabalho realizado..."
+                            placeholder="Descrição do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -9885,7 +9885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç��o Real (horas)
+                          Duração Real (horas)
                         </label>
                         <input
                           type="number"
@@ -9989,7 +9989,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Duração Estimada
+                          ).value; // Duraç��o Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
@@ -10399,7 +10399,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`€avegando para seç��o: ${section}`);
+              console.log(`€avegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
