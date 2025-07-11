@@ -111,6 +111,10 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
 
       // Save cleaned locations
       localStorage.setItem("user-locations", JSON.stringify(uniqueLocations));
+
+      console.log(
+        `📍 Loaded ${uniqueLocations.length} user locations from ${allUsers.length} total users`,
+      );
     } catch (err) {
       setError("Erro ao carregar localizações dos utilizadores");
       console.error("Error loading user locations:", err);
