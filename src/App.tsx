@@ -6053,7 +6053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar interven��ão de manutenção
                       </p>
                     </div>
                   </div>
@@ -7459,9 +7459,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     onClick={() => {
                                       setShowAdvancedSettings(true);
                                       setIsAdvancedUnlocked(true);
-                                      alert(
-                                        "✅ A abrir configurações avançadas...",
-                                      );
                                     }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
@@ -11839,7 +11836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Criação */}
+                    {/* Data de Cria��ão */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
