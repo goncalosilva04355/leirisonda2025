@@ -2188,8 +2188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   };
 
-    // Settings persistence functions - REMOVED DUPLICATE
-    setEnableMapsRedirect(enabled);
+    
 
     // Save to localStorage
     try {
@@ -5586,7 +5585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "❌ Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISSÃO NEGADA: clientes.create",
+                                    "❌ PERMISS��O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
