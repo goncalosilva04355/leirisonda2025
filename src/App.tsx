@@ -39,6 +39,7 @@ import InstallPromptSimple from "./components/InstallPromptSimple";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import SyncStatusIndicator from "./components/SyncStatusIndicator";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -7514,7 +7515,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Piscinas
+                                    Relatório de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
@@ -11406,7 +11407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações do Cliente
+                        Informa��ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
