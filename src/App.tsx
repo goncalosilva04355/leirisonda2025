@@ -420,7 +420,7 @@ function App() {
         return;
       }
 
-      // Preparar dados da notificação
+      // Preparar dados da notifica��ão
       const notificationData = {
         title: "🔔 Nova Obra Atribuída",
         body: `${workData.title} - ${workData.client}`,
@@ -4216,7 +4216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Concluído"}
+                                    : "Conclu��do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -7451,7 +7451,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center mb-4">
                                 <Trash2 className="h-6 w-6 text-red-600 mr-3" />
                                 <h3 className="text-lg font-semibold text-gray-900">
-                                  Gestão de Dados
+                                  Gest��o de Dados
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
@@ -8543,7 +8543,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Código Postal *
+                            C��digo Postal *
                           </label>
                           <input
                             type="text"
@@ -8618,12 +8618,115 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
-                          alert(
-                            "Cliente criado com sucesso! (Função em desenvolvimento)",
-                          );
-                          setActiveSection("clientes");
+
+                          // Obter dados do formulário
+                          const form = e.target.closest("form");
+                          const formData = new FormData(form);
+
+                          // Validação básica
+                          const name = (
+                            form.querySelector(
+                              'input[placeholder="Nome completo ou razão social"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const email = (
+                            form.querySelector(
+                              'input[type="email"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const phone = (
+                            form.querySelector(
+                              'input[type="tel"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const address = (
+                            form.querySelector(
+                              'input[placeholder="Rua, número, andar, etc."]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const postalCode = (
+                            form.querySelector(
+                              'input[pattern="[0-9]{4}-[0-9]{3}"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const city = (
+                            form.querySelector(
+                              'input[placeholder="Cidade/Vila"]',
+                            ) as HTMLInputElement
+                          )?.value;
+
+                          if (!name || !email || !phone || !address) {
+                            alert(
+                              "Por favor, preencha os campos obrigatórios marcados com *",
+                            );
+                            return;
+                          }
+
+                          try {
+                            const newClient = {
+                              id: Date.now(),
+                              name: name,
+                              email: email,
+                              phone: phone,
+                              address:
+                                `${address}, ${postalCode || ""} ${city || ""}`.trim(),
+                              type:
+                                (
+                                  form.querySelector(
+                                    "select",
+                                  ) as HTMLSelectElement
+                                )?.value || "particular",
+                              secondaryEmail:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="email2@exemplo.com"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              secondaryPhone:
+                                (
+                                  form.querySelectorAll(
+                                    'input[type="tel"]',
+                                  )[1] as HTMLInputElement
+                                )?.value || "",
+                              nif:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="123456789"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              contactPerson:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="Nome da pessoa responsável"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              notes:
+                                (
+                                  form.querySelector(
+                                    "textarea",
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                              pools: [],
+                              createdAt: new Date().toISOString(),
+                              active: true,
+                            };
+
+                            await addClient(newClient);
+                            console.log(
+                              "✅ Cliente criado com sucesso:",
+                              newClient,
+                            );
+                            alert(`Cliente "${name}" criado com sucesso!`);
+
+                            // Limpar formulário
+                            form.reset();
+                            setActiveSection("clientes");
+                          } catch (error) {
+                            console.error("❌ Erro ao criar cliente:", error);
+                            alert("Erro ao criar cliente. Tente novamente.");
+                          }
                         }}
                         className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
                       >
