@@ -290,7 +290,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom��ticas
+    // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -846,6 +846,8 @@ function App() {
         console.error("❌ Error loading users:", error);
         // Fallback to initial users
         setUsers(initialUsers);
+      } finally {
+        setUsersLoaded(true);
       }
     };
 
@@ -930,7 +932,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     localStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuraç��o Maps Redirect atualizada:", enabled);
+    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -2001,7 +2003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
