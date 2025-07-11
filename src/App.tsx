@@ -1705,6 +1705,43 @@ function App() {
   };
 
   // Authentication functions
+  const handleLoginWithRememberMe = async (
+    email: string,
+    password: string,
+    rememberMe: boolean = false,
+  ) => {
+    try {
+      console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
+
+      const result = await authService.login(email, password, rememberMe);
+
+      if (result.success && result.user) {
+        console.log("✅ Login successful for:", result.user.email);
+
+        // Set user state and authentication
+        setCurrentUser(result.user);
+        setIsAuthenticated(true);
+
+        // Navigate to dashboard
+        setTimeout(() => {
+          const hash = window.location.hash.substring(1);
+          if (hash && hash !== "login") {
+            setActiveSection(hash);
+          } else {
+            navigateToSection("dashboard");
+          }
+        }, 100);
+
+        return;
+      } else {
+        throw new Error(result.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      throw error;
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
@@ -6241,7 +6278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons����vel *
+                          Técnico Respons���vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -8601,7 +8638,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="particular">Particular</option>
                             <option value="empresa">Empresa</option>
-                            <option value="condominio">Condom��nio</option>
+                            <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
                             <option value="publico">Entidade P📞blica</option>
                           </select>
@@ -9819,7 +9856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observações
+                          ).value; // Observa��ões
 
                           // Prepare update data
                           let updateData: any = {
