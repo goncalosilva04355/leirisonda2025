@@ -191,7 +191,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
+            console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
               "⚠️ Não foi possível reparar a persistência automaticamente",
@@ -2758,6 +2758,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   w.assignedUserIds.includes(currentUser.id)));
                             return isPending && isAssignedToUser; // Mostrar apenas obras pendentes atribuídas
                           });
+                          console.log("📊 Dashboard - DEBUG Contadores:", {
+                            totalObras: works.length,
+                            utilizadorAtual: currentUser?.name,
+                            obrasPendentesAtribuidas: pendingWorks.length,
+                            todasObras: works.map((w) => ({
+                              id: w.id,
+                              title: w.title,
+                              status: w.status,
+                              assignedTo: w.assignedTo,
+                              assignedUsers: w.assignedUsers,
+                              assignedUserIds: w.assignedUserIds,
+                            })),
+                          });
                           console.log(
                             "📊 Dashboard - Obras Pendentes Atribuídas:",
                             pendingWorks.length,
@@ -4138,7 +4151,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenções
+                          Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
