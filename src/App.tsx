@@ -932,11 +932,15 @@ function App() {
     console.log("📞 Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
-    window.dispatchEvent(
-      new CustomEvent("phoneDialerToggled", {
-        detail: { enabled },
-      }),
-    );
+    try {
+      window.dispatchEvent(
+        new CustomEvent("phoneDialerToggled", {
+          detail: { enabled },
+        }),
+      );
+    } catch (error) {
+      console.warn("⚠️ Erro ao disparar evento phoneDialerToggled:", error);
+    }
   };
 
   const toggleMapsRedirect = (enabled: boolean) => {
@@ -1799,7 +1803,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: �����${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -3170,7 +3174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => navigateToSection("nova-manutencao")}
                             className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
                           >
-                            Agendar Manutenção
+                            Agendar Manuten��ão
                           </button>
                         )}
                       </div>
@@ -7203,7 +7207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <li>
                                         • Configure a sua localização abaixo e
                                         veja o mapa da equipa na página
-                                        "Localizações"
+                                        "Localiza��ões"
                                       </li>
                                     </ul>
                                   </div>
