@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { realFirebaseService } from "../services/realFirebaseService";
-import { authService } from "../services/authService";
+// import { authService } from "../services/authService"; // Removed - no longer exists
 import { useDataSync } from "../hooks/useDataSync";
 
 interface SyncDiagnosticProps {
