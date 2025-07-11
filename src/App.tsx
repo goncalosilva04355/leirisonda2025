@@ -102,7 +102,7 @@ import "./utils/testDataPersistence";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
@@ -148,7 +148,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // Garantir que pelo menos o utilizador padr��o existe no localStorage
+  // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
     const savedUsers = localStorage.getItem("app-users");
     if (!savedUsers) {
@@ -282,20 +282,7 @@ function App() {
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  // Temporarily disabled to prevent React error
-  // const userMigration = useAutoUserMigration();
-  const userMigration = {
-    status: {
-      isRunning: false,
-      completed: false,
-      migrated: 0,
-      skipped: 0,
-      failed: 0,
-      lastAttempt: 0,
-    },
-    triggerMigration: async () => {},
-    isActive: false,
-  };
+  const userMigration = useAutoUserMigration();
 
   // Log migration status changes
   useEffect(() => {
@@ -357,7 +344,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -1238,7 +1225,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("�� Iniciando sincronização inicial com Firestore...");
+        console.log("���� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -4669,7 +4656,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "📞 PARSED USERS:",
+                                  "��� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -7111,7 +7098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configuraç��es do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
@@ -8142,7 +8129,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>📊 Dados consolidados</li>
+                        <li>���� Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
                     </div>
