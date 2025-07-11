@@ -147,38 +147,8 @@ function App() {
     // Serviços temporariamente desativados para diagnóstico
 
     // Monitoriza📞ão automática de persistência de dados
-    const initDataPersistenceMonitoring = async () => {
-      try {
-        // Aguardar um pouco antes de iniciar verificação
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-
-        // Verificar estado da persistência
-        const status = await dataPersistenceManager.diagnoseDataPersistence();
-
-        if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
-          setPersistenceIssueDetected(true);
-
-          // Tentar reparar automaticamente
-          const repaired = await dataPersistenceManager.repairDataPersistence();
-
-          if (repaired) {
-            setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
-          } else {
-            console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
-            );
-          }
-        } else {
-          console.log("✅ Sistema de persistência está funcional");
-        }
-      } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
-      }
-    };
-
-    initDataPersistenceMonitoring();
+    // Monitorização de persistência temporariamente desativada
+    console.log("🔄 Sistema de persistência em modo simplificado");
 
     // Cleanup ao desmontar componente
     return () => {
@@ -1768,7 +1738,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -6627,7 +6597,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
-                            manutenções e obras.
+                            manutenç��es e obras.
                           </p>
                         </div>
 
