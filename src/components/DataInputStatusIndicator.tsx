@@ -16,6 +16,7 @@ interface DataInputStatus {
   isOnline?: boolean;
   pendingSync?: number;
   firebaseAvailable?: boolean;
+  autoSyncEnabled?: boolean;
   lastSync?: string;
 }
 
@@ -67,17 +68,34 @@ export const DataInputStatusIndicator: React.FC = () => {
       // Verificar conectividade
       const connectivityWorks = navigator.onLine;
 
-      // Verificar sincronização híbrida
+      // Verificar sincronização inteligente
       let syncStatus = {
         isOnline: false,
         pendingSync: 0,
         firebaseAvailable: false,
+        autoSyncEnabled: false,
       };
       try {
-        const { hybridDataSync } = await import("../services/hybridDataSync");
-        syncStatus = hybridDataSync.getSyncStatus();
+        const { intelligentFirebaseSync } = await import(
+          "../services/intelligentFirebaseSync"
+        );
+        const intelligentStatus = intelligentFirebaseSync.getState();
+
+        syncStatus = {
+          isOnline: connectivityWorks,
+          pendingSync: 0,
+          firebaseAvailable: intelligentStatus.isFirebaseStable,
+          autoSyncEnabled: intelligentStatus.autoSyncEnabled,
+        };
       } catch (error) {
-        console.log("ℹ️ Sync service não disponível");
+        // Fallback para hybridDataSync se intelligentFirebaseSync não estiver disponível
+        try {
+          const { hybridDataSync } = await import("../services/hybridDataSync");
+          const oldStatus = hybridDataSync.getSyncStatus();
+          syncStatus = { ...oldStatus, autoSyncEnabled: false };
+        } catch (error2) {
+          console.log("ℹ️ Sync services não disponíveis");
+        }
       }
 
       setStatus({
@@ -248,11 +266,12 @@ export const DataInputStatusIndicator: React.FC = () => {
         {overallStatus === "good" && (
           <div className="text-xs text-green-600 mt-1">
             <p>✅ Sistema funcionando - pode inserir dados</p>
-            {status.firebase && status.pendingSync === 0 && (
-              <p>🔥 Sincronização Firebase ativa</p>
+            {status.autoSyncEnabled && <p>🔥 Sincronização automática ATIVA</p>}
+            {status.firebaseAvailable && !status.autoSyncEnabled && (
+              <p>🔄 Firebase estável - ativando sync...</p>
             )}
-            {!status.firebase && status.localStorage && (
-              <p>💾 Modo local - sincronizará quando Firebase disponível</p>
+            {!status.firebaseAvailable && status.localStorage && (
+              <p>💾 Modo local - detectando estabilidade Firebase</p>
             )}
           </div>
         )}
