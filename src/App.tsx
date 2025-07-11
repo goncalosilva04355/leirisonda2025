@@ -613,7 +613,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -4264,7 +4264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç����o</option>
+                            <option value="instalacao">Instalaç�����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -4944,7 +4944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observa����ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observa��ões Específicas do Furo
+                              Observações Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -5312,7 +5312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Success - no notification needed
                           } catch (error) {
-                            console.error("❌ Error creating work:", error);
+                            console.error("�� Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
@@ -5559,7 +5559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "�� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS��O NEGADA: clientes.create",
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�������������o criada para nova piscina:",
+                                "Futura manutenç��������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6897,7 +6897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   }}
                   className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
                 >
-                  Ir para Configuraç��es
+                  Ir para Configurações
                 </button>
               </div>
             </div>
@@ -7594,8 +7594,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Relatórios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
-                              Gere relat����rios detalhados em PDF sobre
-                              piscinas, manutenções e obras.
+                              Gere relatórios detalhados em PDF sobre piscinas,
+                              manutenções e obras.
                             </p>
                           </div>
 
@@ -8419,7 +8419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secundário
+                            Email Secund��rio
                           </label>
                           <input
                             type="email"
@@ -8502,7 +8502,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic����vel)
+                            Pessoa de Contacto (se aplic������vel)
                           </label>
                           <input
                             type="text"
