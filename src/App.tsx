@@ -292,8 +292,8 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
+    // Sistema funcionará normalmente sem verificações constantes
+    // Sistema funcionará normalmente sem verificações automáticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -387,7 +387,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
+      console.log("���� Enviando notificações de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -2978,7 +2978,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                                    ���� Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -7389,7 +7389,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          • Todas as manutenções (
+                                          �� Todas as manutenções (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
