@@ -34,7 +34,7 @@ import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
-import { UserPermissionsManager } from "./components/UserPermissionsManager";
+// UserPermissionsManager removido - consolidado no UserManager do painel admin
 import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 
 import { LocationPage } from "./components/LocationPage";
@@ -3407,7 +3407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanhã";
+                            timeText = "Amanh��";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -9384,7 +9384,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `Não há obras com o filtro "${
+                          : `N��o há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
