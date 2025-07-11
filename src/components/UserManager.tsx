@@ -422,7 +422,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                 localStorage.getItem("mock-users") || "{}",
               );
               const authorizedUsers = JSON.parse(
-                localStorage.getItem("authorized-users") || "[]",
+                localStorage.getItem("authorizedUsers") || "[]",
               );
 
               alert(`📊 Diagnóstico de Utilizadores:
