@@ -629,7 +629,7 @@ function App() {
     try {
       console.log("👥 addClient iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createCliente(data);
+      // const firestoreId = await firestoreService.createCliente(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
