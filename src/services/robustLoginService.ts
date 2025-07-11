@@ -1,5 +1,5 @@
 // Serviço de login robusto que funciona em qualquer situação
-import { firebaseAuthService } from "./firebaseAuthService";
+import { authService } from "./firebaseAuthService";
 
 export interface UserPermissions {
   [module: string]: {
@@ -49,7 +49,7 @@ class RobustLoginService {
     // Método 1: Tentar Firebase/authService
     try {
       console.log("🔥 Tentando login via Firebase...");
-      const firebaseResult = await firebaseAuthService.signIn(
+      const firebaseResult = await authService.signIn(
         email,
         password,
         rememberMe,
@@ -248,10 +248,10 @@ class RobustLoginService {
 
   async logout(): Promise<void> {
     try {
-      // Tentar logout do firebaseAuthService primeiro
-      await firebaseAuthService.signOut();
+      // Tentar logout do authService primeiro
+      await authService.signOut();
     } catch (error) {
-      console.warn("⚠️ Erro no logout do firebaseAuthService:", error);
+      console.warn("⚠️ Erro no logout do authService:", error);
     }
 
     // Limpar localStorage
