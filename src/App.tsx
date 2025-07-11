@@ -155,7 +155,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("🚨 Problema de persistência detectado:", status);
+          console.warn("��� Problema de persistência detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -6483,6 +6483,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "configuracoes_unused":
+          // Safety check for activeAdminTab
+          const safeActiveAdminTab = activeAdminTab || "relatorios";
+
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
