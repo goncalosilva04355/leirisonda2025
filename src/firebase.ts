@@ -31,12 +31,34 @@ function initializeFirebase(): FirebaseApp {
   return app;
 }
 
-export function getDB(): Firestore {
-  if (!db) {
+export function getDB(): Firestore | null {
+  if (db) return db;
+
+  try {
     const firebaseApp = initializeFirebase();
+    if (!firebaseApp) {
+      console.warn("⚠️ Firebase app não inicializada");
+      return null;
+    }
+
+    // Aguardar um pouco para garantir que a app está pronta
     db = getFirestore(firebaseApp);
+    console.log("✅ Firestore inicializado com sucesso");
+    return db;
+  } catch (error) {
+    console.warn("⚠️ Erro ao inicializar Firestore:", error);
+    // Tentar novamente depois de um delay
+    setTimeout(() => {
+      try {
+        const firebaseApp = initializeFirebase();
+        db = getFirestore(firebaseApp);
+        console.log("✅ Firestore inicializado na segunda tentativa");
+      } catch (retryError) {
+        console.warn("⚠️ Falha na segunda tentativa Firestore:", retryError);
+      }
+    }, 1000);
+    return null;
   }
-  return db;
 }
 
 export function getFirebaseAuth(): Auth {
