@@ -98,6 +98,7 @@ import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnosti
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import "./utils/testDataPersistence";
 import "./utils/testFirebaseUserSync";
 import "./utils/completeDataSync";
@@ -151,6 +152,9 @@ function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+
+  // Mobile Firebase conflict detection
+  const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
@@ -234,6 +238,53 @@ function App() {
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
+
+    // Detectar conflitos Firebase em dispositivos móveis
+    const detectFirebaseConflicts = () => {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (!isMobile) return;
+
+      // Verificar iframes Firebase duplicados
+      const firebaseIframes = document.querySelectorAll(
+        'iframe[src*="firebaseapp.com"]',
+      );
+      const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
+
+      // Verificar se há múltiplos projetos carregados
+      const hasConflictingProjects = Array.from(firebaseIframes).some(
+        (iframe) => {
+          const src = iframe.getAttribute("src") || "";
+          return (
+            src.includes("leiria-1cfc9") &&
+            document.querySelector('iframe[src*="leirisonda-16f8b"]')
+          );
+        },
+      );
+
+      // Verificar flags de erro no localStorage
+      const hasQuotaIssues =
+        localStorage.getItem("firebase-quota-exceeded") === "true";
+      const hasEmergencyShutdown =
+        localStorage.getItem("firebase-emergency-shutdown") === "true";
+
+      if (
+        hasMultipleFirebaseProjects ||
+        hasConflictingProjects ||
+        hasQuotaIssues ||
+        hasEmergencyShutdown
+      ) {
+        console.log("🚨 Firebase conflict detected on mobile device");
+        setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
+      }
+    };
+
+    // Executar detecção após page load
+    if (document.readyState === "complete") {
+      detectFirebaseConflicts();
+    } else {
+      window.addEventListener("load", detectFirebaseConflicts);
+      return () => window.removeEventListener("load", detectFirebaseConflicts);
+    }
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -1964,7 +2015,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicação agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -6903,7 +6954,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🔍 Estado e localização</li>
+                                <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
@@ -7806,7 +7857,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
+                                  Sincronizaç��o Automática
                                 </span>
                                 <button
                                   onClick={() =>
@@ -12259,6 +12310,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
+
+        {/* Mobile Firebase Fix - Show when conflicts detected */}
+        {showMobileFirebaseFix && <MobileFirebaseFix />}
 
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />

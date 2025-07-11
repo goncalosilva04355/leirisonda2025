@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings } from "lucide-react";
+import { Settings, AlertTriangle } from "lucide-react";
+import { QuickMobileFix } from "../components/QuickMobileFix";
 
 interface LoginPageProps {
   onLogin: (
@@ -22,6 +23,17 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     password: "",
   }));
   const [rememberMe, setRememberMe] = useState(() => false);
+  const [showEmergencyFix, setShowEmergencyFix] = useState(() => {
+    // Detectar se é dispositivo móvel e há conflitos
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const hasQuotaIssues =
+      localStorage.getItem("firebase-quota-exceeded") === "true";
+    const hasEmergencyShutdown =
+      localStorage.getItem("firebase-emergency-shutdown") === "true";
+    const hasConflicts =
+      document.querySelectorAll('iframe[src*="firebaseapp.com"]').length > 1;
+    return isMobile && (hasQuotaIssues || hasEmergencyShutdown || hasConflicts);
+  });
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
@@ -139,6 +151,25 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     [],
   );
 
+  const handleEmergencyFix = useCallback(() => {
+    // Limpar todas as proteções Firebase
+    localStorage.removeItem("firebase-quota-exceeded");
+    localStorage.removeItem("firebase-quota-check-time");
+    localStorage.removeItem("firebase-emergency-shutdown");
+    localStorage.removeItem("firebase-circuit-breaker");
+
+    // Remover iframes duplicados
+    const firebaseIframes = document.querySelectorAll(
+      'iframe[src*="firebaseapp.com"]',
+    );
+    for (let i = 1; i < firebaseIframes.length; i++) {
+      firebaseIframes[i].remove();
+    }
+
+    setShowEmergencyFix(false);
+    alert("✅ Fix aplicado! Agora tente fazer login com password '123'");
+  }, []);
+
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -154,7 +185,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         </div>
 
         {/* Admin Access Button */}
-        <div className="text-center mb-4">
+        <div className="text-center mb-4 space-y-2">
           <button
             type="button"
             onClick={() => {
@@ -165,7 +196,26 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             <Settings className="h-4 w-4" />
             <span>Área de Administração</span>
           </button>
+
+          {/* Emergency Fix Button - Only show on mobile with issues */}
+          {showEmergencyFix && (
+            <button
+              type="button"
+              onClick={handleEmergencyFix}
+              className="text-sm text-red-600 hover:text-red-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 bg-red-25 animate-pulse"
+            >
+              <AlertTriangle className="h-4 w-4" />
+              <span>⚡ Fix Firebase (📱)</span>
+            </button>
+          )}
         </div>
+
+        {/* Quick Mobile Fix - Show if conflicts detected */}
+        {showEmergencyFix && (
+          <div className="mb-4">
+            <QuickMobileFix onFixApplied={() => setShowEmergencyFix(false)} />
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
@@ -225,6 +275,16 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               <strong>Erro de Login:</strong>
               <br />
               {loginError}
+
+              {/* Mobile quick fix hint */}
+              {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
+                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-700">
+                  <strong>💡 Solução Rápida (Mobile):</strong>
+                  <br />
+                  Tente usar password:{" "}
+                  <code className="bg-yellow-100 px-1 rounded">123</code>
+                </div>
+              )}
             </div>
           )}
 
