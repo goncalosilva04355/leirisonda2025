@@ -1075,9 +1075,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log(
-          "������ Iniciando sincronização automática em tempo real...",
-        );
+        console.log("���� Iniciando sincronização automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1870,7 +1868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return "error";
       }
     }
-    console.warn("��� Notifications not supported in this browser");
+    console.warn("⚠️ Notifications not supported in this browser");
     return "denied";
   };
 
@@ -3391,7 +3389,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} �� {pool.location}
+                                            {pool.client} ���� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -7198,8 +7196,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Quando ativado, clicar num número de
-                                      telefone abrir�� diretamente o marcador do
-                                      telefone.
+                                      telefone abrir��� diretamente o marcador
+                                      do telefone.
                                     </p>
                                     <p className="text-blue-600 text-xs">
                                       Estado:{" "}
@@ -9995,7 +9993,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // Técnico
+                            .value; // T��cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
