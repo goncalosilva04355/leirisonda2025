@@ -15,6 +15,15 @@ import {
 import { getDB } from "../firebase/basicConfig";
 import { syncManager } from "../utils/syncManager";
 
+// Get Firestore instance
+const getFirestore = () => {
+  const db = getDB();
+  if (!db) {
+    throw new Error("Firestore não está disponível");
+  }
+  return db;
+};
+
 // Types
 export interface User {
   id: string;
