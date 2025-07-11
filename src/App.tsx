@@ -3236,7 +3236,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">€/div>
+                                                        <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -8128,7 +8128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option>Todos os tipos</option>
                       <option>Particular</option>
                       <option>Empresa</option>
-                      <option>Condomínio</option>
+                      <option>Condom��nio</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                       <option>Todos os estados</option>
