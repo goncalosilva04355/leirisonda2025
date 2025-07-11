@@ -665,7 +665,7 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ��� localStorage synchronization
+  // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
   const autoSyncData = useAutoSyncSimple();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("📞 All mock and test data cleared");
+      console.log("�� All mock and test data cleared");
     };
 
     forceLogout();
@@ -1175,7 +1175,7 @@ function App() {
     // console.log("€Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("€rrent notification permission:", permission);
+      console.log("��rrent notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
@@ -1523,7 +1523,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("📞 Navigating to dashboard");
+            console.log("�� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -5114,7 +5114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="João Silva"]',
+                                'input[placeholder*="Jo��o Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
