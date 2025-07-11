@@ -281,7 +281,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  // AUTO-MIGRA��ÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -316,7 +316,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR��TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -620,7 +620,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("€️ Erro na sincronização universal:", syncError);
+          console.warn("€��� Erro na sincronização universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -630,7 +630,12 @@ function App() {
       } else {
         // Fallback para sistema atual se Firestore falhar
         console.warn("€ Firestore não disponível, usando sistema atual");
-        return await addObra(data);
+        const result = await addObra(data);
+
+        // Enviar notificações mesmo no fallback
+        await sendWorkAssignmentNotifications(data);
+
+        return result;
       }
     } catch (error) {
       console.error("❌ Erro no sistema de obras:", error);
@@ -648,6 +653,9 @@ function App() {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
+
+        // Enviar notificações mesmo no fallback final
+        await sendWorkAssignmentNotifications(newWork);
       }
 
       return newWork.id;
@@ -1110,41 +1118,103 @@ function App() {
     status: "completed",
   });
 
-  // Initialize authentication state with security checks
+  // Initialize authentication state with auto-login check
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
     // SECURITY: Force complete logout on app start
-    const forceLogout = async () => {
+    const initializeAuth = async () => {
       try {
-        // Clear Firebase auth state
-        await authService.logout();
-        console.log("🔒 Firebase auth cleared");
+        // Verificar se auto-login está ativo
+        const autoLoginEnabled = localStorage.getItem("autoLoginEnabled");
+        const rememberMe = localStorage.getItem("rememberMe");
+        const savedCredentials = sessionStorage.getItem(
+          "savedLoginCredentials",
+        );
+
+        if (
+          autoLoginEnabled === "true" &&
+          rememberMe === "true" &&
+          savedCredentials
+        ) {
+          console.log("🔄 Auto-login detectado, tentando restaurar sessão...");
+
+          try {
+            const credentials = JSON.parse(savedCredentials);
+            if (
+              credentials.email &&
+              credentials.password &&
+              credentials.rememberMe
+            ) {
+              console.log("📧 Tentando auto-login para:", credentials.email);
+
+              const result = await authService.login(
+                credentials.email,
+                credentials.password,
+                true,
+              );
+
+              if (result.success && result.user) {
+                console.log(
+                  "✅ Auto-login bem-sucedido para:",
+                  result.user.email,
+                );
+                setCurrentUser(result.user);
+                setIsAuthenticated(true);
+                return; // Não fazer logout se auto-login funcionou
+              } else {
+                console.warn("❌ Auto-login falhou:", result.error);
+                // Limpar credenciais inválidas
+                sessionStorage.removeItem("savedLoginCredentials");
+                localStorage.removeItem("autoLoginEnabled");
+                localStorage.removeItem("rememberMe");
+              }
+            }
+          } catch (autoLoginError) {
+            console.error("❌ Erro no auto-login:", autoLoginError);
+            // Limpar credenciais corrompidas
+            sessionStorage.removeItem("savedLoginCredentials");
+            localStorage.removeItem("autoLoginEnabled");
+            localStorage.removeItem("rememberMe");
+          }
+        }
+
+        // Se chegou aqui, fazer logout normal (sem auto-login ou auto-login falhou)
+        console.log("🔒 Iniciando estado não autenticado");
+
+        // Clear Firebase auth state se não há auto-login
+        try {
+          await authService.logout();
+          console.log("🔒 Firebase auth cleared");
+        } catch (error) {
+          console.log("⚠️ Firebase logout error (expected):", error);
+        }
+
+        // Ensure user starts in unauthenticated state se não há auto-login ativo
+        if (!autoLoginEnabled || !rememberMe) {
+          setCurrentUser(null);
+          setIsAuthenticated(false);
+          localStorage.removeItem("currentUser");
+          localStorage.removeItem("isAuthenticated");
+        }
+
+        // Clear all mock and test data
+        localStorage.removeItem("mock-users");
+        localStorage.removeItem("mock-current-user");
+        localStorage.removeItem("test-data");
+        localStorage.removeItem("sample-data");
+
+        console.log("✅ App initialization completed");
+        console.log("🗑️ Mock and test data cleared");
       } catch (error) {
-        console.log("€ Firebase logout error (expected):", error);
+        console.error("❌ Erro na inicialização:", error);
+        // Em caso de erro, forçar logout completo
+        setCurrentUser(null);
+        setIsAuthenticated(false);
       }
-
-      // Ensure user starts in unauthenticated state
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-
-      // Clear any stored auth data
-      localStorage.removeItem("currentUser");
-      sessionStorage.removeItem("savedLoginCredentials");
-
-      // Clear all mock and test data
-      localStorage.removeItem("mock-users");
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("test-data");
-      localStorage.removeItem("sample-data");
-
-      console.log(
-        "🔒 SECURITY: Forced logout completed - manual login required",
-      );
-      console.log("🗑️ All mock and test data cleared");
     };
 
-    forceLogout();
+    initializeAuth();
   }, []);
 
   // Passo 3: Teste completo do Firestore com operações reais
@@ -1343,6 +1413,31 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
+    // Add global error handler for Firebase messaging errors
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Check if it's a Firebase messaging error
+      if (
+        event.reason &&
+        event.reason.toString().includes("firebase") &&
+        event.reason.toString().includes("messaging")
+      ) {
+        console.warn(
+          "🔥 Firebase messaging error caught and handled:",
+          event.reason,
+        );
+        event.preventDefault(); // Prevent the error from being logged as unhandled
+      }
+    };
+
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+    // Cleanup
+    const cleanup = () => {
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection,
+      );
+    };
     // console.log("€Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
@@ -1363,20 +1458,23 @@ function App() {
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
-      // Clear any existing service workers first to prevent conflicts
+      // Clear only non-Firebase service workers to prevent conflicts
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((registration) => {
-          registration.unregister();
+          // Don't unregister Firebase messaging service worker
+          if (!registration.scope.includes("firebase-messaging-sw")) {
+            registration.unregister();
+          }
         });
       });
 
-      // Register the service worker with a delay to ensure cleanup
+      // Register the Firebase messaging service worker specifically
       setTimeout(() => {
         navigator.serviceWorker
-          .register("/sw.js", { updateViaCache: "none" })
+          .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Service Worker registered successfully:",
+              "📞 Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1386,7 +1484,25 @@ function App() {
             }
           })
           .catch((error) => {
-            console.error("❌ Service Worker registration failed:", error);
+            console.error(
+              "❌ Firebase Messaging Service Worker registration failed:",
+              error,
+            );
+            // Fallback: try to register a basic service worker
+            return navigator.serviceWorker
+              .register("/sw.js", { updateViaCache: "none" })
+              .then((fallbackRegistration) => {
+                console.log(
+                  "📞 Fallback Service Worker registered:",
+                  fallbackRegistration.scope,
+                );
+              })
+              .catch((fallbackError) => {
+                console.error(
+                  "❌ Fallback Service Worker registration also failed:",
+                  fallbackError,
+                );
+              });
           });
 
         // Listen for messages from service worker (notification clicks)
@@ -1435,6 +1551,7 @@ function App() {
 
     return () => {
       window.removeEventListener("hashchange", handleHashChange);
+      cleanup(); // Clean up the global error handler
     };
   }, [isAuthenticated]);
 
@@ -1643,6 +1760,43 @@ function App() {
   };
 
   // Authentication functions
+  const handleLoginWithRememberMe = async (
+    email: string,
+    password: string,
+    rememberMe: boolean = false,
+  ) => {
+    try {
+      console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
+
+      const result = await authService.login(email, password, rememberMe);
+
+      if (result.success && result.user) {
+        console.log("✅ Login successful for:", result.user.email);
+
+        // Set user state and authentication
+        setCurrentUser(result.user);
+        setIsAuthenticated(true);
+
+        // Navigate to dashboard
+        setTimeout(() => {
+          const hash = window.location.hash.substring(1);
+          if (hash && hash !== "login") {
+            setActiveSection(hash);
+          } else {
+            navigateToSection("dashboard");
+          }
+        }, 100);
+
+        return;
+      } else {
+        throw new Error(result.error || "Login failed");
+      }
+    } catch (error) {
+      console.error("❌ Login error:", error);
+      throw error;
+    }
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError("");
@@ -1661,6 +1815,7 @@ function App() {
       const result = await authService.login(
         loginForm.email,
         loginForm.password,
+        false, // rememberMe será gerido pelo LoginPageFixed
       );
 
       console.log("€ Auth result:", result);
@@ -1887,7 +2042,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞ções: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -2077,7 +2232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("���� DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -2625,8 +2780,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("📞 Login attempt for:", email);
-
             // Clear any previous errors
             setLoginError("");
 
@@ -2637,13 +2790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              // Importar serviço robusto
-              const { robustLoginService } = await import(
-                "./services/robustLoginService"
-              );
-
-              console.log("🔐 Usando serviço de login robusto...");
-              const result = await robustLoginService.login(
+              await handleLoginWithRememberMe(
                 email.trim(),
                 password,
                 rememberMe,
@@ -5930,7 +6077,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Características especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter��sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -6531,7 +6678,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenção
+                          Fotografias da Manutenç��o
                         </h3>
                       </div>
 
@@ -7290,7 +7437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localização abaixo e
+                                        • Configure a sua localiza��ão abaixo e
                                         veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
@@ -7412,7 +7559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
+                                      Instruç��es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -8669,7 +8816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observações
+                            Notas e Observaç��es
                           </label>
                           <textarea
                             rows={4}
@@ -9032,7 +9179,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ��� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -9078,7 +9225,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Orçamento:
+                                    Or��amento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
@@ -9756,7 +9903,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observações
+                          ).value; // Observa��ões
 
                           // Prepare update data
                           let updateData: any = {
@@ -11793,7 +11940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            📍 {selectedPool.location}
+                            ���� {selectedPool.location}
                           </button>
                         </div>
                       </div>
@@ -11908,7 +12055,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "Não especificado"}
+                              : "N��o especificado"}
                           </p>
                         </div>
                       </div>

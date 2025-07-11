@@ -295,6 +295,11 @@ class RobustLoginService {
       users.push(newUser);
       localStorage.setItem("app-users", JSON.stringify(users));
 
+      // Disparar evento para atualizar UI
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("usersUpdated"));
+      }
+
       console.log("✅ Utilizador criado com sucesso:", email);
 
       return {

@@ -45,8 +45,8 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSyncFixed(): UniversalSyncState &
   UniversalSyncActions {
-  // Initialize with simple initial state
-  const [state, setState] = useState<UniversalSyncState>({
+  // Initialize with simple initial state - safe for SSR
+  const [state, setState] = useState<UniversalSyncState>(() => ({
     obras: [],
     manutencoes: [],
     piscinas: [],
@@ -57,7 +57,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     isLoading: false,
     error: null,
     syncStatus: "disconnected",
-  });
+  }));
 
   // Safe localStorage access
   const safeGetLocalStorage = useCallback(
@@ -94,6 +94,9 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
   // Load initial data
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
     const loadData = () => {
       try {
         const obras = safeGetLocalStorage("works");
@@ -130,15 +133,17 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
     loadData();
 
-    // Listen for storage changes
+    // Listen for storage changes (only on client side)
     const handleStorageChange = (e: StorageEvent) => {
       if (["works", "maintenance", "pools", "clients"].includes(e.key || "")) {
         loadData();
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
+    }
   }, [safeGetLocalStorage]);
 
   // Add obra function
@@ -167,12 +172,14 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          // Trigger update event
-          window.dispatchEvent(
-            new CustomEvent("obrasUpdated", {
-              detail: { data: updatedObras, collection: "obras" },
-            }),
-          );
+          // Trigger update event (only on client side)
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("obrasUpdated", {
+                detail: { data: updatedObras, collection: "obras" },
+              }),
+            );
+          }
         }
 
         return id;
@@ -213,11 +220,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("manutencoesUpdated", {
-              detail: { data: updatedManutencoes, collection: "manutencoes" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("manutencoesUpdated", {
+                detail: { data: updatedManutencoes, collection: "manutencoes" },
+              }),
+            );
+          }
         }
 
         return id;
@@ -257,11 +266,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("piscinasUpdated", {
-              detail: { data: updatedPiscinas, collection: "piscinas" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("piscinasUpdated", {
+                detail: { data: updatedPiscinas, collection: "piscinas" },
+              }),
+            );
+          }
         }
 
         return id;
@@ -301,11 +312,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("clientesUpdated", {
-              detail: { data: updatedClientes, collection: "clientes" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("clientesUpdated", {
+                detail: { data: updatedClientes, collection: "clientes" },
+              }),
+            );
+          }
         }
 
         return id;
