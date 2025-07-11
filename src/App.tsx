@@ -1076,11 +1076,7 @@ function App() {
               );
             }
           }
-        } else {
-          console.log(
-            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
-          );
-        }
+                // Firestore não disponível - modo simplificado
       } catch (error) {
         console.warn("❌ Passo 3: Erro no teste Firestore:", error);
       }
@@ -7171,7 +7167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         notificações no seu navegador
                                       </li>
                                       <li>
-                                        • Em dispositivos móveis, adicione a app
+                                        ��� Em dispositivos móveis, adicione a app
                                         ao ecrã inicial
                                       </li>
                                       <li>
@@ -8991,7 +8987,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações Básicas */}
+                    {/* Informaç��es Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -9089,7 +9085,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Sa��da
+                              Hora de Saída
                             </label>
                             <input
                               type="datetime-local"
