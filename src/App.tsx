@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("���� All mock and test data cleared");
+      console.log("📞 All mock and test data cleared");
     };
 
     forceLogout();
@@ -2158,7 +2158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("��dress clicked:", address);
+    console.log("€dress clicked:", address);
     console.log("€ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -6592,7 +6592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>• Próximas intervenç��es</li>
                               </ul>
                             </div>
                             <button
@@ -9484,7 +9484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "📞� DEBUG boreInputs found:",
+                              "🔧 DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -10592,7 +10592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             } catch (error: any) {
               console.error("❌ Login error:", error);
               setLoginError(
-                "Erro de conex��o. Verifique sua internet e tente novamente.",
+                "Erro de conexão. Verifique sua internet e tente novamente.",
               );
             }
           }}
@@ -10935,7 +10935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N€specificado"}
+                          {selectedWork.type || "N���specificado"}
                         </p>
                       </div>
                       <div>
@@ -11178,7 +11178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             >
                               {selectedWork.folhaGerada
                                 ? "✓ Gerada"
-                                : "✗ Não gerada"}
+                                : "��� Não gerada"}
                             </span>
                           </div>
                         </div>
