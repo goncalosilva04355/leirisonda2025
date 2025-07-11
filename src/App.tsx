@@ -1372,7 +1372,7 @@ function App() {
               // Show a success message
               setTimeout(() => {
                 showNotification(
-                  "€ Notificação",
+                  "€ Notifica��ão",
                   `Navegando para obra: ${data.workTitle}`,
                   "info",
                 );
@@ -1729,10 +1729,20 @@ function App() {
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔐 Debug: Submitting advanced password form");
+    console.log("🔐 Debug: Password entered:", advancedPassword);
+    console.log("🔐 Debug: Password length:", advancedPassword.length);
+    console.log("🔐 Debug: Current isAdvancedUnlocked:", isAdvancedUnlocked);
+
     if (advancedPassword === "19867") {
+      console.log("✅ Debug: Password correct, unlocking advanced settings");
       setIsAdvancedUnlocked(true);
       setAdvancedPasswordError("");
+      console.log(
+        "✅ Debug: State updated - should show AdvancedSettings component",
+      );
     } else {
+      console.log("❌ Debug: Password incorrect");
       setAdvancedPasswordError("Palavra-passe incorreta");
     }
   };
@@ -2087,7 +2097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `���� Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -4166,7 +4176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -7706,7 +7716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Piscinas
+                                    Relat��rio de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
