@@ -12311,6 +12311,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Work Assignment Notifications */}
         <WorkAssignmentNotifications currentUser={currentUser} />
 
+        {/* Mobile Firebase Fix - Show when conflicts detected */}
+        {showMobileFirebaseFix && <MobileFirebaseFix />}
+
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
 
