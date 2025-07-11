@@ -81,6 +81,7 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -7491,7 +7492,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             "granted"
                                           ) {
                                             new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
+                                              body: "Notificaç��es já estão ativadas!",
                                               icon: "/icon.svg",
                                             });
                                           } else {
