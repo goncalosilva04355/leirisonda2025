@@ -134,7 +134,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       };
 
       mainUsers.push(newMainUser);
-      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      storageUtils.setJson("app-users", mainUsers);
 
       // Sincronizar com mock-users para compatibilidade
       const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
