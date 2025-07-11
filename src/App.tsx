@@ -810,7 +810,7 @@ function App() {
           setUsers(parsedUsers);
         }
       } catch (error) {
-        console.error("�� Error reloading users:", error);
+        console.error("❌ Error reloading users:", error);
       }
     };
 
@@ -1821,7 +1821,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           showNotification(
             "Notifica������es Ativadas",
-            "Agora vai receber notificações de obras atribu��das",
+            "Agora vai receber notificações de obras atribu���das",
             "success",
           );
           console.log("�� Notifications enabled successfully");
@@ -2862,9 +2862,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Todas as Obras
+                          Obras Atribuídas
                         </h3>
-                        <p className="text-sm text-gray-500">No sistema</p>
+                        <p className="text-sm text-gray-500">
+                          Atribuídas a mim
+                        </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
@@ -5939,7 +5941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -7322,7 +7324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          • Todas as manutenções (
+                                          • Todas as manuten��ões (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
@@ -10873,7 +10875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Tipo de Obra
                         </label>
                         <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "N����o especificado"}
+                          {selectedWork.type || "N������o especificado"}
                         </p>
                       </div>
                       <div>
