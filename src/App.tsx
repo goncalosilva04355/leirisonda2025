@@ -1332,9 +1332,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert(
-        "Por favor, preencha os campos obrigat€rios (Piscina e Técnico).",
-      );
+      alert("Por favor, preencha os campos obrigat€rios (Piscina e Técnico).");
       return;
     }
 
@@ -1579,9 +1577,7 @@ function App() {
       // Clear URL hash
       window.location.hash = "";
 
-      console.log(
-        "€Forced logout state clear completed - redirected to login",
-      );
+      console.log("€Forced logout state clear completed - redirected to login");
     }
   };
 
@@ -1676,7 +1672,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -3153,7 +3149,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                                                            <span>🔧</span>
+                                      <span>🔧</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -3236,7 +3232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                                                        <div className="text-gray-400 mb-2">📊</div>
+                            <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -3602,8 +3598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">
-                                    €                               </div>
+                                  <div className="text-gray-400 mb-2">€ </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3844,7 +3839,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                                             <span>Nova Manutenção</span>
+                      <span>Nova Manutenção</span>
                     </button>
                   </div>
                 </div>
@@ -3963,7 +3958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                                                                📞 {maint.clientContact}
+                                        📞 {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3985,7 +3980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                                                         📍 {maint.location}
+                                    📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -4157,7 +4152,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                                                 {maint.technician}
+                                {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -4742,7 +4737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                                                         👤 {assignedUser.name}
+                                    👤 {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -5625,7 +5620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç��o Completa *
+                        Localizaç����o Completa *
                       </label>
                       <input
                         type="text"
@@ -7195,8 +7190,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Quando ativado, clicar num número de
-                                      telefone abrir€ diretamente o marcador
-                                      do telefone.
+                                      telefone abrir€ diretamente o marcador do
+                                      telefone.
                                     </p>
                                     <p className="text-blue-600 text-xs">
                                       Estado:{" "}
@@ -7268,12 +7263,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç€ automática funciona
-                                        melhor em dispositivos móveis
+                                        • A marcaç€ automática funciona melhor
+                                        em dispositivos móveis
                                       </li>
                                       <li>
-                                        €O Google Maps abre numa nova
-                                        janela/tab
+                                        €O Google Maps abre numa nova janela/tab
                                       </li>
                                       <li>
                                         • Pode ativar ou desativar cada
@@ -7392,7 +7386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                                                                    • Todas as manutenções (
+                                          • Todas as manutenções (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
@@ -7405,7 +7399,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                                                                ⚠️ ATENÇÃO: Esta operação é
+                                        ⚠️ ATENÇÃO: Esta operação é
                                         irreversível!
                                       </p>
                                       <button
@@ -7593,8 +7587,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Relatórios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
-                                                            Gere relatórios detalhados em PDF sobre
-                              piscinas, manutenções e obras.
+                              Gere relatórios detalhados em PDF sobre piscinas,
+                              manutenções e obras.
                             </p>
                           </div>
 
@@ -7637,7 +7631,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                                                        Relatório de Manutenções
+                                    Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Histórico de intervenções
@@ -7829,8 +7823,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                                                <li>• Informações de clientes</li>
-                                                 <li>• Histórico de manutenções</li>
+                        <li>• Informações de clientes</li>
+                        <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -7860,7 +7854,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€                      registadas
+                        <strong>{maintenance.length}</strong> manuten€
+                        registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
@@ -8770,7 +8765,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                                                                 📞 {work.contact}
+                                        📞 {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -8805,9 +8800,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
-                                <span className="font-medium">
-                                  Atribu€:
-                                </span>{" "}
+                                <span className="font-medium">Atribu€:</span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
                                   ? work.assignedUsers
@@ -8820,7 +8813,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                                                     €{work.budget}
+                                  €{work.budget}
                                 </div>
                               )}
                             </div>
@@ -9122,9 +9115,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. Vá à Área
-                                de Administração → "🔧 Correção de Atribuição
-                                de Obras" para corrigir este problema.
+                                €hum utilizador encontrado. Vá à Área de
+                                Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -10162,8 +10155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte€o. Por favor, tente
-              novamente.
+              Ocorreu um erro ao carregar o conte€o. Por favor, tente novamente.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -10318,7 +10310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>€an>
+                  <span>💧</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10623,7 +10615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - tamb��m funciona na p��gina de login */}
+        {/* Admin Page - também funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
