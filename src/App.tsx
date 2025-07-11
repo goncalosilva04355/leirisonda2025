@@ -253,17 +253,7 @@ function App() {
     status: { completed: false, migrated: 0 },
   };
 
-  // Log migration status changes
-  useEffect(() => {
-    if (userMigration.status.completed && userMigration.status.migrated > 0) {
-      console.log(
-        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
-      );
-      console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
-      );
-    }
-  }, [userMigration.status.completed, userMigration.status.migrated]);
+  // Migration status effect removed
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -430,7 +420,7 @@ function App() {
 
           // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notifica��ão local para o utilizador
+          // Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -1690,7 +1680,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manuten��ões: ${futureMaintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -4532,7 +4522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "�� ERRO AO FAZER PARSE DOS USERS:",
+                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -5771,7 +5761,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manuten��ão
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
