@@ -21,22 +21,13 @@ class FirebaseAuthService {
   private initialized = false;
 
   async initialize(): Promise<boolean> {
-    try {
-      // Sempre obter uma nova instância para evitar instâncias destruídas
-      this.auth = await getAuthService();
-      if (this.auth) {
-        this.initialized = true;
-        console.log("✅ Firebase Auth service initialized");
-        return true;
-      }
-      console.warn("⚠️ Firebase Auth not available");
-      this.initialized = false;
-      return false;
-    } catch (error) {
-      console.error("❌ Failed to initialize Firebase Auth:", error);
-      this.initialized = false;
-      return false;
-    }
+    // FIREBASE AUTH DISABLED to prevent checkDestroyed errors
+    console.log(
+      "⚠️ Firebase Auth disabled to prevent errors - using local auth only",
+    );
+    this.initialized = false;
+    this.auth = null;
+    return false;
   }
 
   async signIn(
@@ -44,197 +35,55 @@ class FirebaseAuthService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<AuthResult> {
-    try {
-      // Sempre reinicializar para garantir instância válida
-      this.initialized = false;
-      if (!(await this.initialize())) {
-        return {
-          success: false,
-          error: "Firebase Auth not available",
-        };
-      }
-
-      // Verificar se a instância auth ainda é válida
-      if (!this.auth) {
-        return {
-          success: false,
-          error: "Firebase Auth instance is null",
-        };
-      }
-
-      // Set persistence based on remember me preference
-      const persistence = rememberMe
-        ? browserLocalPersistence
-        : browserSessionPersistence;
-
-      try {
-        await setPersistence(this.auth, persistence);
-      } catch (persistError) {
-        console.warn(
-          "⚠️ Could not set persistence, continuing without it:",
-          persistError,
-        );
-      }
-
-      const userCredential = await signInWithEmailAndPassword(
-        this.auth,
-        email,
-        password,
-      );
-
-      console.log("✅ User signed in successfully:", userCredential.user.email);
-
-      return {
-        success: true,
-        user: userCredential.user,
-      };
-    } catch (error: any) {
-      console.error("❌ Sign in error:", error);
-
-      // Se o erro for relacionado com app destruída, tentar reinicializar
-      if (
-        error.message &&
-        (error.message.includes("destroyed") ||
-          error.message.includes("checkDestroyed"))
-      ) {
-        console.log("🔄 App destroyed detected, reinitializing...");
-        this.initialized = false;
-        this.auth = null;
-        return {
-          success: false,
-          error: "Firebase precisa ser reinicializado. Tente novamente.",
-        };
-      }
-
-      let errorMessage = "Erro de autenticação";
-
-      switch (error.code) {
-        case "auth/user-not-found":
-          errorMessage = "Utilizador não encontrado";
-          break;
-        case "auth/wrong-password":
-          errorMessage = "Palavra-passe incorreta";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "Email inválido";
-          break;
-        case "auth/user-disabled":
-          errorMessage = "Conta desativada";
-          break;
-        case "auth/too-many-requests":
-          errorMessage = "Muitas tentativas. Tente novamente mais tarde";
-          break;
-        case "auth/network-request-failed":
-          errorMessage = "Erro de conexão. Verifique sua internet";
-          break;
-        default:
-          errorMessage = error.message || "Erro desconhecido";
-      }
-
-      return {
-        success: false,
-        error: errorMessage,
-      };
-    }
+    // FIREBASE AUTH DISABLED - return failure to force local auth
+    console.log("⚠️ Firebase Auth disabled - forcing local authentication");
+    return {
+      success: false,
+      error: "Firebase Auth disabled - using local auth",
+    };
   }
 
   async signUp(email: string, password: string): Promise<AuthResult> {
-    try {
-      if (!(await this.initialize())) {
-        return {
-          success: false,
-          error: "Firebase Auth not available",
-        };
-      }
-
-      const userCredential = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password,
-      );
-
-      console.log("✅ User created successfully:", userCredential.user.email);
-
-      return {
-        success: true,
-        user: userCredential.user,
-      };
-    } catch (error: any) {
-      console.error("❌ Sign up error:", error);
-
-      let errorMessage = "Erro ao criar conta";
-
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          errorMessage = "Email já está em uso";
-          break;
-        case "auth/invalid-email":
-          errorMessage = "Email inválido";
-          break;
-        case "auth/weak-password":
-          errorMessage = "Palavra-passe muito fraca";
-          break;
-        default:
-          errorMessage = error.message || "Erro desconhecido";
-      }
-
-      return {
-        success: false,
-        error: errorMessage,
-      };
-    }
+    // FIREBASE AUTH DISABLED - return failure to force local auth
+    console.log("⚠️ Firebase Auth disabled - cannot create Firebase users");
+    return {
+      success: false,
+      error: "Firebase Auth disabled - use local user creation",
+    };
   }
 
-  async signOut(): Promise<boolean> {
-    try {
-      if (!(await this.initialize())) {
-        return false;
-      }
-
-      await signOut(this.auth);
-      console.log("✅ User signed out successfully");
-      return true;
-    } catch (error) {
-      console.error("❌ Sign out error:", error);
-      return false;
-    }
+  async signOut(): Promise<void> {
+    // FIREBASE AUTH DISABLED - just reset state
+    console.log("⚠️ Firebase Auth disabled - local signout only");
+    this.initialized = false;
+    this.auth = null;
   }
 
-  async getCurrentUser(): Promise<User | null> {
-    try {
-      if (!(await this.initialize())) {
-        return null;
-      }
-
-      return this.auth.currentUser;
-    } catch (error) {
-      console.error("❌ Get current user error:", error);
-      return null;
-    }
+  onAuthStateChanged(callback: (user: User | null) => void): () => void {
+    // FIREBASE AUTH DISABLED - return empty unsubscribe function
+    console.log("⚠️ Firebase Auth disabled - no auth state changes");
+    return () => {};
   }
 
-  onAuthStateChange(callback: (user: User | null) => void): () => void {
-    if (!this.auth) {
-      return () => {};
-    }
-
-    return onAuthStateChanged(this.auth, callback);
+  getCurrentUser(): User | null {
+    // FIREBASE AUTH DISABLED - always return null
+    return null;
   }
 
-  async waitForAuthReady(): Promise<User | null> {
-    if (!(await this.initialize())) {
-      return null;
-    }
+  async getIdToken(): Promise<string | null> {
+    // FIREBASE AUTH DISABLED - always return null
+    return null;
+  }
 
-    return new Promise((resolve) => {
-      const unsubscribe = onAuthStateChanged(this.auth, (user) => {
-        unsubscribe();
-        resolve(user);
-      });
-    });
+  async refreshToken(): Promise<void> {
+    // FIREBASE AUTH DISABLED - do nothing
+    console.log("⚠️ Firebase Auth disabled - cannot refresh token");
+  }
+
+  isInitialized(): boolean {
+    return false; // Always false since Firebase Auth is disabled
   }
 }
 
-// Export a singleton instance
 export const authService = new FirebaseAuthService();
 export default authService;
