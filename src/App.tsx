@@ -34,8 +34,8 @@ import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
-// import { UserPermissionsManager } from "./components/UserPermissionsManager";
-// import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
+import { UserPermissionsManager } from "./components/UserPermissionsManager";
+import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -1246,7 +1246,7 @@ function App() {
       //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
-      // Forçar re-render dos dados universais se necessário
+      // Forçar re-render dos dados universais se necess��rio
       if (collection === "obras") {
         // Trigger re-fetch das obras
         window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
@@ -1717,7 +1717,9 @@ function App() {
       // Clear URL hash
       window.location.hash = "";
 
-      console.log("€Forced logout state clear completed - redirected to login");
+      console.log(
+        "���Forced logout state clear completed - redirected to login",
+      );
     }
   };
 
@@ -1727,10 +1729,25 @@ function App() {
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Debug visual para mobile
+    alert(
+      `Debug: Password: "${advancedPassword}" (comprimento: ${advancedPassword.length})`,
+    );
+
     if (advancedPassword === "19867") {
-      setIsAdvancedUnlocked(true);
+      alert("✅ Palavra-passe correcta! A abrir configurações...");
       setAdvancedPasswordError("");
+
+      // Usar timeout para garantir que o estado é atualizado
+      setTimeout(() => {
+        setIsAdvancedUnlocked(true);
+        alert("✅ Estado atualizado - Configurações devem abrir agora!");
+      }, 100);
     } else {
+      alert(
+        `❌ Palavra-passe incorrecta! Esperado: "19867", Recebido: "${advancedPassword}"`,
+      );
       setAdvancedPasswordError("Palavra-passe incorreta");
     }
   };
@@ -2120,7 +2137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("Máximo de 20 fotografias permitidas");
+      alert("M��ximo de 20 fotografias permitidas");
       return;
     }
 
@@ -2795,7 +2812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               isWorkAssignedToCurrentUser(w);
                             return isPending && isAssignedToUser;
                           });
-                          console.log("📊 Dashboard - DEBUG Contadores:", {
+                          console.log("�� Dashboard - DEBUG Contadores:", {
                             totalObras: works.length,
                             utilizadorAtual: currentUser?.name,
                             obrasPendentesAtribuidas: pendingWorks.length,
@@ -5494,7 +5511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
 
                               console.log(
-                                "✅ Mostrando formulário de novo cliente",
+                                "✅ Mostrando formul��rio de novo cliente",
                               );
                               setShowNewClientForm(true);
                             }
@@ -6036,7 +6053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar intervenção de manutenção
+                        Registar interven��ão de manutenção
                       </p>
                     </div>
                   </div>
@@ -7224,7 +7241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As notificaç€es funcionam apenas com
+                                        • As notificaç��es funcionam apenas com
                                         HTTPS
                                       </li>
                                       <li>
@@ -7310,7 +7327,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    🔧
+                                    ��
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -7439,9 +7456,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Acesso às configurações avançadas do sistema
                                   </p>
                                   <button
-                                    onClick={() =>
-                                      setShowAdvancedSettings(true)
-                                    }
+                                    onClick={() => {
+                                      // Definir ambos os estados em simultâneo
+                                      setIsAdvancedUnlocked(true);
+                                      setShowAdvancedSettings(true);
+
+                                      // Forçar update com timeout
+                                      setTimeout(() => {
+                                        setIsAdvancedUnlocked(true);
+                                      }, 10);
+                                    }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
                                     Configurações Avançadas
@@ -10568,7 +10592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gonçalo Fonseca",
+  //       name: "Gon��alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11818,7 +11842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Criação */}
+                    {/* Data de Cria��ão */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
