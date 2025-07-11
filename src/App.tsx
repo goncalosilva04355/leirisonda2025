@@ -322,8 +322,7 @@ function App() {
 
   // Hooks removed to prevent crashes
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  // Firebase auto-fix hook removed
 
   // AUTO-MIGRA��ÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
@@ -1894,7 +1893,7 @@ function App() {
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
-        console.log("✅ Login state updated", {
+        console.log("��� Login state updated", {
           user: result.user.email,
           role: result.user.role,
           isAuthenticated: true,
@@ -2243,7 +2242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("🔔 Requesting notification permission...");
+    console.log("�� Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -3283,7 +3282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📍 Morada:
+                                  ���� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -7046,7 +7045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Configurações do Sistema
+                            Configuraç��es do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
@@ -7644,7 +7643,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruç���es
+                                      Instruç��es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
