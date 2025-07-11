@@ -54,7 +54,7 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/config";
+import { isFirebaseReady } from "./firebase";
 import { isFirestoreReady, getDB as getFirebaseFirestore } from "./firebase";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
@@ -537,7 +537,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notifica��ão para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -4733,7 +4733,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    ���� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
