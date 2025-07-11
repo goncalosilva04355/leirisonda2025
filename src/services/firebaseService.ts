@@ -240,7 +240,7 @@ export const userService = {
       throw new Error("Firebase not configured");
     }
 
-    const userRef = doc(db, COLLECTIONS.USERS, userId);
+    const userRef = doc(getFirestore(), COLLECTIONS.USERS, userId);
     await updateDoc(userRef, {
       ...userData,
       updatedAt: Timestamp.now(),
@@ -259,7 +259,7 @@ export const userService = {
       throw new Error("Firebase not configured");
     }
 
-    const userRef = doc(db, COLLECTIONS.USERS, userId);
+    const userRef = doc(getFirestore(), COLLECTIONS.USERS, userId);
     await deleteDoc(userRef);
 
     // Trigger automatic synchronization
@@ -361,7 +361,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
+    const poolRef = doc(getFirestore(), COLLECTIONS.POOLS, poolId);
     await updateDoc(poolRef, {
       ...poolData,
       updatedAt: Timestamp.now(),
@@ -380,7 +380,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
+    const poolRef = doc(getFirestore(), COLLECTIONS.POOLS, poolId);
     await deleteDoc(poolRef);
 
     // Trigger automatic synchronization
@@ -482,7 +482,11 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
+    const maintenanceRef = doc(
+      getFirestore(),
+      COLLECTIONS.MAINTENANCE,
+      maintenanceId,
+    );
     await updateDoc(maintenanceRef, {
       ...maintenanceData,
       updatedAt: Timestamp.now(),
@@ -501,7 +505,11 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
+    const maintenanceRef = doc(
+      getFirestore(),
+      COLLECTIONS.MAINTENANCE,
+      maintenanceId,
+    );
     await deleteDoc(maintenanceRef);
 
     // Trigger automatic synchronization
@@ -531,7 +539,7 @@ export const workService = {
       const works = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
-        // Garantir que todas as obras são marcadas como globalmente visíveis
+        // Garantir que todas as obras são marcadas como globalmente vis��veis
         sharedGlobally: true,
         visibleToAllUsers: true,
       })) as Work[];
@@ -575,7 +583,7 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const workRef = doc(db, COLLECTIONS.WORKS, workId);
+    const workRef = doc(getFirestore(), COLLECTIONS.WORKS, workId);
     await updateDoc(workRef, {
       ...workData,
       updatedAt: Timestamp.now(),
@@ -607,7 +615,7 @@ export const workService = {
       return;
     }
 
-    const workRef = doc(db, COLLECTIONS.WORKS, workId);
+    const workRef = doc(getFirestore(), COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
 
     // Trigger automatic synchronization
@@ -658,7 +666,7 @@ export const syncService = {
         localStorage.setItem("users", JSON.stringify(usersData));
       }
     } catch (error) {
-      console.error("��� Falha ao sincronizar usuário:", error);
+      console.error("❌ Falha ao sincronizar usuário:", error);
     }
   },
 
