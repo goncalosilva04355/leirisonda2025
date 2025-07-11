@@ -88,18 +88,21 @@ export function getDB() {
 // Export db como função
 export const db = getDB();
 
-// Proxy simples para auth (retorna null por enquanto - será implementado no próximo passo)
-export const auth = new Proxy(
-  {},
-  {
-    get() {
-      console.warn(
-        "⚠️ Firebase Auth ainda não configurado - Passo 1 apenas inicializa Firebase App",
-      );
-      return null;
-    },
-  },
-);
+// Função para obter auth seguro
+export function getAuth() {
+  try {
+    const authInstance = getFirebaseAuth();
+    if (authInstance) {
+      return authInstance;
+    }
+  } catch (error) {
+    console.warn("⚠️ Firebase Auth não disponível:", error);
+  }
+  return null;
+}
+
+// Export auth como função
+export const auth = getAuth();
 
 // Importar Auth do Passo 2
 import { getFirebaseAuth, isFirebaseAuthReady } from "./authConfig";
