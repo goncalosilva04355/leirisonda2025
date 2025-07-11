@@ -280,7 +280,21 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
   }, []);
 
   const forceSyncAll = useCallback(async (): Promise<void> => {
-    console.log("forceSyncAll called");
+    try {
+      console.log("🔄 Iniciando sincronização forçada completa...");
+
+      // Import autoSyncService dynamically to avoid circular dependencies
+      const { autoSyncService } = await import("../services/autoSyncService");
+
+      if (autoSyncService.isAutoSyncActive()) {
+        await autoSyncService.syncAllCollections();
+        console.log("✅ Sincronização forçada completa!");
+      } else {
+        console.log("⚠️ Auto sync não está ativo, usando apenas localStorage");
+      }
+    } catch (error) {
+      console.error("❌ Erro na sincronização forçada:", error);
+    }
   }, []);
 
   const resetSync = useCallback(async (): Promise<void> => {
