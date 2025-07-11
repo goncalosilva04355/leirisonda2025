@@ -113,7 +113,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
     // Adicionar ao sistema principal de utilizadores (com password)
     try {
-      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const mainUsers = storageUtils.getJson("app-users", []);
       const newMainUser = {
         id: Date.now(),
         uid: `user_${Date.now()}`, // Adicionar uid para compatibilidade
