@@ -184,7 +184,7 @@ function App() {
     // Monitoriza📞ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificaç��o
+        // Aguardar um pouco antes de iniciar verificação
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -653,6 +653,9 @@ function App() {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
+
+        // Enviar notificações mesmo no fallback final
+        await sendWorkAssignmentNotifications(newWork);
       }
 
       return newWork.id;
@@ -8405,7 +8408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest���o da base de dados de clientes
+                          Gest€o da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -9176,7 +9179,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {work.contact}
+                                        ��� {work.contact}
                                       </button>
                                     </div>
                                   )}
