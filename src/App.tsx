@@ -1652,7 +1652,7 @@ function App() {
   // PDF Generation Functions
   const generatePoolsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE PISCINAS
+LEIRISONDA - RELATÓRIO DE PISCINAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1746,7 +1746,7 @@ ${index + 1}. ${work.title}
 
   const generateClientsPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE CLIENTES
+LEIRISONDA - RELATÓRIO DE CLIENTES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1945,7 +1945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n���� Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -7929,7 +7929,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
+                        <li>���� Piscinas associadas</li>
                         <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
