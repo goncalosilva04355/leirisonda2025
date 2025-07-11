@@ -21,9 +21,8 @@ class FirebaseAuthService {
   private initialized = false;
 
   async initialize(): Promise<boolean> {
-    if (this.initialized) return true;
-
     try {
+      // Sempre obter uma nova instância para evitar instâncias destruídas
       this.auth = await getAuthService();
       if (this.auth) {
         this.initialized = true;
@@ -31,9 +30,11 @@ class FirebaseAuthService {
         return true;
       }
       console.warn("⚠️ Firebase Auth not available");
+      this.initialized = false;
       return false;
     } catch (error) {
       console.error("❌ Failed to initialize Firebase Auth:", error);
+      this.initialized = false;
       return false;
     }
   }
@@ -44,6 +45,8 @@ class FirebaseAuthService {
     rememberMe: boolean = false,
   ): Promise<AuthResult> {
     try {
+      // Sempre reinicializar para garantir instância válida
+      this.initialized = false;
       if (!(await this.initialize())) {
         return {
           success: false,
@@ -51,11 +54,27 @@ class FirebaseAuthService {
         };
       }
 
+      // Verificar se a instância auth ainda é válida
+      if (!this.auth) {
+        return {
+          success: false,
+          error: "Firebase Auth instance is null",
+        };
+      }
+
       // Set persistence based on remember me preference
       const persistence = rememberMe
         ? browserLocalPersistence
         : browserSessionPersistence;
-      await setPersistence(this.auth, persistence);
+
+      try {
+        await setPersistence(this.auth, persistence);
+      } catch (persistError) {
+        console.warn(
+          "⚠️ Could not set persistence, continuing without it:",
+          persistError,
+        );
+      }
 
       const userCredential = await signInWithEmailAndPassword(
         this.auth,
