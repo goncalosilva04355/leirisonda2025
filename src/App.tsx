@@ -576,7 +576,7 @@ function App() {
           // Manter apenas as últimas 50 notificações
           const limitedNotifications = userNotifications.slice(0, 50);
 
-          localStorage.setItem(
+          safeLocalStorage.setItem(
             `work-notifications-${assignedUser.id}`,
             JSON.stringify(limitedNotifications),
           );
@@ -721,7 +721,7 @@ function App() {
       const exists = existingWorks.some((w: any) => w.id === newWork.id);
       if (!exists) {
         existingWorks.push(newWork);
-        localStorage.setItem("works", JSON.stringify(existingWorks));
+        safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
 
         // Enviar notificações mesmo no fallback final
@@ -949,7 +949,7 @@ function App() {
               },
               createdAt: new Date().toISOString(),
             });
-            localStorage.setItem("app-users", JSON.stringify(parsedUsers));
+            safeLocalStorage.setItem("app-users", JSON.stringify(parsedUsers));
           }
 
           setUsers(parsedUsers);
@@ -1021,7 +1021,7 @@ function App() {
           ];
 
           setUsers(defaultUsers);
-          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+          safeLocalStorage.setItem("app-users", JSON.stringify(defaultUsers));
 
           // Criar no Firestore também
           if (isFirestoreReady()) {
@@ -1109,7 +1109,7 @@ function App() {
   // Settings toggle functions with persistence
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    localStorage.setItem("enablePhoneDialer", enabled.toString());
+    safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
     console.log("📞 Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
@@ -1122,7 +1122,7 @@ function App() {
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    localStorage.setItem("enableMapsRedirect", enabled.toString());
+    safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
     console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
@@ -1738,13 +1738,16 @@ function App() {
       safeLocalStorage.getItem("interventions") || "[]",
     );
     savedInterventions.push(interventionData);
-    localStorage.setItem("interventions", JSON.stringify(savedInterventions));
+    safeLocalStorage.setItem(
+      "interventions",
+      JSON.stringify(savedInterventions),
+    );
 
     // Add to maintenance sync system
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç���egular",
+      type: "Manutenç€egular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -2264,7 +2267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setPushPermission(permission);
         if (permission === "granted") {
           setNotificationsEnabled(true);
-          localStorage.setItem("notificationsEnabled", "true");
+          safeLocalStorage.setItem("notificationsEnabled", "true");
           showNotification(
             "Notificações Ativadas",
             "Agora vai receber notificações de obras atribuídas",
@@ -4248,7 +4251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção registada
                       </h3>
                       <p className="text-gray-600 text-sm">
-                        As manuten��ões aparecerão aqui quando forem criadas
+                        As manutenções aparecerão aqui quando forem criadas
                       </p>
                     </div>
                   ) : (
@@ -4988,7 +4991,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       createdAt: new Date().toISOString(),
                                     };
                                     setUsers([defaultUser]);
-                                    localStorage.setItem(
+                                    safeLocalStorage.setItem(
                                       "app-users",
                                       JSON.stringify([defaultUser]),
                                     );
@@ -7688,7 +7691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Shield className="h-6 w-6 text-yellow-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Configurações Avançadas
+                                Configuraç��es Avançadas
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -7733,7 +7736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <h4 className="font-medium text-purple-900 mb-3">
-                                    Configurações Avançadas
+                                    Configuraç��es Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
                                     Acesso às configurações avançadas do sistema
@@ -9380,7 +9383,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     );
                                     if (workIndex !== -1) {
                                       existingWorks[workIndex] = updatedWork;
-                                      localStorage.setItem(
+                                      safeLocalStorage.setItem(
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
@@ -9811,7 +9814,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ���etalhes do Furo de Água
+                        €etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -10936,8 +10939,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //     };
   //     setCurrentUser(testUser);
   //     setIsAuthenticated(true);
-  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
-  //     localStorage.setItem("isAuthenticated", "true");
+  //     safeLocalStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     safeLocalStorage.setItem("isAuthenticated", "true");
   //   }
   // }, []);
 
@@ -11088,11 +11091,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // Update state
                 setCurrentUser(result.user);
                 setIsAuthenticated(true);
-                localStorage.setItem(
+                safeLocalStorage.setItem(
                   "currentUser",
                   JSON.stringify(result.user),
                 );
-                localStorage.setItem("isAuthenticated", "true");
+                safeLocalStorage.setItem("isAuthenticated", "true");
 
                 // Clear login form
                 setLoginForm({ email: "", password: "" });
@@ -11932,7 +11935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta aç��o não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
