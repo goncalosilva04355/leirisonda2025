@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings } from "lucide-react";
+import { Settings, AlertTriangle } from "lucide-react";
 
 interface LoginPageProps {
   onLogin: (
