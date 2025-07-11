@@ -2448,7 +2448,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("❌ Erro ao salvar utilizador:", error);
+      console.error("�� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -2990,7 +2990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras */}
+                {/* Lista das Obras Atribuídas */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
                   const assignedWorks = works
@@ -3988,7 +3988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenç��o registada
+                        Nenhuma manutenção registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
