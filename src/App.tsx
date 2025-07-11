@@ -140,6 +140,32 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Garantir que pelo menos o utilizador padrão existe no localStorage
+  useEffect(() => {
+    const savedUsers = localStorage.getItem("app-users");
+    if (!savedUsers) {
+      console.log("🔧 Criando utilizador padrão no localStorage");
+      const defaultUser = {
+        id: 1,
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        active: true,
+        role: "super_admin",
+        password: "19867gsf",
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        },
+        createdAt: new Date().toISOString(),
+      };
+      localStorage.setItem("app-users", JSON.stringify([defaultUser]));
+    }
+  }, []);
+
   // Debug logging disabled for production
 
   // Monitoramento de integridade de dados e restauração de utilizadores
@@ -2523,7 +2549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("📞 AuthService fallback bem-sucedido");
+                  console.log("���� AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -4587,7 +4613,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  "��� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
