@@ -594,7 +594,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não disponível, usando sistema atual");
+        console.warn("€ Firestore não dispon��vel, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -1011,8 +1011,9 @@ function App() {
   }, []);
 
   // Passo 3: Teste simplificado do Firestore
-  useEffect(() => {
-    const testFirestoreStep3 = async () => {
+    // useEffect temporariamente desativado para evitar erros
+  // useEffect(() => {
+    // const testFirestoreStep3 = async () => {
       console.log("🔥 Passo 3: Teste simplificado do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
@@ -7374,7 +7375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
-                                    Acesso às configurações avançadas do sistema
+                                    Acesso às configurações avan��adas do sistema
                                   </p>
                                   <button
                                     onClick={() =>
