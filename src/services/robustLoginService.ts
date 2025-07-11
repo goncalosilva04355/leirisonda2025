@@ -1,4 +1,5 @@
 // Serviço de login robusto que funciona em qualquer situação
+import { firebaseAuthService } from "./firebaseAuthService";
 
 export interface UserPermissions {
   [module: string]: {
@@ -48,16 +49,37 @@ class RobustLoginService {
     // Método 1: Tentar Firebase/authService
     try {
       console.log("🔥 Tentando login via Firebase...");
-      const firebaseResult = await authService.login(
+      const firebaseResult = await firebaseAuthService.signIn(
         email,
         password,
         rememberMe,
       );
 
-      if (firebaseResult.success) {
+      if (firebaseResult.success && firebaseResult.user) {
         console.log("✅ Login Firebase bem-sucedido");
+
+        // Converter Firebase User para UserProfile
+        const userProfile: UserProfile = {
+          uid: firebaseResult.user.uid,
+          email: firebaseResult.user.email || email,
+          name:
+            firebaseResult.user.displayName ||
+            this.generateNameFromEmail(email),
+          role: this.determineRole(email),
+          permissions: this.getDefaultPermissions(),
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+
+        // Salvar no localStorage
+        const storageKey = rememberMe
+          ? "leirisonda-user"
+          : "leirisonda-session-user";
+        localStorage.setItem(storageKey, JSON.stringify(userProfile));
+
         return {
-          ...firebaseResult,
+          success: true,
+          user: userProfile,
           method: "firebase",
         };
       }
@@ -226,15 +248,18 @@ class RobustLoginService {
 
   async logout(): Promise<void> {
     try {
-      // Tentar logout do authService primeiro
-      await authService.logout();
+      // Tentar logout do firebaseAuthService primeiro
+      await firebaseAuthService.signOut();
     } catch (error) {
-      console.warn("⚠️ Erro no logout do authService:", error);
+      console.warn("⚠️ Erro no logout do firebaseAuthService:", error);
     }
 
     // Limpar localStorage
     localStorage.removeItem("leirisonda-user");
     localStorage.removeItem("leirisonda-session-user");
+
+    // Limpar outras chaves relacionadas
+    localStorage.removeItem("savedLoginCredentials");
 
     console.log("✅ Logout completo realizado");
   }
