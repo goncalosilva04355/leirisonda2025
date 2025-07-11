@@ -210,6 +210,13 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           )}
         </div>
 
+        {/* Quick Mobile Fix - Show if conflicts detected */}
+        {showEmergencyFix && (
+          <div className="mb-4">
+            <QuickMobileFix onFixApplied={() => setShowEmergencyFix(false)} />
+          </div>
+        )}
+
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
