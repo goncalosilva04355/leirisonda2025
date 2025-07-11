@@ -1,8 +1,5 @@
 // Teste automático do Firestore - Passo 3
-import {
-  testFirebaseFirestore,
-  isFirebaseFirestoreAvailable,
-} from "../firebase/basicConfig";
+import { isFirestoreReady as isFirebaseFirestoreAvailable } from "../firebase";
 
 export async function runFirestoreTest() {
   console.log("🧪 Teste Firestore - Passo 3");
