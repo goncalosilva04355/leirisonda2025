@@ -71,8 +71,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
-import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
+// Data sync hooks temporarily removed
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -1695,7 +1694,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTEN��ÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -1830,7 +1829,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -3964,7 +3963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        �� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
