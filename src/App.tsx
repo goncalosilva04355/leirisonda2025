@@ -4264,7 +4264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç�����o</option>
+                            <option value="instalacao">Instalaç����o</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -4551,7 +4551,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "🔧 Corre��ão de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -5312,7 +5312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Success - no notification needed
                           } catch (error) {
-                            console.error("�� Error creating work:", error);
+                            console.error("❌ Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
@@ -5559,7 +5559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "�� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS��O NEGADA: clientes.create",
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��������������o criada para nova piscina:",
+                                "Futura manutenç�������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7638,7 +7638,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Manutenções
+                                    Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Histórico de intervenções
@@ -7866,7 +7866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
-                        <li>�� T��cnicos responsáveis</li>
+                        <li>�� T���cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -8419,7 +8419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secund��rio
+                            Email Secundário
                           </label>
                           <input
                             type="email"
@@ -8502,7 +8502,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic������vel)
+                            Pessoa de Contacto (se aplic����vel)
                           </label>
                           <input
                             type="text"
@@ -9125,7 +9125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ������� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "🔧 Correção de Atribuição
+                                de Administra��ão ��� "🔧 Correção de Atribuição
                                 de Obras" para corrigir este problema.
                               </p>
                             </div>
