@@ -4042,7 +4042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç���es agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -4202,7 +4202,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informações B��sicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10801,6 +10801,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <ArrowLeft className="h-6 w-6 text-gray-600" />
               </button>
             )}
+          </div>
+
+          {/* Sync Status Indicator - Top Right */}
+          <div className="fixed top-4 right-4 z-[60]">
+            <SyncStatusIndicator />
           </div>
 
           {/* Mobile Overlay */}
