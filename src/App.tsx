@@ -541,7 +541,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `�� Erro ao enviar notificação para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
             userError,
           );
         }
