@@ -505,7 +505,7 @@ function App() {
                 );
               } else {
                 console.warn(
-                  `⚠€ Permissão de notificação negada para ${assignedUser.name}`,
+                  `���€ Permissão de notificação negada para ${assignedUser.name}`,
                 );
               }
 
@@ -2519,7 +2519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   navigateToSection("dashboard");
                 }
 
-                // console.log("✅ Login state updated successfully");
+                // console.log("�� Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
@@ -6592,7 +6592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenç��es</li>
+                                <li>• Próximas intervenções</li>
                               </ul>
                             </div>
                             <button
