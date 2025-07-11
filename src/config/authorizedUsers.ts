@@ -57,3 +57,18 @@ export function isEmailAuthorized(email: string): AuthorizedUser | null {
 export function getAuthorizedUser(email: string): AuthorizedUser | null {
   return isEmailAuthorized(email);
 }
+
+// Função para inicializar utilizadores autorizados se necessário
+export function initializeAuthorizedUsers(): void {
+  const savedUsers = localStorage.getItem("authorizedUsers");
+  if (!savedUsers || savedUsers.trim() === "" || savedUsers === "[]") {
+    console.log("🔄 Inicializando utilizadores autorizados...");
+    localStorage.setItem("authorizedUsers", JSON.stringify(AUTHORIZED_USERS));
+    console.log(
+      "✅ Utilizadores autorizados inicializados:",
+      AUTHORIZED_USERS.length,
+    );
+  } else {
+    console.log("✅ Utilizadores autorizados já existem no localStorage");
+  }
+}
