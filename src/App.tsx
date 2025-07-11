@@ -175,7 +175,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
     };
 
@@ -949,11 +949,15 @@ function App() {
     console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
-    window.dispatchEvent(
-      new CustomEvent("mapsRedirectToggled", {
-        detail: { enabled },
-      }),
-    );
+    try {
+      window.dispatchEvent(
+        new CustomEvent("mapsRedirectToggled", {
+          detail: { enabled },
+        }),
+      );
+    } catch (error) {
+      console.warn("⚠️ Erro ao disparar evento mapsRedirectToggled:", error);
+    }
   };
 
   // Load settings from localStorage on startup
@@ -1803,7 +1807,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: �����${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: �������${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -3902,7 +3906,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenções realizadas
+                          Histórico de manuten��ões realizadas
                         </p>
                       </div>
                     </div>
@@ -11261,7 +11265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            🚰 Detalhes do Furo de Água
+                            🚰 Detalhes do Furo de ��gua
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
