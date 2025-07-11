@@ -24,16 +24,14 @@ export const AUTHORIZED_USERS: AuthorizedUser[] = [
 // Função para obter lista atual de utilizadores (localStorage + padrão)
 export function getCurrentAuthorizedUsers(): AuthorizedUser[] {
   try {
-    const savedUsers = localStorage.getItem("authorizedUsers");
-    if (savedUsers && savedUsers.trim() !== "") {
-      const parsedUsers = JSON.parse(savedUsers);
-      if (Array.isArray(parsedUsers) && parsedUsers.length > 0) {
-        console.log(
-          "✅ Utilizadores carregados do localStorage:",
-          parsedUsers.length,
-        );
-        return parsedUsers;
-      }
+    const parsedUsers =
+      storageUtils.getJson<AuthorizedUser[]>("authorizedUsers");
+    if (parsedUsers && Array.isArray(parsedUsers) && parsedUsers.length > 0) {
+      console.log(
+        "✅ Utilizadores carregados do localStorage:",
+        parsedUsers.length,
+      );
+      return parsedUsers;
     }
   } catch (error) {
     console.warn("⚠️ Erro ao carregar utilizadores do localStorage:", error);
