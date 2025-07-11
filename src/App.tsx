@@ -2188,9 +2188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
   };
 
-  // Settings persistence functions
-
-  const toggleMapsRedirect = (enabled: boolean) => {
+    // Settings persistence functions - REMOVED DUPLICATE
     setEnableMapsRedirect(enabled);
 
     // Save to localStorage
@@ -7165,7 +7163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localização abaixo e
+                                        • Configure a sua localiza��ão abaixo e
                                         veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
@@ -7299,7 +7297,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         melhor em dispositivos móveis
                                       </li>
                                       <li>
-                                        ��� O Google Maps abre numa nova
+                                        ���� O Google Maps abre numa nova
                                         janela/tab
                                       </li>
                                       <li>
@@ -9287,7 +9285,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ���� Detalhes do Furo de Água
+                        ����� Detalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -11185,7 +11183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.actualCost
-                                ? `€${selectedWork.actualCost.toLocaleString("pt-PT")}`
+                                ? `���${selectedWork.actualCost.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
                           </div>
