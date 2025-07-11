@@ -86,6 +86,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 // import "./utils/testDataPersistence"; // DESATIVADO - causa refreshes
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
+import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
 // Auto hooks temporarily removed
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
@@ -581,7 +582,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de manutenções:", error);
+      console.error("�� Erro no sistema de manutenções:", error);
       return await addManutencao(data);
     }
   };
@@ -4045,7 +4046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -11447,7 +11448,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            📍 {selectedPool.location}
+                            ��� {selectedPool.location}
                           </button>
                         </div>
                       </div>
