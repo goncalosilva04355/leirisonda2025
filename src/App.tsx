@@ -2792,27 +2792,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const isPending =
                               w.status === "pending" || w.status === "pendente";
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isPending && isAssignedToUser; // Mostrar apenas obras pendentes atribuídas
+                              isWorkAssignedToCurrentUser(w);
+                            return isPending && isAssignedToUser;
                           });
                           console.log("📊 Dashboard - DEBUG Contadores:", {
                             totalObras: works.length,
@@ -3247,7 +3228,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç€endada
+                          Nenhuma manutenç���endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -9154,7 +9135,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç��o</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
