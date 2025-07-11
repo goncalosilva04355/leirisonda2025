@@ -49,6 +49,12 @@ import "./utils/clearModalStates";
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+import { useDataProtection } from "./hooks/useDataProtection";
+import {
+  DataRestoredNotification,
+  DataProtectionStatus,
+} from "./components/DataRestoredNotification";
+import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 
@@ -753,6 +759,10 @@ function App() {
   };
 
   // Debug logging removed to prevent re-render loops
+
+  // Proteção de dados críticos - NUNCA PERDER DADOS
+  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+    useDataProtection();
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -2342,6 +2352,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleDeleteUser = (userId) => {
+    // BACKUP AUTOMÁTICO antes de eliminar utilizador
+    backupBeforeOperation("delete_user");
+
     // Check if it's the main user
     const user = users.find(
       (u) => u.id === userId || u.id === parseInt(userId),
@@ -2361,6 +2374,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleSaveUser = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+
+    // BACKUP AUTOMÁTICO antes de guardar utilizador
+    backupBeforeOperation(editingUser ? "update_user" : "create_user");
 
     try {
       if (editingUser) {
@@ -2448,7 +2464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("❌ Erro ao salvar utilizador:", error);
+      console.error("�� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -2990,7 +3006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras */}
+                {/* Lista das Obras Atribuídas */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
                   const assignedWorks = works
@@ -3020,14 +3036,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             w.assignedUserIds.includes(currentUser.id)));
                       return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
                     })
-                    .slice(0, 3); // Limitar a 3 obras mais recentes
+                    .slice(0, 3); // Limitar a 3 obras atribuídas mais recentes
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
                       <div className="flex items-center p-4 border-b border-gray-100">
                         <Building2 className="h-5 w-5 text-purple-600 mr-3" />
                         <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras
+                          Obras Atribuídas
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
@@ -3056,7 +3072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    Não especificada
+                                    N��o especificada
                                   </span>
                                 )}
                               </div>
@@ -3858,7 +3874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr€xima manutenção:{" "}
+                                Pr���xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -5499,7 +5515,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "🔍 hasPermission clientes create:",
+                                "���� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -7002,7 +7018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configurações.
+                  Os relatórios agora estão na página de Configuraç��es.
                 </p>
                 <button
                   onClick={() => {
@@ -7362,7 +7378,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "📞 Ativo"
+                                        ? "�� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7379,8 +7395,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As definições são guardadas localmente
-                                        no dispositivo
+                                        • As definiç��es são guardadas
+                                        localmente no dispositivo
                                       </li>
                                       <li>
                                         • A marcaç€ automática funciona melhor
@@ -7683,7 +7699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autenticação ou conexão.
+                                    autentica��ão ou conexão.
                                   </p>
                                 </div>
 
@@ -10837,7 +10853,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p📞gina de login */}
+        {/* Admin Page - também funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -11185,7 +11201,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ���� {selectedWork.contact}
+                            ����� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -11760,7 +11776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificações Técnicas */}
+                    {/* Especificaç��es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
@@ -12021,6 +12037,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Persistence Status Indicator */}
         <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
+
+        {/* Proteção de Dados - Notificações e Status */}
+        <DataRestoredNotification />
+        <DataProtectionStatus />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
