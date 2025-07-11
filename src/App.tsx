@@ -53,7 +53,7 @@ import {
   safeSessionStorage,
   storageUtils,
 } from "./utils/storageUtils";
-import PrivateBrowsingTest from "./components/PrivateBrowsingTest";
+
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
@@ -2212,7 +2212,7 @@ ESTAT📞STICAS:
 - Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
-PR��XIMAS AÇÕES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -4927,7 +4927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 type="button"
                                 onClick={() => {
                                   console.log(
-                                    "🔄 Recarregando utilizadores...",
+                                    "���� Recarregando utilizadores...",
                                   );
                                   const savedUsers =
                                     safeLocalStorage.getItem("app-users");
@@ -10315,7 +10315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instala��ão
+                          ).value; // Data de Instalação
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
