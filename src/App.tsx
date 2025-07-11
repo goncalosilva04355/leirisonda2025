@@ -134,48 +134,16 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
-
-    // Monitoriza📞ão automática de persistência de dados
-    const initDataPersistenceMonitoring = async () => {
-      try {
-        // Aguardar um pouco antes de iniciar verificação
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-
-        // Verificar estado da persistência
-        const status = await dataPersistenceManager.diagnoseDataPersistence();
-
-        if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
-          setPersistenceIssueDetected(true);
-
-          // Tentar reparar automaticamente
-          const repaired = await dataPersistenceManager.repairDataPersistence();
-
-          if (repaired) {
-            setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
-          } else {
-            console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
-            );
-          }
-        } else {
-          console.log("✅ Sistema de persistência está funcional");
-        }
-      } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
-      }
-    };
-
-    initDataPersistenceMonitoring();
+    // Restaurar utilizadores automaticamente se necessário (uma vez apenas)
+    const timer = setTimeout(() => {
+      userRestoreService.autoRestore();
+    }, 1000);
 
     // Cleanup ao desmontar componente
     return () => {
-      // Cleanup functions if needed
+      clearTimeout(timer);
     };
-  }, []);
+  }, []); // SIMPLIFICADO - sem monitoramento contínuo para evitar refreshes
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
