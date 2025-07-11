@@ -79,11 +79,11 @@ export const SyncStatusIndicator: React.FC = () => {
   const getSyncStatus = () => {
     if (!isFirebaseReady) {
       return {
-        icon: WifiOff,
+        icon: Database,
         text: "Local",
-        color: "text-yellow-500",
-        bgColor: "bg-yellow-50",
-        borderColor: "border-yellow-200",
+        color: "text-gray-600",
+        bgColor: "bg-gray-50",
+        borderColor: "border-gray-200",
       };
     }
 
