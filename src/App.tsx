@@ -1075,7 +1075,9 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("���� Iniciando sincronização automática em tempo real...");
+        console.log(
+          "������ Iniciando sincronização automática em tempo real...",
+        );
 
         try {
           await autoSyncService.startAutoSync();
@@ -2187,7 +2189,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     }
   };
-
 
   const handleDeleteUser = (userId) => {
     // Check if it's the main user
