@@ -55,11 +55,7 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
-import {
-  isFirestoreReady,
-  testFirestore,
-  getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
+import { isFirestoreReady, getDB as getFirebaseFirestore } from "./firebase";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
