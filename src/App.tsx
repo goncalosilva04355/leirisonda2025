@@ -58,7 +58,7 @@ import { isFirebaseReady } from "./firebase";
 import { isFirestoreReady, getDB as getFirebaseFirestore } from "./firebase";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
-// import { autoSyncService } from "./services/autoSyncService"; // TEMPORARIAMENTE DESATIVADO
+import { autoSyncService } from "./services/autoSyncServiceMock";
 // import "./utils/testFirebaseBasic"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/testFirestore"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/permanentMockCleanup"; // TEMPORARIAMENTE DESATIVADO
