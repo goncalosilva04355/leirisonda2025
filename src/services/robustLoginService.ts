@@ -170,17 +170,23 @@ class RobustLoginService {
     email: string,
     password: string,
   ): Promise<void> {
-    // Tentar criar/sincronizar utilizador no Firebase em background
+    // DESABILITAR sync background para evitar erros checkDestroyed
+    console.log(
+      "💾 Background sync desabilitado - usando apenas sistema local por estabilidade",
+    );
+
+    // Firebase sync será apenas manual ou quando explicitamente solicitado
+    // Isso evita os erros checkDestroyed que podem aparecer em background
+
+    return; // Early return - sem background sync
+
+    // Código original comentado:
+    /*
     setTimeout(async () => {
       try {
         console.log("🔄 Tentando sincronização background com Firebase...");
-
-        // Tentar login first
         const firebaseResult = await authService.signIn(email, password, true);
-
         if (!firebaseResult.success) {
-          // Se login falhar, tentar criar conta
-          console.log("🆕 Tentando criar conta Firebase...");
           const signupResult = await authService.signUp(email, password);
           if (signupResult.success) {
             console.log("✅ Conta Firebase criada em background");
@@ -189,11 +195,10 @@ class RobustLoginService {
           console.log("✅ Sincronização Firebase background bem-sucedida");
         }
       } catch (error) {
-        console.log(
-          "ℹ️ Sincronização Firebase background falhou (normal em modo offline)",
-        );
+        console.log("ℹ️ Sincronização Firebase background falhou");
       }
     }, 2000);
+    */
   }
 
   private localAuthentication(
