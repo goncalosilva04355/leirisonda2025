@@ -22,6 +22,13 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     password: "",
   }));
   const [rememberMe, setRememberMe] = useState(() => false);
+  const [showEmergencyFix, setShowEmergencyFix] = useState(() => {
+    // Detectar se é dispositivo móvel e há conflitos
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const hasQuotaIssues =
+      localStorage.getItem("firebase-quota-exceeded") === "true";
+    return isMobile && hasQuotaIssues;
+  });
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
