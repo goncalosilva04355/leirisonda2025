@@ -140,8 +140,8 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
+    console.log("🔥 App montado - modo diagnóstico");
+    // Serviços temporariamente desativados para diagnóstico
 
     // Monitoriza📞ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
@@ -3922,7 +3922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu📞do"
+                                      ? "Conclu����do"
                                       : maint.status}
                               </span>
                             </div>
