@@ -158,7 +158,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("€ Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -1019,10 +1019,16 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        // Teste básico simplificado sem dependências externas
+                // Teste básico simplificado sem dependências externas
         console.log("✅ Firestore em modo simplificado");
 
-        if (firestoreResult) {
+        // Teste básico de conectividade
+        const db = getFirebaseFirestore();
+        if (db) {
+          console.log("✅ Firestore conectado e disponível");
+        } else {
+          console.warn("⚠️ Firestore não disponível");
+        }
           console.log("✅ Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
@@ -10626,7 +10632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("❌ Login error:", error);
+              console.error("��� Login error:", error);
               setLoginError(
                 "Erro de conexão. Verifique sua internet e tente novamente.",
               );
