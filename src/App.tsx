@@ -247,11 +247,11 @@ function App() {
       console.log("Mock updateMaintenance:", id, data),
   };
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
-
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  // Firebase hooks removed - mock objects to prevent crashes
+  const firebaseAutoFix = { checkOnUserAction: () => {} };
+  const userMigration = {
+    status: { completed: false, migrated: 0 },
+  };
 
   // Log migration status changes
   useEffect(() => {
@@ -430,7 +430,7 @@ function App() {
 
           // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notificação local para o utilizador
+          // Salvar notifica��ão local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -1690,7 +1690,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manuten��ões: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -4532,7 +4532,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  "�� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -5771,7 +5771,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manuten��ão
                         </label>
                         <input
                           type="date"
