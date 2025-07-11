@@ -26,6 +26,13 @@ interface UserLocationMapProps {
     name: string;
     email: string;
   };
+  allUsers?: Array<{
+    id: number | string;
+    name: string;
+    email: string;
+    role: string;
+    active: boolean;
+  }>;
 }
 
 export const UserLocationMap: React.FC<UserLocationMapProps> = ({
