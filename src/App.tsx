@@ -53,6 +53,7 @@ import {
   safeSessionStorage,
   storageUtils,
 } from "./utils/storageUtils";
+import PrivateBrowsingTest from "./components/PrivateBrowsingTest";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
@@ -5765,7 +5766,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               if (!hasPermission("clientes", "create")) {
                                 alert(
-                                  "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                  "❌ Não tem permiss��o para criar clientes. Contacte o administrador.",
                                 );
                                 return;
                               }
@@ -9466,7 +9467,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu📞das"
+                                    ? "Conclu����das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
