@@ -535,7 +535,7 @@ export const workService = {
 
     // CORREÇÃO: Usar coleção global para garantir que todos os utilizadores vejam as obras
     const q = query(
-      collection(db, COLLECTIONS.WORKS),
+      collection(getFirestore(), COLLECTIONS.WORKS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -560,7 +560,7 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(db, COLLECTIONS.WORKS), {
+    const docRef = await addDoc(collection(getFirestore(), COLLECTIONS.WORKS), {
       ...workData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -711,7 +711,10 @@ export const syncService = {
         `✅ Sincronização entre dispositivos ativada para: ${collection}`,
       );
     } catch (error) {
-      console.error(`❌ Erro ao forçar sincronização de ${collection}:`, error);
+      console.error(
+        `❌ Erro ao forçar sincroniza��ão de ${collection}:`,
+        error,
+      );
     }
   },
 
