@@ -68,6 +68,7 @@ import {
   testFirestore,
   getFirebaseFirestore,
 } from "./firebase/firestoreConfig";
+import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -3067,7 +3068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Concluídas
+                          Conclu��das
                         </h3>
                         <p className="text-sm text-gray-500">
                           Obras finalizadas
@@ -11484,7 +11485,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.startTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "Não especificado"}
+                            : "N��o especificado"}
                         </p>
                       </div>
                       <div>
