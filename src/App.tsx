@@ -54,12 +54,11 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/config";
 import {
+  isFirebaseReady,
   isFirestoreReady,
-  testFirestore,
-  getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
+  getDB as getFirebaseFirestore,
+} from "./firebase";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -3663,7 +3662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -5882,7 +5881,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç€ara nova piscina:",
+                                "Futura manutenç���ara nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7959,7 +7958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -11171,7 +11170,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             >
                               {selectedWork.folhaGerada
                                 ? "✓ Gerada"
-                                : "✗ Não gerada"}
+                                : "��� Não gerada"}
                             </span>
                           </div>
                         </div>
