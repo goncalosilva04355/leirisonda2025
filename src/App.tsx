@@ -1729,20 +1729,20 @@ function App() {
   // Advanced settings functions
   const handleAdvancedPasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔐 Debug: Submitting advanced password form");
-    console.log("🔐 Debug: Password entered:", advancedPassword);
-    console.log("🔐 Debug: Password length:", advancedPassword.length);
-    console.log("🔐 Debug: Current isAdvancedUnlocked:", isAdvancedUnlocked);
+
+    // Debug visual para mobile
+    alert(
+      `Debug: Password: "${advancedPassword}" (comprimento: ${advancedPassword.length})`,
+    );
 
     if (advancedPassword === "19867") {
-      console.log("✅ Debug: Password correct, unlocking advanced settings");
+      alert("✅ Palavra-passe correcta! A abrir configurações...");
       setIsAdvancedUnlocked(true);
       setAdvancedPasswordError("");
-      console.log(
-        "✅ Debug: State updated - should show AdvancedSettings component",
-      );
     } else {
-      console.log("❌ Debug: Password incorrect");
+      alert(
+        `❌ Palavra-passe incorrecta! Esperado: "19867", Recebido: "${advancedPassword}"`,
+      );
       setAdvancedPasswordError("Palavra-passe incorreta");
     }
   };
