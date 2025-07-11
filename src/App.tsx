@@ -289,7 +289,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom���ticas
+    // Sistema funcionará normalmente sem verificações autom��ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -604,7 +604,7 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createManutencao(data);
+      // const firestoreId = await firestoreService.createManutencao(data);
 
       if (firestoreId) {
         console.log("✅ Manutenção criada no Firestore:", firestoreId);
@@ -4502,7 +4502,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               localStorage.getItem("app-users");
                             console.log(
-                              "�� USERS NO LOCALSTORAGE (app-users):",
+                              "💾 USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -6486,7 +6486,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configuraç��es do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
