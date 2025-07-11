@@ -42,26 +42,26 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 
 // Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
+// import "./utils/clearModalStates"; // TEMPORARIAMENTE DESATIVADO para diagnóstico
 
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
-import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+// import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe"; // TEMPORARIAMENTE DESATIVADO
+// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe"; // TEMPORARIAMENTE DESATIVADO
+// import { RealtimeNotifications } from "./components/RealtimeNotifications"; // TEMPORARIAMENTE DESATIVADO
+// import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications"; // TEMPORARIAMENTE DESATIVADO
 
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+// import { syncManager } from "./utils/syncManager"; // TEMPORARIAMENTE DESATIVADO
+// import { clearQuotaProtection } from "./utils/clearQuotaProtection"; // TEMPORARIAMENTE DESATIVADO
 import { isFirebaseReady } from "./firebase";
 import { isFirestoreReady, getDB as getFirebaseFirestore } from "./firebase";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+// import { autoSyncService } from "./services/autoSyncService"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/testFirebaseBasic"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/testFirestore"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/permanentMockCleanup"; // TEMPORARIAMENTE DESATIVADO
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -5558,7 +5558,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
 
                                 console.log(
-                                  "✅ Permissão validada, criando cliente...",
+                                  "��� Permissão validada, criando cliente...",
                                 );
                                 // Add client to the system
                                 const newClient = {
