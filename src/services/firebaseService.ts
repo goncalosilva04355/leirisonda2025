@@ -12,7 +12,7 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { withFirestore } from "../firebase/basicConfig";
 import { syncManager } from "../utils/syncManager";
 
 // Types
@@ -523,7 +523,7 @@ export const workService = {
       })) as Work[];
 
       console.log(
-        `🔍 OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
+        `���� OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
       );
       callback(works);
     });
@@ -605,7 +605,7 @@ export const syncService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    console.log("🚀 Inicializando dados do Firebase...");
+    console.log("�� Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
     console.log("✅ Dados inicializados com sucesso");
   },
