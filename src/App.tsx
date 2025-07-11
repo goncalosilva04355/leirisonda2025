@@ -1305,7 +1305,7 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("📱 Notification clicked, navigating...", event.data);
+            console.log("���� Notification clicked, navigating...", event.data);
 
             const { data } = event.data;
 
@@ -2983,32 +2983,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Lista das Últimas 3 Obras */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
-                  const assignedWorks = works.filter((w) => {
-                    const isNotCompleted =
-                      w.status !== "completed" && w.status !== "concluida";
-                    const isAssignedToUser =
-                      currentUser &&
-                      // Verificar assignedTo (campo legacy)
-                      ((w.assignedTo &&
-                        (w.assignedTo === currentUser.name ||
-                          w.assignedTo
-                            .toLowerCase()
-                            .includes(currentUser.name.toLowerCase()) ||
-                          currentUser.name
-                            .toLowerCase()
-                            .includes(w.assignedTo.toLowerCase()))) ||
-                        // Verificar assignedUsers array
-                        (w.assignedUsers &&
-                          w.assignedUsers.some(
-                            (user) =>
-                              user.name === currentUser.name ||
-                              user.id === currentUser.id,
-                          )) ||
-                        // Verificar assignedUserIds array
-                        (w.assignedUserIds &&
-                          w.assignedUserIds.includes(currentUser.id)));
-                    return true; // Mostrar todas as obras na lista
-                  }); // Remover limitação - mostrar todas as obras
+                  const assignedWorks = works
+                    .filter((w) => {
+                      const isNotCompleted =
+                        w.status !== "completed" && w.status !== "concluida";
+                      const isAssignedToUser =
+                        currentUser &&
+                        // Verificar assignedTo (campo legacy)
+                        ((w.assignedTo &&
+                          (w.assignedTo === currentUser.name ||
+                            w.assignedTo
+                              .toLowerCase()
+                              .includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name
+                              .toLowerCase()
+                              .includes(w.assignedTo.toLowerCase()))) ||
+                          // Verificar assignedUsers array
+                          (w.assignedUsers &&
+                            w.assignedUsers.some(
+                              (user) =>
+                                user.name === currentUser.name ||
+                                user.id === currentUser.id,
+                            )) ||
+                          // Verificar assignedUserIds array
+                          (w.assignedUserIds &&
+                            w.assignedUserIds.includes(currentUser.id)));
+                      return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
+                    })
+                    .slice(0, 3); // Limitar a 3 obras mais recentes
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
@@ -11051,7 +11053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            📞 {selectedWork.contact}
+                            ���� {selectedWork.contact}
                           </button>
                         )}
                       </div>
