@@ -93,11 +93,7 @@ import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnosti
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
-import "./utils/testDataPersistence";
-import "./utils/testFirebaseUserSync";
-import "./utils/completeDataSync";
-import "./utils/fullSyncStatus";
+// Removed conflicting Firebase test utilities
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
@@ -6623,7 +6619,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pré-filtro",
+                          "Limpeza de pr��-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento automático",
@@ -7452,7 +7448,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-blue-900 mb-2">
-                                      Notificações de Obras
+                                      Notifica��ões de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Receba notificações quando uma nova obra
