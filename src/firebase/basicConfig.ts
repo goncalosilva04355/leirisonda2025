@@ -116,7 +116,7 @@ import {
 import { getFirebaseStatus } from "./simpleConfig";
 
 // Funções de compatibilidade
-export const getDB = () => Promise.resolve(getFirebaseFirestore());
+export const getDBAsync = () => Promise.resolve(getFirebaseFirestore());
 export const getAuthService = () => Promise.resolve(getFirebaseAuth());
 export const attemptFirestoreInit = () =>
   Promise.resolve(getFirebaseFirestore());
