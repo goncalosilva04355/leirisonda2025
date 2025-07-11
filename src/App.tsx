@@ -101,7 +101,7 @@ import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
 import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
@@ -279,19 +279,7 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  // Temporarily disabled to prevent React error
-  // const firebaseAutoFix = useAutoFirebaseFix();
-  const firebaseAutoFix = {
-    status: {
-      isHealthy: false,
-      authAvailable: false,
-      dbAvailable: false,
-      lastCheck: 0,
-      autoFixAttempts: 0,
-    },
-    checkOnUserAction: async () => {},
-    isMonitoring: false,
-  };
+  const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
@@ -2671,7 +2659,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("������ AuthService fallback bem-sucedido");
+                  console.log("���� AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -5698,7 +5686,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
                               console.log(
-                                "���� User Permissions:",
+                                "🔍 User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
