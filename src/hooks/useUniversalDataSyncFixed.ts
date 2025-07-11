@@ -133,15 +133,17 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
     loadData();
 
-    // Listen for storage changes
+    // Listen for storage changes (only on client side)
     const handleStorageChange = (e: StorageEvent) => {
       if (["works", "maintenance", "pools", "clients"].includes(e.key || "")) {
         loadData();
       }
     };
 
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
+    if (typeof window !== "undefined") {
+      window.addEventListener("storage", handleStorageChange);
+      return () => window.removeEventListener("storage", handleStorageChange);
+    }
   }, [safeGetLocalStorage]);
 
   // Add obra function
