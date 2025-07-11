@@ -427,7 +427,7 @@ function App() {
 
           // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notificação local para o utilizador
+          // Salvar notifica��ão local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -2532,7 +2532,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
+                // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -4599,12 +4599,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Selecione os usuarios responsaveis por esta obra.
                             Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
-                          {users.length === 0 && (
+                          {users.length === 0 && usersLoaded && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
+                                ⚠️ Nenhum utilizador encontrado.
+                              </p>
+                              <p className="text-xs text-yellow-700 mt-1">
+                                Debug: localStorage tem{" "}
+                                {localStorage.getItem("app-users")
+                                  ? "dados"
+                                  : "sem dados"}
+                              </p>
+                            </div>
+                          )}
+
+                          {!usersLoaded && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-blue-800">
+                                🔄 Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -5792,7 +5804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="cartucho">Filtro de Cartucho</option>
                           <option value="diatomaceas">Terra Diatomáceas</option>
                           <option value="uv">Sistema UV</option>
-                          <option value="sal">Eletrólise de Sal</option>
+                          <option value="sal">Eletr��lise de Sal</option>
                         </select>
                       </div>
                       <div>
@@ -9174,7 +9186,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "🔧 Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
