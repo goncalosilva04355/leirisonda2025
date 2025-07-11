@@ -11768,8 +11768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
 
-        {/* Firebase Auto-Monitor - Discrete indicator */}
-        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
+        {/* Firebase Auto-Monitor removed */}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
