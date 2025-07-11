@@ -91,6 +91,21 @@ class FirebaseAuthService {
     } catch (error: any) {
       console.error("❌ Sign in error:", error);
 
+      // Se o erro for relacionado com app destruída, tentar reinicializar
+      if (
+        error.message &&
+        (error.message.includes("destroyed") ||
+          error.message.includes("checkDestroyed"))
+      ) {
+        console.log("🔄 App destroyed detected, reinitializing...");
+        this.initialized = false;
+        this.auth = null;
+        return {
+          success: false,
+          error: "Firebase precisa ser reinicializado. Tente novamente.",
+        };
+      }
+
       let errorMessage = "Erro de autenticação";
 
       switch (error.code) {
