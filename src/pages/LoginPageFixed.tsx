@@ -174,9 +174,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        {/* Firestore Status */}
-        <FirestoreStatus />
-
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
