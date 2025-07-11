@@ -31,11 +31,11 @@ import {
   Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
-import { FirebaseConfig } from "./components/FirebaseConfig";
+// import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
-import { UserPermissionsManager } from "./components/UserPermissionsManager";
-import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
+// import { UserPermissionsManager } from "./components/UserPermissionsManager";
+// import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
