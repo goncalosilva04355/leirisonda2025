@@ -344,7 +344,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -719,7 +719,16 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
+  // Temporarily disabled to prevent React error
+  // const autoSyncData = useAutoSyncSimple();
+  const autoSyncData = {
+    syncStatus: "idle" as const,
+    lastSync: null,
+    performSync: async () => {},
+    startAutoSync: () => {},
+    stopAutoSync: () => {},
+    isAutoSyncing: false,
+  };
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
@@ -1225,7 +1234,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("���� Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -1964,7 +1973,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -4656,7 +4665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "��� PARSED USERS:",
+                                  "📞 PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -7160,7 +7169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informações do Sistema
+                              Informaç��es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -8129,7 +8138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>���� Dados consolidados</li>
+                        <li>📊 Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
                     </div>
