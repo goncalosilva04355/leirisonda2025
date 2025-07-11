@@ -94,6 +94,9 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
   // Load initial data
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
     const loadData = () => {
       try {
         const obras = safeGetLocalStorage("works");
