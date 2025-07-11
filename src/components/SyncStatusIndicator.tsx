@@ -128,4 +128,61 @@ export const SyncStatusIndicator: React.FC = () => {
   );
 };
 
+// Compact version for smaller spaces
+export const SyncStatusCompact: React.FC = () => {
+  const [isFirebaseReady, setIsFirebaseReady] = useState(false);
+  const [isAutoSyncActive, setIsAutoSyncActive] = useState(false);
+
+  useEffect(() => {
+    const checkStatus = () => {
+      const firebaseReady = isFirestoreReady();
+      const autoSync = autoSyncService.isAutoSyncActive();
+
+      setIsFirebaseReady(firebaseReady);
+      setIsAutoSyncActive(autoSync);
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const getSyncStatus = () => {
+    if (!isFirebaseReady) {
+      return {
+        icon: WifiOff,
+        color: "text-yellow-500",
+        text: "Local",
+      };
+    }
+
+    if (isAutoSyncActive) {
+      return {
+        icon: CheckCircle,
+        color: "text-green-600",
+        text: "Sync",
+      };
+    }
+
+    return {
+      icon: RefreshCw,
+      color: "text-amber-500",
+      text: "...",
+    };
+  };
+
+  const status = getSyncStatus();
+  const StatusIcon = status.icon;
+
+  return (
+    <div className="inline-flex items-center gap-1">
+      <StatusIcon className={`h-3 w-3 ${status.color}`} />
+      <span className={`text-xs font-medium ${status.color}`}>
+        {status.text}
+      </span>
+    </div>
+  );
+};
+
 export default SyncStatusIndicator;
