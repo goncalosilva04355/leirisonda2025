@@ -39,6 +39,7 @@ export class FirestoreService {
 
   // Verificar se Firestore está disponível
   private isAvailable(): boolean {
+    this.ensureInitialized();
     return this.db !== null;
   }
 
