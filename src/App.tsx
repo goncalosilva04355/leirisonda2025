@@ -55,7 +55,7 @@ import {
 } from "./utils/storageUtils";
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
+// useDataProtection hook removed
 import {
   DataRestoredNotification,
   DataProtectionStatus,
@@ -1270,7 +1270,7 @@ function App() {
     initializeAuth();
   }, []);
 
-  // Passo 3: Teste completo do Firestore com operações reais
+  // Passo 3: Teste completo do Firestore com opera��ões reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
       console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
@@ -5145,7 +5145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N€vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -6097,7 +6097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência Elétrica
+                            Resist��ncia Elétrica
                           </option>
                           <option value="gas">Aquecimento a G��s</option>
                         </select>
