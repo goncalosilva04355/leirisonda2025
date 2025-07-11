@@ -50,6 +50,7 @@ export function getFirebaseAuth(): Auth {
 // Compatibilidade com código existente
 export const getFirebaseFirestore = getDB;
 export const getAuthService = getFirebaseAuth;
+export const getFirebaseApp = () => initializeFirebase();
 export const isFirebaseReady = () => app !== null;
 export const isFirestoreReady = () => db !== null;
 export const isFirebaseAuthReady = () => auth !== null;
