@@ -1239,16 +1239,16 @@ function App() {
                 console.warn("❌ Auto-login falhou:", result.error);
                 // Limpar credenciais inválidas
                 sessionStorage.removeItem("savedLoginCredentials");
-                localStorage.removeItem("autoLoginEnabled");
-                localStorage.removeItem("rememberMe");
+                safeLocalStorage.removeItem("autoLoginEnabled");
+                safeLocalStorage.removeItem("rememberMe");
               }
             }
           } catch (autoLoginError) {
             console.error("❌ Erro no auto-login:", autoLoginError);
             // Limpar credenciais corrompidas
             sessionStorage.removeItem("savedLoginCredentials");
-            localStorage.removeItem("autoLoginEnabled");
-            localStorage.removeItem("rememberMe");
+            safeLocalStorage.removeItem("autoLoginEnabled");
+            safeLocalStorage.removeItem("rememberMe");
           }
         }
 
@@ -1267,15 +1267,15 @@ function App() {
         if (!autoLoginEnabled || !rememberMe) {
           setCurrentUser(null);
           setIsAuthenticated(false);
-          localStorage.removeItem("currentUser");
-          localStorage.removeItem("isAuthenticated");
+          safeLocalStorage.removeItem("currentUser");
+          safeLocalStorage.removeItem("isAuthenticated");
         }
 
         // Clear all mock and test data
-        localStorage.removeItem("mock-users");
-        localStorage.removeItem("mock-current-user");
-        localStorage.removeItem("test-data");
-        localStorage.removeItem("sample-data");
+        safeLocalStorage.removeItem("mock-users");
+        safeLocalStorage.removeItem("mock-current-user");
+        safeLocalStorage.removeItem("test-data");
+        safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
         console.log("🗑️ Mock and test data cleared");
@@ -1466,7 +1466,7 @@ function App() {
   //     console.warn("SECURITY: Inconsistent auth state detected");
   //     setIsAuthenticated(false);
   //     setCurrentUser(null);
-  //     localStorage.removeItem("currentUser");
+  //     safeLocalStorage.removeItem("currentUser");
   //   }
   // }, [isAuthenticated, currentUser]);
 
@@ -1478,7 +1478,7 @@ function App() {
   //       console.warn("SECURITY: Auth state compromised, forcing logout");
   //       setIsAuthenticated(false);
   //       setCurrentUser(null);
-  //       localStorage.removeItem("currentUser");
+  //       safeLocalStorage.removeItem("currentUser");
   //     }
   //   }, 5000);
   //   return () => clearInterval(authCheckInterval);
@@ -7691,7 +7691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Shield className="h-6 w-6 text-yellow-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Configuraç��es Avançadas
+                                Configurações Avançadas
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -7736,7 +7736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <h4 className="font-medium text-purple-900 mb-3">
-                                    Configuraç��es Avançadas
+                                    Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
                                     Acesso às configurações avançadas do sistema
@@ -8274,7 +8274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observaç��es</li>
                       </ul>
                     </div>
                     <button
@@ -11935,7 +11935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta aç��o não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
