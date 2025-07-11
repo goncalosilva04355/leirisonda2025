@@ -50,6 +50,10 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtection } from "./hooks/useDataProtection";
+import {
+  DataRestoredNotification,
+  DataProtectionStatus,
+} from "./components/DataRestoredNotification";
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
@@ -1631,7 +1635,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("���� Password length:", loginForm.password?.length || 0);
+      console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -7014,7 +7018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configurações.
+                  Os relatórios agora estão na página de Configuraç��es.
                 </p>
                 <button
                   onClick={() => {
@@ -7374,7 +7378,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "📞 Ativo"
+                                        ? "�� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7695,7 +7699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autenticação ou conexão.
+                                    autentica��ão ou conexão.
                                   </p>
                                 </div>
 
@@ -7984,7 +7988,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Manutenções
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
