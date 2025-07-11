@@ -1723,6 +1723,7 @@ function App() {
       const result = await authService.login(
         loginForm.email,
         loginForm.password,
+        false, // rememberMe será gerido pelo LoginPageFixed
       );
 
       console.log("€ Auth result:", result);
@@ -6240,7 +6241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons���vel *
+                          Técnico Respons����vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -8600,7 +8601,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="particular">Particular</option>
                             <option value="empresa">Empresa</option>
-                            <option value="condominio">Condomínio</option>
+                            <option value="condominio">Condom��nio</option>
                             <option value="hotel">Hotel / Turismo</option>
                             <option value="publico">Entidade P📞blica</option>
                           </select>
