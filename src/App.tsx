@@ -512,7 +512,9 @@ function App() {
       };
 
       // Carregar todos os utilizadores para obter tokens FCM
-      const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const allUsers = JSON.parse(
+        safeLocalStorage.getItem("app-users") || "[]",
+      );
 
       // Para cada utilizador atribuído
       for (const assignedUser of workData.assignedUsers) {
@@ -553,7 +555,7 @@ function App() {
 
           // 2. Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
-            localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
+            safeLocalStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
           );
 
@@ -707,7 +709,9 @@ function App() {
       console.error("❌ Erro no sistema de obras:", error);
 
       // Fallback final para localStorage
-      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const existingWorks = JSON.parse(
+        safeLocalStorage.getItem("works") || "[]",
+      );
       const newWork = {
         ...data,
         id: data.id || Date.now().toString(),
@@ -889,7 +893,7 @@ function App() {
         }
 
         // Fallback para localStorage se Firestore não tiver dados
-        const savedUsers = localStorage.getItem("app-users");
+        const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
@@ -1044,7 +1048,7 @@ function App() {
     const handleUsersUpdated = () => {
       console.log("🔄 Users updated event received, reloading...");
       try {
-        const savedUsers = localStorage.getItem("app-users");
+        const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
@@ -1133,7 +1137,8 @@ function App() {
   useEffect(() => {
     const loadSettings = () => {
       try {
-        const savedMapsRedirect = localStorage.getItem("enableMapsRedirect");
+        const savedMapsRedirect =
+          safeLocalStorage.getItem("enableMapsRedirect");
         if (savedMapsRedirect !== null) {
           setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
           console.log(
@@ -1142,7 +1147,7 @@ function App() {
           );
         }
 
-        const savedPhoneDialer = localStorage.getItem("enablePhoneDialer");
+        const savedPhoneDialer = safeLocalStorage.getItem("enablePhoneDialer");
         if (savedPhoneDialer !== null) {
           setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
           console.log(
@@ -1152,7 +1157,9 @@ function App() {
         }
 
         // Load notification preference
-        const savedNotifications = localStorage.getItem("notificationsEnabled");
+        const savedNotifications = safeLocalStorage.getItem(
+          "notificationsEnabled",
+        );
         if (savedNotifications !== null) {
           setNotificationsEnabled(JSON.parse(savedNotifications));
         }
@@ -1192,8 +1199,8 @@ function App() {
     const initializeAuth = async () => {
       try {
         // Verificar se auto-login está ativo
-        const autoLoginEnabled = localStorage.getItem("autoLoginEnabled");
-        const rememberMe = localStorage.getItem("rememberMe");
+        const autoLoginEnabled = safeLocalStorage.getItem("autoLoginEnabled");
+        const rememberMe = safeLocalStorage.getItem("rememberMe");
         const savedCredentials = sessionStorage.getItem(
           "savedLoginCredentials",
         );
@@ -1728,7 +1735,7 @@ function App() {
 
     // Store in localStorage for persistence (in real app, would save to backend)
     const savedInterventions = JSON.parse(
-      localStorage.getItem("interventions") || "[]",
+      safeLocalStorage.getItem("interventions") || "[]",
     );
     savedInterventions.push(interventionData);
     localStorage.setItem("interventions", JSON.stringify(savedInterventions));
@@ -1737,7 +1744,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç€egular",
+      type: "Manutenç���egular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -4241,7 +4248,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção registada
                       </h3>
                       <p className="text-gray-600 text-sm">
-                        As manutenções aparecerão aqui quando forem criadas
+                        As manuten��ões aparecerão aqui quando forem criadas
                       </p>
                     </div>
                   ) : (
@@ -4859,7 +4866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Check localStorage directly
                             const localStorageUsers =
-                              localStorage.getItem("app-users");
+                              safeLocalStorage.getItem("app-users");
                             console.log(
                               "💾 USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
@@ -4894,7 +4901,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <p className="text-xs text-yellow-700 mt-1">
                                 Debug: localStorage tem{" "}
-                                {localStorage.getItem("app-users")
+                                {safeLocalStorage.getItem("app-users")
                                   ? "dados"
                                   : "sem dados"}
                               </p>
@@ -4919,7 +4926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "🔄 Recarregando utilizadores...",
                                   );
                                   const savedUsers =
-                                    localStorage.getItem("app-users");
+                                    safeLocalStorage.getItem("app-users");
                                   if (savedUsers) {
                                     try {
                                       const parsedUsers =
@@ -6932,7 +6939,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Relat📞rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
-                            Gere relat��rios detalhados em PDF sobre piscinas,
+                            Gere relatórios detalhados em PDF sobre piscinas,
                             manutenções e obras.
                           </p>
                         </div>
@@ -8471,7 +8478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-2xl font-bold text-cyan-600">
                         {(() => {
                           const waterBores = JSON.parse(
-                            localStorage.getItem("waterBores") || "[]",
+                            safeLocalStorage.getItem("waterBores") || "[]",
                           );
                           return waterBores.length;
                         })()}
@@ -9366,7 +9373,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                                     // Atualizar no localStorage
                                     const existingWorks = JSON.parse(
-                                      localStorage.getItem("works") || "[]",
+                                      safeLocalStorage.getItem("works") || "[]",
                                     );
                                     const workIndex = existingWorks.findIndex(
                                       (w: any) => w.id === work.id,
@@ -9804,7 +9811,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        €etalhes do Furo de Água
+                        ���etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
