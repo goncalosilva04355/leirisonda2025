@@ -281,7 +281,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  // AUTO-MIGRA��ÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -316,7 +316,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR��TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -2735,13 +2735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              // Importar serviço robusto
-              const { robustLoginService } = await import(
-                "./services/robustLoginService"
-              );
-
-              console.log("🔐 Usando serviço de login robusto...");
-              const result = await robustLoginService.login(
+              await handleLoginWithRememberMe(
                 email.trim(),
                 password,
                 rememberMe,
@@ -11891,7 +11885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            📍 {selectedPool.location}
+                            ���� {selectedPool.location}
                           </button>
                         </div>
                       </div>
@@ -12006,7 +12000,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "Não especificado"}
+                              : "N��o especificado"}
                           </p>
                         </div>
                       </div>
