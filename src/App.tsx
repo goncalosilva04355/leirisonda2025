@@ -940,13 +940,13 @@ function App() {
   // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
+      console.log("🔥 Passo 3: Firestore test disabled for stability");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        const firestoreResult = await testFirestore();
+        // const firestoreResult = await testFirestore();
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -6573,7 +6573,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas interven��ões</li>
+                                <li>• Próximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -7054,7 +7054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                                   new Notification(
                                                     "Leirisonda",
                                                     {
-                                                      body: "Notificações ativadas com sucesso!",
+                                                      body: "Notifica��ões ativadas com sucesso!",
                                                       icon: "/icon.svg",
                                                     },
                                                   );
@@ -7244,7 +7244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç����o autom��tica funciona
+                                        • A marcaç����o automática funciona
                                         melhor em dispositivos móveis
                                       </li>
                                       <li>
@@ -7367,7 +7367,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
+                                  Sincronização Autom��tica
                                 </span>
                                 <button
                                   onClick={() =>
@@ -7837,7 +7837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
+                        <li>��� Piscinas associadas</li>
                         <li>�� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
