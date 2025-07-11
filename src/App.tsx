@@ -82,6 +82,7 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import "./utils/firebaseBypass"; // BYPASS: Desativar Firebase para evitar erros getImmediate
+import "./utils/bypassSuccess"; // Mensagem de sucesso
 // import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
 // import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
 
@@ -121,7 +122,7 @@ import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
-// Diagnóstico automático para problemas de inserç��o de dados
+// Diagnóstico automático para problemas de inserção de dados
 import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
@@ -1050,7 +1051,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("���� Users updated event received, reloading...");
+      console.log("🔄 Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -7046,7 +7047,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>👥 Equipas atribuídas</li>
-                                <li>• Prazos e orçamentos</li>
+                                <li>��� Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
@@ -7372,7 +7373,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <div className="flex items-center space-x-2">
                             <Settings className="h-4 w-4" />
-                            <span>Configurações</span>
+                            <span>Configuraç��es</span>
                           </div>
                         </button>
                         <button
