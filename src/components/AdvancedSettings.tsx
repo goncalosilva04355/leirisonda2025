@@ -15,12 +15,23 @@ import {
   Users,
   Key,
   Smartphone,
+  Bell,
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
+import { FCMNotificationSetup } from "./FCMNotificationSetup";
+
+interface User {
+  uid: string;
+  email: string;
+  name: string;
+  role: "super_admin" | "manager" | "technician";
+  active: boolean;
+}
 
 interface AdvancedSettingsProps {
   onBack: () => void;
   onNavigateToSection?: (section: string) => void;
+  currentUser?: User | null;
   dataSync?: {
     pools: any[];
     maintenance: any[];
@@ -45,6 +56,7 @@ interface AdvancedSettingsProps {
 export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
   onBack,
   onNavigateToSection,
+  currentUser,
   dataSync,
   notifications,
 }) => {
@@ -488,7 +500,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Teste de Sincronização
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Verifique o funcionamento das funcionalidades de sincronização
+                  Verifique o funcionamento das funcionalidades de
+                  sincronizaç��o
                 </p>
               </div>
 
