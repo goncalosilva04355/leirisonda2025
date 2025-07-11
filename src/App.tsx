@@ -100,9 +100,7 @@ import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
-// Monitor de erros Firebase para detectar e corrigir automaticamente
-import "./utils/firebaseErrorMonitor";
-import FirebaseFixButton from "./components/FirebaseFixButton";
+// Firebase error monitor temporarily removed
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -505,7 +503,7 @@ function App() {
                 );
               }
 
-              // TODO: Implementar FCM para notificaç��es push quando app está fechada
+              // TODO: Implementar FCM para notificações push quando app está fechada
               // Isso requer configuração adicional do Firebase Messaging
             } catch (pushError) {
               console.warn("⚠️ Erro ao enviar notificação push:", pushError);
@@ -1409,7 +1407,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenção anterior",
+          notes: "Agendada automaticamente ap��s manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5875,7 +5873,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criaç��o da piscina",
+                                  "Manutennção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -7251,7 +7249,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instru��ões
+                                      Instruções
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -10582,7 +10580,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("��� Login failed:", result.error);
+                console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
