@@ -13,6 +13,10 @@ interface DataInputStatus {
   localStorage: boolean;
   authentication: boolean;
   connectivity: boolean;
+  isOnline?: boolean;
+  pendingSync?: number;
+  firebaseAvailable?: boolean;
+  lastSync?: string;
 }
 
 export const DataInputStatusIndicator: React.FC = () => {
@@ -48,7 +52,7 @@ export const DataInputStatusIndicator: React.FC = () => {
         firebaseWorks = false;
       }
 
-      // Verificar autenticação (local)
+      // Verificar autenticação (híbrida)
       let authWorks = false;
       try {
         const { robustLoginService } = await import(
@@ -56,24 +60,32 @@ export const DataInputStatusIndicator: React.FC = () => {
         );
         const currentUser = robustLoginService.getCurrentUser();
         authWorks = !!currentUser;
-        // Se não há utilizador mas o sistema está funcional, considerar OK
-        if (!authWorks) {
-          // Sistema de autenticação está sempre disponível (local)
-          authWorks = true;
-        }
       } catch {
-        // Sistema local sempre funciona
-        authWorks = true;
+        authWorks = false;
       }
 
       // Verificar conectividade
       const connectivityWorks = navigator.onLine;
+
+      // Verificar sincronização híbrida
+      let syncStatus = {
+        isOnline: false,
+        pendingSync: 0,
+        firebaseAvailable: false,
+      };
+      try {
+        const { hybridDataSync } = await import("../services/hybridDataSync");
+        syncStatus = hybridDataSync.getSyncStatus();
+      } catch (error) {
+        console.log("ℹ️ Sync service não disponível");
+      }
 
       setStatus({
         firebase: firebaseWorks,
         localStorage: localStorageWorks,
         authentication: authWorks,
         connectivity: connectivityWorks,
+        ...syncStatus,
       });
     };
 
@@ -189,6 +201,28 @@ export const DataInputStatusIndicator: React.FC = () => {
             <AlertCircle className="w-4 h-4 text-orange-500" />
           )}
         </div>
+
+        {/* Status de Sincronização */}
+        {status.pendingSync !== undefined && (
+          <div className="flex items-center justify-between">
+            <span className="flex items-center">
+              <Database className="w-3 h-3 mr-2" />
+              Sincronização
+            </span>
+            <div className="flex items-center space-x-1">
+              {status.pendingSync === 0 ? (
+                <CheckCircle className="w-4 h-4 text-green-500" />
+              ) : (
+                <>
+                  <AlertCircle className="w-4 h-4 text-orange-500" />
+                  <span className="text-xs text-orange-600">
+                    {status.pendingSync}
+                  </span>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-3 pt-3 border-t border-gray-200">
@@ -212,9 +246,15 @@ export const DataInputStatusIndicator: React.FC = () => {
         </div>
 
         {overallStatus === "good" && (
-          <p className="text-xs text-green-600 mt-1">
-            ✅ Sistema funcionando - pode inserir dados
-          </p>
+          <div className="text-xs text-green-600 mt-1">
+            <p>✅ Sistema funcionando - pode inserir dados</p>
+            {status.firebase && status.pendingSync === 0 && (
+              <p>🔥 Sincronização Firebase ativa</p>
+            )}
+            {!status.firebase && status.localStorage && (
+              <p>💾 Modo local - sincronizará quando Firebase disponível</p>
+            )}
+          </div>
         )}
 
         {overallStatus === "warning" && (
@@ -225,7 +265,7 @@ export const DataInputStatusIndicator: React.FC = () => {
 
         {overallStatus === "error" && (
           <div className="text-xs text-red-600 mt-1">
-            <p>�� Problemas detectados</p>
+            <p>❌ Problemas detectados</p>
             <p className="mt-1">
               💡 Tente: F5 (recarregar) ou Ctrl+Shift+N (modo incógnito)
             </p>
