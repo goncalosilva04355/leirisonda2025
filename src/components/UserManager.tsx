@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { AuthorizedUser } from "../config/authorizedUsers";
 import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
+import { safeLocalStorage, storageUtils } from "../utils/storageUtils";
 
 interface UserManagerProps {
   currentUser: any;
