@@ -7456,9 +7456,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Acesso às configurações avançadas do sistema
                                   </p>
                                   <button
-                                    onClick={() =>
-                                      setShowAdvancedSettings(true)
-                                    }
+                                    onClick={() => {
+                                      setShowAdvancedSettings(true);
+                                      setIsAdvancedUnlocked(true);
+                                      alert(
+                                        "✅ A abrir configurações avançadas...",
+                                      );
+                                    }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
                                     Configurações Avançadas
