@@ -19,6 +19,23 @@ interface UserManagerProps {
 
 const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const { users, updateUsers, isLoading } = useAuthorizedUsers();
+
+  // Garantir que há pelo menos um utilizador autorizado padrão
+  useEffect(() => {
+    if (!isLoading && users.length === 0) {
+      console.log(
+        "⚠️ Nenhum utilizador autorizado encontrado, inicializando...",
+      );
+      const defaultUsers = [
+        {
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "super_admin" as const,
+        },
+      ];
+      updateUsers(defaultUsers);
+    }
+  }, [isLoading, users.length, updateUsers]);
   const [editingUser, setEditingUser] = useState<AuthorizedUser | null>(null);
   const [newUser, setNewUser] = useState<
     AuthorizedUser & { password?: string }
