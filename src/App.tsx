@@ -87,7 +87,7 @@ import("./firebase/ultimateSimpleFirebase");
 // import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
 // import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 // import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
-// import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+import { dataPersistenceManager } from "./utils/dataPersistenceManagerMock";
 // import "./utils/testDataPersistence";
 
 // Hooks temporariamente desativados para diagnóstico
@@ -11082,7 +11082,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "Não especificado"}
+                            : "N��o especificado"}
                         </p>
                       </div>
                       <div>
