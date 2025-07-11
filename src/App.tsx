@@ -535,7 +535,7 @@ function App() {
             }
           } catch (firestoreError) {
             console.warn(
-              "��️ Erro ao salvar notificação no Firestore:",
+              "⚠️ Erro ao salvar notificação no Firestore:",
               firestoreError,
             );
           }
@@ -576,7 +576,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("����️ Firestore não disponível, usando sistema atual");
+        console.warn("�����️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -2146,7 +2146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠��� Maps redirect is disabled");
+        console.warn("������ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -2767,13 +2767,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {
-                          works.filter(
-                            (w) =>
+                        {(() => {
+                          const completedWorks = works.filter((w) => {
+                            const isCompleted =
                               w.status === "completed" ||
-                              w.status === "concluida",
-                          ).length
-                        }
+                              w.status === "concluida";
+                            const isAssignedToUser =
+                              currentUser &&
+                              ((w.assignedTo &&
+                                (w.assignedTo === currentUser.name ||
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes(currentUser.name.toLowerCase()) ||
+                                  currentUser.name
+                                    .toLowerCase()
+                                    .includes(w.assignedTo.toLowerCase()))) ||
+                                (w.assignedUsers &&
+                                  w.assignedUsers.some(
+                                    (user) =>
+                                      user.name === currentUser.name ||
+                                      user.id === currentUser.id,
+                                  )) ||
+                                (w.assignedUserIds &&
+                                  w.assignedUserIds.includes(currentUser.id)));
+                            return isCompleted && isAssignedToUser;
+                          });
+                          return completedWorks.length;
+                        })()}
                       </div>
                     </div>
                   </button>
@@ -5374,7 +5394,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             if (e.target.value === "novo") {
                               console.log(
-                                "��� Tentando mostrar formulário de novo cliente...",
+                                "🔍 Tentando mostrar formulário de novo cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
@@ -7738,7 +7758,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten���������es</li>
+                        <li>• Histórico de manuten�������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -10369,7 +10389,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura����ões avançadas
+                Insira a palavra-passe para aceder às configura����ões
+                avan��adas
               </p>
             </div>
 
