@@ -109,6 +109,7 @@ import FirebaseFixButton from "./components/FirebaseFixButton";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
+import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -155,7 +156,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("���� Problema de persistência detectado:", status);
+          console.warn("��� Problema de persistência detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -3959,7 +3960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������������� {maint.clientContact}
+                                        ����������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4083,7 +4084,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenç��es
+                      Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -7782,7 +7783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç������es
+                        <strong>{maintenance.length}</strong> manuten��������es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
