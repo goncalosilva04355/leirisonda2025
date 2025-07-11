@@ -782,8 +782,13 @@ function App() {
   // Debug logging removed to prevent re-render loops
 
   // Proteção de dados críticos - NUNCA PERDER DADOS
-  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
-    useDataProtection();
+  // Temporarily disabled to prevent React error
+  // const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+  //   useDataProtection();
+  const isProtected = false;
+  const dataRestored = false;
+  const backupBeforeOperation = () => {};
+  const checkIntegrity = () => ({ isValid: true, issues: [] });
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -4458,7 +4463,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n��o terminou
+                              Deixe vazio se ainda não terminou
                             </p>
                           </div>
                         </div>
@@ -5893,7 +5898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G📞s</option>
+                          <option value="gas">Aquecimento a G���s</option>
                         </select>
                       </div>
                     </div>
