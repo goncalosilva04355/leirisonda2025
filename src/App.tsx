@@ -184,7 +184,7 @@ function App() {
     // Monitoriza📞ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificação
+        // Aguardar um pouco antes de iniciar verificaç��o
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -630,7 +630,12 @@ function App() {
       } else {
         // Fallback para sistema atual se Firestore falhar
         console.warn("€ Firestore não disponível, usando sistema atual");
-        return await addObra(data);
+        const result = await addObra(data);
+
+        // Enviar notificações mesmo no fallback
+        await sendWorkAssignmentNotifications(data);
+
+        return result;
       }
     } catch (error) {
       console.error("❌ Erro no sistema de obras:", error);
@@ -8400,7 +8405,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest€o da base de dados de clientes
+                          Gest���o da base de dados de clientes
                         </p>
                       </div>
                     </div>
