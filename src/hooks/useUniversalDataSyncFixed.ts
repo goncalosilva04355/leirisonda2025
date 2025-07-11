@@ -312,11 +312,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("clientesUpdated", {
-              detail: { data: updatedClientes, collection: "clientes" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("clientesUpdated", {
+                detail: { data: updatedClientes, collection: "clientes" },
+              }),
+            );
+          }
         }
 
         return id;
