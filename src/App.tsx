@@ -3072,7 +3072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    Não especificada
+                                    N��o especificada
                                   </span>
                                 )}
                               </div>
@@ -7395,8 +7395,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As definições são guardadas localmente
-                                        no dispositivo
+                                        • As definiç��es são guardadas
+                                        localmente no dispositivo
                                       </li>
                                       <li>
                                         • A marcaç€ automática funciona melhor
@@ -10853,7 +10853,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p📞gina de login */}
+        {/* Admin Page - também funciona na p��gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -12037,6 +12037,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Data Persistence Status Indicator */}
         <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
+
+        {/* Proteção de Dados - Notificações e Status */}
+        <DataRestoredNotification />
+        <DataProtectionStatus />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
