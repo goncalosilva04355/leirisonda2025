@@ -70,7 +70,7 @@ import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
+import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncMock";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -5877,7 +5877,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 description:
                                   "Manutennção programada durante criação da piscina",
                                 notes:
-                                  "Agendada automaticamente na criação da piscina",
+                                  "Agendada automaticamente na cria��ão da piscina",
                                 clientName: poolData.client,
                                 clientContact: poolData.contact || "",
                                 location: poolData.location,
