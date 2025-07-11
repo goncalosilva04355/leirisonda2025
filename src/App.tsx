@@ -707,12 +707,19 @@ function App() {
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
-          if (false) {
-            // Disabled Firestore sync
+          if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
             );
-            // Firestore sync disabled temporarily
+            for (const user of parsedUsers) {
+              if (!(user as any).firestoreId) {
+                const firestoreId =
+                  await firestoreService.createUtilizador(user);
+                if (firestoreId) {
+                  (user as any).firestoreId = firestoreId;
+                }
+              }
+            }
           }
         } else {
           console.log(
@@ -11087,7 +11094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic��vel */}
+                      {/* Detalhes do Furo de Água - Se aplicável */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
