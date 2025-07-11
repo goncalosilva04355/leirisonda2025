@@ -153,6 +153,9 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Mobile Firebase conflict detection
+  const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
+
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
     // Inicializar utilizadores autorizados (async)
@@ -439,7 +442,7 @@ function App() {
         return;
       }
 
-      // Preparar dados da notifica��ão
+      // Preparar dados da notifica���ão
       const notificationData = {
         title: "🔔 Nova Obra Atribuída",
         body: `${workData.title} - ${workData.client}`,
@@ -7982,7 +7985,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven��ões
+                                    Histórico de interven���ões
                                   </p>
                                 </div>
                               </div>
