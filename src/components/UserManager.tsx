@@ -91,7 +91,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     ];
     saveUsers(updatedUsers);
 
-      // Adicionar ao sistema principal de utilizadores (com password)
+    // Adicionar ao sistema principal de utilizadores (com password)
     try {
       const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
       const newMainUser = {
@@ -112,13 +112,18 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         createdAt: new Date().toISOString(),
       };
 
-    mainUsers.push(newMainUser);
-    localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      mainUsers.push(newMainUser);
+      localStorage.setItem("app-users", JSON.stringify(mainUsers));
 
-    // Triggerar evento para atualizar outros componentes
-    window.dispatchEvent(new CustomEvent("usersUpdated"));
+      // Triggerar evento para atualizar outros componentes
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
 
-    console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+      console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+    } catch (error) {
+      console.error("❌ Erro ao criar utilizador no sistema principal:", error);
+      setErrors("Erro ao guardar utilizador. Tente novamente.");
+      return;
+    }
 
     setNewUser({ email: "", name: "", role: "technician", password: "" });
     setShowAddForm(false);
