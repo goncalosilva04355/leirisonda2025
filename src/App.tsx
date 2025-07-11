@@ -80,10 +80,7 @@ import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-import "./utils/testSimpleFirestore"; // Teste simples do Firestore
+// Firebase configuration simplified
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -4424,7 +4421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç��</span>
+                      <span>Agendar Manutenç€</span>
                     </button>
                   </div>
                 </div>
@@ -8950,7 +8947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const form = e.target.closest("form");
                           const formData = new FormData(form);
 
-                          // Validaç��o básica
+                          // Validação básica
                           const name = (
                             form.querySelector(
                               'input[placeholder="Nome completo ou razão social"]',
@@ -10883,7 +10880,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>📞</span>
+                  <span>���</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
