@@ -849,7 +849,7 @@ function App() {
       !work.assignedTo &&
       (!work.assignedUsers || work.assignedUsers.length === 0) &&
       (!work.assignedUserIds || work.assignedUserIds.length === 0) &&
-      (currentUser.role === "super_admin" ||
+      (currentUser.role === ("super_admin" as any) ||
         currentUser.email === "gongonsilva@gmail.com")
     ) {
       return true;
@@ -10700,7 +10700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  Página não encontrada
+                  P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç€ solicitada não foi encontrada.
