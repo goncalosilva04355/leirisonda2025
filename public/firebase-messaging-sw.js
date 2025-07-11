@@ -10,8 +10,7 @@ importScripts(
 const firebaseConfig = {
   apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
   authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  databaseURL: "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leiria-1cfc9",
   storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
@@ -24,28 +23,21 @@ try {
   firebase.initializeApp(firebaseConfig);
   console.log("[firebase-messaging-sw.js] Firebase initialized successfully");
 } catch (error) {
-  console.error(
-    "[firebase-messaging-sw.js] Firebase initialization failed:",
-    error,
-  );
+  console.error("[firebase-messaging-sw.js] Firebase initialization failed:", error);
 }
 
 // Initialize Firebase Cloud Messaging and get a reference to the service
 let messaging = null;
 try {
   messaging = firebase.messaging();
-  console.log(
-    "[firebase-messaging-sw.js] Firebase Messaging initialized successfully",
-  );
+  console.log("[firebase-messaging-sw.js] Firebase Messaging initialized successfully");
 } catch (error) {
-  console.error(
-    "[firebase-messaging-sw.js] Firebase Messaging initialization failed:",
-    error,
-  );
+  console.error("[firebase-messaging-sw.js] Firebase Messaging initialization failed:", error);
 }
 
-// Handle background messages
-messaging.onBackgroundMessage((payload) => {
+// Handle background messages (only if messaging is available)
+if (messaging) {
+  messaging.onBackgroundMessage((payload) => {
   console.log(
     "[firebase-messaging-sw.js] Received background message:",
     payload,
