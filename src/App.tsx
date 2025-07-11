@@ -68,8 +68,7 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { firestore } from "./firebase/justFirestore";
-import { FirestoreStatus } from "./components/FirestoreStatus";
+// Firebase/Firestore removed - starting fresh
 // Removed conflicting Firebase imports
 // Firebase configuration simplified
 
@@ -367,7 +366,7 @@ function App() {
   // PROTEÇÃO CR��TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
-      "🛡��� Data protection initialized (checks disabled for performance)",
+      "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
@@ -1034,7 +1033,7 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
-            "✅ Users reloaded after update:",
+            "��� Users reloaded after update:",
             parsedUsers.length,
             parsedUsers,
           );
@@ -6615,7 +6614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pré-filtro",
+                          "Limpeza de pr��-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento automático",
@@ -7444,7 +7443,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-blue-900 mb-2">
-                                      Notificações de Obras
+                                      Notifica��ões de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Receba notificações quando uma nova obra
@@ -9925,7 +9924,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif��sico)</option>
+                            <option value="400V">400V (trif📞sico)</option>
                           </select>
                         </div>
                       </div>
