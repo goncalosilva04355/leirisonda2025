@@ -147,7 +147,24 @@ export async function forceSyncToAppUsers(): Promise<void> {
     "🔄 Forçando ressincronização de utilizadores autorizados para app-users...",
   );
   const currentAuthorizedUsers = getCurrentAuthorizedUsers();
+  console.log(
+    "📝 Utilizadores autorizados encontrados:",
+    currentAuthorizedUsers.length,
+  );
+  console.log(
+    "📝 Dados:",
+    currentAuthorizedUsers.map((u) => `${u.name} (${u.email})`),
+  );
+
   await syncToAppUsers(currentAuthorizedUsers);
+
+  // Verificar resultado
+  const syncedAppUsers = storageUtils.getJson("app-users", []);
+  console.log("✅ Sincronização completa - App Users:", syncedAppUsers.length);
+  console.log(
+    "✅ App Users criados:",
+    syncedAppUsers.map((u) => `${u.name} (${u.email})`),
+  );
 }
 
 // Listener para mudanças nos utilizadores autorizados
