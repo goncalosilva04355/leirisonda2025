@@ -516,7 +516,7 @@ function App() {
             }
           }
 
-          // Salvar notifica��ão no Firestore (se disponível)
+          // Salvar notificação no Firestore (se disponível)
           try {
             if (firestoreService) {
               await firestoreService.createNotification({
@@ -567,7 +567,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("���️ Erro na sincroniza��ão universal:", syncError);
+          console.warn("���️ Erro na sincronização universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -1047,7 +1047,7 @@ function App() {
     testFirestoreStep3();
   }, []);
 
-  // Sincroniza��ão inicial de todos os dados com Firestore
+  // Sincronização inicial de todos os dados com Firestore
   useEffect(() => {
     const syncAllData = async () => {
       // Aguardar um pouco para o Firestore estar pronto
@@ -1079,7 +1079,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincroniza��ão automática ativa!");
+          console.log("✅ Sincronização automática ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -1428,7 +1428,7 @@ function App() {
 
     console.log("Manutenção salva com sucesso:", interventionData);
 
-    let alertMessage = `Manuten��ão salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
+    let alertMessage = `Manutenção salva com sucesso! Piscina: ${interventionData.poolName}, Técnico: ${interventionData.technician}`;
 
     if (maintenanceForm.nextMaintenance) {
       const nextDate = new Date(
@@ -4026,7 +4026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manuten��ão "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -4265,7 +4265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalaç����o</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Repara��ão</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -5885,7 +5885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manuten����ão programada durante criação da piscina",
+                                  "Manuten��ção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç��������������o criada para nova piscina:",
+                                "Futura manutenç�������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5936,7 +5936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten��ão
+                        Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -6258,7 +6258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimenta��ão",
+                          "Verificação alimentação",
                           "Enchimento automático",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -6478,7 +6478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Interven��ão</span>
+                        <span>Guardar Intervenção</span>
                       </button>
                     </div>
                   </form>
@@ -7113,7 +7113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                               </div>
 
-                              {/* Configurações de Localiza���ão Individual - Apenas para super_admin */}
+                              {/* Configurações de Localiza�ção Individual - Apenas para super_admin */}
                               {currentUser?.role === "super_admin" && (
                                 <PersonalLocationSettings />
                               )}
@@ -7139,7 +7139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localiza��ão abaixo e
+                                        • Configure a sua localização abaixo e
                                         veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
@@ -7832,7 +7832,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manuten�������es</li>
-                        <li>• Próximas interven����ões</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
@@ -8995,8 +8995,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manuten��ão</option>
-                            <option value="instalacao">Instala��ão</option>
+                            <option value="manutencao">Manutenção</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -9125,8 +9125,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ������� Nenhum utilizador encontrado. Vá à Área
-                                de Administra��ão → "🔧 Correção de Atribuição
-                                de Obras" para corrigir este problema.
+                                de Administração → "🔧 Correção de Atribuição de
+                                Obras" para corrigir este problema.
                               </p>
                             </div>
                           )}
@@ -10337,7 +10337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç����es e próxima manuten��ão</span>
+                  <span>Observaç����es e próxima manutenção</span>
                 </div>
               </div>
             </div>
