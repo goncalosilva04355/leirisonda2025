@@ -1795,7 +1795,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: ���${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -2044,7 +2044,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("Máximo de 20 fotografias permitidas");
+      alert("M��ximo de 20 fotografias permitidas");
       return;
     }
 
@@ -7231,7 +7231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-blue-900">
-                                        Marcação Automática
+                                        Marcação Autom��tica
                                       </h4>
                                       <button
                                         onClick={() =>
