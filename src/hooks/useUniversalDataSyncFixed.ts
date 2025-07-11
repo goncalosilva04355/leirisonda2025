@@ -266,11 +266,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("piscinasUpdated", {
-              detail: { data: updatedPiscinas, collection: "piscinas" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("piscinasUpdated", {
+                detail: { data: updatedPiscinas, collection: "piscinas" },
+              }),
+            );
+          }
         }
 
         return id;
