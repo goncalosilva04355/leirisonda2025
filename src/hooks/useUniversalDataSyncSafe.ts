@@ -259,7 +259,7 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
     [],
   );
 
-  // Simple add piscina function
+  // Enhanced add piscina function with Firebase sync
   const addPiscina = useCallback(async (piscinaData: any): Promise<string> => {
     try {
       const id = piscinaData.id || `piscina-${Date.now()}-${Math.random()}`;
@@ -267,19 +267,53 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
         ...piscinaData,
         id,
         createdAt: piscinaData.createdAt || new Date().toISOString(),
+        sharedGlobally: true,
+        visibleToAllUsers: true,
       };
 
+      // Try to save to Firebase first
+      try {
+        const { isFirestoreReady } = await import(
+          "../firebase/firestoreConfig"
+        );
+        if (isFirestoreReady()) {
+          const { firestoreService } = await import(
+            "../services/firestoreService"
+          );
+          const firestoreId = await firestoreService.createPiscina(piscina);
+          if (firestoreId) {
+            console.log("✅ Piscina criada no Firestore:", firestoreId);
+          }
+        }
+      } catch (firebaseError) {
+        console.warn("⚠️ Erro ao criar piscina no Firebase:", firebaseError);
+      }
+
+      // Always save to localStorage as backup/primary
       const existingPiscinas = JSON.parse(
         localStorage.getItem("pools") || "[]",
       );
-      existingPiscinas.push(piscina);
-      localStorage.setItem("pools", JSON.stringify(existingPiscinas));
+      const piscinaExists = existingPiscinas.some(
+        (p: any) => p.id === piscina.id,
+      );
 
-      setState((prev) => ({
-        ...prev,
-        piscinas: existingPiscinas,
-        totalItems: prev.totalItems + 1,
-      }));
+      if (!piscinaExists) {
+        existingPiscinas.push(piscina);
+        localStorage.setItem("pools", JSON.stringify(existingPiscinas));
+
+        setState((prev) => ({
+          ...prev,
+          piscinas: existingPiscinas,
+          totalItems: prev.totalItems + 1,
+        }));
+
+        // Trigger manual sync event
+        window.dispatchEvent(
+          new CustomEvent("piscinasUpdated", {
+            detail: { data: existingPiscinas, collection: "piscinas" },
+          }),
+        );
+      }
 
       return id;
     } catch (error) {
