@@ -10,6 +10,18 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
+// Firebase Service Worker registration
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker
+    .register("/firebase-messaging-sw.js")
+    .then((registration) => {
+      console.log("✅ Firebase SW registered:", registration);
+    })
+    .catch((error) => {
+      console.warn("⚠️ Firebase SW registration failed:", error);
+    });
+}
+
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
 

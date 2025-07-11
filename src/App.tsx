@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { useDataProtection } from "./hooks/useDataProtection";
+import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
   DataRestoredNotification,
   DataProtectionStatus,
@@ -57,6 +57,8 @@ import {
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
+import { FCMNotificationSetup } from "./components/FCMNotificationSetup";
+import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -77,10 +79,10 @@ import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { LoginPage } from "./pages/LoginPage";
+import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
-import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
+import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
+import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -98,9 +100,9 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
+import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
+import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
@@ -272,7 +274,7 @@ function App() {
     useState(false);
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
-  // Firebase ativo como solicitado
+  // Firebase ativo como solicitado - Fixed version
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
@@ -289,7 +291,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -418,7 +420,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se h�� utilizadores atribuídos
+      // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -452,14 +454,38 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `€️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
             );
             continue;
           }
 
-          // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
+          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notifica��ão local para o utilizador
+          // 1. Enviar notificação FCM (notificação push real)
+          const fcmSuccess = await fcmService.sendNotificationToUser(
+            assignedUser.id,
+            {
+              title: "🔔 Nova Obra Atribuída",
+              body: `${workData.title} - ${workData.client}`,
+              icon: "/icon.svg",
+              clickAction: "/#obras",
+              data: {
+                workId: workData.id,
+                workTitle: workData.title,
+                client: workData.client,
+                location: workData.location,
+                type: "work_assignment",
+              },
+            },
+          );
+
+          if (fcmSuccess) {
+            console.log(`✅ Notificação FCM enviada para ${assignedUser.name}`);
+          } else {
+            console.warn(`⚠️ Falha no envio FCM para ${assignedUser.name}`);
+          }
+
+          // 2. Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -487,7 +513,7 @@ function App() {
             JSON.stringify(limitedNotifications),
           );
 
-          // Disparar evento customizado para atualizar UI em tempo real
+          // 3. Disparar evento customizado para atualizar UI em tempo real
           const customEvent = new CustomEvent("worksUpdated", {
             detail: {
               type: "assignment",
@@ -501,16 +527,17 @@ function App() {
           });
           window.dispatchEvent(customEvent);
 
-          // Tentar enviar notificação push via Firebase (se disponível)
-          if ("serviceWorker" in navigator && "PushManager" in window) {
+          // 4. Fallback: notificação local se FCM falhar e app estiver aberta
+          if (
+            !fcmSuccess &&
+            "serviceWorker" in navigator &&
+            "PushManager" in window
+          ) {
             try {
-              const registration = await navigator.serviceWorker.ready;
-
-              // Verificar se o utilizador tem permissão para notificações
               const permission = await Notification.requestPermission();
 
               if (permission === "granted") {
-                // Mostrar notificação local imediatamente
+                // Mostrar notificação local como fallback
                 const notification = new Notification(notificationData.title, {
                   body: notificationData.body,
                   icon: notificationData.icon,
@@ -529,22 +556,16 @@ function App() {
                 notification.onclick = () => {
                   window.focus();
                   notification.close();
-                  // Opcional: navegar para a obra
+                  // Navegar para obras
+                  window.location.hash = "#obras";
                 };
 
                 console.log(
-                  `€ Notificação local enviada para ${assignedUser.name}`,
-                );
-              } else {
-                console.warn(
-                  `⚠€ Permissão de notificação negada para ${assignedUser.name}`,
+                  `✅ Notificação local (fallback) enviada para ${assignedUser.name}`,
                 );
               }
-
-              // TODO: Implementar FCM para notificações push quando app está fechada
-              // Isso requer configuração adicional do Firebase Messaging
             } catch (pushError) {
-              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
+              console.warn("⚠️ Erro ao enviar notificação local:", pushError);
             }
           }
 
@@ -1856,7 +1877,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTENÇ��ES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -3072,7 +3093,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    N��o especificada
+                                    N���o especificada
                                   </span>
                                 )}
                               </div>
@@ -6157,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Responsável *
+                          Técnico Respons���vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6952,7 +6973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Versão</span>
+                        <span className="text-gray-600">Vers��o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7018,7 +7039,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configuraç��es.
+                  Os relatórios agora estão na página de Configura����es.
                 </p>
                 <button
                   onClick={() => {
@@ -7777,7 +7798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de intervenções
+                                    Histórico de interven��ões
                                   </p>
                                 </div>
                               </div>
@@ -7834,7 +7855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gestão de Utilizadores
+                              Gest��o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8109,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -9093,6 +9114,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <Edit2 className="h-5 w-5" />
                               </button>
                             )}
+                            {/* Botão Iniciar Obra (só se pendente) */}
+                            {(work.status === "pending" ||
+                              work.status === "pendente") &&
+                              hasPermission("obras", "edit") && (
+                                <button
+                                  onClick={() => {
+                                    const updatedWork = {
+                                      ...work,
+                                      status: "in_progress",
+                                    };
+
+                                    // Atualizar no localStorage
+                                    const existingWorks = JSON.parse(
+                                      localStorage.getItem("works") || "[]",
+                                    );
+                                    const workIndex = existingWorks.findIndex(
+                                      (w: any) => w.id === work.id,
+                                    );
+                                    if (workIndex !== -1) {
+                                      existingWorks[workIndex] = updatedWork;
+                                      localStorage.setItem(
+                                        "works",
+                                        JSON.stringify(existingWorks),
+                                      );
+                                      setWorks(existingWorks);
+                                    }
+
+                                    // Atualizar via dataSync se disponível
+                                    if (dataSync && dataSync.updateWork) {
+                                      dataSync.updateWork(work.id, {
+                                        status: "in_progress",
+                                      });
+                                    }
+
+                                    showNotification(
+                                      "Obra Iniciada",
+                                      `A obra "${work.title || work.client}" foi iniciada`,
+                                      "success",
+                                    );
+                                  }}
+                                  className="p-3 text-green-600 hover:text-green-800 hover:bg-green-50 rounded-lg border border-green-200 transition-colors"
+                                  title="Iniciar obra"
+                                >
+                                  <Play className="h-5 w-5" />
+                                </button>
+                              )}
                             {hasPermission("obras", "delete") && (
                               <button
                                 onClick={() =>
@@ -9637,7 +9704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10100,7 +10167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç€">Reparação</option>
+                          <option value="Reparaç���">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -10644,8 +10711,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
+            currentUser={currentUser}
             onNavigateToSection={(section) => {
-              console.log(`€avegando para seção: ${section}`);
+              console.log(`Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               // Advanced settings password (19867) provides sufficient authentication
@@ -12040,7 +12108,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Proteção de Dados - Notificações e Status */}
         <DataRestoredNotification />
-        <DataProtectionStatus />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );

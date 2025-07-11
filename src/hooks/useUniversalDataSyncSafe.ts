@@ -1,5 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
+// Safe wrapper to prevent React hook errors
+const useSafeState = <T>(initialState: T | (() => T)) => {
+  try {
+    return useState(initialState);
+  } catch (error) {
+    console.error("❌ Critical error in useState:", error);
+    // Return a fallback state
+    return [initialState, () => {}] as const;
+  }
+};
+
 export interface UniversalSyncState {
   obras: any[];
   manutencoes: any[];
@@ -45,45 +56,77 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSyncSafe(): UniversalSyncState &
   UniversalSyncActions {
-  const [state, setState] = useState<UniversalSyncState>({
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    totalItems: 0,
-    lastSync: "",
-    isGloballyShared: false,
-    isLoading: false,
-    error: null,
-    syncStatus: "disconnected",
+  // Initialize state with error handling
+  const [state, setState] = useSafeState<UniversalSyncState>(() => {
+    try {
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: false,
+        isLoading: false,
+        error: null,
+        syncStatus: "disconnected",
+      };
+    } catch (error) {
+      console.error(
+        "❌ Error initializing useUniversalDataSyncSafe state:",
+        error,
+      );
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: false,
+        isLoading: false,
+        error: "Failed to initialize",
+        syncStatus: "error",
+      };
+    }
   });
 
   // Load data from localStorage as fallback
   useEffect(() => {
     try {
       const loadLocalData = () => {
-        const obras = JSON.parse(localStorage.getItem("works") || "[]");
-        const manutencoes = JSON.parse(
-          localStorage.getItem("maintenance") || "[]",
-        );
-        const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
-        const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
+        try {
+          const obras = JSON.parse(localStorage.getItem("works") || "[]");
+          const manutencoes = JSON.parse(
+            localStorage.getItem("maintenance") || "[]",
+          );
+          const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
+          const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
 
-        setState((prev) => ({
-          ...prev,
-          obras,
-          manutencoes,
-          piscinas,
-          clientes,
-          totalItems:
-            obras.length +
-            manutencoes.length +
-            piscinas.length +
-            clientes.length,
-          lastSync: new Date().toISOString(),
-          isLoading: false,
-          syncStatus: "connected",
-        }));
+          setState((prev) => ({
+            ...prev,
+            obras: Array.isArray(obras) ? obras : [],
+            manutencoes: Array.isArray(manutencoes) ? manutencoes : [],
+            piscinas: Array.isArray(piscinas) ? piscinas : [],
+            clientes: Array.isArray(clientes) ? clientes : [],
+            totalItems:
+              (Array.isArray(obras) ? obras.length : 0) +
+              (Array.isArray(manutencoes) ? manutencoes.length : 0) +
+              (Array.isArray(piscinas) ? piscinas.length : 0) +
+              (Array.isArray(clientes) ? clientes.length : 0),
+            lastSync: new Date().toISOString(),
+            isLoading: false,
+            syncStatus: "connected",
+          }));
+        } catch (localError) {
+          console.error("❌ Error loading data from localStorage:", localError);
+          setState((prev) => ({
+            ...prev,
+            error: "Failed to load local data",
+            isLoading: false,
+            syncStatus: "error",
+          }));
+        }
       };
 
       loadLocalData();
