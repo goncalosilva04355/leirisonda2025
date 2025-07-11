@@ -25,7 +25,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   useEffect(() => {
     if (!isLoading && users.length === 0) {
       console.log(
-        "⚠️ Nenhum utilizador autorizado encontrado, inicializando...",
+        "��️ Nenhum utilizador autorizado encontrado, inicializando...",
       );
       const defaultUsers = [
         {
@@ -137,7 +137,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       storageUtils.setJson("app-users", mainUsers);
 
       // Sincronizar com mock-users para compatibilidade
-      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
+      const mockUsers = storageUtils.getJson("mock-users", {});
       mockUsers[newMainUser.uid] = {
         uid: newMainUser.uid,
         email: newMainUser.email,
@@ -147,7 +147,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         active: newMainUser.active,
         createdAt: newMainUser.createdAt,
       };
-      localStorage.setItem("mock-users", JSON.stringify(mockUsers));
+      storageUtils.setJson("mock-users", mockUsers);
 
       // Triggerar evento para atualizar outros componentes
       window.dispatchEvent(new CustomEvent("usersUpdated"));
