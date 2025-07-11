@@ -70,13 +70,40 @@ export const QuickMobileFix: React.FC<QuickMobileFixProps> = ({
             Múltiplos projetos Firebase carregados. Isto pode impedir o login.
           </p>
 
+          {/* Result Message */}
+          {fixResult && (
+            <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded text-xs">
+              <pre className="text-blue-800 whitespace-pre-wrap">
+                {fixResult}
+              </pre>
+            </div>
+          )}
+
           <div className="space-y-2">
             <button
               onClick={applyQuickFix}
-              className="w-full bg-orange-600 text-white py-2 px-3 rounded-md hover:bg-orange-700 text-xs font-medium flex items-center justify-center space-x-1"
+              disabled={isApplying}
+              className="w-full bg-orange-600 text-white py-2 px-3 rounded-md hover:bg-orange-700 disabled:opacity-50 text-xs font-medium flex items-center justify-center space-x-1"
             >
-              <CheckCircle className="h-3 w-3" />
-              <span>Corrigir Agora</span>
+              {isApplying ? (
+                <>
+                  <RefreshCw className="h-3 w-3 animate-spin" />
+                  <span>A corrigir...</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="h-3 w-3" />
+                  <span>Corrigir Agora</span>
+                </>
+              )}
+            </button>
+
+            <button
+              onClick={applyFullReset}
+              disabled={isApplying}
+              className="w-full bg-red-600 text-white py-1 px-3 rounded-md hover:bg-red-700 disabled:opacity-50 text-xs font-medium"
+            >
+              🚨 Reset Completo
             </button>
 
             <div className="bg-green-50 border border-green-200 rounded p-2">
