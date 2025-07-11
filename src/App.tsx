@@ -11770,8 +11770,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Firebase Auto-Monitor removed */}
 
-        {/* User Migration Indicator - Shows migration status */}
-        <UserMigrationIndicator migrationStatus={userMigration} />
+        {/* User Migration Indicator removed */}
 
         {/* Data Persistence Diagnostic - Modal for persistence issues */}
         {showDataDiagnostic && (
