@@ -557,11 +557,10 @@ function App() {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar o novo FirestoreService
-      // const firestoreId = await firestoreService.createObra(data);
+      const firestoreId = await firestoreService.createObra(data);
 
-      if (false) {
-        // Disabled Firestore for now
-        console.log("✅ Obra criada no Firestore:", "disabled");
+      if (firestoreId) {
+        console.log("✅ Obra criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal também
         try {
@@ -4526,7 +4525,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "��� Correção de Atribuição de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
