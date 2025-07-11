@@ -42,7 +42,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 
 // Limpar estados que causam modais indesejados
-// import "./utils/clearModalStates"; // DESATIVADO - causa refreshes
+import "./utils/clearModalStates";
 
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
@@ -54,15 +54,18 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+import { isFirebaseReady } from "./firebase/config";
 import {
-  isFirebaseReady,
   isFirestoreReady,
-  getDB as getFirebaseFirestore,
-} from "./firebase";
+  testFirestore,
+  getFirebaseFirestore,
+} from "./firebase/firestoreConfig";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-// Firebase test imports temporarily removed
+import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -70,38 +73,44 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
-// Data sync hooks temporarily removed
+import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
+import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
-// Firebase imports removed temporarily
+// Firebase works silently in background - no diagnostics or UI needed
+import("./firebase/ultimateSimpleFirebase");
+import { ForceInitialization } from "./utils/forceInitialization";
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-// import "./utils/testDataPersistence"; // DESATIVADO - causa refreshes
+import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-// Auto hooks temporarily removed
+import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
-// import "./utils/datainput-diagnostic"; // DESATIVADO - causa refreshes
+import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
-// Firebase error monitor temporarily removed
+// Monitor de erros Firebase para detectar e corrigir automaticamente
+import "./utils/firebaseErrorMonitor";
+import FirebaseFixButton from "./components/FirebaseFixButton";
 
 // Inicialização de emergência de utilizadores
-// import "./utils/emergencyUserInit"; // DESATIVADO - causa refreshes
-// import "./utils/forceUserInit"; // DESATIVADO - causa refreshes
+import "./utils/emergencyUserInit";
+import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -135,16 +144,48 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário (uma vez apenas)
-    const timer = setTimeout(() => {
-      userRestoreService.autoRestore();
-    }, 1000);
+    // Restaurar utilizadores automaticamente se necessário
+    userRestoreService.autoRestore();
+
+    // Monitoriza📞ão automática de persistência de dados
+    const initDataPersistenceMonitoring = async () => {
+      try {
+        // Aguardar um pouco antes de iniciar verificação
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        // Verificar estado da persistência
+        const status = await dataPersistenceManager.diagnoseDataPersistence();
+
+        if (!status.working) {
+          console.warn("€ Problema de persistência detectado:", status);
+          setPersistenceIssueDetected(true);
+
+          // Tentar reparar automaticamente
+          const repaired = await dataPersistenceManager.repairDataPersistence();
+
+          if (repaired) {
+            setPersistenceIssueDetected(false);
+            console.log("✅ Persistência reparada automaticamente");
+          } else {
+            console.error(
+              "⚠️ Não foi possível reparar a persistência automaticamente",
+            );
+          }
+        } else {
+          console.log("✅ Sistema de persistência está funcional");
+        }
+      } catch (error) {
+        console.error("❌ Erro na monitorização de persistência:", error);
+      }
+    };
+
+    initDataPersistenceMonitoring();
 
     // Cleanup ao desmontar componente
     return () => {
-      clearTimeout(timer);
+      // Cleanup functions if needed
     };
-  }, []); // SIMPLIFICADO - sem monitoramento contínuo para evitar refreshes
+  }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
@@ -200,28 +241,26 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado
-  // Mock dataSync to prevent crashes - universalSync removed
-  const dataSync = {
-    updateWork: (id: any, data: any) =>
-      console.log("Mock updateWork:", id, data),
-    deletePool: (id: any) => console.log("Mock deletePool:", id),
-    deleteMaintenance: (id: any) => console.log("Mock deleteMaintenance:", id),
-    addClient: (data: any) => console.log("Mock addClient:", data),
-    deleteClient: (id: any) => console.log("Mock deleteClient:", id),
-    deleteWork: (id: any) => console.log("Mock deleteWork:", id),
-    updatePool: (id: any, data: any) =>
-      console.log("Mock updatePool:", id, data),
-    updateMaintenance: (id: any, data: any) =>
-      console.log("Mock updateMaintenance:", id, data),
-  };
+  const universalSync = useUniversalDataSync();
+  const dataSync = useDataSyncSimple();
 
-  // Firebase hooks removed - mock objects to prevent crashes
-  const firebaseAutoFix = { checkOnUserAction: () => {} };
-  const userMigration = {
-    status: { completed: false, migrated: 0 },
-  };
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  const firebaseAutoFix = useAutoFirebaseFix();
 
-  // Migration status effect removed
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  const userMigration = useAutoUserMigration();
+
+  // Log migration status changes
+  useEffect(() => {
+    if (userMigration.status.completed && userMigration.status.migrated > 0) {
+      console.log(
+        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+      );
+      console.log(
+        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+      );
+    }
+  }, [userMigration.status.completed, userMigration.status.migrated]);
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -250,8 +289,8 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionará normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações automáticas
+    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -345,7 +384,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("���� Enviando notificações de atribuição de obra...");
+      console.log("📱 Enviando notificações de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -627,25 +666,9 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  let autoSyncData;
-  let autoSyncStatus = "idle";
-  let autoSyncLastSync = null;
-
-  try {
-    autoSyncData = useAutoSyncSimple();
-    autoSyncStatus = autoSyncData.syncStatus;
-    autoSyncLastSync = autoSyncData.lastSync;
-  } catch (error) {
-    console.warn("⚠️ Auto-sync hook error, using fallback:", error);
-    autoSyncData = {
-      syncStatus: "idle",
-      lastSync: null,
-      performSync: () => Promise.resolve(),
-      startAutoSync: () => {},
-      stopAutoSync: () => {},
-      isAutoSyncing: false,
-    };
-  }
+  const autoSyncData = useAutoSyncSimple();
+  const { syncStatus: autoSyncStatus } = autoSyncData;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
   // Debug logging removed to prevent re-render loops
 
@@ -1390,7 +1413,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente ap��s manutenção anterior",
+          notes: "Agendada automaticamente após manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -1922,7 +1945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -2952,7 +2975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    ���� Contacto:
+                                    📞 Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -3018,7 +3041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Eye className="h-4 w-4" />
                                   </button>
 
-                                  {/* Botão Iniciar Obra (s�� se pendente) */}
+                                  {/* Botão Iniciar Obra (só se pendente) */}
                                   {work.status === "pending" && (
                                     <button
                                       onClick={(e) => {
@@ -3058,7 +3081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenç��es
+                      Próximas Manutenções
                     </h2>
                   </div>
 
@@ -3647,7 +3670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -4199,7 +4222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informaç��es Básicas
+                          Informações Básicas
                         </h3>
                       </div>
 
@@ -5283,7 +5306,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Success - no notification needed
                           } catch (error) {
-                            console.error("��� Error creating work:", error);
+                            console.error("❌ Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
@@ -5518,7 +5541,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
                               console.log(
-                                "�� User Permissions:",
+                                "🔍 User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -5866,7 +5889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç���ara nova piscina:",
+                                "Futura manutenç€ara nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6288,7 +6311,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observações Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -7363,7 +7386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          �� Todas as manutenções (
+                                          • Todas as manutenções (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
@@ -7943,7 +7966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• An��lise de performance</li>
+                        <li>• Análise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -9781,7 +9804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten��ão
+                        Editar Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -11155,7 +11178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             >
                               {selectedWork.folhaGerada
                                 ? "✓ Gerada"
-                                : "��� Não gerada"}
+                                : "✗ Não gerada"}
                             </span>
                           </div>
                         </div>
@@ -11751,9 +11774,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
 
-        {/* Firebase Auto-Monitor removed */}
+        {/* Firebase Auto-Monitor - Discrete indicator */}
+        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
 
-        {/* User Migration Indicator removed */}
+        {/* User Migration Indicator - Shows migration status */}
+        <UserMigrationIndicator migrationStatus={userMigration} />
 
         {/* Data Persistence Diagnostic - Modal for persistence issues */}
         {showDataDiagnostic && (

@@ -4,7 +4,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { getFirebaseAuth, isFirebaseAuthReady } from "../firebase";
+import { getFirebaseAuth, isFirebaseAuthReady } from "../firebase/authConfig";
 import { localAuthService, UserProfile } from "./localAuthService";
 import {
   isEmailAuthorized,

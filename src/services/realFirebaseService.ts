@@ -11,7 +11,7 @@ import {
   remove,
   update,
 } from "firebase/database";
-import { app as firebaseApp } from "../firebase";
+import { app as firebaseApp } from "../firebase/config";
 
 interface FirebaseConfig {
   apiKey: string;

@@ -12,7 +12,7 @@ import {
 import { authService } from "../services/authService";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db } from "../firebase/config";
 
 interface LocalUser {
   uid: string;

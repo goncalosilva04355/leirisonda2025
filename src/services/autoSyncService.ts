@@ -8,7 +8,7 @@ import {
   DocumentSnapshot,
   Unsubscribe,
 } from "firebase/firestore";
-import { getDB as getFirebaseFirestore } from "../firebase";
+import { getFirebaseFirestore } from "../firebase/firestoreConfig";
 import { firestoreService } from "./firestoreService";
 
 export interface SyncObserver {

@@ -7,7 +7,7 @@ import {
   CheckCircle,
   AlertTriangle,
 } from "lucide-react";
-import { isFirestoreReady } from "../firebase";
+import { isFirestoreReady } from "../firebase/firestoreConfig";
 import { autoSyncService } from "../services/autoSyncService";
 
 export const SyncStatusIndicator: React.FC = () => {
