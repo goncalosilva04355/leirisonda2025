@@ -84,7 +84,7 @@ async function syncToAppUsers(
     }));
 
     // Sincronizar para localStorage
-    localStorage.setItem("app-users", JSON.stringify(appUsers));
+    storageUtils.setJson("app-users", appUsers);
     console.log("✅ app-users sincronizados (localStorage):", appUsers.length);
 
     // Sincronizar para Firestore se disponível
