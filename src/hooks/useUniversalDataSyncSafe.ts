@@ -1,5 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 
+// Safe wrapper to prevent React hook errors
+const useSafeState = <T>(initialState: T | (() => T)) => {
+  try {
+    return useState(initialState);
+  } catch (error) {
+    console.error("❌ Critical error in useState:", error);
+    // Return a fallback state
+    return [initialState, () => {}] as const;
+  }
+};
+
 export interface UniversalSyncState {
   obras: any[];
   manutencoes: any[];
