@@ -1058,7 +1058,7 @@ function App() {
 
         try {
           await firestoreService.syncAll();
-          console.log("�� Sincronização inicial completa!");
+          console.log("€ Sincronização inicial completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização inicial:", error);
         }
@@ -1103,7 +1103,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1325,7 +1325,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "N��o tem permissão para criar manutenç€es. Contacte o administrador.",
+        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
       );
       return;
     }
@@ -2960,7 +2960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    N��o especificada
+                                    Não especificada
                                   </span>
                                 )}
                               </div>
@@ -3926,7 +3926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu��do"
+                                      ? "Conclu����do"
                                       : maint.status}
                               </span>
                             </div>
@@ -7162,7 +7162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    🏊
+                                    ��
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -8897,7 +8897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
-                          ? "N��o há obras registadas no sistema."
+                          ? "Não há obras registadas no sistema."
                           : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
@@ -11140,7 +11140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900">
                               {selectedWork.budget
                                 ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
-                                : "N��o especificado"}
+                                : "Não especificado"}
                             </p>
                           </div>
                           <div>
@@ -11208,7 +11208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.waterLevel
                                   ? `${selectedWork.waterLevel} m`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
@@ -11218,7 +11218,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
                                   ? `${selectedWork.flowRate} m³/h`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
