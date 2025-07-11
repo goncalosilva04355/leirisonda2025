@@ -759,7 +759,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("👥 addClient iniciado com Firestore ativo");
+      console.log("��� addClient iniciado com Firestore ativo");
 
       const firestoreId = await firestoreService.createCliente(data);
 
@@ -8111,7 +8111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                           </div>
 
-                          <UserPermissionsManager />
+                          {/* UserPermissionsManager removido - consolidado no UserManager */}
                         </div>
                       )}
                     </div>
@@ -12133,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç��es
+                        Manutenç���es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
