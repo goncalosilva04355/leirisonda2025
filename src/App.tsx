@@ -683,12 +683,11 @@ function App() {
         // Aguardar Firestore estar pronto
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        if (false) {
-          // Disabled Firestore loading
+        if (isFirestoreReady()) {
           console.log("📱 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
-          // const firestoreUsers = await firestoreService.getUtilizadores();
+          const firestoreUsers = await firestoreService.getUtilizadores();
 
           if (firestoreUsers.length > 0) {
             console.log(
@@ -11088,7 +11087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {/* Detalhes do Furo de Água - Se aplic��vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
