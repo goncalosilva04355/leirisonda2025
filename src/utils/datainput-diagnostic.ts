@@ -100,7 +100,9 @@ export class DataInputDiagnostic {
     console.log("🔐 Testando autenticação...");
 
     try {
-      const { authService } = await import("../services/authService");
+      const { robustLoginService } = await import(
+        "../services/robustLoginService"
+      );
 
       // Testar login local
       const testResult = await authService.login("teste@teste.com", "123");
