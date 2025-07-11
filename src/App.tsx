@@ -276,7 +276,28 @@ function App() {
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
   const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  // Temporarily disabled to prevent React error
+  // const dataSync = useDataSyncSimple();
+  const dataSync = {
+    pools: [],
+    works: [],
+    maintenance: [],
+    futureMaintenance: [],
+    clients: [],
+    lastSync: null,
+    addPool: () => {},
+    updatePool: () => {},
+    deletePool: () => {},
+    addWork: () => {},
+    updateWork: () => {},
+    deleteWork: () => {},
+    addMaintenance: () => {},
+    updateMaintenance: () => {},
+    deleteMaintenance: () => {},
+    addClient: () => {},
+    updateClient: () => {},
+    deleteClient: () => {},
+  };
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -323,7 +344,7 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionar📞 normalmente sem verificaç��es constantes
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
