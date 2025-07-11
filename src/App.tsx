@@ -1372,7 +1372,7 @@ function App() {
               // Show a success message
               setTimeout(() => {
                 showNotification(
-                  "€ Notifica��ão",
+                  "€ Notificação",
                   `Navegando para obra: ${data.workTitle}`,
                   "info",
                 );
@@ -2097,7 +2097,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `���� Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -4176,7 +4176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -7716,7 +7716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Piscinas
+                                    Relatório de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
@@ -10580,7 +10580,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gonçalo Fonseca",
+  //       name: "Gon��alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -10612,7 +10612,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
 
     if (showAdvancedSettings) {
+      console.log("🔐 Debug: Rendering advanced settings", {
+        showAdvancedSettings,
+        isAdvancedUnlocked,
+      });
+
       if (isAdvancedUnlocked) {
+        console.log("✅ Debug: Rendering AdvancedSettings component");
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
