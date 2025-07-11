@@ -147,7 +147,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitorização automática de persistência de dados
+    // Monitoriza��ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -370,7 +370,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade simplificadas
+  // Funç��es de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com sistema local");
@@ -3844,7 +3844,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç€/span>
+                                             <span>Nova Manutenção</span>
                     </button>
                   </div>
                 </div>
@@ -8128,7 +8128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option>Todos os tipos</option>
                       <option>Particular</option>
                       <option>Empresa</option>
-                      <option>Condom��nio</option>
+                      <option>Condomínio</option>
                     </select>
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                       <option>Todos os estados</option>
