@@ -57,7 +57,7 @@ export interface UniversalSyncActions {
 export function useUniversalDataSyncSafe(): UniversalSyncState &
   UniversalSyncActions {
   // Initialize state with error handling
-  const [state, setState] = useState<UniversalSyncState>(() => {
+  const [state, setState] = useSafeState<UniversalSyncState>(() => {
     try {
       return {
         obras: [],
