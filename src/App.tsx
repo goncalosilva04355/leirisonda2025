@@ -857,6 +857,33 @@ function App() {
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
   const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
 
+  // Settings toggle functions with persistence
+  const togglePhoneDialer = (enabled: boolean) => {
+    setEnablePhoneDialer(enabled);
+    localStorage.setItem("enablePhoneDialer", enabled.toString());
+    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+
+    // Dispatch event for other components
+    window.dispatchEvent(
+      new CustomEvent("phoneDialerToggled", {
+        detail: { enabled },
+      }),
+    );
+  };
+
+  const toggleMapsRedirect = (enabled: boolean) => {
+    setEnableMapsRedirect(enabled);
+    localStorage.setItem("enableMapsRedirect", enabled.toString());
+    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+
+    // Dispatch event for other components
+    window.dispatchEvent(
+      new CustomEvent("mapsRedirectToggled", {
+        detail: { enabled },
+      }),
+    );
+  };
+
   // Load settings from localStorage on startup
   useEffect(() => {
     const loadSettings = () => {
@@ -877,6 +904,12 @@ function App() {
             "✅ Configuração Phone Dialer carregada:",
             JSON.parse(savedPhoneDialer),
           );
+        }
+
+        // Load notification preference
+        const savedNotifications = localStorage.getItem("notificationsEnabled");
+        if (savedNotifications !== null) {
+          setNotificationsEnabled(JSON.parse(savedNotifications));
         }
       } catch (error) {
         console.error("❌ Erro ao carregar configurações:", error);
