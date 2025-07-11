@@ -241,7 +241,7 @@ function App() {
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização autom��tica
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -285,7 +285,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
+    // Verificaç��es automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações automáticas
   }, []);
@@ -1065,7 +1065,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
+          console.error("❌ Erro ao iniciar sincronização automática:", error);
         }
       }
     };
