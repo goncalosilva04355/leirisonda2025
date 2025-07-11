@@ -945,13 +945,13 @@ function App() {
   // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Firestore test disabled for stability");
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        // const firestoreResult = await testFirestore();
+        const firestoreResult = await testFirestore();
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -7514,7 +7514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Piscinas
+                                    Relat��rio de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
