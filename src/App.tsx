@@ -148,7 +148,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // Garantir que pelo menos o utilizador padrão existe no localStorage
+  // Garantir que pelo menos o utilizador padr��o existe no localStorage
   useEffect(() => {
     const savedUsers = localStorage.getItem("app-users");
     if (!savedUsers) {
@@ -282,7 +282,20 @@ function App() {
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  // Temporarily disabled to prevent React error
+  // const userMigration = useAutoUserMigration();
+  const userMigration = {
+    status: {
+      isRunning: false,
+      completed: false,
+      migrated: 0,
+      skipped: 0,
+      failed: 0,
+      lastAttempt: 0,
+    },
+    triggerMigration: async () => {},
+    isActive: false,
+  };
 
   // Log migration status changes
   useEffect(() => {
@@ -7098,7 +7111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
+                        Configuraç��es do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
