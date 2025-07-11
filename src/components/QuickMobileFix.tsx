@@ -9,48 +9,52 @@ interface QuickMobileFixProps {
 export const QuickMobileFix: React.FC<QuickMobileFixProps> = ({
   onFixApplied,
 }) => {
-  const applyQuickFix = () => {
+  const [isApplying, setIsApplying] = useState(false);
+  const [fixResult, setFixResult] = useState<string>("");
+
+  const applyQuickFix = async () => {
+    setIsApplying(true);
+    setFixResult("");
+
     try {
-      // 1. Limpar todas as proteções Firebase
-      localStorage.removeItem("firebase-quota-exceeded");
-      localStorage.removeItem("firebase-quota-check-time");
-      localStorage.removeItem("firebase-emergency-shutdown");
-      localStorage.removeItem("firebase-circuit-breaker");
-      localStorage.removeItem("firebase-conflict-detected");
+      const result = mobileFirebaseQuickFix.applyQuickFix();
+      setFixResult(result.message);
 
-      // 2. Remover iframes duplicados
-      const firebaseIframes = document.querySelectorAll(
-        'iframe[src*="firebaseapp.com"]',
-      );
-      console.log(
-        `📱 Removing ${firebaseIframes.length - 1} duplicate Firebase iframes`,
-      );
-
-      for (let i = 1; i < firebaseIframes.length; i++) {
-        firebaseIframes[i].remove();
+      if (result.success && onFixApplied) {
+        setTimeout(() => {
+          onFixApplied();
+        }, 2000);
       }
+    } catch (error: any) {
+      setFixResult(`❌ Erro: ${error.message}`);
+    } finally {
+      setIsApplying(false);
+    }
+  };
 
-      // 3. Configurar modo móvel
-      localStorage.setItem("mobile-optimized", "true");
-      localStorage.setItem("firebase-mobile-mode", "enabled");
+  const applyFullReset = async () => {
+    if (
+      !confirm(
+        "⚠️ ATENÇÃO: Isto vai limpar TODAS as configurações Firebase. Continuar?",
+      )
+    ) {
+      return;
+    }
 
-      // 4. Disparar evento de fix aplicado
-      window.dispatchEvent(
-        new CustomEvent("quickMobileFixApplied", {
-          detail: { timestamp: new Date().toISOString() },
-        }),
-      );
+    setIsApplying(true);
+    try {
+      const result = mobileFirebaseQuickFix.applyFullReset();
+      setFixResult(result.message);
 
-      console.log("✅ Quick mobile fix aplicado com sucesso");
-
-      if (onFixApplied) {
-        onFixApplied();
+      if (result.success && onFixApplied) {
+        setTimeout(() => {
+          onFixApplied();
+        }, 2000);
       }
-
-      return true;
-    } catch (error) {
-      console.error("❌ Erro no quick fix:", error);
-      return false;
+    } catch (error: any) {
+      setFixResult(`❌ Reset falhou: ${error.message}`);
+    } finally {
+      setIsApplying(false);
     }
   };
 
