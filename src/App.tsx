@@ -1052,7 +1052,7 @@ function App() {
           setNotificationsEnabled(JSON.parse(savedNotifications));
         }
       } catch (error) {
-        console.error("❌ Erro ao carregar configurações:", error);
+        console.error("❌ Erro ao carregar configura��ões:", error);
       }
     };
 
@@ -5891,7 +5891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create pools
@@ -6435,7 +6435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenç��o
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
@@ -10190,7 +10190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // Técnico
+                            .value; // T��cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
