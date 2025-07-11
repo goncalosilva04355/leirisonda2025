@@ -5,15 +5,36 @@ import { collection, getDocs, query, limit } from "firebase/firestore";
 export async function debugFirestore() {
   console.log("🔍 Debugging Firebase Firestore...");
 
+  // Verificar estado da correção direta
+  const status = checkFirebaseStatus();
+  console.log("🔧 Estado da correção:", status);
+
   try {
-    const db = getFirebaseFirestore();
+    // Tentar primeiro com a correção direta
+    let db = fixedDb;
 
     if (!db) {
-      console.error("❌ Firestore não inicializado");
+      console.log("⚠️ Correção direta falhou, tentando método original...");
+      db = getFirebaseFirestore();
+    }
+
+    if (!db) {
+      console.error(
+        "❌ Firestore não inicializado - ambos os métodos falharam",
+      );
+      console.log("💡 Soluções possíveis:");
+      console.log(
+        "1. Verificar se o Firestore está ativado no console Firebase",
+      );
+      console.log("2. Verificar regras de segurança do Firestore");
+      console.log(
+        "3. Verificar configuração do projeto (projectId: leiria-1cfc9)",
+      );
       return false;
     }
 
     console.log("✅ Firestore inicializado");
+    console.log("📊 Projeto:", db.app.options.projectId);
 
     // Tentar listar coleções (esto pode não funcionar em regras restritivas)
     try {
@@ -27,7 +48,13 @@ export async function debugFirestore() {
     }
 
     // Verificar outras coleções possíveis
-    const commonCollections = ["obras", "utilizadores", "dados", "test"];
+    const commonCollections = [
+      "obras",
+      "utilizadores",
+      "dados",
+      "test",
+      "system_tests",
+    ];
 
     for (const collectionName of commonCollections) {
       try {
@@ -41,6 +68,23 @@ export async function debugFirestore() {
       }
     }
 
+    // Teste de escrita simples (se regras permitirem)
+    try {
+      const { doc, setDoc } = await import("firebase/firestore");
+      const testDoc = doc(db, "debug_tests", "connection_test");
+
+      await setDoc(testDoc, {
+        message: "Teste de conexão",
+        timestamp: new Date().toISOString(),
+        status: "OK",
+      });
+
+      console.log("✅ Teste de escrita: OK");
+    } catch (writeError) {
+      console.log("⚠️ Teste de escrita falhou:", writeError);
+      console.log("💡 Verifique as regras de segurança do Firestore");
+    }
+
     return true;
   } catch (error) {
     console.error("❌ Erro no debug Firestore:", error);
@@ -52,3 +96,9 @@ export async function debugFirestore() {
 setTimeout(() => {
   debugFirestore();
 }, 2000);
+
+// Executar novamente após 5 segundos se primeiro falhou
+setTimeout(() => {
+  console.log("🔄 Segunda tentativa de debug...");
+  debugFirestore();
+}, 5000);
