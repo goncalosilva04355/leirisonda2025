@@ -68,8 +68,7 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { db } from "./firebase/simpleFirestore";
-import "./utils/testSimpleFirestore";
+import { firestore } from "./firebase/justFirestore";
 import { isFirebaseReady } from "./firebase/config";
 import {
   isFirestoreReady,
@@ -1345,7 +1344,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+                "�� Firestore conectado mas pode haver problema nas regras de segurança",
               );
             }
           }
@@ -1895,7 +1894,7 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("€ Auth result:", result);
+      console.log("�� Auth result:", result);
 
       if (result.success && result.user) {
         // console.log("✅ Login successful for:", result.user.email);
@@ -6402,7 +6401,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons���vel *
+                          Técnico Respons�����vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -9947,7 +9946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec📞ficas do Furo
+                          Observações Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -10880,7 +10879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>📞</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
