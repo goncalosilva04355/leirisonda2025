@@ -98,6 +98,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       color: "bg-gradient-to-r from-red-600 to-orange-600",
     },
     {
+      id: "user-diagnostic" as AdminSection,
+      title: "🔍 Diagnóstico de Utilizadores",
+      description:
+        "URGENTE: Verificar porque utilizadores guardados não aparecem",
+      icon: Users,
+      color: "bg-red-600",
+    },
+    {
       id: "user-management" as AdminSection,
       title: "Gestão de Utilizadores",
       description: "Criar, editar e gerir utilizadores do sistema",
