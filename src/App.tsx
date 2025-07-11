@@ -343,7 +343,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("��SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -839,9 +839,11 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados críticos - NUNCA PERDER DADOS
-  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
-    useDataProtection();
+  // Data protection hook removed - mock values
+  const isProtected = true;
+  const dataRestored = false;
+  const backupBeforeOperation = () => {};
+  const checkIntegrity = () => {};
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -1270,7 +1272,7 @@ function App() {
     initializeAuth();
   }, []);
 
-  // Passo 3: Teste completo do Firestore com opera��ões reais
+  // Passo 3: Teste completo do Firestore com operações reais
   useEffect(() => {
     const testFirestoreStep3 = async () => {
       console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
@@ -5145,7 +5147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N���vel da Água (m) *
+                                  N€vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -6097,7 +6099,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resist��ncia Elétrica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a G��s</option>
                         </select>
@@ -6988,7 +6990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 manutenções registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🔧 Trabalhos realizados</li>
+                                <li>�� Trabalhos realizados</li>
                                 <li>👷 Técnicos responsáveis</li>
                                 <li>• Datas e durações</li>
                                 <li>• Estados e observações</li>
@@ -12247,7 +12249,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar Página
+                            Recarregar P��gina
                           </button>
                           <button
                             onClick={() => {
