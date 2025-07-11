@@ -628,7 +628,7 @@ function App() {
     try {
       console.log("👥 addClient iniciado com Firestore ativo");
 
-      // const firestoreId = await firestoreService.createCliente(data);
+      const firestoreId = await firestoreService.createCliente(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -4132,7 +4132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                ����������‍🔧 {maint.technician}
+                                ���������‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -5565,7 +5565,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     error,
                                   );
                                   alert(
-                                    "��� Erro ao adicionar cliente: " + error,
+                                    "❌ Erro ao adicionar cliente: " + error,
                                   );
                                   return;
                                 }
