@@ -185,7 +185,7 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
     }
   }, []);
 
-  // Simple add manutenção function
+  // Enhanced add manutenção function with Firebase sync
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
       try {
@@ -195,22 +195,60 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
           ...manutencaoData,
           id,
           createdAt: manutencaoData.createdAt || new Date().toISOString(),
+          sharedGlobally: true,
+          visibleToAllUsers: true,
         };
 
+        // Try to save to Firebase first
+        try {
+          const { isFirestoreReady } = await import(
+            "../firebase/firestoreConfig"
+          );
+          if (isFirestoreReady()) {
+            const { firestoreService } = await import(
+              "../services/firestoreService"
+            );
+            const firestoreId =
+              await firestoreService.createManutencao(manutencao);
+            if (firestoreId) {
+              console.log("✅ Manutenção criada no Firestore:", firestoreId);
+            }
+          }
+        } catch (firebaseError) {
+          console.warn(
+            "⚠️ Erro ao criar manutenção no Firebase:",
+            firebaseError,
+          );
+        }
+
+        // Always save to localStorage as backup/primary
         const existingManutencoes = JSON.parse(
           localStorage.getItem("maintenance") || "[]",
         );
-        existingManutencoes.push(manutencao);
-        localStorage.setItem(
-          "maintenance",
-          JSON.stringify(existingManutencoes),
+        const maintenanceExists = existingManutencoes.some(
+          (m: any) => m.id === manutencao.id,
         );
 
-        setState((prev) => ({
-          ...prev,
-          manutencoes: existingManutencoes,
-          totalItems: prev.totalItems + 1,
-        }));
+        if (!maintenanceExists) {
+          existingManutencoes.push(manutencao);
+          localStorage.setItem(
+            "maintenance",
+            JSON.stringify(existingManutencoes),
+          );
+
+          setState((prev) => ({
+            ...prev,
+            manutencoes: existingManutencoes,
+            totalItems: prev.totalItems + 1,
+          }));
+
+          // Trigger manual sync event
+          window.dispatchEvent(
+            new CustomEvent("manutencoesUpdated", {
+              detail: { data: existingManutencoes, collection: "manutencoes" },
+            }),
+          );
+        }
 
         return id;
       } catch (error) {
