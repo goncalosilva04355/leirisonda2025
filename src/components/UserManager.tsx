@@ -315,7 +315,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         }
       }
 
-      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      storageUtils.setJson("app-users", mainUsers);
 
       // Sincronizar com mock-users
       const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
