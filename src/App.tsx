@@ -94,7 +94,7 @@ import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator"
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 // Removed conflicting Firebase test utilities
 
-import { useDataCleanup } from "./hooks/useDataCleanup";
+// useDataCleanup hook removed
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
 // Removed conflicting Firebase hooks and components
 
@@ -343,7 +343,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("��SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -6990,7 +6990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 manutenções registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>�� Trabalhos realizados</li>
+                                <li>🔧 Trabalhos realizados</li>
                                 <li>👷 Técnicos responsáveis</li>
                                 <li>• Datas e durações</li>
                                 <li>• Estados e observações</li>
@@ -7475,7 +7475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             "granted"
                                           ) {
                                             new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
+                                              body: "Notificações já est��o ativadas!",
                                               icon: "/icon.svg",
                                             });
                                           } else {
@@ -12249,7 +12249,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P��gina
+                            Recarregar Página
                           </button>
                           <button
                             onClick={() => {
