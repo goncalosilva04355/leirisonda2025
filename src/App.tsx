@@ -412,7 +412,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se há utilizadores atribuídos
+      // Verificar se h�� utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -1194,7 +1194,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("📞 Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -2849,27 +2849,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               w.status === "in_progress" ||
                               w.status === "em_progresso";
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser; // Mostrar apenas obras em progresso atribuídas
+                              isWorkAssignedToCurrentUser(w);
+                            return isInProgress && isAssignedToUser;
                           });
                           return inProgressWorks.length;
                         })()}
@@ -3228,7 +3209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç���endada
+                          Nenhuma manutenç€endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
