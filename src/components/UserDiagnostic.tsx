@@ -6,7 +6,6 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import UserSyncTest from "./UserSyncTest";
 
 export const UserDiagnostic: React.FC = () => {
   const [diagnosticData, setDiagnosticData] = useState({
