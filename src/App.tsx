@@ -151,6 +151,9 @@ function App() {
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
+    // Inicializar utilizadores autorizados
+    initializeAuthorizedUsers();
+
     const savedUsers = localStorage.getItem("app-users");
     if (!savedUsers) {
       console.log("🔧 Criando utilizador padrão no localStorage");
@@ -829,7 +832,7 @@ function App() {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
 
-          // Garantir que Gonçalo Fonseca está sempre disponível
+          // Garantir que Gonçalo Fonseca est�� sempre disponível
           const hasGoncalo = parsedUsers.some(
             (user) =>
               user.email === "gongonsilva@gmail.com" ||
@@ -3068,7 +3071,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Conclu��das
+                          Concluídas
                         </h3>
                         <p className="text-sm text-gray-500">
                           Obras finalizadas
@@ -6355,7 +6358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furgão 1, Carrinha 2"
+                          placeholder="Ex: Furg��o 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7493,7 +7496,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    🏊
+                                    ��
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -8784,7 +8787,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Rua, número, andar, etc."
+                            placeholder="Rua, n��mero, andar, etc."
                             required
                           />
                         </div>
@@ -11485,7 +11488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.startTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "N��o especificado"}
+                            : "Não especificado"}
                         </p>
                       </div>
                       <div>
