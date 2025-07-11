@@ -561,7 +561,7 @@ function App() {
       const firestoreId = await firestoreService.createObra(data);
 
       if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
+        console.log("��� Obra criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal também
         try {
@@ -1026,7 +1026,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "⚠€ Passo 3: Erro nas opera��€es Firestore:",
                 writeError,
               );
               console.log(
@@ -3985,7 +3985,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    €maint.location}
+                                                                         📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -4550,7 +4550,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Corre��ão de Atribuição de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -7347,7 +7347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
-                                    Configuraç��es Avançadas
+                                    Configurações Avançadas
                                   </button>
                                   <button
                                     onClick={closeSettings}
