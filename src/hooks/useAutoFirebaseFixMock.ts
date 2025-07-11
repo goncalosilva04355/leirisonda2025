@@ -7,6 +7,7 @@ export const useAutoFirebaseFix = () => {
     lastFix: null,
     fixCount: 0,
     performFix: () => Promise.resolve(),
+    checkOnUserAction: () => Promise.resolve(),
     autoFixEnabled: false,
     toggleAutoFix: () => {},
   };
