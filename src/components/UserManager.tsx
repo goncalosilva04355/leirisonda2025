@@ -47,10 +47,12 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string | null>(
     null,
   );
   const [tempPermissions, setTempPermissions] = useState<any>(null);
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false);
 
   // Salvar utilizadores
   const saveUsers = (updatedUsers: AuthorizedUser[]) => {
@@ -254,6 +256,24 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     if (permissions) {
       setTempPermissions({ ...permissions });
       setEditingPermissions(email);
+    } else {
+      // Se não encontrar permissões, criar padrão
+      console.log(`⚠️ Criando permissões padrão para: ${email}`);
+      const defaultPermissions = {
+        obras: { view: true, create: true, edit: true, delete: false },
+        manutencoes: { view: true, create: true, edit: true, delete: false },
+        piscinas: { view: true, create: false, edit: true, delete: false },
+        utilizadores: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        relatorios: { view: true, create: true, edit: false, delete: false },
+        clientes: { view: true, create: false, edit: false, delete: false },
+      };
+      setTempPermissions(defaultPermissions);
+      setEditingPermissions(email);
     }
   };
 
@@ -261,29 +281,94 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const handleSavePermissions = () => {
     if (!editingPermissions || !tempPermissions) return;
 
-    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-    const userIndex = mainUsers.findIndex(
-      (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
-    );
+    try {
+      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      let userIndex = mainUsers.findIndex(
+        (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
+      );
 
-    if (userIndex !== -1) {
-      mainUsers[userIndex].permissions = { ...tempPermissions };
+      if (userIndex !== -1) {
+        // Utilizador existe - atualizar permissões
+        mainUsers[userIndex].permissions = { ...tempPermissions };
+      } else {
+        // Utilizador não existe no sistema principal - criar entrada
+        console.log(
+          `⚠️ Utilizador ${editingPermissions} não encontrado em app-users, criando entrada...`,
+        );
+        const authorizedUser = users.find(
+          (u) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
+        );
+        if (authorizedUser) {
+          const newMainUser = {
+            id: Date.now(),
+            uid: `user_${Date.now()}`,
+            name: authorizedUser.name,
+            email: authorizedUser.email.toLowerCase(),
+            password: "temppass123", // Password temporária
+            role: authorizedUser.role,
+            permissions: { ...tempPermissions },
+            active: true,
+            createdAt: new Date().toISOString(),
+          };
+          mainUsers.push(newMainUser);
+        }
+      }
+
       localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+      // Sincronizar com mock-users
+      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
+      const targetUser = mainUsers.find(
+        (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
+      );
+      if (targetUser) {
+        mockUsers[targetUser.uid] = {
+          uid: targetUser.uid,
+          email: targetUser.email,
+          name: targetUser.name,
+          role: targetUser.role,
+          permissions: targetUser.permissions,
+          active: targetUser.active,
+          createdAt: targetUser.createdAt,
+        };
+        localStorage.setItem("mock-users", JSON.stringify(mockUsers));
+      }
 
       // Triggerar evento para atualizar outros componentes
       window.dispatchEvent(new CustomEvent("usersUpdated"));
 
-      console.log("✅ Permissões atualizadas para:", editingPermissions);
-    }
+      console.log(
+        "✅ Permissões atualizadas com sucesso para:",
+        editingPermissions,
+      );
 
-    setEditingPermissions(null);
-    setTempPermissions(null);
+      // Mostrar feedback de sucesso
+      setErrors("");
+      setSuccessMessage(
+        `Permissões atualizadas com sucesso para ${editingPermissions}`,
+      );
+      setIsSavingPermissions(false);
+
+      // Limpar estado após pequeno delay para permitir ver a confirmação
+      setTimeout(() => {
+        setEditingPermissions(null);
+        setTempPermissions(null);
+        setSuccessMessage("");
+      }, 2000);
+    } catch (error) {
+      console.error("❌ Erro ao guardar permissões:", error);
+      setErrors("Erro ao guardar permissões. Tente novamente.");
+      setIsSavingPermissions(false);
+    }
   };
 
   // Cancelar edição de permissões
   const handleCancelPermissionsEdit = () => {
     setEditingPermissions(null);
     setTempPermissions(null);
+    setErrors("");
+    setSuccessMessage("");
+    setIsSavingPermissions(false);
   };
 
   // Atualizar permissão específica
@@ -367,6 +452,15 @@ Este gestor sincroniza todos os sistemas automaticamente.`);
       {errors && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-800 text-sm">{errors}</p>
+        </div>
+      )}
+
+      {/* Mensagem de sucesso */}
+      {successMessage && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <p className="text-green-800 text-sm font-medium">
+            ✅ {successMessage}
+          </p>
         </div>
       )}
 
@@ -900,10 +994,23 @@ Este gestor sincroniza todos os sistemas automaticamente.`);
                   Cancelar
                 </button>
                 <button
-                  onClick={handleSavePermissions}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+                  onClick={() => {
+                    setIsSavingPermissions(true);
+                    handleSavePermissions();
+                  }}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 flex items-center space-x-2"
+                  disabled={!tempPermissions || isSavingPermissions}
                 >
-                  Guardar Permissões
+                  {isSavingPermissions && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  )}
+                  <span>
+                    {isSavingPermissions
+                      ? "A guardar..."
+                      : editingPermissions && tempPermissions
+                        ? "Guardar Permissões"
+                        : "A processar..."}
+                  </span>
                 </button>
               </div>
             </div>
