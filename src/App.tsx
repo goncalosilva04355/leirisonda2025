@@ -69,6 +69,7 @@ import { fcmService } from "./services/fcmService";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { db } from "./firebase/simpleFirestore";
+import "./utils/testSimpleFirestore";
 import { isFirebaseReady } from "./firebase/config";
 import {
   isFirestoreReady,
@@ -1692,7 +1693,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "Não tem permissão para criar manuten��€es. Contacte o administrador.",
+        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
       );
       return;
     }
@@ -4620,7 +4621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç€</option>
+                            <option value="instalacao">Instalaç���</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -6142,7 +6143,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenç��o
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
