@@ -42,7 +42,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 
 // Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
+// import "./utils/clearModalStates"; // DESATIVADO - causa refreshes
 
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
@@ -83,7 +83,7 @@ import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnosti
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import "./utils/testDataPersistence";
+// import "./utils/testDataPersistence"; // DESATIVADO - causa refreshes
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 // Auto hooks temporarily removed
@@ -92,15 +92,15 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
-import "./utils/datainput-diagnostic";
+// import "./utils/datainput-diagnostic"; // DESATIVADO - causa refreshes
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
 // Firebase error monitor temporarily removed
 
 // Inicialização de emergência de utilizadores
-import "./utils/emergencyUserInit";
-import "./utils/forceUserInit";
+// import "./utils/emergencyUserInit"; // DESATIVADO - causa refreshes
+// import "./utils/forceUserInit"; // DESATIVADO - causa refreshes
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -3033,7 +3033,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Eye className="h-4 w-4" />
                                   </button>
 
-                                  {/* Botão Iniciar Obra (só se pendente) */}
+                                  {/* Botão Iniciar Obra (s�� se pendente) */}
                                   {work.status === "pending" && (
                                     <button
                                       onClick={(e) => {
@@ -5298,7 +5298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Success - no notification needed
                           } catch (error) {
-                            console.error("❌ Error creating work:", error);
+                            console.error("��� Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
