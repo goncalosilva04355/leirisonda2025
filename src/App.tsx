@@ -4927,7 +4927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 type="button"
                                 onClick={() => {
                                   console.log(
-                                    "���� Recarregando utilizadores...",
+                                    "🔄 Recarregando utilizadores...",
                                   );
                                   const savedUsers =
                                     safeLocalStorage.getItem("app-users");
@@ -5142,7 +5142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Medições do Furo */}
+                          {/* Mediç��es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medições do Furo
@@ -11200,11 +11200,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          {/* Private Browsing Test - Temporary for debugging */}
-          <div className="absolute top-4 right-4 z-40">
-            <PrivateBrowsingTest />
-          </div>
-
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
