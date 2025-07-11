@@ -268,9 +268,9 @@ function App() {
 
       // Verificar flags de erro no localStorage
       const hasQuotaIssues =
-        localStorage.getItem("firebase-quota-exceeded") === "true";
+        safeLocalStorage.getItem("firebase-quota-exceeded") === "true";
       const hasEmergencyShutdown =
-        localStorage.getItem("firebase-emergency-shutdown") === "true";
+        safeLocalStorage.getItem("firebase-emergency-shutdown") === "true";
 
       if (
         hasMultipleFirebaseProjects ||
@@ -1251,7 +1251,7 @@ function App() {
         // Clear Firebase auth state se não há auto-login
         try {
           await authService.logout();
-          console.log("��� Firebase auth cleared");
+          console.log("🔒 Firebase auth cleared");
         } catch (error) {
           console.log("⚠️ Firebase logout error (expected):", error);
         }
@@ -4108,7 +4108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr���xima manuten��ão:{" "}
+                                Pr���xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -8298,7 +8298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>📞 Equipas responsáveis</li>
+                        <li>���� Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
@@ -9232,7 +9232,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Conclu��da"
+                                      ? "Concluída"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
