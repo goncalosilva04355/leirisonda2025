@@ -67,7 +67,12 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  return firestoreInstance !== null;
+  console.log(
+    "🚫 BYPASS: isFirestoreReady retornando false (modo local ativo)",
+  );
+  return false; // Sempre false para forçar modo local
+
+  /* CÓDIGO ORIGINAL: return firestoreInstance !== null; */
 }
 
 // Função de teste simples para Firestore
