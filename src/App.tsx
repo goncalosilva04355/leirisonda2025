@@ -1893,7 +1893,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -2369,6 +2369,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleSaveUser = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+
+    // BACKUP AUTOMÁTICO antes de guardar utilizador
+    backupBeforeOperation(editingUser ? "update_user" : "create_user");
 
     try {
       if (editingUser) {
@@ -6789,7 +6792,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>👥 Equipas atribuídas</li>
+                                <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -10092,7 +10095,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Repara��€">Reparação</option>
+                          <option value="Reparaç€">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -11298,7 +11301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Atribu��da a
+                          Atribuída a
                         </label>
                         <p className="text-gray-900">
                           {selectedWork.assignedUsers &&
