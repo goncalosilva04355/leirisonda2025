@@ -1,5 +1,6 @@
 // Passo 1: Configuração básica do Firebase
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { isPrivateBrowsing } from "../utils/storageUtils";
 
 // Configuração do novo projeto Firebase
 const firebaseConfig = {
@@ -20,6 +21,16 @@ let firebaseApp: FirebaseApp | null = null;
 // Função simples para inicializar Firebase
 function initializeFirebaseBasic(): FirebaseApp | null {
   try {
+    // Verificar se estamos em modo privado
+    if (isPrivateBrowsing()) {
+      console.warn(
+        "🔒 Modo privado detectado - Firebase pode ter funcionalidades limitadas",
+      );
+      console.log(
+        "💡 Sistema funcionará em modo local com funcionalidades reduzidas",
+      );
+    }
+
     // Verificar se já existe uma app
     const existingApps = getApps();
 
@@ -34,7 +45,7 @@ function initializeFirebaseBasic(): FirebaseApp | null {
     return firebaseApp;
   } catch (error) {
     console.warn(
-      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+      "⚠��� Firebase: Problema na inicialização, mas app pode funcionar em modo local",
     );
     console.log("💡 Sistema continua funcional com autenticação local");
     firebaseApp = null;
@@ -61,46 +72,55 @@ initializeFirebaseBasic();
 // Exportações para compatibilidade com código existente
 export const app = firebaseApp;
 
-// Proxy inteligente para db que usa Firestore real quando disponível
-export const db = new Proxy(
-  {},
-  {
-    get(target, prop) {
-      const firestoreInstance = getFirebaseFirestore();
+// Função para obter db seguro
+export function getDB() {
+  try {
+    const firestoreInstance = getFirebaseFirestore();
+    if (firestoreInstance) {
+      return firestoreInstance;
+    }
+  } catch (error) {
+    console.warn("⚠️ Firestore não disponível:", error);
+  }
+  return null;
+}
 
-      // Se Firestore está disponível, usar instância real
-      if (firestoreInstance) {
-        try {
-          return (firestoreInstance as any)[prop];
-        } catch (error) {
-          console.warn("⚠️ Erro ao acessar Firestore:", error);
-          return null;
-        }
-      }
+// Função para verificar se Firestore está disponível antes de usar
+export function withFirestore<T>(
+  callback: (db: any) => T,
+  fallback?: T,
+): T | null {
+  const firestoreDb = getDB();
+  if (firestoreDb) {
+    try {
+      return callback(firestoreDb);
+    } catch (error) {
+      console.warn("⚠️ Erro ao executar operação Firestore:", error);
+      return fallback ?? null;
+    }
+  }
+  console.warn("⚠️ Firestore não disponível - operação ignorada");
+  return fallback ?? null;
+}
 
-      // Fallback para propriedades especiais
-      if (prop === "type" || prop === "app" || prop === "toJSON") {
-        return undefined;
-      }
+// Export db como instância (pode ser null)
+export const db = getDB();
 
-      console.warn("⚠️ Firestore não disponível - usando fallback local");
-      return null;
-    },
-  },
-);
+// Função para obter auth seguro
+export function getAuth() {
+  try {
+    const authInstance = getFirebaseAuth();
+    if (authInstance) {
+      return authInstance;
+    }
+  } catch (error) {
+    console.warn("⚠️ Firebase Auth não disponível:", error);
+  }
+  return null;
+}
 
-// Proxy simples para auth (retorna null por enquanto - será implementado no próximo passo)
-export const auth = new Proxy(
-  {},
-  {
-    get() {
-      console.warn(
-        "⚠️ Firebase Auth ainda não configurado - Passo 1 apenas inicializa Firebase App",
-      );
-      return null;
-    },
-  },
-);
+// Export auth como função
+export const auth = getAuth();
 
 // Importar Auth do Passo 2
 import { getFirebaseAuth, isFirebaseAuthReady } from "./authConfig";
@@ -114,7 +134,7 @@ import {
 import { getFirebaseStatus } from "./simpleConfig";
 
 // Funções de compatibilidade
-export const getDB = () => Promise.resolve(getFirebaseFirestore());
+export const getDBAsync = () => Promise.resolve(getFirebaseFirestore());
 export const getAuthService = () => Promise.resolve(getFirebaseAuth());
 export const attemptFirestoreInit = () =>
   Promise.resolve(getFirebaseFirestore());

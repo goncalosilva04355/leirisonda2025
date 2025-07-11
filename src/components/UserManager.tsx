@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { AuthorizedUser } from "../config/authorizedUsers";
 import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
+import { safeLocalStorage, storageUtils } from "../utils/storageUtils";
 
 interface UserManagerProps {
   currentUser: any;
@@ -112,7 +113,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
     // Adicionar ao sistema principal de utilizadores (com password)
     try {
-      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const mainUsers = storageUtils.getJson("app-users", []);
       const newMainUser = {
         id: Date.now(),
         uid: `user_${Date.now()}`, // Adicionar uid para compatibilidade
@@ -133,10 +134,10 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       };
 
       mainUsers.push(newMainUser);
-      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      storageUtils.setJson("app-users", mainUsers);
 
       // Sincronizar com mock-users para compatibilidade
-      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
+      const mockUsers = storageUtils.getJson("mock-users", {});
       mockUsers[newMainUser.uid] = {
         uid: newMainUser.uid,
         email: newMainUser.email,
@@ -146,7 +147,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         active: newMainUser.active,
         createdAt: newMainUser.createdAt,
       };
-      localStorage.setItem("mock-users", JSON.stringify(mockUsers));
+      storageUtils.setJson("mock-users", mockUsers);
 
       // Triggerar evento para atualizar outros componentes
       window.dispatchEvent(new CustomEvent("usersUpdated"));
@@ -243,7 +244,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
   // Obter permissões do utilizador do sistema principal
   const getUserPermissions = (email: string) => {
-    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const mainUsers = storageUtils.getJson("app-users", []);
     const user = mainUsers.find(
       (u: any) => u.email.toLowerCase() === email.toLowerCase(),
     );
@@ -282,7 +283,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     if (!editingPermissions || !tempPermissions) return;
 
     try {
-      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const mainUsers = storageUtils.getJson("app-users", []);
       let userIndex = mainUsers.findIndex(
         (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
       );
@@ -314,7 +315,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         }
       }
 
-      localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      storageUtils.setJson("app-users", mainUsers);
 
       // Sincronizar com mock-users
       const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");

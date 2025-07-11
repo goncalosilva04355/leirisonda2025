@@ -1,4 +1,6 @@
 // Lista de utilizadores autorizados a fazer login
+import { safeLocalStorage, storageUtils } from "../utils/storageUtils";
+
 export interface AuthorizedUser {
   email: string;
   name: string;
@@ -22,16 +24,14 @@ export const AUTHORIZED_USERS: AuthorizedUser[] = [
 // Função para obter lista atual de utilizadores (localStorage + padrão)
 export function getCurrentAuthorizedUsers(): AuthorizedUser[] {
   try {
-    const savedUsers = localStorage.getItem("authorizedUsers");
-    if (savedUsers && savedUsers.trim() !== "") {
-      const parsedUsers = JSON.parse(savedUsers);
-      if (Array.isArray(parsedUsers) && parsedUsers.length > 0) {
-        console.log(
-          "✅ Utilizadores carregados do localStorage:",
-          parsedUsers.length,
-        );
-        return parsedUsers;
-      }
+    const parsedUsers =
+      storageUtils.getJson<AuthorizedUser[]>("authorizedUsers");
+    if (parsedUsers && Array.isArray(parsedUsers) && parsedUsers.length > 0) {
+      console.log(
+        "✅ Utilizadores carregados do localStorage:",
+        parsedUsers.length,
+      );
+      return parsedUsers;
     }
   } catch (error) {
     console.warn("⚠️ Erro ao carregar utilizadores do localStorage:", error);
@@ -82,7 +82,7 @@ async function syncToAppUsers(
     }));
 
     // Sincronizar para localStorage
-    localStorage.setItem("app-users", JSON.stringify(appUsers));
+    storageUtils.setJson("app-users", appUsers);
     console.log("✅ app-users sincronizados (localStorage):", appUsers.length);
 
     // Sincronizar para Firestore se disponível
@@ -107,12 +107,12 @@ async function syncToAppUsers(
 
 // Função para inicializar utilizadores autorizados se necessário
 export async function initializeAuthorizedUsers(): Promise<void> {
-  const savedUsers = localStorage.getItem("authorizedUsers");
-  const savedAppUsers = localStorage.getItem("app-users");
+  const savedUsers = safeLocalStorage.getItem("authorizedUsers");
+  const savedAppUsers = safeLocalStorage.getItem("app-users");
 
   if (!savedUsers || savedUsers.trim() === "" || savedUsers === "[]") {
     console.log("🔄 Inicializando utilizadores autorizados...");
-    localStorage.setItem("authorizedUsers", JSON.stringify(AUTHORIZED_USERS));
+    storageUtils.setJson("authorizedUsers", AUTHORIZED_USERS);
     console.log(
       "✅ Utilizadores autorizados inicializados:",
       AUTHORIZED_USERS.length,
@@ -139,4 +139,42 @@ export async function initializeAuthorizedUsers(): Promise<void> {
       console.warn("⚠️ Firebase não disponível:", error);
     }
   }
+}
+
+// Função para forçar ressincronização (útil quando utilizadores autorizados são alterados)
+export async function forceSyncToAppUsers(): Promise<void> {
+  console.log(
+    "🔄 Forçando ressincronização de utilizadores autorizados para app-users...",
+  );
+  const currentAuthorizedUsers = getCurrentAuthorizedUsers();
+  console.log(
+    "📝 Utilizadores autorizados encontrados:",
+    currentAuthorizedUsers.length,
+  );
+  console.log(
+    "📝 Dados:",
+    currentAuthorizedUsers.map((u) => `${u.name} (${u.email})`),
+  );
+
+  await syncToAppUsers(currentAuthorizedUsers);
+
+  // Verificar resultado
+  const syncedAppUsers = storageUtils.getJson("app-users", []);
+  console.log("✅ Sincronização completa - App Users:", syncedAppUsers.length);
+  console.log(
+    "✅ App Users criados:",
+    syncedAppUsers.map((u) => `${u.name} (${u.email})`),
+  );
+}
+
+// Listener para mudanças nos utilizadores autorizados
+if (typeof window !== "undefined") {
+  window.addEventListener("authorizedUsersChanged", async (event: any) => {
+    console.log("🔔 Evento 'authorizedUsersChanged' recebido!");
+    console.log("📦 Dados do evento:", event.detail?.length || "sem dados");
+    console.log("🔄 Iniciando sincronização automática...");
+    await forceSyncToAppUsers();
+  });
+
+  console.log("👂 Listener 'authorizedUsersChanged' registado com sucesso");
 }

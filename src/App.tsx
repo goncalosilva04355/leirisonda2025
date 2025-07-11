@@ -48,6 +48,12 @@ import "./utils/clearModalStates";
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+import {
+  safeLocalStorage,
+  safeSessionStorage,
+  storageUtils,
+} from "./utils/storageUtils";
+
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
@@ -164,7 +170,7 @@ function App() {
     };
     initUsers();
 
-    const savedUsers = localStorage.getItem("app-users");
+    const savedUsers = safeLocalStorage.getItem("app-users");
     if (!savedUsers) {
       console.log("🔧 Criando utilizador padrão no localStorage");
       const defaultUser = {
@@ -184,7 +190,7 @@ function App() {
         },
         createdAt: new Date().toISOString(),
       };
-      localStorage.setItem("app-users", JSON.stringify([defaultUser]));
+      storageUtils.setJson("app-users", [defaultUser]);
     }
   }, []);
 
@@ -263,9 +269,9 @@ function App() {
 
       // Verificar flags de erro no localStorage
       const hasQuotaIssues =
-        localStorage.getItem("firebase-quota-exceeded") === "true";
+        safeLocalStorage.getItem("firebase-quota-exceeded") === "true";
       const hasEmergencyShutdown =
-        localStorage.getItem("firebase-emergency-shutdown") === "true";
+        safeLocalStorage.getItem("firebase-emergency-shutdown") === "true";
 
       if (
         hasMultipleFirebaseProjects ||
@@ -392,7 +398,7 @@ function App() {
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
-      localStorage.setItem(
+      safeLocalStorage.setItem(
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
@@ -401,7 +407,7 @@ function App() {
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
       setEnableMapsRedirect(event.detail.enabled);
-      localStorage.setItem(
+      safeLocalStorage.setItem(
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
@@ -507,7 +513,9 @@ function App() {
       };
 
       // Carregar todos os utilizadores para obter tokens FCM
-      const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const allUsers = JSON.parse(
+        safeLocalStorage.getItem("app-users") || "[]",
+      );
 
       // Para cada utilizador atribuído
       for (const assignedUser of workData.assignedUsers) {
@@ -548,7 +556,7 @@ function App() {
 
           // 2. Salvar notificação local para o utilizador
           const userNotifications = JSON.parse(
-            localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
+            safeLocalStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
           );
 
@@ -569,7 +577,7 @@ function App() {
           // Manter apenas as últimas 50 notificações
           const limitedNotifications = userNotifications.slice(0, 50);
 
-          localStorage.setItem(
+          safeLocalStorage.setItem(
             `work-notifications-${assignedUser.id}`,
             JSON.stringify(limitedNotifications),
           );
@@ -702,7 +710,9 @@ function App() {
       console.error("❌ Erro no sistema de obras:", error);
 
       // Fallback final para localStorage
-      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
+      const existingWorks = JSON.parse(
+        safeLocalStorage.getItem("works") || "[]",
+      );
       const newWork = {
         ...data,
         id: data.id || Date.now().toString(),
@@ -712,7 +722,7 @@ function App() {
       const exists = existingWorks.some((w: any) => w.id === newWork.id);
       if (!exists) {
         existingWorks.push(newWork);
-        localStorage.setItem("works", JSON.stringify(existingWorks));
+        safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
 
         // Enviar notificações mesmo no fallback final
@@ -749,7 +759,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("👥 addClient iniciado com Firestore ativo");
+      console.log("��� addClient iniciado com Firestore ativo");
 
       const firestoreId = await firestoreService.createCliente(data);
 
@@ -839,7 +849,7 @@ function App() {
       !work.assignedTo &&
       (!work.assignedUsers || work.assignedUsers.length === 0) &&
       (!work.assignedUserIds || work.assignedUserIds.length === 0) &&
-      (currentUser.role === "super_admin" ||
+      (currentUser.role === ("super_admin" as any) ||
         currentUser.email === "gongonsilva@gmail.com")
     ) {
       return true;
@@ -884,7 +894,7 @@ function App() {
         }
 
         // Fallback para localStorage se Firestore não tiver dados
-        const savedUsers = localStorage.getItem("app-users");
+        const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
@@ -940,7 +950,7 @@ function App() {
               },
               createdAt: new Date().toISOString(),
             });
-            localStorage.setItem("app-users", JSON.stringify(parsedUsers));
+            safeLocalStorage.setItem("app-users", JSON.stringify(parsedUsers));
           }
 
           setUsers(parsedUsers);
@@ -1012,7 +1022,7 @@ function App() {
           ];
 
           setUsers(defaultUsers);
-          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
+          safeLocalStorage.setItem("app-users", JSON.stringify(defaultUsers));
 
           // Criar no Firestore também
           if (isFirestoreReady()) {
@@ -1039,7 +1049,7 @@ function App() {
     const handleUsersUpdated = () => {
       console.log("🔄 Users updated event received, reloading...");
       try {
-        const savedUsers = localStorage.getItem("app-users");
+        const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
@@ -1100,7 +1110,7 @@ function App() {
   // Settings toggle functions with persistence
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    localStorage.setItem("enablePhoneDialer", enabled.toString());
+    safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
     console.log("📞 Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
@@ -1113,7 +1123,7 @@ function App() {
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    localStorage.setItem("enableMapsRedirect", enabled.toString());
+    safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
     console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
@@ -1128,7 +1138,8 @@ function App() {
   useEffect(() => {
     const loadSettings = () => {
       try {
-        const savedMapsRedirect = localStorage.getItem("enableMapsRedirect");
+        const savedMapsRedirect =
+          safeLocalStorage.getItem("enableMapsRedirect");
         if (savedMapsRedirect !== null) {
           setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
           console.log(
@@ -1137,7 +1148,7 @@ function App() {
           );
         }
 
-        const savedPhoneDialer = localStorage.getItem("enablePhoneDialer");
+        const savedPhoneDialer = safeLocalStorage.getItem("enablePhoneDialer");
         if (savedPhoneDialer !== null) {
           setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
           console.log(
@@ -1147,7 +1158,9 @@ function App() {
         }
 
         // Load notification preference
-        const savedNotifications = localStorage.getItem("notificationsEnabled");
+        const savedNotifications = safeLocalStorage.getItem(
+          "notificationsEnabled",
+        );
         if (savedNotifications !== null) {
           setNotificationsEnabled(JSON.parse(savedNotifications));
         }
@@ -1187,9 +1200,9 @@ function App() {
     const initializeAuth = async () => {
       try {
         // Verificar se auto-login está ativo
-        const autoLoginEnabled = localStorage.getItem("autoLoginEnabled");
-        const rememberMe = localStorage.getItem("rememberMe");
-        const savedCredentials = sessionStorage.getItem(
+        const autoLoginEnabled = safeLocalStorage.getItem("autoLoginEnabled");
+        const rememberMe = safeLocalStorage.getItem("rememberMe");
+        const savedCredentials = safeSessionStorage.getItem(
           "savedLoginCredentials",
         );
 
@@ -1224,19 +1237,19 @@ function App() {
                 setIsAuthenticated(true);
                 return; // Não fazer logout se auto-login funcionou
               } else {
-                console.warn("❌ Auto-login falhou:", result.error);
+                console.warn("�� Auto-login falhou:", result.error);
                 // Limpar credenciais inválidas
-                sessionStorage.removeItem("savedLoginCredentials");
-                localStorage.removeItem("autoLoginEnabled");
-                localStorage.removeItem("rememberMe");
+                safeSessionStorage.removeItem("savedLoginCredentials");
+                safeLocalStorage.removeItem("autoLoginEnabled");
+                safeLocalStorage.removeItem("rememberMe");
               }
             }
           } catch (autoLoginError) {
             console.error("❌ Erro no auto-login:", autoLoginError);
             // Limpar credenciais corrompidas
-            sessionStorage.removeItem("savedLoginCredentials");
-            localStorage.removeItem("autoLoginEnabled");
-            localStorage.removeItem("rememberMe");
+            safeSessionStorage.removeItem("savedLoginCredentials");
+            safeLocalStorage.removeItem("autoLoginEnabled");
+            safeLocalStorage.removeItem("rememberMe");
           }
         }
 
@@ -1255,15 +1268,15 @@ function App() {
         if (!autoLoginEnabled || !rememberMe) {
           setCurrentUser(null);
           setIsAuthenticated(false);
-          localStorage.removeItem("currentUser");
-          localStorage.removeItem("isAuthenticated");
+          safeLocalStorage.removeItem("currentUser");
+          safeLocalStorage.removeItem("isAuthenticated");
         }
 
         // Clear all mock and test data
-        localStorage.removeItem("mock-users");
-        localStorage.removeItem("mock-current-user");
-        localStorage.removeItem("test-data");
-        localStorage.removeItem("sample-data");
+        safeLocalStorage.removeItem("mock-users");
+        safeLocalStorage.removeItem("mock-current-user");
+        safeLocalStorage.removeItem("test-data");
+        safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
         console.log("🗑️ Mock and test data cleared");
@@ -1454,7 +1467,7 @@ function App() {
   //     console.warn("SECURITY: Inconsistent auth state detected");
   //     setIsAuthenticated(false);
   //     setCurrentUser(null);
-  //     localStorage.removeItem("currentUser");
+  //     safeLocalStorage.removeItem("currentUser");
   //   }
   // }, [isAuthenticated, currentUser]);
 
@@ -1466,7 +1479,7 @@ function App() {
   //       console.warn("SECURITY: Auth state compromised, forcing logout");
   //       setIsAuthenticated(false);
   //       setCurrentUser(null);
-  //       localStorage.removeItem("currentUser");
+  //       safeLocalStorage.removeItem("currentUser");
   //     }
   //   }, 5000);
   //   return () => clearInterval(authCheckInterval);
@@ -1723,10 +1736,13 @@ function App() {
 
     // Store in localStorage for persistence (in real app, would save to backend)
     const savedInterventions = JSON.parse(
-      localStorage.getItem("interventions") || "[]",
+      safeLocalStorage.getItem("interventions") || "[]",
     );
     savedInterventions.push(interventionData);
-    localStorage.setItem("interventions", JSON.stringify(savedInterventions));
+    safeLocalStorage.setItem(
+      "interventions",
+      JSON.stringify(savedInterventions),
+    );
 
     // Add to maintenance sync system
     const newMaintenance = {
@@ -1936,7 +1952,7 @@ function App() {
       setIsAuthenticated(false);
 
       // Clear saved login credentials when user manually logs out
-      sessionStorage.removeItem("savedLoginCredentials");
+      safeSessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
 
       // Clear form
@@ -1957,7 +1973,7 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
       // Clear saved login credentials on emergency logout
-      sessionStorage.removeItem("savedLoginCredentials");
+      safeSessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
       setLoginForm({ email: "", password: "" });
 
@@ -2252,7 +2268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setPushPermission(permission);
         if (permission === "granted") {
           setNotificationsEnabled(true);
-          localStorage.setItem("notificationsEnabled", "true");
+          safeLocalStorage.setItem("notificationsEnabled", "true");
           showNotification(
             "Notificações Ativadas",
             "Agora vai receber notificações de obras atribuídas",
@@ -2657,7 +2673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         if (firestoreId) {
           console.log("✅ Utilizador criado no Firestore:", firestoreId);
-          newUser.firestoreId = firestoreId;
+          (newUser as any).firestoreId = firestoreId;
         }
 
         // Atualizar estado local
@@ -2851,14 +2867,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              await handleLoginWithRememberMe(
+              const result = await handleLoginWithRememberMe(
                 email.trim(),
                 password,
                 rememberMe,
               );
 
               // Fallback para authService se necessário
-              if (!result.success) {
+              if (!result?.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -2868,14 +2884,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 if (fallbackResult.success) {
                   console.log("���� AuthService fallback bem-sucedido");
-                  result.success = true;
-                  result.user = fallbackResult.user;
+                  (result as any).success = true;
+                  (result as any).user = fallbackResult.user;
                 }
               }
 
               // console.log("🔐 Auth result:", result);
 
-              if (result.success && result.user) {
+              if (result?.success && result?.user) {
                 // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
@@ -4854,7 +4870,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                             // Check localStorage directly
                             const localStorageUsers =
-                              localStorage.getItem("app-users");
+                              safeLocalStorage.getItem("app-users");
                             console.log(
                               "💾 USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
@@ -4889,7 +4905,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <p className="text-xs text-yellow-700 mt-1">
                                 Debug: localStorage tem{" "}
-                                {localStorage.getItem("app-users")
+                                {safeLocalStorage.getItem("app-users")
                                   ? "dados"
                                   : "sem dados"}
                               </p>
@@ -4914,7 +4930,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "🔄 Recarregando utilizadores...",
                                   );
                                   const savedUsers =
-                                    localStorage.getItem("app-users");
+                                    safeLocalStorage.getItem("app-users");
                                   if (savedUsers) {
                                     try {
                                       const parsedUsers =
@@ -4976,7 +4992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       createdAt: new Date().toISOString(),
                                     };
                                     setUsers([defaultUser]);
-                                    localStorage.setItem(
+                                    safeLocalStorage.setItem(
                                       "app-users",
                                       JSON.stringify([defaultUser]),
                                     );
@@ -5126,7 +5142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Medições do Furo */}
+                          {/* Mediç��es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medições do Furo
@@ -5442,7 +5458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create works
                           if (!hasPermission("obras", "create")) {
                             alert(
-                              "Não tem permissão para criar obras. Contacte o administrador.",
+                              "Não tem permiss��o para criar obras. Contacte o administrador.",
                             );
                             return;
                           }
@@ -5750,7 +5766,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               if (!hasPermission("clientes", "create")) {
                                 alert(
-                                  "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                  "❌ Não tem permiss��o para criar clientes. Contacte o administrador.",
                                 );
                                 return;
                               }
@@ -6101,7 +6117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G📞s</option>
+                          <option value="gas">Aquecimento a G��s</option>
                         </select>
                       </div>
                     </div>
@@ -6239,7 +6255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manutenção Programada",
+                                type: "Manuten��ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -7140,7 +7156,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configurações Avançadas
+                                      Configura��ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7273,7 +7289,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configura����es.
+                  Os relatórios agora estão na página de Configura������es.
                 </p>
                 <button
                   onClick={() => {
@@ -7308,7 +7324,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                <UserPermissionsManager />
                 <EmergencyLogoutManager />
               </div>
             </div>
@@ -8096,7 +8111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </p>
                           </div>
 
-                          <UserPermissionsManager />
+                          {/* UserPermissionsManager removido - consolidado no UserManager */}
                         </div>
                       )}
                     </div>
@@ -8328,7 +8343,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>📞 Piscinas associadas</li>
-                        <li>📞 Histórico de serviços</li>
+                        <li>��� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -8466,7 +8481,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="text-2xl font-bold text-cyan-600">
                         {(() => {
                           const waterBores = JSON.parse(
-                            localStorage.getItem("waterBores") || "[]",
+                            safeLocalStorage.getItem("waterBores") || "[]",
                           );
                           return waterBores.length;
                         })()}
@@ -9361,14 +9376,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                                     // Atualizar no localStorage
                                     const existingWorks = JSON.parse(
-                                      localStorage.getItem("works") || "[]",
+                                      safeLocalStorage.getItem("works") || "[]",
                                     );
                                     const workIndex = existingWorks.findIndex(
                                       (w: any) => w.id === work.id,
                                     );
                                     if (workIndex !== -1) {
                                       existingWorks[workIndex] = updatedWork;
-                                      localStorage.setItem(
+                                      safeLocalStorage.setItem(
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
@@ -9451,7 +9466,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu📞das"
+                                    ? "Conclu����das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -10684,7 +10699,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  Página não encontrada
+                  P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç€ solicitada não foi encontrada.
@@ -10924,8 +10939,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //     };
   //     setCurrentUser(testUser);
   //     setIsAuthenticated(true);
-  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
-  //     localStorage.setItem("isAuthenticated", "true");
+  //     safeLocalStorage.setItem("currentUser", JSON.stringify(testUser));
+  //     safeLocalStorage.setItem("isAuthenticated", "true");
   //   }
   // }, []);
 
@@ -11076,11 +11091,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // Update state
                 setCurrentUser(result.user);
                 setIsAuthenticated(true);
-                localStorage.setItem(
+                safeLocalStorage.setItem(
                   "currentUser",
                   JSON.stringify(result.user),
                 );
-                localStorage.setItem("isAuthenticated", "true");
+                safeLocalStorage.setItem("isAuthenticated", "true");
 
                 // Clear login form
                 setLoginForm({ email: "", password: "" });
@@ -12118,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenções
+                        Manutenç���es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

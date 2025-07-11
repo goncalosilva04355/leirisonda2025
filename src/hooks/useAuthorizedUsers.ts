@@ -3,6 +3,7 @@ import {
   AuthorizedUser,
   getCurrentAuthorizedUsers,
 } from "../config/authorizedUsers";
+import { storageUtils } from "../utils/storageUtils";
 
 // Hook para gerir utilizadores autorizados
 export function useAuthorizedUsers() {
@@ -47,7 +48,7 @@ export function useAuthorizedUsers() {
 
   // Função para atualizar utilizadores
   const updateUsers = (newUsers: AuthorizedUser[]) => {
-    localStorage.setItem("authorizedUsers", JSON.stringify(newUsers));
+    storageUtils.setJson("authorizedUsers", newUsers);
     setUsers(newUsers);
 
     // Disparar evento personalizado para outros componentes

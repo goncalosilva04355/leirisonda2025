@@ -6,7 +6,16 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { getDB } from "../firebase/basicConfig";
+
+// Get Firestore instance
+const getFirestore = () => {
+  const db = getDB();
+  if (!db) {
+    throw new Error("Firestore não está disponível");
+  }
+  return db;
+};
 
 /**
  * Serviço para corrigir dados existentes que podem estar isolados por utilizador
@@ -57,7 +66,7 @@ export class FixDataVisibilityService {
         "obras",
       );
       result.details.push(
-        `✅ ${result.fixed.works} obras corrigidas para visibilidade global`,
+        `��� ${result.fixed.works} obras corrigidas para visibilidade global`,
       );
 
       // Corrigir piscinas
@@ -120,7 +129,9 @@ export class FixDataVisibilityService {
 
     try {
       // Buscar todos os documentos da coleção
-      const querySnapshot = await getDocs(collection(db, collectionName));
+      const querySnapshot = await getDocs(
+        collection(getFirestore(), collectionName),
+      );
       let fixedCount = 0;
 
       for (const docSnap of querySnapshot.docs) {
@@ -139,7 +150,7 @@ export class FixDataVisibilityService {
           );
 
           // Atualizar documento para ser globalmente visível
-          await updateDoc(doc(db, collectionName, docSnap.id), {
+          await updateDoc(doc(getFirestore(), collectionName, docSnap.id), {
             sharedGlobally: true,
             visibleToAllUsers: true,
             isGlobalData: true,
@@ -192,7 +203,9 @@ export class FixDataVisibilityService {
       // Verificar cada coleção
       for (const [key, collectionName] of Object.entries(this.COLLECTIONS)) {
         const collectionKey = key.toLowerCase() as keyof typeof result.counts;
-        const querySnapshot = await getDocs(collection(db, collectionName));
+        const querySnapshot = await getDocs(
+          collection(getFirestore(), collectionName),
+        );
 
         result.counts[collectionKey].total = querySnapshot.size;
 
