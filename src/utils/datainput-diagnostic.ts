@@ -105,11 +105,14 @@ export class DataInputDiagnostic {
       );
 
       // Testar login local
-      const testResult = await authService.login("teste@teste.com", "123");
-      console.log("✅ Autenticação local funciona:", testResult.success);
+      const testResult = await robustLoginService.login(
+        "teste@teste.com",
+        "123",
+      );
+      console.log("�� Autenticação local funciona:", testResult.success);
 
       if (testResult.success) {
-        await authService.logout();
+        await robustLoginService.logout();
         console.log("✅ Logout funciona");
       }
     } catch (error) {
