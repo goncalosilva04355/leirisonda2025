@@ -106,6 +106,9 @@ import DataInputTutorial from "./components/DataInputTutorial";
 // Monitor de erros Firebase para detectar e corrigir automaticamente
 import "./utils/firebaseErrorMonitor";
 import FirebaseFixButton from "./components/FirebaseFixButton";
+
+// Inicialização de emergência de utilizadores
+import "./utils/emergencyUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -1036,7 +1039,7 @@ function App() {
 
         try {
           await firestoreService.syncAll();
-          console.log("✅ Sincronização inicial completa!");
+          console.log("��� Sincronização inicial completa!");
         } catch (error) {
           console.error("❌ Erro na sincronizaç��o inicial:", error);
         }
@@ -3633,7 +3636,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
