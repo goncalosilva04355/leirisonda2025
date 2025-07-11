@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("���� All mock and test data cleared");
+      console.log("🗑️ All mock and test data cleared");
     };
 
     forceLogout();
@@ -1860,7 +1860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("€️ Error requesting notification permission:", error);
+        console.error("€�� Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -4544,8 +4544,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
+                                ⚠�� Nenhum utilizador encontrado. Vá à Área de
+                                de Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
