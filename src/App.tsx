@@ -2132,7 +2132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("Máximo de 20 fotografias permitidas");
+      alert("M��ximo de 20 fotografias permitidas");
       return;
     }
 
@@ -7236,7 +7236,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As notificaç€es funcionam apenas com
+                                        • As notificaç��es funcionam apenas com
                                         HTTPS
                                       </li>
                                       <li>
@@ -10612,13 +10612,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
 
     if (showAdvancedSettings) {
-      console.log("🔐 Debug: Rendering advanced settings", {
-        showAdvancedSettings,
-        isAdvancedUnlocked,
-      });
-
       if (isAdvancedUnlocked) {
-        console.log("✅ Debug: Rendering AdvancedSettings component");
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
