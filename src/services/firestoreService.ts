@@ -460,5 +460,91 @@ export class FirestoreService {
   }
 }
 
-// Instância singleton
-export const firestoreService = new FirestoreService();
+// Instância singleton lazy-loaded
+let firestoreServiceInstance: FirestoreService | null = null;
+
+export const firestoreService = {
+  getInstance(): FirestoreService {
+    if (!firestoreServiceInstance) {
+      firestoreServiceInstance = new FirestoreService();
+    }
+    return firestoreServiceInstance;
+  },
+
+  // Métodos delegados para compatibilidade
+  async createObra(obra: any): Promise<string | null> {
+    return this.getInstance().createObra(obra);
+  },
+
+  async getObras(): Promise<any[]> {
+    return this.getInstance().getObras();
+  },
+
+  async updateObra(id: string, obra: any): Promise<boolean> {
+    return this.getInstance().updateObra(id, obra);
+  },
+
+  async deleteObra(id: string): Promise<boolean> {
+    return this.getInstance().deleteObra(id);
+  },
+
+  async createPiscina(piscina: any): Promise<string | null> {
+    return this.getInstance().createPiscina(piscina);
+  },
+
+  async getPiscinas(): Promise<any[]> {
+    return this.getInstance().getPiscinas();
+  },
+
+  async updatePiscina(id: string, piscina: any): Promise<boolean> {
+    return this.getInstance().updatePiscina(id, piscina);
+  },
+
+  async deletePiscina(id: string): Promise<boolean> {
+    return this.getInstance().deletePiscina(id);
+  },
+
+  async createManutencao(manutencao: any): Promise<string | null> {
+    return this.getInstance().createManutencao(manutencao);
+  },
+
+  async getManutencoes(): Promise<any[]> {
+    return this.getInstance().getManutencoes();
+  },
+
+  async updateManutencao(id: string, manutencao: any): Promise<boolean> {
+    return this.getInstance().updateManutencao(id, manutencao);
+  },
+
+  async deleteManutencao(id: string): Promise<boolean> {
+    return this.getInstance().deleteManutencao(id);
+  },
+
+  async createCliente(cliente: any): Promise<string | null> {
+    return this.getInstance().createCliente(cliente);
+  },
+
+  async getClientes(): Promise<any[]> {
+    return this.getInstance().getClientes();
+  },
+
+  async updateCliente(id: string, cliente: any): Promise<boolean> {
+    return this.getInstance().updateCliente(id, cliente);
+  },
+
+  async deleteCliente(id: string): Promise<boolean> {
+    return this.getInstance().deleteCliente(id);
+  },
+
+  async createNotification(notification: any): Promise<string | null> {
+    return this.getInstance().createNotification(notification);
+  },
+
+  async getNotificacoes(): Promise<any[]> {
+    return this.getInstance().getNotificacoes();
+  },
+
+  async syncAll(): Promise<void> {
+    return this.getInstance().syncAll();
+  },
+};
