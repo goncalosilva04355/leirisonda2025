@@ -66,7 +66,7 @@ export const AuthSyncDiagnostic: React.FC = () => {
 
     try {
       // Test current user
-      const currentUser = await authService.getCurrentUserProfile();
+      const currentUser = await robustLoginService.getCurrentUser();
 
       if (currentUser) {
         setTestResult(`✅ Utilizador autenticado:
