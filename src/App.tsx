@@ -80,9 +80,7 @@ import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
-// Firebase works silently in background - no diagnostics or UI needed
-import("./firebase/ultimateSimpleFirebase");
-import { ForceInitialization } from "./utils/forceInitialization";
+// Firebase imports removed temporarily
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
@@ -1432,7 +1430,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -8904,7 +8902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu📞das"
+                                    ? "Conclu��das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
