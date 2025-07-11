@@ -6178,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons��vel *
+                          Técnico Respons���vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -9704,7 +9704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -12108,7 +12108,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Proteção de Dados - Notificações e Status */}
         <DataRestoredNotification />
-        <DataProtectionStatus />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
