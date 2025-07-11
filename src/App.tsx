@@ -235,7 +235,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado
-  // Mock dataSync to prevent crashes
+  // Mock dataSync to prevent crashes - universalSync removed
   const dataSync = {
     updateWork: (id: any, data: any) =>
       console.log("Mock updateWork:", id, data),
@@ -1419,7 +1419,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente ap��s manutenç��o anterior",
+          notes: "Agendada automaticamente ap��s manutenção anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5547,7 +5547,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
                               console.log(
-                                "🔍 User Permissions:",
+                                "�� User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -9810,7 +9810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -10592,7 +10592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("��� Login failed:", result.error);
+                console.warn("❌ Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
