@@ -45,17 +45,39 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSyncSafe(): UniversalSyncState &
   UniversalSyncActions {
-  const [state, setState] = useState<UniversalSyncState>({
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    totalItems: 0,
-    lastSync: "",
-    isGloballyShared: false,
-    isLoading: false,
-    error: null,
-    syncStatus: "disconnected",
+  // Initialize state with error handling
+  const [state, setState] = useState<UniversalSyncState>(() => {
+    try {
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: false,
+        isLoading: false,
+        error: null,
+        syncStatus: "disconnected",
+      };
+    } catch (error) {
+      console.error(
+        "❌ Error initializing useUniversalDataSyncSafe state:",
+        error,
+      );
+      return {
+        obras: [],
+        manutencoes: [],
+        piscinas: [],
+        clientes: [],
+        totalItems: 0,
+        lastSync: "",
+        isGloballyShared: false,
+        isLoading: false,
+        error: "Failed to initialize",
+        syncStatus: "error",
+      };
+    }
   });
 
   // Load data from localStorage as fallback
