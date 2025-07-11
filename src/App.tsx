@@ -2273,9 +2273,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers([...users, newUser]);
 
-        // Try to register with Firebase Auth for automatic synchronization
+        // Try to register with robustLoginService
         try {
-          const result = await authService.register(
+          const { robustLoginService } = await import(
+            "./services/robustLoginService"
+          );
+          const result = await robustLoginService.register(
             userForm.email,
             userForm.password,
             userForm.name,
@@ -7743,7 +7746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten������es</li>
+                        <li>• Histórico de manuten�������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
