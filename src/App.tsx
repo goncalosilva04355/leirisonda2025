@@ -172,7 +172,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persist��ncia:", error);
+        console.error("❌ Erro na monitorização de persistência:", error);
       }
     };
 
