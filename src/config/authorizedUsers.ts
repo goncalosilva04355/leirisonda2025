@@ -58,9 +58,39 @@ export function getAuthorizedUser(email: string): AuthorizedUser | null {
   return isEmailAuthorized(email);
 }
 
+// Função para sincronizar authorizedUsers para app-users
+function syncToAppUsers(authorizedUsers: AuthorizedUser[]): void {
+  try {
+    const appUsers = authorizedUsers.map((user, index) => ({
+      id: index + 1,
+      name: user.name,
+      email: user.email,
+      active: true,
+      role: user.role,
+      password: user.email === "gongonsilva@gmail.com" ? "19867gsf" : "123456", // Password padrão
+      permissions: {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        clientes: { view: true, create: true, edit: true, delete: true },
+      },
+      createdAt: new Date().toISOString(),
+    }));
+
+    localStorage.setItem("app-users", JSON.stringify(appUsers));
+    console.log("✅ app-users sincronizados:", appUsers.length);
+  } catch (error) {
+    console.error("❌ Erro ao sincronizar app-users:", error);
+  }
+}
+
 // Função para inicializar utilizadores autorizados se necessário
 export function initializeAuthorizedUsers(): void {
   const savedUsers = localStorage.getItem("authorizedUsers");
+  const savedAppUsers = localStorage.getItem("app-users");
+
   if (!savedUsers || savedUsers.trim() === "" || savedUsers === "[]") {
     console.log("🔄 Inicializando utilizadores autorizados...");
     localStorage.setItem("authorizedUsers", JSON.stringify(AUTHORIZED_USERS));
@@ -70,5 +100,14 @@ export function initializeAuthorizedUsers(): void {
     );
   } else {
     console.log("✅ Utilizadores autorizados já existem no localStorage");
+  }
+
+  // Sempre sincronizar para app-users se necessário
+  if (!savedAppUsers || savedAppUsers.trim() === "" || savedAppUsers === "[]") {
+    console.log("🔄 Sincronizando para app-users...");
+    const currentAuthorizedUsers = getCurrentAuthorizedUsers();
+    syncToAppUsers(currentAuthorizedUsers);
+  } else {
+    console.log("✅ app-users já existem no localStorage");
   }
 }
