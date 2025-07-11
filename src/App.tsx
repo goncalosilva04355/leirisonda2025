@@ -151,8 +151,11 @@ function App() {
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
-    // Inicializar utilizadores autorizados
-    initializeAuthorizedUsers();
+    // Inicializar utilizadores autorizados (async)
+    const initUsers = async () => {
+      await initializeAuthorizedUsers();
+    };
+    initUsers();
 
     const savedUsers = localStorage.getItem("app-users");
     if (!savedUsers) {
@@ -348,7 +351,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺��� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -633,7 +636,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não disponível, usando sistema atual");
+        console.warn("�� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
         // Enviar notifica��ões mesmo no fallback
@@ -832,7 +835,7 @@ function App() {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
 
-          // Garantir que Gonçalo Fonseca est�� sempre disponível
+          // Garantir que Gonçalo Fonseca está sempre disponível
           const hasGoncalo = parsedUsers.some(
             (user) =>
               user.email === "gongonsilva@gmail.com" ||
@@ -6358,7 +6361,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furg��o 1, Carrinha 2"
+                          placeholder="Ex: Furgão 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7496,7 +7499,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    ��
+                                    🏊
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -8787,7 +8790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Rua, n��mero, andar, etc."
+                            placeholder="Rua, número, andar, etc."
                             required
                           />
                         </div>
@@ -9875,7 +9878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec📞ficas do Furo
+                          Observa��ões Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
