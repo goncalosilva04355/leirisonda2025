@@ -290,7 +290,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
+    // Sistema funcionará normalmente sem verificações autom��ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -706,6 +706,61 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+
+          // Garantir que Gonçalo Fonseca está sempre disponível
+          const hasGoncalo = parsedUsers.some(
+            (user) =>
+              user.email === "gongonsilva@gmail.com" ||
+              user.name === "Gonçalo Fonseca",
+          );
+
+          if (!hasGoncalo) {
+            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
+            parsedUsers.push({
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              active: true,
+              role: "super_admin",
+              password: "19867gsf",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              createdAt: new Date().toISOString(),
+            });
+            localStorage.setItem("app-users", JSON.stringify(parsedUsers));
+          }
+
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
@@ -875,7 +930,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     localStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("🗺️ Configuraç��o Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1946,7 +2001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
