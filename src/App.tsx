@@ -1860,7 +1860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("€�� Error requesting notification permission:", error);
+        console.error("€️ Error requesting notification permission:", error);
         return "error";
       }
     }
@@ -4544,8 +4544,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠�� Nenhum utilizador encontrado. Vá à Área de
-                                de Administração → "🔧 Correção de Atribuição de
+                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
+                                Administração → "🔧 Correção de Atribuição de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -10531,7 +10531,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("�� Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
