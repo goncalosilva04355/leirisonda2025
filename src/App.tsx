@@ -692,7 +692,7 @@ function App() {
 
           if (firestoreUsers.length > 0) {
             console.log(
-              "✅ Utilizadores carregados do Firestore:",
+              "��� Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
             setUsers(firestoreUsers);
@@ -1643,7 +1643,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -2681,7 +2681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isPending; // Mostrar todas as obras pendentes
+                            return isPending && isAssignedToUser; // Mostrar apenas obras pendentes atribuídas
                           });
                           console.log(
                             "📊 Dashboard - Obras Pendentes Atribuídas:",
@@ -9769,7 +9769,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç���o">Manutenção</option>
+                          <option value="Manutenç����o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -11296,7 +11296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta a��ão não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
