@@ -674,6 +674,7 @@ function App() {
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
+  const [usersLoaded, setUsersLoaded] = useState(false);
 
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
