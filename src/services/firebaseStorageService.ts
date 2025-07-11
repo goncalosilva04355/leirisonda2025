@@ -8,7 +8,7 @@ import {
   listAll,
   StorageReference,
 } from "firebase/storage";
-import { app as getFirebaseApp } from "../firebase";
+import { getFirebaseApp } from "../firebase";
 
 export interface PhotoUpload {
   id?: string;
