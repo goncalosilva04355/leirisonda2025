@@ -422,14 +422,14 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
                 localStorage.getItem("mock-users") || "{}",
               );
               const authorizedUsers = JSON.parse(
-                localStorage.getItem("authorized-users") || "[]",
+                localStorage.getItem("authorizedUsers") || "[]",
               );
 
               alert(`📊 Diagnóstico de Utilizadores:
 
 🔵 app-users: ${appUsers.length} utilizadores
 🟡 mock-users: ${Object.keys(mockUsers).length} utilizadores
-🟢 authorized-users: ${authorizedUsers.length} utilizadores
+🟢 authorizedUsers: ${authorizedUsers.length} utilizadores
 
 Este gestor sincroniza todos os sistemas automaticamente.`);
             }}

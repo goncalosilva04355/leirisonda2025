@@ -68,6 +68,7 @@ import {
   testFirestore,
   getFirebaseFirestore,
 } from "./firebase/firestoreConfig";
+import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -98,6 +99,9 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
+import "./utils/testFirebaseUserSync";
+import "./utils/completeDataSync";
+import "./utils/fullSyncStatus";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
@@ -150,6 +154,12 @@ function App() {
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
+    // Inicializar utilizadores autorizados (async)
+    const initUsers = async () => {
+      await initializeAuthorizedUsers();
+    };
+    initUsers();
+
     const savedUsers = localStorage.getItem("app-users");
     if (!savedUsers) {
       console.log("🔧 Criando utilizador padrão no localStorage");
@@ -181,7 +191,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitoriza📞ão automática de persistência de dados
+    // Monitoriza���ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
