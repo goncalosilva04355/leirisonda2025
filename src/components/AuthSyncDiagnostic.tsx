@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { robustLoginService } from "../services/robustLoginService";
-import { auth } from "../firebase/config";
+import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthState {
