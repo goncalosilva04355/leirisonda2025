@@ -87,9 +87,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+// Auto hooks temporarily removed
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
@@ -1694,7 +1692,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTEN��ÕES REALIZADAS:
+MANUTENÇÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -1829,7 +1827,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -3086,7 +3084,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Próximas Manutenç��es
                     </h2>
                   </div>
 
@@ -3963,7 +3961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        �� {maint.clientContact}
+                                        📞 {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -6316,7 +6314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observa��ões Gerais
                         </label>
                         <textarea
                           rows={4}
