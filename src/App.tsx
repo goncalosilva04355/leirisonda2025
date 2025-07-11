@@ -5951,7 +5951,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add pool (will handle Firebase and localStorage)
-                          addPool(poolData);
+                          try {
+                            await addPool(poolData);
+                            console.log(
+                              "✅ Piscina criada com sucesso:",
+                              poolData,
+                            );
+                          } catch (error) {
+                            console.error("❌ Erro ao criar piscina:", error);
+                            alert(
+                              `Erro ao criar piscina: ${error.message || error}`,
+                            );
+                            return;
+                          }
 
                           // Create future maintenance if next maintenance date is provided
                           if (poolData.nextMaintenance) {
@@ -6423,7 +6435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manutenç��o
                         </label>
                         <input
                           type="date"
