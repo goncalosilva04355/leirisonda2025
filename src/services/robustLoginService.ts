@@ -234,6 +234,71 @@ class RobustLoginService {
 
     return null;
   }
+
+  async register(
+    email: string,
+    password: string,
+    name: string,
+    role: "super_admin" | "admin" | "manager" | "technician" = "technician",
+    permissions?: any,
+  ): Promise<LoginResult> {
+    console.log("👥 RobustLoginService: Criando novo utilizador", email);
+
+    try {
+      // Verificar se email já existe
+      const existingUsers = this.getAllUsers();
+      const emailExists = existingUsers.some(
+        (u) => u.email.toLowerCase() === email.toLowerCase(),
+      );
+
+      if (emailExists) {
+        return {
+          success: false,
+          error: "Este email já está em uso",
+        };
+      }
+
+      // Criar novo utilizador
+      const newUser: UserProfile = {
+        uid: `user-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        email: email,
+        name: name,
+        role: role,
+        permissions: permissions || this.getDefaultPermissions(),
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
+
+      // Guardar na lista de utilizadores
+      const users = this.getAllUsers();
+      users.push(newUser);
+      localStorage.setItem("app-users", JSON.stringify(users));
+
+      console.log("✅ Utilizador criado com sucesso:", email);
+
+      return {
+        success: true,
+        user: newUser,
+        method: "local",
+      };
+    } catch (error) {
+      console.error("❌ Erro ao criar utilizador:", error);
+      return {
+        success: false,
+        error: "Erro ao criar utilizador",
+      };
+    }
+  }
+
+  private getAllUsers(): UserProfile[] {
+    try {
+      const savedUsers = localStorage.getItem("app-users") || "[]";
+      return JSON.parse(savedUsers);
+    } catch (error) {
+      console.error("❌ Erro ao carregar utilizadores:", error);
+      return [];
+    }
+  }
 }
 
 export const robustLoginService = new RobustLoginService();
