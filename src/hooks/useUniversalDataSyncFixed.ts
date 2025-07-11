@@ -45,8 +45,8 @@ export interface UniversalSyncActions {
  */
 export function useUniversalDataSyncFixed(): UniversalSyncState &
   UniversalSyncActions {
-  // Initialize with simple initial state
-  const [state, setState] = useState<UniversalSyncState>({
+  // Initialize with simple initial state - safe for SSR
+  const [state, setState] = useState<UniversalSyncState>(() => ({
     obras: [],
     manutencoes: [],
     piscinas: [],
@@ -57,7 +57,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     isLoading: false,
     error: null,
     syncStatus: "disconnected",
-  });
+  }));
 
   // Safe localStorage access
   const safeGetLocalStorage = useCallback(
