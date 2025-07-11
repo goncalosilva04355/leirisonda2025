@@ -585,10 +585,16 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    await withFirestore(async (db) => {
-      const workRef = doc(db, COLLECTIONS.WORKS, workId);
-      await deleteDoc(workRef);
-    });
+    const db = getDB();
+    if (!db) {
+      console.warn(
+        "⚠️ Firestore não disponível - obra não removida do Firebase",
+      );
+      return;
+    }
+
+    const workRef = doc(db, COLLECTIONS.WORKS, workId);
+    await deleteDoc(workRef);
 
     // Trigger automatic synchronization
     console.log(
