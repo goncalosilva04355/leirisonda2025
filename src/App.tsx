@@ -2741,8 +2741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              // Fallback para authService se necessário
-              if (!result.success) {
+              
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
