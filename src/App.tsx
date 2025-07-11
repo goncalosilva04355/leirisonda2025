@@ -5620,7 +5620,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Location */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Localizaç����o Completa *
+                        Localizaç��o Completa *
                       </label>
                       <input
                         type="text"
@@ -5879,7 +5879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manuten��ção programada durante criação da piscina",
+                                  "Manutennção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -7382,7 +7382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          �� Todas as obras ({works.length}{" "}
+                                          ���� Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -7895,7 +7895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>�� Equipas responsáveis</li>
+                        <li>��� Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
