@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from "react";
-import {
-  firestore,
-  getFirestoreStatus,
-  getFirestoreError,
-} from "../firebase/justFirestore";
+import { getDB, isFirestoreReady } from "../firebase";
 
 export function FirestoreStatus() {
   const [status, setStatus] = useState("checking");
   const [message, setMessage] = useState("🔄 Verificando Firestore...");
 
   useEffect(() => {
-    // Verificar estado inicial
     const checkStatus = () => {
-      const currentStatus = getFirestoreStatus();
-      const error = getFirestoreError();
+      try {
+        const db = getDB();
+        const ready = isFirestoreReady();
 
-      if (currentStatus === "connected") {
-        setStatus("connected");
-        setMessage("✅ Firestore conectado");
-      } else if (currentStatus === "error") {
+        if (db && ready) {
+          setStatus("connected");
+          setMessage("✅ Firestore conectado");
+        } else {
+          setStatus("error");
+          setMessage("❌ Firestore não inicializado");
+        }
+      } catch (error) {
         setStatus("error");
-        setMessage(`❌ Erro: ${error}`);
-      } else {
-        setStatus("checking");
-        setMessage("🔄 Inicializando...");
+        setMessage(
+          `❌ Erro: ${error instanceof Error ? error.message : "Desconhecido"}`,
+        );
       }
     };
 
