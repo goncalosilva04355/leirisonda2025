@@ -535,7 +535,7 @@ function App() {
             }
           } catch (firestoreError) {
             console.warn(
-              "⚠️ Erro ao salvar notificação no Firestore:",
+              "��️ Erro ao salvar notificação no Firestore:",
               firestoreError,
             );
           }
@@ -692,7 +692,7 @@ function App() {
 
           if (firestoreUsers.length > 0) {
             console.log(
-              "��� Utilizadores carregados do Firestore:",
+              "✅ Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
             setUsers(firestoreUsers);
@@ -1643,7 +1643,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -2744,7 +2744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Verificar assignedUserIds array
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress; // Mostrar todas as obras em progresso
+                            return isInProgress && isAssignedToUser; // Mostrar apenas obras em progresso atribuídas
                           });
                           return inProgressWorks.length;
                         })()}
@@ -5374,7 +5374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             if (e.target.value === "novo") {
                               console.log(
-                                "🔍 Tentando mostrar formulário de novo cliente...",
+                                "��� Tentando mostrar formulário de novo cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
@@ -7738,7 +7738,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten�������es</li>
+                        <li>• Histórico de manuten���������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -9769,7 +9769,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç����o">Manutenção</option>
+                          <option value="Manutenç���o">Manutenção</option>
                           <option value="Reparaç����o">Reparação</option>
                         </select>
                       </div>
@@ -11296,7 +11296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta a��ão não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
