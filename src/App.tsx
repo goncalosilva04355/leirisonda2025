@@ -165,7 +165,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
+            console.log("�� Persistência reparada automaticamente");
           } else {
             console.error(
               "❌ Não foi possível reparar a persistência automaticamente",
@@ -3081,7 +3081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Próximas Manutenções
+                      Pr��ximas Manutenções
                     </h2>
                   </div>
 
@@ -7107,7 +7107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                               </div>
 
-                              {/* Configurações de Localiza�ção Individual - Apenas para super_admin */}
+                              {/* Configurações de Localização Individual - Apenas para super_admin */}
                               {currentUser?.role === "super_admin" && (
                                 <PersonalLocationSettings />
                               )}
@@ -7845,7 +7845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Manutenções
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
