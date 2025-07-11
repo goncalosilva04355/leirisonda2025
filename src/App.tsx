@@ -2212,7 +2212,7 @@ ESTAT📞STICAS:
 - Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
-PRÓXIMAS AÇÕES:
+PR��XIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -10315,7 +10315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instala��ão
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -11200,6 +11200,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          {/* Private Browsing Test - Temporary for debugging */}
+          <div className="absolute top-4 right-4 z-40">
+            <PrivateBrowsingTest />
+          </div>
+
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
