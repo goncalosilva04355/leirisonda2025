@@ -68,6 +68,7 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+import { db } from "./firebase/simpleFirestore";
 import { isFirebaseReady } from "./firebase/config";
 import {
   isFirestoreReady,
@@ -81,6 +82,10 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+import "./utils/firebaseBypass"; // BYPASS: Desativar Firebase para evitar erros getImmediate
+import "./utils/bypassSuccess"; // Mensagem de sucesso
+// import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
+// import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -1687,7 +1692,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
+        "Não tem permissão para criar manuten��€es. Contacte o administrador.",
       );
       return;
     }
@@ -6137,7 +6142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenção
+                          Próxima Manutenç��o
                         </label>
                         <input
                           type="date"
