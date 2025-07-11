@@ -38,6 +38,13 @@ function initializeFirestore(): Firestore | null {
 
 // Função para obter o Firestore
 export function getFirebaseFirestore(): Firestore | null {
+  // BYPASS: Desativar Firestore temporariamente para evitar erros getImmediate
+  console.log(
+    "🚫 BYPASS: getFirebaseFirestore retornando null (modo local ativo)",
+  );
+  return null;
+
+  /* CÓDIGO ORIGINAL COMENTADO PARA EVITAR ERROS:
   try {
     // Tentar primeiro com instância global corrigida
     const globalInstance = getGlobalFirestore();
@@ -55,6 +62,7 @@ export function getFirebaseFirestore(): Firestore | null {
     console.warn("⚠️ getFirebaseFirestore falhou, retornando null:", error);
     return null;
   }
+  */
 }
 
 // Função para verificar se Firestore está pronto
