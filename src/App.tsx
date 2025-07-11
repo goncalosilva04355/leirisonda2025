@@ -370,7 +370,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Fun��ões de compatibilidade simplificadas
+  // Funções de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com sistema local");
@@ -1703,7 +1703,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa����ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa��ções: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -3676,7 +3676,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -3876,7 +3876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <input
                       type="text"
-                      placeholder="Pesquisar manuten��ões..."
+                      placeholder="Pesquisar manutenções..."
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -4265,7 +4265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalaç����o</option>
-                            <option value="reparacao">Repara��ão</option>
+                            <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -4782,7 +4782,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��ões do Furo
+                              Medições do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -4941,7 +4941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa����ões Específicas do Furo */}
+                          {/* Observa��ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -4949,7 +4949,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -4975,7 +4975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa���ões sobre a obra..."
+                            placeholder="Observa�ções sobre a obra..."
                           />
                         </div>
 
@@ -5162,7 +5162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observações sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -5233,7 +5233,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condi��ões do terreno"]',
+                                    'textarea[placeholder*="Condições do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -5786,7 +5786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões e Características Especiais
+                        Observações e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -6691,7 +6691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
-                            Gerir configurações da aplicação, notificações e
+                            Gerir configurações da aplica��ão, notificações e
                             preferências.
                           </p>
                         </div>
@@ -7096,7 +7096,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             });
                                           } else {
                                             alert(
-                                              "Notifica���ões foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                              "Notifica�ções foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
                                             );
                                           }
                                         } else {
@@ -7132,7 +7132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica���ões no seu navegador
+                                        notifica�ções no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -7832,7 +7832,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manuten�������es</li>
-                        <li>• Próximas interven��ões</li>
+                        <li>• Próximas intervenções</li>
                       </ul>
                     </div>
                     <button
@@ -8958,7 +8958,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa��ões Básicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -9228,7 +9228,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa��ões
+                          Observações
                         </h3>
                       </div>
 
@@ -9400,7 +9400,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condi��ões do terreno, qualidade da água, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -9715,7 +9715,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observações
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -9959,7 +9959,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observa��ões
+                        Observações
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -10463,7 +10463,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura����ões avançadas
+                Insira a palavra-passe para aceder às configura��ções avançadas
               </p>
             </div>
 
@@ -11135,7 +11135,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Se��ões Expandidas */}
+                    {/* Detalhes Completos - Seções Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
@@ -11506,7 +11506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa��ões do Cliente
+                        Informações do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
