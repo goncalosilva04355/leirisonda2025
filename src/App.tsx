@@ -283,6 +283,9 @@ function App() {
       lastFix: null,
       fixCount: 0,
       performFix: () => Promise.resolve(),
+      checkOnUserAction: () => Promise.resolve(),
+      autoFixEnabled: false,
+      toggleAutoFix: () => {},
     };
   }
 
@@ -561,7 +564,7 @@ function App() {
               // TODO: Implementar FCM para notificações push quando app está fechada
               // Isso requer configuração adicional do Firebase Messaging
             } catch (pushError) {
-              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
+              console.warn("⚠️ Erro ao enviar notificaç��o push:", pushError);
             }
           }
 
@@ -9602,7 +9605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
                       >
                         <Building2 className="h-4 w-4" />
-                        <span>Guardar Alterações</span>
+                        <span>Guardar Altera��ões</span>
                       </button>
                     </div>
                   </form>
