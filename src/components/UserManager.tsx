@@ -429,7 +429,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
 🔵 app-users: ${appUsers.length} utilizadores
 🟡 mock-users: ${Object.keys(mockUsers).length} utilizadores
-🟢 authorized-users: ${authorizedUsers.length} utilizadores
+🟢 authorizedUsers: ${authorizedUsers.length} utilizadores
 
 Este gestor sincroniza todos os sistemas automaticamente.`);
             }}
