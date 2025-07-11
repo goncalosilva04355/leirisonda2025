@@ -1238,7 +1238,7 @@ function App() {
               } else {
                 console.warn("❌ Auto-login falhou:", result.error);
                 // Limpar credenciais inválidas
-                sessionStorage.removeItem("savedLoginCredentials");
+                safeSessionStorage.removeItem("savedLoginCredentials");
                 safeLocalStorage.removeItem("autoLoginEnabled");
                 safeLocalStorage.removeItem("rememberMe");
               }
@@ -1246,7 +1246,7 @@ function App() {
           } catch (autoLoginError) {
             console.error("❌ Erro no auto-login:", autoLoginError);
             // Limpar credenciais corrompidas
-            sessionStorage.removeItem("savedLoginCredentials");
+            safeSessionStorage.removeItem("savedLoginCredentials");
             safeLocalStorage.removeItem("autoLoginEnabled");
             safeLocalStorage.removeItem("rememberMe");
           }
@@ -1951,7 +1951,7 @@ function App() {
       setIsAuthenticated(false);
 
       // Clear saved login credentials when user manually logs out
-      sessionStorage.removeItem("savedLoginCredentials");
+      safeSessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
 
       // Clear form
@@ -1972,7 +1972,7 @@ function App() {
       setCurrentUser(null);
       setIsAuthenticated(false);
       // Clear saved login credentials on emergency logout
-      sessionStorage.removeItem("savedLoginCredentials");
+      safeSessionStorage.removeItem("savedLoginCredentials");
       // Firebase handles auth state clearing automatically
       setLoginForm({ email: "", password: "" });
 
@@ -7155,7 +7155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configurações Avançadas
+                                      Configura��ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7288,7 +7288,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configura����es.
+                  Os relatórios agora estão na página de Configura������es.
                 </p>
                 <button
                   onClick={() => {
@@ -11518,7 +11518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ������ {selectedWork.contact}
+                            ����� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -12133,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenções
+                        Manutenç��es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
