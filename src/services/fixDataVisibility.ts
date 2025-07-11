@@ -129,7 +129,9 @@ export class FixDataVisibilityService {
 
     try {
       // Buscar todos os documentos da coleção
-      const querySnapshot = await getDocs(collection(db, collectionName));
+      const querySnapshot = await getDocs(
+        collection(getFirestore(), collectionName),
+      );
       let fixedCount = 0;
 
       for (const docSnap of querySnapshot.docs) {
@@ -201,7 +203,9 @@ export class FixDataVisibilityService {
       // Verificar cada coleção
       for (const [key, collectionName] of Object.entries(this.COLLECTIONS)) {
         const collectionKey = key.toLowerCase() as keyof typeof result.counts;
-        const querySnapshot = await getDocs(collection(db, collectionName));
+        const querySnapshot = await getDocs(
+          collection(getFirestore(), collectionName),
+        );
 
         result.counts[collectionKey].total = querySnapshot.size;
 
@@ -238,7 +242,7 @@ export class FixDataVisibilityService {
     }
 
     try {
-      console.log("🚀 Forçando sincronização entre todos os utilizadores...");
+      console.log("�� Forçando sincronização entre todos os utilizadores...");
 
       // Notificar todos os listeners ativos para recarregar dados
       const syncEvent = new CustomEvent("force-cross-user-sync", {
