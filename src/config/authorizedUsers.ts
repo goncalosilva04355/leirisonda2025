@@ -170,9 +170,11 @@ export async function forceSyncToAppUsers(): Promise<void> {
 // Listener para mudanças nos utilizadores autorizados
 if (typeof window !== "undefined") {
   window.addEventListener("authorizedUsersChanged", async (event: any) => {
-    console.log(
-      "🔄 Utilizadores autorizados alterados, forçando sincronização...",
-    );
+    console.log("🔔 Evento 'authorizedUsersChanged' recebido!");
+    console.log("📦 Dados do evento:", event.detail?.length || "sem dados");
+    console.log("🔄 Iniciando sincronização automática...");
     await forceSyncToAppUsers();
   });
+
+  console.log("👂 Listener 'authorizedUsersChanged' registado com sucesso");
 }
