@@ -37,6 +37,7 @@ interface UserLocationMapProps {
 
 export const UserLocationMap: React.FC<UserLocationMapProps> = ({
   currentUser,
+  allUsers = [],
 }) => {
   const [userLocations, setUserLocations] = useState<UserLocation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
