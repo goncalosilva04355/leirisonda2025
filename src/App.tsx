@@ -49,7 +49,7 @@ import "./utils/clearModalStates";
 
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { useDataProtection } from "./hooks/useDataProtection";
+import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import {
   DataRestoredNotification,
   DataProtectionStatus,
@@ -782,13 +782,8 @@ function App() {
   // Debug logging removed to prevent re-render loops
 
   // Proteção de dados críticos - NUNCA PERDER DADOS
-  // Temporarily disabled to prevent React error
-  // const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
-  //   useDataProtection();
-  const isProtected = false;
-  const dataRestored = false;
-  const backupBeforeOperation = () => {};
-  const checkIntegrity = () => ({ isValid: true, issues: [] });
+  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+    useDataProtection();
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -5898,7 +5893,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G���s</option>
+                          <option value="gas">Aquecimento a G📞s</option>
                         </select>
                       </div>
                     </div>
@@ -7510,7 +7505,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
-                                    Configurações Avançadas
+                                    Configuraç��es Avançadas
                                   </button>
                                   <button
                                     onClick={closeSettings}
