@@ -19,11 +19,30 @@ const firebaseConfig = {
   measurementId: "G-Q2QWQVH60L",
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+// Initialize Firebase with error handling
+try {
+  firebase.initializeApp(firebaseConfig);
+  console.log("[firebase-messaging-sw.js] Firebase initialized successfully");
+} catch (error) {
+  console.error(
+    "[firebase-messaging-sw.js] Firebase initialization failed:",
+    error,
+  );
+}
 
 // Initialize Firebase Cloud Messaging and get a reference to the service
-const messaging = firebase.messaging();
+let messaging = null;
+try {
+  messaging = firebase.messaging();
+  console.log(
+    "[firebase-messaging-sw.js] Firebase Messaging initialized successfully",
+  );
+} catch (error) {
+  console.error(
+    "[firebase-messaging-sw.js] Firebase Messaging initialization failed:",
+    error,
+  );
+}
 
 // Handle background messages
 messaging.onBackgroundMessage((payload) => {
