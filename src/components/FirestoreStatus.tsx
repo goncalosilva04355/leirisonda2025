@@ -1,21 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { firestore } from "../firebase/justFirestore";
+import {
+  firestore,
+  getFirestoreStatus,
+  getFirestoreError,
+} from "../firebase/justFirestore";
 
 export function FirestoreStatus() {
   const [status, setStatus] = useState("checking");
-  const [message, setMessage] = useState("Verificando Firestore...");
+  const [message, setMessage] = useState("🔄 Verificando Firestore...");
 
   useEffect(() => {
-    // Verificar estado do Firestore
-    setTimeout(() => {
-      if (firestore) {
+    // Verificar estado inicial
+    const checkStatus = () => {
+      const currentStatus = getFirestoreStatus();
+      const error = getFirestoreError();
+
+      if (currentStatus === "connected") {
         setStatus("connected");
         setMessage("✅ Firestore conectado");
+      } else if (currentStatus === "error") {
+        setStatus("error");
+        setMessage(`❌ Erro: ${error}`);
       } else {
-        setStatus("disconnected");
-        setMessage("❌ Firestore não conectado - usando localStorage");
+        setStatus("checking");
+        setMessage("🔄 Inicializando...");
       }
-    }, 2000);
+    };
+
+    // Verificar imediatamente
+    checkStatus();
+
+    // Verificar novamente após 3 segundos
+    const timer = setTimeout(checkStatus, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const getStatusColor = () => {
