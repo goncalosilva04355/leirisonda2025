@@ -1893,7 +1893,7 @@ function App() {
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
-        console.log("��� Login state updated", {
+        console.log("✅ Login state updated", {
           user: result.user.email,
           role: result.user.role,
           isAuthenticated: true,
@@ -2242,7 +2242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("�� Requesting notification permission...");
+    console.log("🔔 Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -3282,7 +3282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���� Morada:
+                                  📍 Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -4199,7 +4199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manutenç��es
                     </button>
                   </div>
                 </div>
@@ -7045,7 +7045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Configuraç��es do Sistema
+                            Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
@@ -8240,7 +8240,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relatório de Manuten��ões
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
@@ -11056,8 +11056,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              // Auto-check Firebase before login attempt
-              await firebaseAutoFix.checkOnUserAction();
+              // Firebase auto-check removed
 
               const result = await authService.login(
                 email.trim(),
