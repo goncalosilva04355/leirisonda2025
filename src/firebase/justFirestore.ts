@@ -14,15 +14,60 @@ const firebaseConfig = {
 };
 
 let firestore = null;
+let initError = null;
 
-try {
-  const apps = getApps();
-  const app = apps.length > 0 ? apps[0] : initializeApp(firebaseConfig);
-  firestore = getFirestore(app);
-  console.log("✅ Firestore inicializado");
-} catch (error) {
-  console.warn("⚠️ Firestore falhou:", error);
-  firestore = null;
+// Função para tentar inicializar com delay
+async function initializeWithDelay() {
+  try {
+    // Aguardar um pouco para evitar conflitos
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const apps = getApps();
+    let app;
+
+    if (apps.length > 0) {
+      app = apps[0];
+    } else {
+      app = initializeApp(firebaseConfig);
+    }
+
+    // Aguardar mais um pouco antes do Firestore
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    firestore = getFirestore(app);
+
+    // Testar uma operação simples para verificar se realmente funciona
+    if (
+      firestore &&
+      firestore.app &&
+      firestore.app.options.projectId === "leiria-1cfc9"
+    ) {
+      console.log("✅ Firestore conectado com sucesso");
+      return true;
+    } else {
+      throw new Error("Firestore não configurado corretamente");
+    }
+  } catch (error) {
+    initError = error.message || error.toString();
+    console.warn("⚠️ Firestore falhou:", error);
+    firestore = null;
+    return false;
+  }
+}
+
+// Inicializar com delay
+initializeWithDelay();
+
+// Função para obter o erro
+export function getFirestoreError() {
+  return initError;
+}
+
+// Função para verificar status
+export function getFirestoreStatus() {
+  if (firestore) return "connected";
+  if (initError) return "error";
+  return "initializing";
 }
 
 export { firestore };
