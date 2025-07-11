@@ -594,7 +594,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não dispon��vel, usando sistema atual");
+        console.warn("€ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -1086,8 +1086,8 @@ function App() {
       }
     };
 
-    testFirestoreStep3();
-  }, []);
+        // testFirestoreStep3();
+  // }, []);
 
   // Sincronização inicial de todos os dados com Firestore
   useEffect(() => {
@@ -7375,7 +7375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
-                                    Acesso às configurações avan��adas do sistema
+                                    Acesso às configurações avançadas do sistema
                                   </p>
                                   <button
                                     onClick={() =>
@@ -9089,7 +9089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Saída
+                              Hora de Sa��da
                             </label>
                             <input
                               type="datetime-local"
