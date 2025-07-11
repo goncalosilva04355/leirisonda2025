@@ -82,6 +82,7 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
+import "./utils/firebaseDirectFix"; // Correção direta do Firestore
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -2271,7 +2272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           safeLocalStorage.setItem("notificationsEnabled", "true");
           showNotification(
-            "Notificações Ativadas",
+            "Notificaç��es Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -7492,7 +7493,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             "granted"
                                           ) {
                                             new Notification("Leirisonda", {
-                                              body: "Notificaç��es já estão ativadas!",
+                                              body: "Notificações já estão ativadas!",
                                               icon: "/icon.svg",
                                             });
                                           } else {
