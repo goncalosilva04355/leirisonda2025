@@ -147,8 +147,38 @@ function App() {
     // Serviços temporariamente desativados para diagnóstico
 
     // Monitoriza📞ão automática de persistência de dados
-    // Monitorização de persistência temporariamente desativada
-    console.log("🔄 Sistema de persistência em modo simplificado");
+    const initDataPersistenceMonitoring = async () => {
+      try {
+        // Aguardar um pouco antes de iniciar verificação
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        // Verificar estado da persistência
+        const status = await dataPersistenceManager.diagnoseDataPersistence();
+
+        if (!status.working) {
+          console.warn("€ Problema de persistência detectado:", status);
+          setPersistenceIssueDetected(true);
+
+          // Tentar reparar automaticamente
+          const repaired = await dataPersistenceManager.repairDataPersistence();
+
+          if (repaired) {
+            setPersistenceIssueDetected(false);
+            console.log("✅ Persistência reparada automaticamente");
+          } else {
+            console.error(
+              "⚠️ Não foi possível reparar a persistência automaticamente",
+            );
+          }
+        } else {
+          console.log("✅ Sistema de persistência está funcional");
+        }
+      } catch (error) {
+        console.error("❌ Erro na monitorização de persistência:", error);
+      }
+    };
+
+    initDataPersistenceMonitoring();
 
     // Cleanup ao desmontar componente
     return () => {
@@ -158,7 +188,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("��� Firebase handles auth state automatically");
+    console.log("€ Firebase handles auth state automatically");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -1010,26 +1040,18 @@ function App() {
     forceLogout();
   }, []);
 
-  // Passo 3: Teste simplificado do Firestore
-    // useEffect temporariamente desativado para evitar erros
-  // useEffect(() => {
-    // const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Teste simplificado do Firestore...");
+  // Passo 3: Teste completo do Firestore com operações reais
+  useEffect(() => {
+    const testFirestoreStep3 = async () => {
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-                // Teste básico simplificado sem dependências externas
-        console.log("✅ Firestore em modo simplificado");
+        const firestoreResult = await testFirestore();
 
-        // Teste básico de conectividade
-        const db = getFirebaseFirestore();
-        if (db) {
-          console.log("✅ Firestore conectado e disponível");
-        } else {
-          console.warn("⚠️ Firestore não disponível");
-        }
+        if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
@@ -1076,14 +1098,18 @@ function App() {
               );
             }
           }
-                // Firestore não disponível - modo simplificado
+        } else {
+          console.log(
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+          );
+        }
       } catch (error) {
         console.warn("❌ Passo 3: Erro no teste Firestore:", error);
       }
     };
 
-        // testFirestoreStep3();
-  // }, []);
+    testFirestoreStep3();
+  }, []);
 
   // Sincronização inicial de todos os dados com Firestore
   useEffect(() => {
@@ -1742,7 +1768,7 @@ ${index + 1}. ${maint.poolName}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -5623,7 +5649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     error,
                                   );
                                   alert(
-                                    "��� Erro ao adicionar cliente: " + error,
+                                    "❌ Erro ao adicionar cliente: " + error,
                                   );
                                   return;
                                 }
@@ -6601,7 +6627,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
-                            manutenç��es e obras.
+                            manutenções e obras.
                           </p>
                         </div>
 
@@ -7167,7 +7193,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         notificações no seu navegador
                                       </li>
                                       <li>
-                                        ��� Em dispositivos móveis, adicione a app
+                                        • Em dispositivos móveis, adicione a app
                                         ao ecrã inicial
                                       </li>
                                       <li>
@@ -7747,7 +7773,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* System Information */}
                     <div className="bg-white rounded-lg p-6 shadow-sm">
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informaç��es do Sistema
+                        Informações do Sistema
                       </h3>
                       <div className="grid gap-3">
                         <div className="flex justify-between py-2 border-b border-gray-100">
@@ -8987,7 +9013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informaç��es Básicas */}
+                    {/* Informações Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10629,7 +10655,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("��� Login error:", error);
+              console.error("❌ Login error:", error);
               setLoginError(
                 "Erro de conexão. Verifique sua internet e tente novamente.",
               );
