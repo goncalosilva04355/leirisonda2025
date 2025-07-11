@@ -109,7 +109,7 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
     }
   }, []);
 
-  // Simple add obra function
+  // Enhanced add obra function with Firebase sync
   const addObra = useCallback(async (obraData: any): Promise<string> => {
     try {
       const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
@@ -117,8 +117,32 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
         ...obraData,
         id,
         createdAt: obraData.createdAt || new Date().toISOString(),
+        // Add global sharing flags
+        sharedGlobally: true,
+        visibleToAllUsers: true,
+        isGlobalData: true,
+        dataSharing: "all_users",
       };
 
+      // Try to save to Firebase first
+      try {
+        const { firestoreService } = await import(
+          "../services/firestoreService"
+        );
+        const firestoreId = await firestoreService.createObra(obra);
+        if (firestoreId) {
+          console.log("✅ Obra criada no Firestore:", firestoreId);
+          // Firebase will trigger sync automatically via observers
+          return firestoreId;
+        }
+      } catch (firebaseError) {
+        console.warn(
+          "⚠️ Erro ao criar obra no Firebase, usando localStorage:",
+          firebaseError,
+        );
+      }
+
+      // Fallback to localStorage
       const existingObras = JSON.parse(localStorage.getItem("works") || "[]");
       const workExists = existingObras.some((w: any) => w.id === obra.id);
 
@@ -131,6 +155,13 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
           obras: existingObras,
           totalItems: prev.totalItems + 1,
         }));
+
+        // Trigger manual sync event
+        window.dispatchEvent(
+          new CustomEvent("obrasUpdated", {
+            detail: { data: existingObras, collection: "obras" },
+          }),
+        );
       }
 
       return id;
