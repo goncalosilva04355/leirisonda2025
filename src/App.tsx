@@ -576,7 +576,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("������� Firestore não disponível, usando sistema atual");
+        console.warn("����️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -613,7 +613,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincroniza��ão universal:", syncError);
         }
 
         return firestoreId;
@@ -1690,7 +1690,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manuten��ões: ${maintenance.length}
+- Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -4944,7 +4944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observa����ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observa��ões Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç���������������o criada para nova piscina:",
+                                "Futura manutenç�������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6897,7 +6897,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   }}
                   className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
                 >
-                  Ir para Configurações
+                  Ir para Configuraç��es
                 </button>
               </div>
             </div>
@@ -7406,8 +7406,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ���️ ATENÇÃO: Esta operação é
-                                        irrevers���vel!
+                                        ⚠️ ATENÇÃO: Esta operação é
+                                        irreversível!
                                       </p>
                                       <button
                                         onClick={handleDataCleanup}
