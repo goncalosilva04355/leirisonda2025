@@ -110,6 +110,8 @@ import {
   isFirestoreReady,
   testFirestore,
 } from "./firestoreConfig";
+// Importar status do simpleConfig
+import { getFirebaseStatus } from "./simpleConfig";
 
 // Funções de compatibilidade
 export const getDB = () => Promise.resolve(getFirebaseFirestore());
