@@ -5768,7 +5768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Próxima Manutenç��o
+                          Próxima Manutenção
                         </label>
                         <input
                           type="date"
@@ -7090,7 +7090,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             });
                                           } else {
                                             alert(
-                                              "Notifica�ções foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                              "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                             );
                                           }
                                         } else {
@@ -7845,7 +7845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relat��rio de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
