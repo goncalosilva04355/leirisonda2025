@@ -68,6 +68,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
+import AppStatusIndicator from "./components/AppStatusIndicator";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
 import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncMock";
@@ -335,7 +336,7 @@ function App() {
       "🛡��� Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações automáticas desabilitadas para resolver instabilidade
+    // Verifica��ões automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
@@ -1796,7 +1797,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Respons��vel: ${work.assignedTo}
+   Responsável: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -6562,7 +6563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configura��ões do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
