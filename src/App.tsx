@@ -370,7 +370,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funç��es de compatibilidade simplificadas
+  // Funções de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com sistema local");
@@ -1781,7 +1781,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
 - Piscinas Registadas: ${pools.length}
-- Manutenç��es Realizadas: ${maintenance.length}
+- Manutenções Realizadas: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 - Obras em Curso: ${works.length}
 - Clientes Ativos: ${clients.length}
@@ -1966,7 +1966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     if (Notification.permission === "granted") {
       showNotification(
         "Teste de Notificação",
-        "As notificaç��es estão a funcionar corretamente!",
+        "As notificações estão a funcionar corretamente!",
         "test",
       );
     } else {
@@ -3095,7 +3095,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenç€endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenç��es aparecerão aqui
+                          As futuras manutenções aparecerão aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -3410,7 +3410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ).length > 0 && (
                               <div>
                                 <h4 className="text-sm font-medium text-gray-700 mb-2">
-                                  Manutenç��es
+                                  Manutenções
                                 </h4>
                                 {maintenance
                                   .filter(
@@ -3830,7 +3830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Histórico de manutenç��es realizadas
+                          Histórico de manutenções realizadas
                         </p>
                       </div>
                     </div>
@@ -4101,7 +4101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenç��es aparecerão aqui quando forem
+                        As futuras manutenções aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -4927,7 +4927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof���sico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -4950,7 +4950,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Observaç��es e Trabalho */}
+                    {/* Observações e Trabalho */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5403,7 +5403,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
 
                               console.log(
-                                "✅ Mostrando formul��rio de novo cliente",
+                                "✅ Mostrando formulário de novo cliente",
                               );
                               setShowNewClientForm(true);
                             }
@@ -7057,7 +7057,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       Notificações de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificaç��es quando uma nova obra
+                                      Receba notificações quando uma nova obra
                                       for atribuída a si.
                                     </p>
                                     <button
@@ -7090,7 +7090,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             });
                                           } else {
                                             alert(
-                                              "Notifica�ções foram bloqueadas. Por favor, ative-as nas configuraç��es do navegador.",
+                                              "Notifica�ções foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
                                             );
                                           }
                                         } else {
@@ -7117,7 +7117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruç��es
+                                      Instruções
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -7848,7 +7848,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Histórico de intervenç��es
+                          Histórico de intervenções
                         </p>
                       </div>
                     </div>
@@ -7860,7 +7860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>�� Trabalhos realizados</li>
                         <li>�� T��cnicos responsáveis</li>
-                        <li>• Datas e duraç��es</li>
+                        <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -9783,7 +9783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alteraç��es
+                        Guardar Alterações
                       </button>
                     </div>
                   </form>
@@ -9989,7 +9989,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Duraç��o Estimada
+                          ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
