@@ -23,12 +23,21 @@ export const AUTHORIZED_USERS: AuthorizedUser[] = [
 export function getCurrentAuthorizedUsers(): AuthorizedUser[] {
   try {
     const savedUsers = localStorage.getItem("authorizedUsers");
-    if (savedUsers) {
-      return JSON.parse(savedUsers);
+    if (savedUsers && savedUsers.trim() !== "") {
+      const parsedUsers = JSON.parse(savedUsers);
+      if (Array.isArray(parsedUsers) && parsedUsers.length > 0) {
+        console.log(
+          "✅ Utilizadores carregados do localStorage:",
+          parsedUsers.length,
+        );
+        return parsedUsers;
+      }
     }
   } catch (error) {
-    console.warn("Erro ao carregar utilizadores do localStorage:", error);
+    console.warn("⚠️ Erro ao carregar utilizadores do localStorage:", error);
   }
+
+  console.log("📝 Usando utilizadores padrão");
   return [...AUTHORIZED_USERS];
 }
 

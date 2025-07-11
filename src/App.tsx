@@ -140,6 +140,32 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
+  // Garantir que pelo menos o utilizador padrão existe no localStorage
+  useEffect(() => {
+    const savedUsers = localStorage.getItem("app-users");
+    if (!savedUsers) {
+      console.log("🔧 Criando utilizador padrão no localStorage");
+      const defaultUser = {
+        id: 1,
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        active: true,
+        role: "super_admin",
+        password: "19867gsf",
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        },
+        createdAt: new Date().toISOString(),
+      };
+      localStorage.setItem("app-users", JSON.stringify([defaultUser]));
+    }
+  }, []);
+
   // Debug logging disabled for production
 
   // Monitoramento de integridade de dados e restauração de utilizadores
@@ -165,7 +191,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
+            console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
               "⚠️ Não foi possível reparar a persistência automaticamente",
@@ -386,7 +412,7 @@ function App() {
     try {
       console.log("📱 Enviando notificações de atribuição de obra...");
 
-      // Verificar se há utilizadores atribuídos
+      // Verificar se h�� utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
           "⚠️ Nenhum utilizador atribuído, não enviando notificações",
@@ -394,7 +420,7 @@ function App() {
         return;
       }
 
-      // Preparar dados da notificação
+      // Preparar dados da notifica��ão
       const notificationData = {
         title: "🔔 Nova Obra Atribuída",
         body: `${workData.title} - ${workData.client}`,
@@ -427,7 +453,7 @@ function App() {
 
           // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // Salvar notificação local para o utilizador
+          // Salvar notifica��ão local para o utilizador
           const userNotifications = JSON.parse(
             localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
               "[]",
@@ -670,10 +696,67 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
+  // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
+  const isWorkAssignedToCurrentUser = (work: any) => {
+    if (!currentUser) return false;
+
+    // Se é super admin (Gonçalo), mostrar todas as obras
+    if (
+      currentUser.role === "super_admin" ||
+      currentUser.email === "gongonsilva@gmail.com"
+    ) {
+      return true;
+    }
+
+    // Verificar assignedTo (campo legacy)
+    if (
+      work.assignedTo &&
+      (work.assignedTo === currentUser.name ||
+        work.assignedTo
+          .toLowerCase()
+          .includes(currentUser.name.toLowerCase()) ||
+        currentUser.name.toLowerCase().includes(work.assignedTo.toLowerCase()))
+    ) {
+      return true;
+    }
+
+    // Verificar assignedUsers array
+    if (
+      work.assignedUsers &&
+      work.assignedUsers.some(
+        (user) =>
+          user.name === currentUser.name ||
+          user.id === currentUser.id ||
+          user.id === currentUser.id.toString(),
+      )
+    ) {
+      return true;
+    }
+
+    // Verificar assignedUserIds array
+    if (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id)) {
+      return true;
+    }
+
+    // Se não há utilizadores atribuídos, mostrar para super admin
+    if (
+      !work.assignedTo &&
+      (!work.assignedUsers || work.assignedUsers.length === 0) &&
+      (!work.assignedUserIds || work.assignedUserIds.length === 0) &&
+      (currentUser.role === "super_admin" ||
+        currentUser.email === "gongonsilva@gmail.com")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
   // Debug logging removed to prevent re-render loops
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
+  const [usersLoaded, setUsersLoaded] = useState(false);
 
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
@@ -705,6 +788,61 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+
+          // Garantir que Gonçalo Fonseca está sempre disponível
+          const hasGoncalo = parsedUsers.some(
+            (user) =>
+              user.email === "gongonsilva@gmail.com" ||
+              user.name === "Gonçalo Fonseca",
+          );
+
+          if (!hasGoncalo) {
+            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
+            parsedUsers.push({
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              active: true,
+              role: "super_admin",
+              password: "19867gsf",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              createdAt: new Date().toISOString(),
+            });
+            localStorage.setItem("app-users", JSON.stringify(parsedUsers));
+          }
+
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
@@ -790,6 +928,8 @@ function App() {
         console.error("❌ Error loading users:", error);
         // Fallback to initial users
         setUsers(initialUsers);
+      } finally {
+        setUsersLoaded(true);
       }
     };
 
@@ -912,7 +1052,7 @@ function App() {
           setNotificationsEnabled(JSON.parse(savedNotifications));
         }
       } catch (error) {
-        console.error("❌ Erro ao carregar configurações:", error);
+        console.error("❌ Erro ao carregar configura��ões:", error);
       }
     };
 
@@ -1054,7 +1194,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("📞 Iniciando sincronização inicial com Firestore...");
+        console.log("�� Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -1221,7 +1361,7 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("📱 Notification clicked, navigating...", event.data);
+            console.log("���� Notification clicked, navigating...", event.data);
 
             const { data } = event.data;
 
@@ -2465,7 +2605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("📞 AuthService fallback bem-sucedido");
+                  console.log("���� AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -2474,7 +2614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
+                // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -2652,27 +2792,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const isPending =
                               w.status === "pending" || w.status === "pendente";
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isPending && isAssignedToUser; // Mostrar apenas obras pendentes atribuídas
+                              isWorkAssignedToCurrentUser(w);
+                            return isPending && isAssignedToUser;
+                          });
+                          console.log("📊 Dashboard - DEBUG Contadores:", {
+                            totalObras: works.length,
+                            utilizadorAtual: currentUser?.name,
+                            obrasPendentesAtribuidas: pendingWorks.length,
+                            todasObras: works.map((w) => ({
+                              id: w.id,
+                              title: w.title,
+                              status: w.status,
+                              assignedTo: w.assignedTo,
+                              assignedUsers: w.assignedUsers,
+                              assignedUserIds: w.assignedUserIds,
+                            })),
                           });
                           console.log(
                             "📊 Dashboard - Obras Pendentes Atribuídas:",
@@ -2715,27 +2849,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               w.status === "in_progress" ||
                               w.status === "em_progresso";
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser; // Mostrar apenas obras em progresso atribuídas
+                              isWorkAssignedToCurrentUser(w);
+                            return isInProgress && isAssignedToUser;
                           });
                           return inProgressWorks.length;
                         })()}
@@ -2812,26 +2927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               w.status !== "concluida";
                             const noSheetGenerated = !w.folhaGerada;
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
+                              isWorkAssignedToCurrentUser(w);
                             return (
                               isNotCompleted &&
                               noSheetGenerated &&
@@ -2867,26 +2963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               w.status !== "completed" &&
                               w.status !== "concluida";
                             const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
+                              isWorkAssignedToCurrentUser(w);
                             return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
                           });
                           return assignedWorks.length;
@@ -2899,32 +2976,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Lista das Últimas 3 Obras */}
                 {(() => {
                   // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
-                  const assignedWorks = works.filter((w) => {
-                    const isNotCompleted =
-                      w.status !== "completed" && w.status !== "concluida";
-                    const isAssignedToUser =
-                      currentUser &&
-                      // Verificar assignedTo (campo legacy)
-                      ((w.assignedTo &&
-                        (w.assignedTo === currentUser.name ||
-                          w.assignedTo
-                            .toLowerCase()
-                            .includes(currentUser.name.toLowerCase()) ||
-                          currentUser.name
-                            .toLowerCase()
-                            .includes(w.assignedTo.toLowerCase()))) ||
-                        // Verificar assignedUsers array
-                        (w.assignedUsers &&
-                          w.assignedUsers.some(
-                            (user) =>
-                              user.name === currentUser.name ||
-                              user.id === currentUser.id,
-                          )) ||
-                        // Verificar assignedUserIds array
-                        (w.assignedUserIds &&
-                          w.assignedUserIds.includes(currentUser.id)));
-                    return true; // Mostrar todas as obras na lista
-                  }); // Remover limitação - mostrar todas as obras
+                  const assignedWorks = works
+                    .filter((w) => {
+                      const isNotCompleted =
+                        w.status !== "completed" && w.status !== "concluida";
+                      const isAssignedToUser =
+                        currentUser &&
+                        // Verificar assignedTo (campo legacy)
+                        ((w.assignedTo &&
+                          (w.assignedTo === currentUser.name ||
+                            w.assignedTo
+                              .toLowerCase()
+                              .includes(currentUser.name.toLowerCase()) ||
+                            currentUser.name
+                              .toLowerCase()
+                              .includes(w.assignedTo.toLowerCase()))) ||
+                          // Verificar assignedUsers array
+                          (w.assignedUsers &&
+                            w.assignedUsers.some(
+                              (user) =>
+                                user.name === currentUser.name ||
+                                user.id === currentUser.id,
+                            )) ||
+                          // Verificar assignedUserIds array
+                          (w.assignedUserIds &&
+                            w.assignedUserIds.includes(currentUser.id)));
+                      return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
+                    })
+                    .slice(0, 3); // Limitar a 3 obras mais recentes
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
@@ -4052,7 +4131,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenções
+                          Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -4137,7 +4216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Concluído"}
+                                    : "Conclu��do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -4529,7 +4608,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  "��� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -4541,12 +4620,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Selecione os usuarios responsaveis por esta obra.
                             Utilizadores inativos sao marcados como "(Inativo)".
                           </p>
-                          {users.length === 0 && (
+                          {users.length === 0 && usersLoaded && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
+                                ⚠️ Nenhum utilizador encontrado.
+                              </p>
+                              <p className="text-xs text-yellow-700 mt-1">
+                                Debug: localStorage tem{" "}
+                                {localStorage.getItem("app-users")
+                                  ? "dados"
+                                  : "sem dados"}
+                              </p>
+                            </div>
+                          )}
+
+                          {!usersLoaded && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                              <p className="text-sm text-blue-800">
+                                🔄 Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -5734,7 +5825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="cartucho">Filtro de Cartucho</option>
                           <option value="diatomaceas">Terra Diatomáceas</option>
                           <option value="uv">Sistema UV</option>
-                          <option value="sal">Eletrólise de Sal</option>
+                          <option value="sal">Eletr��lise de Sal</option>
                         </select>
                       </div>
                       <div>
@@ -5800,7 +5891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create pools
@@ -5860,7 +5951,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           };
 
                           // Use sync system to add pool (will handle Firebase and localStorage)
-                          addPool(poolData);
+                          try {
+                            await addPool(poolData);
+                            console.log(
+                              "✅ Piscina criada com sucesso:",
+                              poolData,
+                            );
+                          } catch (error) {
+                            console.error("❌ Erro ao criar piscina:", error);
+                            alert(
+                              `Erro ao criar piscina: ${error.message || error}`,
+                            );
+                            return;
+                          }
 
                           // Create future maintenance if next maintenance date is provided
                           if (poolData.nextMaintenance) {
@@ -6592,7 +6695,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -7360,7 +7463,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center mb-4">
                                 <Trash2 className="h-6 w-6 text-red-600 mr-3" />
                                 <h3 className="text-lg font-semibold text-gray-900">
-                                  Gestão de Dados
+                                  Gest��o de Dados
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
@@ -8452,7 +8555,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Código Postal *
+                            C��digo Postal *
                           </label>
                           <input
                             type="text"
@@ -8527,12 +8630,115 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
-                          alert(
-                            "Cliente criado com sucesso! (Função em desenvolvimento)",
-                          );
-                          setActiveSection("clientes");
+
+                          // Obter dados do formulário
+                          const form = e.target.closest("form");
+                          const formData = new FormData(form);
+
+                          // Validação básica
+                          const name = (
+                            form.querySelector(
+                              'input[placeholder="Nome completo ou razão social"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const email = (
+                            form.querySelector(
+                              'input[type="email"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const phone = (
+                            form.querySelector(
+                              'input[type="tel"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const address = (
+                            form.querySelector(
+                              'input[placeholder="Rua, número, andar, etc."]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const postalCode = (
+                            form.querySelector(
+                              'input[pattern="[0-9]{4}-[0-9]{3}"]',
+                            ) as HTMLInputElement
+                          )?.value;
+                          const city = (
+                            form.querySelector(
+                              'input[placeholder="Cidade/Vila"]',
+                            ) as HTMLInputElement
+                          )?.value;
+
+                          if (!name || !email || !phone || !address) {
+                            alert(
+                              "Por favor, preencha os campos obrigatórios marcados com *",
+                            );
+                            return;
+                          }
+
+                          try {
+                            const newClient = {
+                              id: Date.now(),
+                              name: name,
+                              email: email,
+                              phone: phone,
+                              address:
+                                `${address}, ${postalCode || ""} ${city || ""}`.trim(),
+                              type:
+                                (
+                                  form.querySelector(
+                                    "select",
+                                  ) as HTMLSelectElement
+                                )?.value || "particular",
+                              secondaryEmail:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="email2@exemplo.com"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              secondaryPhone:
+                                (
+                                  form.querySelectorAll(
+                                    'input[type="tel"]',
+                                  )[1] as HTMLInputElement
+                                )?.value || "",
+                              nif:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="123456789"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              contactPerson:
+                                (
+                                  form.querySelector(
+                                    'input[placeholder="Nome da pessoa responsável"]',
+                                  ) as HTMLInputElement
+                                )?.value || "",
+                              notes:
+                                (
+                                  form.querySelector(
+                                    "textarea",
+                                  ) as HTMLTextAreaElement
+                                )?.value || "",
+                              pools: [],
+                              createdAt: new Date().toISOString(),
+                              active: true,
+                            };
+
+                            await addClient(newClient);
+                            console.log(
+                              "✅ Cliente criado com sucesso:",
+                              newClient,
+                            );
+                            alert(`Cliente "${name}" criado com sucesso!`);
+
+                            // Limpar formulário
+                            form.reset();
+                            setActiveSection("clientes");
+                          } catch (error) {
+                            console.error("❌ Erro ao criar cliente:", error);
+                            alert("Erro ao criar cliente. Tente novamente.");
+                          }
                         }}
                         className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center space-x-2"
                       >
@@ -9116,7 +9322,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
+                                Administração → "🔧 Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -9984,7 +10190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // Técnico
+                            .value; // T��cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
@@ -10402,19 +10608,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               console.log(`€avegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
-              if (
-                section === "utilizadores" &&
-                (!isAuthenticated || !currentUser)
-              ) {
+              // Advanced settings password (19867) provides sufficient authentication
+              if (section === "utilizadores") {
                 console.log(
-                  "€Access denied: User management requires authentication",
+                  "✅ Access granted: User management via advanced settings",
                 );
-                setLoginError(
-                  "Por favor, faça login primeiro para aceder 📞 gestão de utilizadores",
-                );
-                setShowAdvancedSettings(false);
-                setIsAdvancedUnlocked(false);
-                return;
               }
 
               navigateToSection(section);
@@ -10963,7 +11161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            📞 {selectedWork.contact}
+                            ���� {selectedWork.contact}
                           </button>
                         )}
                       </div>

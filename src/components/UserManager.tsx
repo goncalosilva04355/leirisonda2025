@@ -19,6 +19,23 @@ interface UserManagerProps {
 
 const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const { users, updateUsers, isLoading } = useAuthorizedUsers();
+
+  // Garantir que há pelo menos um utilizador autorizado padrão
+  useEffect(() => {
+    if (!isLoading && users.length === 0) {
+      console.log(
+        "⚠️ Nenhum utilizador autorizado encontrado, inicializando...",
+      );
+      const defaultUsers = [
+        {
+          email: "gongonsilva@gmail.com",
+          name: "Gonçalo Fonseca",
+          role: "super_admin" as const,
+        },
+      ];
+      updateUsers(defaultUsers);
+    }
+  }, [isLoading, users.length, updateUsers]);
   const [editingUser, setEditingUser] = useState<AuthorizedUser | null>(null);
   const [newUser, setNewUser] = useState<
     AuthorizedUser & { password?: string }
@@ -55,7 +72,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     if (!validateEmail(user.email)) return "Email inválido";
     if (!user.name.trim()) return "Nome é obrigatório";
     if (!user.role) return "Role é obrigatória";
-    if (!user.password || user.password.length < 4)
+    if (!user.password || user.password.trim().length < 4)
       return "Password deve ter pelo menos 4 caracteres";
 
     // Verificar email duplicado
@@ -92,32 +109,38 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     saveUsers(updatedUsers);
 
     // Adicionar ao sistema principal de utilizadores (com password)
-    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-    const newMainUser = {
-      id: Date.now(),
-      name: newUser.name,
-      email: newUser.email.toLowerCase(),
-      password: newUser.password,
-      role: newUser.role,
-      permissions: {
-        obras: { view: true, create: true, edit: true, delete: true },
-        manutencoes: { view: true, create: true, edit: true, delete: true },
-        piscinas: { view: true, create: true, edit: true, delete: true },
-        utilizadores: { view: true, create: true, edit: true, delete: true },
-        relatorios: { view: true, create: true, edit: true, delete: true },
-        clientes: { view: true, create: true, edit: true, delete: true },
-      },
-      active: true,
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const newMainUser = {
+        id: Date.now(),
+        name: newUser.name,
+        email: newUser.email.toLowerCase(),
+        password: newUser.password,
+        role: newUser.role,
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          clientes: { view: true, create: true, edit: true, delete: true },
+        },
+        active: true,
+        createdAt: new Date().toISOString(),
+      };
 
-    mainUsers.push(newMainUser);
-    localStorage.setItem("app-users", JSON.stringify(mainUsers));
+      mainUsers.push(newMainUser);
+      localStorage.setItem("app-users", JSON.stringify(mainUsers));
 
-    // Triggerar evento para atualizar outros componentes
-    window.dispatchEvent(new CustomEvent("usersUpdated"));
+      // Triggerar evento para atualizar outros componentes
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
 
-    console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+      console.log("✅ Utilizador criado com sucesso:", newMainUser.email);
+    } catch (error) {
+      console.error("❌ Erro ao criar utilizador no sistema principal:", error);
+      setErrors("Erro ao guardar utilizador. Tente novamente.");
+      return;
+    }
 
     setNewUser({ email: "", name: "", role: "technician", password: "" });
     setShowAddForm(false);
@@ -134,8 +157,10 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const handleSaveEdit = () => {
     if (!editingUser) return;
 
-    const error = validateUser(editingUser);
-    if (error) {
+    // Para edição, não validar password se não foi alterada
+    const userForValidation = { ...editingUser, password: "temppass123" };
+    const error = validateUser(userForValidation);
+    if (error && !error.includes("Password")) {
       setErrors(error);
       return;
     }
