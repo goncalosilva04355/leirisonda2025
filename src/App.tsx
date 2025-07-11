@@ -79,8 +79,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
-import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
-import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
+// Removed Firebase-dependent hooks
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -2487,7 +2486,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       pdf.save(pdfFilename);
 
       // Show success message
-      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
+      alert(`Relat��rio "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       alert("Erro ao gerar o relatório PDF. Tente novamente.");
