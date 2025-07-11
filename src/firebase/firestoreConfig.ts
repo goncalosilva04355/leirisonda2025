@@ -38,18 +38,23 @@ function initializeFirestore(): Firestore | null {
 
 // Função para obter o Firestore
 export function getFirebaseFirestore(): Firestore | null {
-  // Tentar primeiro com instância global corrigida
-  const globalInstance = getGlobalFirestore();
-  if (globalInstance) {
-    firestoreInstance = globalInstance;
-    return globalInstance;
-  }
+  try {
+    // Tentar primeiro com instância global corrigida
+    const globalInstance = getGlobalFirestore();
+    if (globalInstance) {
+      firestoreInstance = globalInstance;
+      return globalInstance;
+    }
 
-  // Fallback para inicialização local
-  if (!firestoreInstance) {
-    return initializeFirestore();
+    // Fallback para inicialização local
+    if (!firestoreInstance) {
+      return initializeFirestore();
+    }
+    return firestoreInstance;
+  } catch (error) {
+    console.warn("⚠️ getFirebaseFirestore falhou, retornando null:", error);
+    return null;
   }
-  return firestoreInstance;
 }
 
 // Função para verificar se Firestore está pronto
