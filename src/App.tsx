@@ -709,19 +709,12 @@ function App() {
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
-          if (isFirestoreReady()) {
+          if (false) {
+            // Disabled Firestore sync
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
             );
-            for (const user of parsedUsers) {
-              if (!(user as any).firestoreId) {
-                const firestoreId =
-                  await firestoreService.createUtilizador(user);
-                if (firestoreId) {
-                  (user as any).firestoreId = firestoreId;
-                }
-              }
-            }
+            // Firestore sync disabled temporarily
           }
         } else {
           console.log(
@@ -6580,7 +6573,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>• Próximas interven��ões</li>
                               </ul>
                             </div>
                             <button
@@ -7251,7 +7244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç����o automática funciona
+                                        • A marcaç����o autom��tica funciona
                                         melhor em dispositivos móveis
                                       </li>
                                       <li>
