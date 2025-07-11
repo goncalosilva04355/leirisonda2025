@@ -2812,7 +2812,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               isWorkAssignedToCurrentUser(w);
                             return isPending && isAssignedToUser;
                           });
-                          console.log("📊 Dashboard - DEBUG Contadores:", {
+                          console.log("�� Dashboard - DEBUG Contadores:", {
                             totalObras: works.length,
                             utilizadorAtual: currentUser?.name,
                             obrasPendentesAtribuidas: pendingWorks.length,
@@ -7457,8 +7457,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </p>
                                   <button
                                     onClick={() => {
-                                      setShowAdvancedSettings(true);
+                                      // Definir ambos os estados em simultâneo
                                       setIsAdvancedUnlocked(true);
+                                      setShowAdvancedSettings(true);
+
+                                      // Forçar update com timeout
+                                      setTimeout(() => {
+                                        setIsAdvancedUnlocked(true);
+                                      }, 10);
                                     }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
