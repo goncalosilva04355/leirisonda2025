@@ -2867,14 +2867,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              await handleLoginWithRememberMe(
+              const result = await handleLoginWithRememberMe(
                 email.trim(),
                 password,
                 rememberMe,
               );
 
               // Fallback para authService se necessário
-              if (!result.success) {
+              if (!result?.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -5458,7 +5458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create works
                           if (!hasPermission("obras", "create")) {
                             alert(
-                              "Não tem permissão para criar obras. Contacte o administrador.",
+                              "Não tem permiss��o para criar obras. Contacte o administrador.",
                             );
                             return;
                           }
@@ -6117,7 +6117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G📞s</option>
+                          <option value="gas">Aquecimento a G��s</option>
                         </select>
                       </div>
                     </div>
@@ -6255,7 +6255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manutenção Programada",
+                                type: "Manuten��ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -8344,7 +8344,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>📞 Piscinas associadas</li>
-                        <li>📞 Histórico de serviços</li>
+                        <li>��� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
