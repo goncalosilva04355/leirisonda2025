@@ -287,7 +287,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações automáticas
+    // Sistema funcionará normalmente sem verificações autom��ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -607,7 +607,7 @@ function App() {
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("💾 Obra guardada no localStorage como fallback");
+        console.log("��� Obra guardada no localStorage como fallback");
       }
 
       return newWork.id;
@@ -651,7 +651,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("��️ Erro na sincronização universal:", syncError);
+          console.warn("���️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -2893,35 +2893,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Lista das Últimas 3 Obras */}
                 {(() => {
-                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
-                  const assignedWorks = works
-                    .filter((w) => {
-                      const isNotCompleted =
-                        w.status !== "completed" && w.status !== "concluida";
-                      const isAssignedToUser =
-                        currentUser &&
-                        // Verificar assignedTo (campo legacy)
-                        ((w.assignedTo &&
-                          (w.assignedTo === currentUser.name ||
-                            w.assignedTo
-                              .toLowerCase()
-                              .includes(currentUser.name.toLowerCase()) ||
-                            currentUser.name
-                              .toLowerCase()
-                              .includes(w.assignedTo.toLowerCase()))) ||
-                          // Verificar assignedUsers array
-                          (w.assignedUsers &&
-                            w.assignedUsers.some(
-                              (user) =>
-                                user.name === currentUser.name ||
-                                user.id === currentUser.id,
-                            )) ||
-                          // Verificar assignedUserIds array
-                          (w.assignedUserIds &&
-                            w.assignedUserIds.includes(currentUser.id)));
-                      return true; // Mostrar todas as obras na lista
-                    })
-                    .slice(0, 3); // Pegar apenas as últimas 3 obras
+                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
+                  const assignedWorks = works.filter((w) => {
+                    const isNotCompleted =
+                      w.status !== "completed" && w.status !== "concluida";
+                    const isAssignedToUser =
+                      currentUser &&
+                      // Verificar assignedTo (campo legacy)
+                      ((w.assignedTo &&
+                        (w.assignedTo === currentUser.name ||
+                          w.assignedTo
+                            .toLowerCase()
+                            .includes(currentUser.name.toLowerCase()) ||
+                          currentUser.name
+                            .toLowerCase()
+                            .includes(w.assignedTo.toLowerCase()))) ||
+                        // Verificar assignedUsers array
+                        (w.assignedUsers &&
+                          w.assignedUsers.some(
+                            (user) =>
+                              user.name === currentUser.name ||
+                              user.id === currentUser.id,
+                          )) ||
+                        // Verificar assignedUserIds array
+                        (w.assignedUserIds &&
+                          w.assignedUserIds.includes(currentUser.id)));
+                    return true; // Mostrar todas as obras na lista
+                  }); // Remover limitação - mostrar todas as obras
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
