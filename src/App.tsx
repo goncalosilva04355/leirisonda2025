@@ -81,10 +81,6 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-import "./utils/firebaseBypass"; // BYPASS: Desativar Firebase para evitar erros getImmediate
-import "./utils/bypassSuccess"; // Mensagem de sucesso
-// import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
-// import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -7047,7 +7043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>👥 Equipas atribuídas</li>
-                                <li>��� Prazos e orçamentos</li>
+                                <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
@@ -7373,7 +7369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <div className="flex items-center space-x-2">
                             <Settings className="h-4 w-4" />
-                            <span>Configuraç��es</span>
+                            <span>Configurações</span>
                           </div>
                         </button>
                         <button

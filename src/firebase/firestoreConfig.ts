@@ -1,10 +1,6 @@
 // Passo 3: Configuração Firestore - base de dados na nuvem
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getFirebaseApp } from "./basicConfig";
-import {
-  getGlobalFirestore,
-  forceInitializeFirestore,
-} from "../utils/firebaseInitFix";
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
@@ -38,49 +34,19 @@ function initializeFirestore(): Firestore | null {
 
 // Função para obter o Firestore
 export function getFirebaseFirestore(): Firestore | null {
-  // BYPASS: Desativar Firestore temporariamente para evitar erros getImmediate
-  console.log(
-    "🚫 BYPASS: getFirebaseFirestore retornando null (modo local ativo)",
-  );
-  return null;
-
-  /* CÓDIGO ORIGINAL COMENTADO PARA EVITAR ERROS:
-  try {
-    // Tentar primeiro com instância global corrigida
-    const globalInstance = getGlobalFirestore();
-    if (globalInstance) {
-      firestoreInstance = globalInstance;
-      return globalInstance;
-    }
-
-    // Fallback para inicialização local
-    if (!firestoreInstance) {
-      return initializeFirestore();
-    }
-    return firestoreInstance;
-  } catch (error) {
-    console.warn("⚠️ getFirebaseFirestore falhou, retornando null:", error);
-    return null;
+  if (!firestoreInstance) {
+    return initializeFirestore();
   }
-  */
+  return firestoreInstance;
 }
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  console.log(
-    "🚫 BYPASS: isFirestoreReady retornando false (modo local ativo)",
-  );
-  return false; // Sempre false para forçar modo local
-
-  /* CÓDIGO ORIGINAL: return firestoreInstance !== null; */
+  return firestoreInstance !== null;
 }
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  console.log("🚫 BYPASS: Teste Firestore desativado - modo local ativo");
-  return false;
-
-  /* CÓDIGO ORIGINAL COMENTADO:
   try {
     const db = getFirebaseFirestore();
     if (!db) {
@@ -94,7 +60,6 @@ export async function testFirestore(): Promise<boolean> {
     console.warn("⚠️ Teste Firestore falhou:", error);
     return false;
   }
-  */
 }
 
 // Inicializar Firestore automaticamente após um pequeno delay
