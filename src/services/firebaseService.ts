@@ -585,8 +585,10 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const workRef = doc(db, COLLECTIONS.WORKS, workId);
-    await deleteDoc(workRef);
+    await withFirestore(async (db) => {
+      const workRef = doc(db, COLLECTIONS.WORKS, workId);
+      await deleteDoc(workRef);
+    });
 
     // Trigger automatic synchronization
     console.log(
