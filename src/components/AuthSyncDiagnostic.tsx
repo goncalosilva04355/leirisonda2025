@@ -104,7 +104,7 @@ export const AuthSyncDiagnostic: React.FC = () => {
 
     try {
       // Simulate logout and login
-      await authService.logout();
+      await robustLoginService.logout();
 
       // Wait a moment
       await new Promise((resolve) => setTimeout(resolve, 1000));
