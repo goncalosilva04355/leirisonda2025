@@ -1868,7 +1868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return "error";
       }
     }
-    console.warn("❌ Notifications not supported in this browser");
+    console.warn("��� Notifications not supported in this browser");
     return "denied";
   };
 
@@ -4100,7 +4100,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenç���es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -10174,6 +10174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }
                       : undefined
                   }
+                  allUsers={users}
                 />
               </div>
             </div>
@@ -11178,7 +11179,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç���es Detalhadas
+                          Informaç����es Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -11356,7 +11357,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">€{selectedWork.budget}</p>
+                        <p className="text-gray-900">��{selectedWork.budget}</p>
                       </div>
                     )}
 
