@@ -530,7 +530,7 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
                 Nenhuma localização disponível
               </h3>
               <p className="text-gray-600 mb-4">
-                Partilhe a sua localização ou aguarde que outros utilizadores
+                Partilhe a sua localiza��ão ou aguarde que outros utilizadores
                 partilhem as suas.
               </p>
               <button
@@ -601,6 +601,75 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
           )}
         </div>
       </div>
+
+      {/* All Users Section */}
+      {allUsers.length > 0 && (
+        <div className="bg-white rounded-lg border border-gray-200">
+          <div className="p-4 border-b border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Todos os Utilizadores ({allUsers.length})
+            </h3>
+            <p className="text-sm text-gray-600">
+              Lista completa de utilizadores do sistema
+            </p>
+          </div>
+
+          <div className="divide-y divide-gray-200">
+            {allUsers.map((user) => {
+              const hasLocation = userLocations.some(
+                (loc) => loc.email === user.email,
+              );
+              return (
+                <div
+                  key={user.id}
+                  className="p-4 flex items-center justify-between"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div
+                      className={`w-10 h-10 ${user.active ? "bg-gradient-to-r from-green-500 to-blue-600" : "bg-gray-400"} rounded-full flex items-center justify-center`}
+                    >
+                      <span className="text-white font-bold text-sm">
+                        {user.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900">
+                        {user.name}
+                        {user.email === currentUser?.email && (
+                          <span className="ml-2 text-xs bg-orange-100 text-orange-800 px-2 py-1 rounded-full">
+                            Você
+                          </span>
+                        )}
+                      </h4>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <p className="text-xs text-gray-500 capitalize">
+                        {user.role?.replace("_", " ")} •{" "}
+                        {user.active ? "Ativo" : "Inativo"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="text-right">
+                    {hasLocation ? (
+                      <div className="flex items-center space-x-2 text-green-600">
+                        <MapPin className="h-4 w-4" />
+                        <span className="text-sm font-medium">
+                          Com localização
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-2 text-gray-400">
+                        <User className="h-4 w-4" />
+                        <span className="text-sm">Sem localização</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
