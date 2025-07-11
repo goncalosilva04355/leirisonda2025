@@ -168,7 +168,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "❌ Não foi possível reparar a persistência automaticamente",
+              "��� Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -665,7 +665,7 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ↔ localStorage synchronization
+  // Auto-sync hook for automatic Firebase ��� localStorage synchronization
   const autoSyncData = useAutoSyncSimple();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
@@ -1824,7 +1824,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -11178,7 +11178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             >
                               {selectedWork.folhaGerada
                                 ? "✓ Gerada"
-                                : "��� Não gerada"}
+                                : "✗ Não gerada"}
                             </span>
                           </div>
                         </div>
