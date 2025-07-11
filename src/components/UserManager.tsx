@@ -47,10 +47,12 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   });
   const [showAddForm, setShowAddForm] = useState(false);
   const [errors, setErrors] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const [editingPermissions, setEditingPermissions] = useState<string | null>(
     null,
   );
   const [tempPermissions, setTempPermissions] = useState<any>(null);
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false);
 
   // Salvar utilizadores
   const saveUsers = (updatedUsers: AuthorizedUser[]) => {
@@ -342,15 +344,21 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
       // Mostrar feedback de sucesso
       setErrors("");
+      setSuccessMessage(
+        `Permissões atualizadas com sucesso para ${editingPermissions}`,
+      );
+      setIsSavingPermissions(false);
 
       // Limpar estado após pequeno delay para permitir ver a confirmação
       setTimeout(() => {
         setEditingPermissions(null);
         setTempPermissions(null);
-      }, 500);
+        setSuccessMessage("");
+      }, 2000);
     } catch (error) {
       console.error("❌ Erro ao guardar permissões:", error);
       setErrors("Erro ao guardar permissões. Tente novamente.");
+      setIsSavingPermissions(false);
     }
   };
 
@@ -358,6 +366,9 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   const handleCancelPermissionsEdit = () => {
     setEditingPermissions(null);
     setTempPermissions(null);
+    setErrors("");
+    setSuccessMessage("");
+    setIsSavingPermissions(false);
   };
 
   // Atualizar permissão específica
@@ -441,6 +452,15 @@ Este gestor sincroniza todos os sistemas automaticamente.`);
       {errors && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-800 text-sm">{errors}</p>
+        </div>
+      )}
+
+      {/* Mensagem de sucesso */}
+      {successMessage && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <p className="text-green-800 text-sm font-medium">
+            ✅ {successMessage}
+          </p>
         </div>
       )}
 
@@ -974,13 +994,23 @@ Este gestor sincroniza todos os sistemas automaticamente.`);
                   Cancelar
                 </button>
                 <button
-                  onClick={handleSavePermissions}
-                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
-                  disabled={!tempPermissions}
+                  onClick={() => {
+                    setIsSavingPermissions(true);
+                    handleSavePermissions();
+                  }}
+                  className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 flex items-center space-x-2"
+                  disabled={!tempPermissions || isSavingPermissions}
                 >
-                  {editingPermissions && tempPermissions
-                    ? "Guardar Permissões"
-                    : "A processar..."}
+                  {isSavingPermissions && (
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  )}
+                  <span>
+                    {isSavingPermissions
+                      ? "A guardar..."
+                      : editingPermissions && tempPermissions
+                        ? "Guardar Permissões"
+                        : "A processar..."}
+                  </span>
                 </button>
               </div>
             </div>
