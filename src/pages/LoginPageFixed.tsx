@@ -153,6 +153,20 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
+        {/* Admin Access Button */}
+        <div className="text-center mb-4">
+          <button
+            type="button"
+            onClick={() => {
+              window.location.hash = "administracao";
+            }}
+            className="text-sm text-gray-600 hover:text-gray-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
+          >
+            <Settings className="h-4 w-4" />
+            <span>Área de Administração</span>
+          </button>
+        </div>
+
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
