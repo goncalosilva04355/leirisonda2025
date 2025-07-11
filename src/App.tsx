@@ -275,7 +275,34 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado
-  const universalSync = useUniversalDataSync();
+  // Temporarily disabled to debug React error
+  // const universalSync = useUniversalDataSync();
+  const universalSync = {
+    obras: [],
+    manutencoes: [],
+    piscinas: [],
+    clientes: [],
+    totalItems: 0,
+    lastSync: "",
+    isGloballyShared: false,
+    isLoading: false,
+    error: null,
+    syncStatus: "disconnected" as const,
+    addObra: async (obra: any) => "",
+    updateObra: async (id: string, obra: any) => {},
+    deleteObra: async (id: string) => {},
+    addManutencao: async (manutencao: any) => "",
+    updateManutencao: async (id: string, manutencao: any) => {},
+    deleteManutencao: async (id: string) => {},
+    addPiscina: async (piscina: any) => "",
+    updatePiscina: async (id: string, piscina: any) => {},
+    deletePiscina: async (id: string) => {},
+    addCliente: async (cliente: any) => "",
+    updateCliente: async (id: string, cliente: any) => {},
+    deleteCliente: async (id: string) => {},
+    forceSyncAll: async () => {},
+    resetSync: async () => {},
+  };
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
