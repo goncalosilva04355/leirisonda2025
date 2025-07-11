@@ -2742,7 +2742,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               );
 
               // Fallback para authService se necessário
-              if (!result.success) {
+              
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -7289,7 +7289,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Bell className="h-6 w-6 text-blue-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações Push
+                                Notifica��ões Push
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -10560,7 +10560,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte€o. Por favor, tente novamente.
+              Ocorreu um erro ao carregar o conte��o. Por favor, tente novamente.
             </p>
             <button
               onClick={() => window.location.reload()}
