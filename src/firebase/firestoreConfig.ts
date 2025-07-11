@@ -38,6 +38,14 @@ function initializeFirestore(): Firestore | null {
 
 // Função para obter o Firestore
 export function getFirebaseFirestore(): Firestore | null {
+  // Tentar primeiro com instância global corrigida
+  const globalInstance = getGlobalFirestore();
+  if (globalInstance) {
+    firestoreInstance = globalInstance;
+    return globalInstance;
+  }
+
+  // Fallback para inicialização local
   if (!firestoreInstance) {
     return initializeFirestore();
   }
