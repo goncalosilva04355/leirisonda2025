@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Settings, AlertTriangle } from "lucide-react";
 import { QuickMobileFix } from "../components/QuickMobileFix";
+import { FirestoreStatus } from "../components/FirestoreStatus";
 
 interface LoginPageProps {
   onLogin: (
