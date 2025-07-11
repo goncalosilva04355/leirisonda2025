@@ -54,14 +54,14 @@ import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifica
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { isFirebaseReady } from "./firebase/config";
-import {
-  isFirestoreReady,
-  testFirestore,
-  getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
-import { firestoreService } from "./services/firestoreService";
-import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
+// import {
+//   isFirestoreReady,
+//   testFirestore,
+//   getFirebaseFirestore,
+// } from "./firebase/firestoreConfig";
+// import { firestoreService } from "./services/firestoreService";
+// import { firebaseStorageService } from "./services/firebaseStorageService";
+// import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -8424,7 +8424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic����vel)
+                            Pessoa de Contacto (se aplic�����vel)
                           </label>
                           <input
                             type="text"
