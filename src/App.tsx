@@ -2189,19 +2189,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   // Settings persistence functions
-  const togglePhoneDialer = (enabled: boolean) => {
-    setEnablePhoneDialer(enabled);
-
-    // Save to localStorage
-    try {
-      localStorage.setItem("enablePhoneDialer", JSON.stringify(enabled));
-      console.log(
-        `✅ Configuração Phone Dialer guardada: ${enabled ? "ativado" : "desativado"}`,
-      );
-    } catch (error) {
-      console.error("❌ Erro ao guardar configuração Phone Dialer:", error);
-    }
-  };
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
@@ -8847,7 +8834,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <span className="font-medium">
-                                  Atribu������da a:
+                                  Atribu�������da a:
                                 </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
