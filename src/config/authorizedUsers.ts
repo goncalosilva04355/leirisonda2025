@@ -1,4 +1,6 @@
 // Lista de utilizadores autorizados a fazer login
+import { safeLocalStorage, storageUtils } from "../utils/storageUtils";
+
 export interface AuthorizedUser {
   email: string;
   name: string;
