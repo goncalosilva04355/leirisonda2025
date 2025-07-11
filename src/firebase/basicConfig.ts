@@ -45,7 +45,7 @@ function initializeFirebaseBasic(): FirebaseApp | null {
     return firebaseApp;
   } catch (error) {
     console.warn(
-      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+      "⚠��� Firebase: Problema na inicialização, mas app pode funcionar em modo local",
     );
     console.log("💡 Sistema continua funcional com autenticação local");
     firebaseApp = null;
@@ -85,7 +85,25 @@ export function getDB() {
   return null;
 }
 
-// Export db como função
+// Função para verificar se Firestore está disponível antes de usar
+export function withFirestore<T>(
+  callback: (db: any) => T,
+  fallback?: T,
+): T | null {
+  const firestoreDb = getDB();
+  if (firestoreDb) {
+    try {
+      return callback(firestoreDb);
+    } catch (error) {
+      console.warn("⚠️ Erro ao executar operação Firestore:", error);
+      return fallback ?? null;
+    }
+  }
+  console.warn("⚠️ Firestore não disponível - operação ignorada");
+  return fallback ?? null;
+}
+
+// Export db como instância (pode ser null)
 export const db = getDB();
 
 // Função para obter auth seguro
