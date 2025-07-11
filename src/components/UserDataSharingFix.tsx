@@ -8,7 +8,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { db, auth, isFirebaseReady } from "../firebase/config";
+import { db, auth, isFirebaseReady } from "../firebase";
 import {
   collection,
   getDocs,
