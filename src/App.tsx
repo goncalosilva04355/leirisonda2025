@@ -710,10 +710,26 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
-  const { syncStatus: autoSyncStatus } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // Auto-sync hook - versão defensiva
+  let autoSyncData;
+  let autoSyncStatus = "idle";
+  let autoSyncLastSync = null;
+
+  try {
+    autoSyncData = useAutoSyncSimple();
+    autoSyncStatus = autoSyncData.syncStatus;
+    autoSyncLastSync = autoSyncData.lastSync;
+  } catch (error) {
+    console.warn("⚠️ useAutoSyncSimple falhou:", error);
+    autoSyncData = {
+      syncStatus: "idle",
+      lastSync: null,
+      performSync: () => Promise.resolve(),
+      startAutoSync: () => {},
+      stopAutoSync: () => {},
+      isAutoSyncing: false,
+    };
+  }
 
   // Debug logging removed to prevent re-render loops
 
