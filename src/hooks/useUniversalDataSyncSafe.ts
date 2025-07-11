@@ -84,28 +84,38 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
   useEffect(() => {
     try {
       const loadLocalData = () => {
-        const obras = JSON.parse(localStorage.getItem("works") || "[]");
-        const manutencoes = JSON.parse(
-          localStorage.getItem("maintenance") || "[]",
-        );
-        const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
-        const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
+        try {
+          const obras = JSON.parse(localStorage.getItem("works") || "[]");
+          const manutencoes = JSON.parse(
+            localStorage.getItem("maintenance") || "[]",
+          );
+          const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
+          const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
 
-        setState((prev) => ({
-          ...prev,
-          obras,
-          manutencoes,
-          piscinas,
-          clientes,
-          totalItems:
-            obras.length +
-            manutencoes.length +
-            piscinas.length +
-            clientes.length,
-          lastSync: new Date().toISOString(),
-          isLoading: false,
-          syncStatus: "connected",
-        }));
+          setState((prev) => ({
+            ...prev,
+            obras: Array.isArray(obras) ? obras : [],
+            manutencoes: Array.isArray(manutencoes) ? manutencoes : [],
+            piscinas: Array.isArray(piscinas) ? piscinas : [],
+            clientes: Array.isArray(clientes) ? clientes : [],
+            totalItems:
+              (Array.isArray(obras) ? obras.length : 0) +
+              (Array.isArray(manutencoes) ? manutencoes.length : 0) +
+              (Array.isArray(piscinas) ? piscinas.length : 0) +
+              (Array.isArray(clientes) ? clientes.length : 0),
+            lastSync: new Date().toISOString(),
+            isLoading: false,
+            syncStatus: "connected",
+          }));
+        } catch (localError) {
+          console.error("❌ Error loading data from localStorage:", localError);
+          setState((prev) => ({
+            ...prev,
+            error: "Failed to load local data",
+            isLoading: false,
+            syncStatus: "error",
+          }));
+        }
       };
 
       loadLocalData();
