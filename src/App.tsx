@@ -2725,8 +2725,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("📞 Login attempt for:", email);
-
             // Clear any previous errors
             setLoginError("");
 
