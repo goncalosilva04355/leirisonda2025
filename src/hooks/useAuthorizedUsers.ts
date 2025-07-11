@@ -3,6 +3,7 @@ import {
   AuthorizedUser,
   getCurrentAuthorizedUsers,
 } from "../config/authorizedUsers";
+import { storageUtils } from "../utils/storageUtils";
 
 // Hook para gerir utilizadores autorizados
 export function useAuthorizedUsers() {
