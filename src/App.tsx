@@ -1852,12 +1852,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setPushPermission(permission);
         if (permission === "granted") {
           setNotificationsEnabled(true);
+          localStorage.setItem("notificationsEnabled", "true");
           showNotification(
-            "Notifica������es Ativadas",
-            "Agora vai receber notificações de obras atribu���das",
+            "Notificações Ativadas",
+            "Agora vai receber notificações de obras atribuídas",
             "success",
           );
-          console.log("�� Notifications enabled successfully");
+          console.log("✅ Notifications enabled successfully");
         } else {
           console.warn("❌ Notification permission denied or dismissed");
         }
@@ -3883,7 +3884,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenç����o</span>
+                      <span>Nova Manutenç�����o</span>
                     </button>
                   </div>
                 </div>
