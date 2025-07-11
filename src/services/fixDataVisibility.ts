@@ -66,7 +66,7 @@ export class FixDataVisibilityService {
         "obras",
       );
       result.details.push(
-        `✅ ${result.fixed.works} obras corrigidas para visibilidade global`,
+        `��� ${result.fixed.works} obras corrigidas para visibilidade global`,
       );
 
       // Corrigir piscinas
@@ -150,7 +150,7 @@ export class FixDataVisibilityService {
           );
 
           // Atualizar documento para ser globalmente visível
-          await updateDoc(doc(db, collectionName, docSnap.id), {
+          await updateDoc(doc(getFirestore(), collectionName, docSnap.id), {
             sharedGlobally: true,
             visibleToAllUsers: true,
             isGlobalData: true,
@@ -242,7 +242,7 @@ export class FixDataVisibilityService {
     }
 
     try {
-      console.log("�� Forçando sincronização entre todos os utilizadores...");
+      console.log("🚀 Forçando sincronização entre todos os utilizadores...");
 
       // Notificar todos os listeners ativos para recarregar dados
       const syncEvent = new CustomEvent("force-cross-user-sync", {
