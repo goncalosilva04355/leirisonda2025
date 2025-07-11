@@ -10652,7 +10652,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
 
       // Password protection screen
-      console.log("🔐 Debug: Rendering password form for advanced settings");
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
