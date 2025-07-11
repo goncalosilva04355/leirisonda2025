@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { authService } from "../services/authService";
+import { robustLoginService } from "../services/robustLoginService";
 import { auth } from "../firebase/config";
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -66,7 +66,7 @@ export const AuthSyncDiagnostic: React.FC = () => {
 
     try {
       // Test current user
-      const currentUser = await authService.getCurrentUserProfile();
+      const currentUser = await robustLoginService.getCurrentUser();
 
       if (currentUser) {
         setTestResult(`✅ Utilizador autenticado:
@@ -104,7 +104,7 @@ export const AuthSyncDiagnostic: React.FC = () => {
 
     try {
       // Simulate logout and login
-      await authService.logout();
+      await robustLoginService.logout();
 
       // Wait a moment
       await new Promise((resolve) => setTimeout(resolve, 1000));

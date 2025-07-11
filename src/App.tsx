@@ -66,17 +66,16 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
-// SECURITY: RegisterForm removed - only super admin can create users
+// SECURITY: RegisterForm for super admin only
+import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
 import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
-import {
-  hybridAuthService as authService,
-  UserProfile,
-} from "./services/hybridAuthService";
+import { hybridAuthService as authService } from "./services/hybridAuthService";
+import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
@@ -98,6 +97,19 @@ import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
+
+// Diagnóstico automático para problemas de inserção de dados
+import "./utils/datainput-diagnostic";
+import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
+import DataInputTutorial from "./components/DataInputTutorial";
+
+// Monitor de erros Firebase para detectar e corrigir automaticamente
+import "./utils/firebaseErrorMonitor";
+import FirebaseFixButton from "./components/FirebaseFixButton";
+
+// Inicialização de emergência de utilizadores
+import "./utils/emergencyUserInit";
+import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -144,7 +156,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("🚨 Problema de persistência detectado:", status);
+          console.warn("��� Problema de persistência detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -162,7 +174,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitoriza����ão de persist��ncia:", error);
+        console.error("❌ Erro na monitorização de persistência:", error);
       }
     };
 
@@ -226,12 +238,12 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização autom��tica
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
@@ -275,9 +287,9 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificaç��es autom��ticas desabilitadas para resolver instabilidade
+    // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar�� normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações automáticas
+    // Sistema funcionará normalmente sem verificações autom��ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -387,7 +399,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribui���ão de obra...");
+      console.log("📱 Enviando notificações de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -597,7 +609,7 @@ function App() {
       if (!exists) {
         existingWorks.push(newWork);
         localStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("💾 Obra guardada no localStorage como fallback");
+        console.log("��� Obra guardada no localStorage como fallback");
       }
 
       return newWork.id;
@@ -641,7 +653,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("��️ Erro na sincronização universal:", syncError);
+          console.warn("���️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -716,11 +728,11 @@ function App() {
               "🔄 Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
-              if (!user.firestoreId) {
+              if (!(user as any).firestoreId) {
                 const firestoreId =
                   await firestoreService.createUtilizador(user);
                 if (firestoreId) {
-                  user.firestoreId = firestoreId;
+                  (user as any).firestoreId = firestoreId;
                 }
               }
             }
@@ -784,7 +796,7 @@ function App() {
             for (const user of defaultUsers) {
               const firestoreId = await firestoreService.createUtilizador(user);
               if (firestoreId) {
-                user.firestoreId = firestoreId;
+                (user as any).firestoreId = firestoreId;
               }
             }
           }
@@ -859,6 +871,35 @@ function App() {
   // Clickable links settings
   const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
   const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
+
+  // Load settings from localStorage on startup
+  useEffect(() => {
+    const loadSettings = () => {
+      try {
+        const savedMapsRedirect = localStorage.getItem("enableMapsRedirect");
+        if (savedMapsRedirect !== null) {
+          setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
+          console.log(
+            "✅ Configuração Google Maps carregada:",
+            JSON.parse(savedMapsRedirect),
+          );
+        }
+
+        const savedPhoneDialer = localStorage.getItem("enablePhoneDialer");
+        if (savedPhoneDialer !== null) {
+          setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
+          console.log(
+            "✅ Configuração Phone Dialer carregada:",
+            JSON.parse(savedPhoneDialer),
+          );
+        }
+      } catch (error) {
+        console.error("❌ Erro ao carregar configurações:", error);
+      }
+    };
+
+    loadSettings();
+  }, []);
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -999,9 +1040,9 @@ function App() {
 
         try {
           await firestoreService.syncAll();
-          console.log("✅ Sincronização inicial completa!");
+          console.log("��� Sincronização inicial completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
+          console.error("❌ Erro na sincronizaç��o inicial:", error);
         }
       }
     };
@@ -1026,7 +1067,7 @@ function App() {
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização autom��tica:", error);
+          console.error("❌ Erro ao iniciar sincronização automática:", error);
         }
       }
     };
@@ -1326,7 +1367,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç����o Regular",
+      type: "Manutenç������o Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -2110,7 +2151,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       const encodedAddress = encodeURIComponent(address);
       const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
 
-      console.log("���️ Opening Google Maps:", mapsUrl);
+      console.log("����� Opening Google Maps:", mapsUrl);
 
       try {
         window.open(mapsUrl, "_blank");
@@ -2131,12 +2172,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Settings persistence functions
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
-    // Firebase handles settings persistence automatically
+
+    // Save to localStorage
+    try {
+      localStorage.setItem("enablePhoneDialer", JSON.stringify(enabled));
+      console.log(
+        `✅ Configuração Phone Dialer guardada: ${enabled ? "ativado" : "desativado"}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao guardar configuração Phone Dialer:", error);
+    }
   };
 
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
-    // Firebase handles settings persistence automatically
+
+    // Save to localStorage
+    try {
+      localStorage.setItem("enableMapsRedirect", JSON.stringify(enabled));
+      console.log(
+        `✅ Configuração Google Maps guardada: ${enabled ? "ativado" : "desativado"}`,
+      );
+    } catch (error) {
+      console.error("❌ Erro ao guardar configuração Google Maps:", error);
+    }
 
     // Show notification
     console.log(`🗺️ Google Maps ${enabled ? "ativado" : "desativado"}`);
@@ -2218,9 +2277,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers([...users, newUser]);
 
-        // Try to register with Firebase Auth for automatic synchronization
+        // Try to register with robustLoginService
         try {
-          const result = await authService.register(
+          const { robustLoginService } = await import(
+            "./services/robustLoginService"
+          );
+          const result = await robustLoginService.register(
             userForm.email,
             userForm.password,
             userForm.name,
@@ -2393,7 +2455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("🔐 Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -2405,11 +2467,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              const result = await authService.login(
+              // Importar serviço robusto
+              const { robustLoginService } = await import(
+                "./services/robustLoginService"
+              );
+
+              console.log("🔐 Usando serviço de login robusto...");
+              const result = await robustLoginService.login(
                 email.trim(),
                 password,
                 rememberMe,
               );
+
+              // Fallback para authService se necessário
+              if (!result.success) {
+                console.log("🔄 Tentando authService como fallback...");
+                const fallbackResult = await authService.login(
+                  email.trim(),
+                  password,
+                  rememberMe,
+                );
+
+                if (fallbackResult.success) {
+                  console.log("✅ AuthService fallback bem-sucedido");
+                  result.success = true;
+                  result.user = fallbackResult.user;
+                }
+              }
 
               // console.log("🔐 Auth result:", result);
 
@@ -2561,7 +2645,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Automática Ativa"
+                            ? "Sincronizaç��o Automática Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -2814,35 +2898,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Lista das Últimas 3 Obras */}
                 {(() => {
-                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas) e pegar apenas as últimas 3
-                  const assignedWorks = works
-                    .filter((w) => {
-                      const isNotCompleted =
-                        w.status !== "completed" && w.status !== "concluida";
-                      const isAssignedToUser =
-                        currentUser &&
-                        // Verificar assignedTo (campo legacy)
-                        ((w.assignedTo &&
-                          (w.assignedTo === currentUser.name ||
-                            w.assignedTo
-                              .toLowerCase()
-                              .includes(currentUser.name.toLowerCase()) ||
-                            currentUser.name
-                              .toLowerCase()
-                              .includes(w.assignedTo.toLowerCase()))) ||
-                          // Verificar assignedUsers array
-                          (w.assignedUsers &&
-                            w.assignedUsers.some(
-                              (user) =>
-                                user.name === currentUser.name ||
-                                user.id === currentUser.id,
-                            )) ||
-                          // Verificar assignedUserIds array
-                          (w.assignedUserIds &&
-                            w.assignedUserIds.includes(currentUser.id)));
-                      return true; // Mostrar todas as obras na lista
-                    })
-                    .slice(0, 3); // Pegar apenas as últimas 3 obras
+                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
+                  const assignedWorks = works.filter((w) => {
+                    const isNotCompleted =
+                      w.status !== "completed" && w.status !== "concluida";
+                    const isAssignedToUser =
+                      currentUser &&
+                      // Verificar assignedTo (campo legacy)
+                      ((w.assignedTo &&
+                        (w.assignedTo === currentUser.name ||
+                          w.assignedTo
+                            .toLowerCase()
+                            .includes(currentUser.name.toLowerCase()) ||
+                          currentUser.name
+                            .toLowerCase()
+                            .includes(w.assignedTo.toLowerCase()))) ||
+                        // Verificar assignedUsers array
+                        (w.assignedUsers &&
+                          w.assignedUsers.some(
+                            (user) =>
+                              user.name === currentUser.name ||
+                              user.id === currentUser.id,
+                          )) ||
+                        // Verificar assignedUserIds array
+                        (w.assignedUserIds &&
+                          w.assignedUserIds.includes(currentUser.id)));
+                    return true; // Mostrar todas as obras na lista
+                  }); // Remover limitação - mostrar todas as obras
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
@@ -3555,7 +3637,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gestão de piscinas no sistema
+                          Gest��o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3878,7 +3960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���������������� {maint.clientContact}
+                                        ����������������� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -5496,7 +5578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "✅ Cliente adicionado com sucesso:",
+                                    "��� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -5799,7 +5881,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manuten��ão programada durante criação da piscina",
+                                  "Manuten����ão programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -5809,7 +5891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�����������o criada para nova piscina:",
+                                "Futura manutenç�������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -6402,6 +6484,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "configuracoes_unused":
+          // Safety check for activeAdminTab
+          const safeActiveAdminTab = activeAdminTab || "relatorios";
+
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
@@ -6974,7 +7059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       Notificações de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificações quando uma nova obra
+                                      Receba notificaç��es quando uma nova obra
                                       for atribuída a si.
                                     </p>
                                     <button
@@ -7043,7 +7128,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica��ões no seu navegador
+                                        notifica���ões no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -7369,6 +7454,57 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                             </div>
                           )}
+
+                          {/* System Diagnostics Section - Only for Super Admin */}
+                          {currentUser?.role === "super_admin" && (
+                            <div className="bg-white rounded-lg p-6 shadow-sm">
+                              <div className="flex items-center mb-4">
+                                <Settings className="h-6 w-6 text-purple-600 mr-3" />
+                                <h3 className="text-lg font-semibold text-gray-900">
+                                  Diagnósticos do Sistema
+                                </h3>
+                              </div>
+                              <p className="text-gray-600 mb-6">
+                                Ferramentas de diagnóstico e correção para
+                                problemas do sistema.
+                              </p>
+
+                              <div className="space-y-4">
+                                {/* Data Input Status */}
+                                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                  <DataInputStatusIndicator />
+                                </div>
+
+                                {/* Firebase Fix Button */}
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-medium text-blue-900">
+                                      Correção Firebase
+                                    </h4>
+                                    <FirebaseFixButton />
+                                  </div>
+                                  <p className="text-blue-700 text-sm">
+                                    Use este botão se encontrar problemas de
+                                    autenticação ou conexão.
+                                  </p>
+                                </div>
+
+                                {/* Tutorial Access */}
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                  <div className="flex items-center justify-between mb-3">
+                                    <h4 className="font-medium text-green-900">
+                                      Tutorial Interativo
+                                    </h4>
+                                    <DataInputTutorial />
+                                  </div>
+                                  <p className="text-green-700 text-sm">
+                                    Tutorial passo-a-passo para inserção de
+                                    dados.
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 
@@ -7380,8 +7516,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Relatórios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
-                              Gere relat��rios detalhados em PDF sobre piscinas,
-                              manutenções e obras.
+                              Gere relat����rios detalhados em PDF sobre
+                              piscinas, manutenções e obras.
                             </p>
                           </div>
 
@@ -7424,7 +7560,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Manutenções
+                                    Relat��rio de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Histórico de intervenções
@@ -7617,7 +7753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten������es</li>
+                        <li>• Histórico de manuten�������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -7647,7 +7783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manutenç������es
+                        <strong>{maintenance.length}</strong> manuten��������es
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -9279,7 +9415,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "🔍 DEBUG boreInputs found:",
+                              "�� DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -9398,7 +9534,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç���o da piscina"
+                          placeholder="Localizaç�����o da piscina"
                           required
                         />
                       </div>
@@ -10194,7 +10330,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`���� Navegando para seç��o: ${section}`);
+              console.log(`����� Navegando para seç��o: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
@@ -10202,7 +10338,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "��� Access denied: User management requires authentication",
+                  "���� Access denied: User management requires authentication",
                 );
                 setLoginError(
                   "Por favor, faça login primeiro para aceder à gestão de utilizadores",

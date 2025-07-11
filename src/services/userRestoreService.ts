@@ -1,4 +1,4 @@
-import { authService } from "./authService";
+// import { authService } from "./authService"; // Removed - no longer exists
 
 export interface RestoreResult {
   success: boolean;

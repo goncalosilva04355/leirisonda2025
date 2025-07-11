@@ -12,7 +12,7 @@ import {
   getFirebaseStatus,
   reinitializeFirebase,
 } from "../firebase/config";
-import { authService } from "../services/authService";
+// import { authService } from "../services/authService"; // Removed - no longer exists
 
 interface PreLoginSyncProps {
   onSyncComplete?: () => void;

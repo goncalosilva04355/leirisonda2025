@@ -11,7 +11,7 @@ import {
   CheckCircle,
   AlertTriangle,
 } from "lucide-react";
-import { authService } from "../services/authService";
+import { robustLoginService } from "../services/robustLoginService";
 
 interface RegisterFormProps {
   onRegisterSuccess: () => void;
@@ -198,8 +198,8 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      // Register user with authService
-      const result = await authService.register(
+      // Register user with robustLoginService
+      const result = await robustLoginService.register(
         userForm.email,
         userForm.password,
         userForm.name,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UserPlus, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
-import { authService } from "../services/authService";
+import { robustLoginService } from "../services/robustLoginService";
 import UserSyncManager from "../utils/userSyncManager";
 
 interface UserCreationHelperProps {
@@ -59,7 +59,7 @@ export const UserCreationHelper: React.FC<UserCreationHelperProps> = ({
       }
 
       // Create new user
-      const result = await authService.register(
+      const result = await robustLoginService.register(
         formData.email,
         formData.password,
         formData.name,
