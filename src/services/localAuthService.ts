@@ -117,16 +117,6 @@ class LocalAuthService {
       // Save to localStorage
       this.saveUserToStorage(userProfile);
 
-      // Persistir sessão se rememberMe for true
-      if (rememberMe) {
-        localStorage.setItem("rememberMe", "true");
-        localStorage.setItem("autoLoginEnabled", "true");
-        console.log("💾 Sessão persistida - auto-login ativo para:", email);
-      } else {
-        localStorage.removeItem("rememberMe");
-        localStorage.removeItem("autoLoginEnabled");
-      }
-
       // Notify listeners
       this.notifyListeners();
 
@@ -143,13 +133,6 @@ class LocalAuthService {
     try {
       this.currentUser = null;
       this.clearUserFromStorage();
-
-      // Limpar configurações de auto-login
-      localStorage.removeItem("rememberMe");
-      localStorage.removeItem("autoLoginEnabled");
-      sessionStorage.removeItem("savedLoginCredentials");
-      console.log("🔒 Configurações de auto-login removidas");
-
       this.notifyListeners();
       console.log("✅ Local logout successful");
     } catch (error) {

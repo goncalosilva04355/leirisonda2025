@@ -3,7 +3,6 @@ import {
   AuthorizedUser,
   getCurrentAuthorizedUsers,
 } from "../config/authorizedUsers";
-import { storageUtils } from "../utils/storageUtils";
 
 // Hook para gerir utilizadores autorizados
 export function useAuthorizedUsers() {
@@ -14,19 +13,11 @@ export function useAuthorizedUsers() {
   const loadUsers = () => {
     try {
       const currentUsers = getCurrentAuthorizedUsers();
-      console.log("✅ Utilizadores carregados no hook:", currentUsers.length);
       setUsers(currentUsers);
       setIsLoading(false);
     } catch (error) {
-      console.error("❌ Erro ao carregar utilizadores:", error);
-      // Fallback para utilizadores padrão em caso de erro
-      setUsers([
-        {
-          email: "gongonsilva@gmail.com",
-          name: "Gonçalo Fonseca",
-          role: "super_admin",
-        },
-      ]);
+      console.error("Erro ao carregar utilizadores:", error);
+      setUsers([]);
       setIsLoading(false);
     }
   };
@@ -48,7 +39,7 @@ export function useAuthorizedUsers() {
 
   // Função para atualizar utilizadores
   const updateUsers = (newUsers: AuthorizedUser[]) => {
-    storageUtils.setJson("authorizedUsers", newUsers);
+    localStorage.setItem("authorizedUsers", JSON.stringify(newUsers));
     setUsers(newUsers);
 
     // Disparar evento personalizado para outros componentes

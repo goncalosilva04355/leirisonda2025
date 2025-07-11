@@ -12,17 +12,8 @@ import {
   getDocs,
   where,
 } from "firebase/firestore";
-import { getDB } from "../firebase/basicConfig";
+import { db } from "../firebase/config";
 import { syncManager } from "../utils/syncManager";
-
-// Get Firestore instance
-const getFirestore = () => {
-  const db = getDB();
-  if (!db) {
-    throw new Error("Firestore não está disponível");
-  }
-  return db;
-};
 
 // Types
 export interface User {
@@ -182,7 +173,7 @@ export const userService = {
     }
 
     const q = query(
-      collection(getFirestore(), COLLECTIONS.USERS),
+      collection(db, COLLECTIONS.USERS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -216,14 +207,11 @@ export const userService = {
     }
 
     return await safeFirebaseOperation(async () => {
-      const docRef = await addDoc(
-        collection(getFirestore(), COLLECTIONS.USERS),
-        {
-          ...userData,
-          createdAt: new Date().toISOString(),
-          updatedAt: Timestamp.now(),
-        },
-      );
+      const docRef = await addDoc(collection(db, COLLECTIONS.USERS), {
+        ...userData,
+        createdAt: new Date().toISOString(),
+        updatedAt: Timestamp.now(),
+      });
 
       console.log(
         `✅ Usuário ${userData.name} (${userData.email}) adicionado no Firebase`,
@@ -240,7 +228,7 @@ export const userService = {
       throw new Error("Firebase not configured");
     }
 
-    const userRef = doc(getFirestore(), COLLECTIONS.USERS, userId);
+    const userRef = doc(db, COLLECTIONS.USERS, userId);
     await updateDoc(userRef, {
       ...userData,
       updatedAt: Timestamp.now(),
@@ -259,7 +247,7 @@ export const userService = {
       throw new Error("Firebase not configured");
     }
 
-    const userRef = doc(getFirestore(), COLLECTIONS.USERS, userId);
+    const userRef = doc(db, COLLECTIONS.USERS, userId);
     await deleteDoc(userRef);
 
     // Trigger automatic synchronization
@@ -275,9 +263,7 @@ export const userService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    const usersSnapshot = await getDocs(
-      collection(getFirestore(), COLLECTIONS.USERS),
-    );
+    const usersSnapshot = await getDocs(collection(db, COLLECTIONS.USERS));
     if (usersSnapshot.empty) {
       const realAdmin = {
         name: "Gonçalo Fonseca",
@@ -317,7 +303,7 @@ export const poolService = {
     }
 
     const q = query(
-      collection(getFirestore(), COLLECTIONS.POOLS),
+      collection(db, COLLECTIONS.POOLS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -335,7 +321,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(getFirestore(), COLLECTIONS.POOLS), {
+    const docRef = await addDoc(collection(db, COLLECTIONS.POOLS), {
       ...poolData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -361,7 +347,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const poolRef = doc(getFirestore(), COLLECTIONS.POOLS, poolId);
+    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await updateDoc(poolRef, {
       ...poolData,
       updatedAt: Timestamp.now(),
@@ -380,7 +366,7 @@ export const poolService = {
       throw new Error("Firebase not configured");
     }
 
-    const poolRef = doc(getFirestore(), COLLECTIONS.POOLS, poolId);
+    const poolRef = doc(db, COLLECTIONS.POOLS, poolId);
     await deleteDoc(poolRef);
 
     // Trigger automatic synchronization
@@ -404,7 +390,7 @@ export const maintenanceService = {
     }
 
     const q = query(
-      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
+      collection(db, COLLECTIONS.MAINTENANCE),
       orderBy("scheduledDate", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -432,7 +418,7 @@ export const maintenanceService = {
 
     const today = new Date().toISOString().split("T")[0];
     const q = query(
-      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
+      collection(db, COLLECTIONS.MAINTENANCE),
       where("scheduledDate", ">=", today),
       orderBy("scheduledDate", "asc"),
     );
@@ -453,19 +439,16 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(
-      collection(getFirestore(), COLLECTIONS.MAINTENANCE),
-      {
-        ...maintenanceData,
-        createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now(),
-        // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
-        sharedGlobally: true,
-        visibleToAllUsers: true,
-        isGlobalData: true,
-        dataSharing: "all_users",
-      },
-    );
+    const docRef = await addDoc(collection(db, COLLECTIONS.MAINTENANCE), {
+      ...maintenanceData,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+      // CORREÇÃO: Garantir que todas as manutenções são sempre visíveis para todos
+      sharedGlobally: true,
+      visibleToAllUsers: true,
+      isGlobalData: true,
+      dataSharing: "all_users",
+    });
 
     // Trigger automatic synchronization
     console.log(
@@ -485,11 +468,7 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const maintenanceRef = doc(
-      getFirestore(),
-      COLLECTIONS.MAINTENANCE,
-      maintenanceId,
-    );
+    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await updateDoc(maintenanceRef, {
       ...maintenanceData,
       updatedAt: Timestamp.now(),
@@ -508,11 +487,7 @@ export const maintenanceService = {
       throw new Error("Firebase not configured");
     }
 
-    const maintenanceRef = doc(
-      getFirestore(),
-      COLLECTIONS.MAINTENANCE,
-      maintenanceId,
-    );
+    const maintenanceRef = doc(db, COLLECTIONS.MAINTENANCE, maintenanceId);
     await deleteDoc(maintenanceRef);
 
     // Trigger automatic synchronization
@@ -535,7 +510,7 @@ export const workService = {
 
     // CORREÇÃO: Usar coleção global para garantir que todos os utilizadores vejam as obras
     const q = query(
-      collection(getFirestore(), COLLECTIONS.WORKS),
+      collection(db, COLLECTIONS.WORKS),
       orderBy("createdAt", "desc"),
     );
     return onSnapshot(q, (snapshot) => {
@@ -548,7 +523,7 @@ export const workService = {
       })) as Work[];
 
       console.log(
-        `���� OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
+        `🔍 OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
       );
       callback(works);
     });
@@ -560,7 +535,7 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const docRef = await addDoc(collection(getFirestore(), COLLECTIONS.WORKS), {
+    const docRef = await addDoc(collection(db, COLLECTIONS.WORKS), {
       ...workData,
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now(),
@@ -586,7 +561,7 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const workRef = doc(getFirestore(), COLLECTIONS.WORKS, workId);
+    const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await updateDoc(workRef, {
       ...workData,
       updatedAt: Timestamp.now(),
@@ -610,7 +585,7 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const workRef = doc(getFirestore(), COLLECTIONS.WORKS, workId);
+    const workRef = doc(db, COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
 
     // Trigger automatic synchronization
@@ -630,7 +605,7 @@ export const syncService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    console.log("�� Inicializando dados do Firebase...");
+    console.log("🚀 Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
     console.log("✅ Dados inicializados com sucesso");
   },
@@ -703,10 +678,7 @@ export const syncService = {
         `✅ Sincronização entre dispositivos ativada para: ${collection}`,
       );
     } catch (error) {
-      console.error(
-        `❌ Erro ao forçar sincroniza��ão de ${collection}:`,
-        error,
-      );
+      console.error(`❌ Erro ao forçar sincronização de ${collection}:`, error);
     }
   },
 

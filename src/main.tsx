@@ -5,40 +5,18 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
-import { isPrivateBrowsing } from "./utils/storageUtils";
 import "./index.css";
 
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
-
-// Firebase Service Worker registration (skip in private browsing)
-if ("serviceWorker" in navigator && !isPrivateBrowsing()) {
-  navigator.serviceWorker
-    .register("/firebase-messaging-sw.js")
-    .then((registration) => {
-      console.log("✅ Firebase SW registered:", registration);
-    })
-    .catch((error) => {
-      console.warn("⚠️ Firebase SW registration failed:", error);
-    });
-} else if (isPrivateBrowsing()) {
-  console.log("🔒 Modo privado: Service Worker desabilitado");
-}
 
 // ReadableStream polyfill is handled by ./polyfills.ts
 console.log("🔧 ReadableStream polyfill loaded via polyfills.ts");
 
 // Chrome-specific fixes for PWA compatibility
 if (typeof window !== "undefined") {
-  // Check for private browsing mode
-  if (isPrivateBrowsing()) {
-    console.log(
-      "🔒 Modo privado detectado - algumas funcionalidades podem estar limitadas",
-    );
-  }
-
-  // Clear any cached data that might be causing issues in Chrome (skip in private mode)
-  if ("caches" in window && !isPrivateBrowsing()) {
+  // Clear any cached data that might be causing issues in Chrome
+  if ("caches" in window) {
     caches.keys().then((names) => {
       names.forEach((name) => {
         if (
