@@ -322,7 +322,7 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
     }
   }, []);
 
-  // Simple add cliente function
+  // Enhanced add cliente function with Firebase sync
   const addCliente = useCallback(async (clienteData: any): Promise<string> => {
     try {
       const id = clienteData.id || `cliente-${Date.now()}-${Math.random()}`;
@@ -330,19 +330,53 @@ export function useUniversalDataSyncSafe(): UniversalSyncState &
         ...clienteData,
         id,
         createdAt: clienteData.createdAt || new Date().toISOString(),
+        sharedGlobally: true,
+        visibleToAllUsers: true,
       };
 
+      // Try to save to Firebase first
+      try {
+        const { isFirestoreReady } = await import(
+          "../firebase/firestoreConfig"
+        );
+        if (isFirestoreReady()) {
+          const { firestoreService } = await import(
+            "../services/firestoreService"
+          );
+          const firestoreId = await firestoreService.createCliente(cliente);
+          if (firestoreId) {
+            console.log("✅ Cliente criado no Firestore:", firestoreId);
+          }
+        }
+      } catch (firebaseError) {
+        console.warn("⚠️ Erro ao criar cliente no Firebase:", firebaseError);
+      }
+
+      // Always save to localStorage as backup/primary
       const existingClientes = JSON.parse(
         localStorage.getItem("clients") || "[]",
       );
-      existingClientes.push(cliente);
-      localStorage.setItem("clients", JSON.stringify(existingClientes));
+      const clienteExists = existingClientes.some(
+        (c: any) => c.id === cliente.id,
+      );
 
-      setState((prev) => ({
-        ...prev,
-        clientes: existingClientes,
-        totalItems: prev.totalItems + 1,
-      }));
+      if (!clienteExists) {
+        existingClientes.push(cliente);
+        localStorage.setItem("clients", JSON.stringify(existingClientes));
+
+        setState((prev) => ({
+          ...prev,
+          clientes: existingClientes,
+          totalItems: prev.totalItems + 1,
+        }));
+
+        // Trigger manual sync event
+        window.dispatchEvent(
+          new CustomEvent("clientesUpdated", {
+            detail: { data: existingClientes, collection: "clientes" },
+          }),
+        );
+      }
 
       return id;
     } catch (error) {
