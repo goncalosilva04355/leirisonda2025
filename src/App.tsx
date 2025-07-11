@@ -582,7 +582,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("�� Erro no sistema de manutenções:", error);
+      console.error("❌ Erro no sistema de manutenções:", error);
       return await addManutencao(data);
     }
   };
@@ -627,9 +627,25 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
-  const { syncStatus: autoSyncStatus } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  let autoSyncData;
+  let autoSyncStatus = "idle";
+  let autoSyncLastSync = null;
+
+  try {
+    autoSyncData = useAutoSyncSimple();
+    autoSyncStatus = autoSyncData.syncStatus;
+    autoSyncLastSync = autoSyncData.lastSync;
+  } catch (error) {
+    console.warn("⚠️ Auto-sync hook error, using fallback:", error);
+    autoSyncData = {
+      syncStatus: "idle",
+      lastSync: null,
+      performSync: () => Promise.resolve(),
+      startAutoSync: () => {},
+      stopAutoSync: () => {},
+      isAutoSyncing: false,
+    };
+  }
 
   // Debug logging removed to prevent re-render loops
 
@@ -1906,7 +1922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n��� Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -4046,7 +4062,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Futuras Manuten��ões
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -4183,7 +4199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informaç��es Básicas
                         </h3>
                       </div>
 
@@ -11448,7 +11464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ��� {selectedPool.location}
+                            📍 {selectedPool.location}
                           </button>
                         </div>
                       </div>
