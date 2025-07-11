@@ -1641,7 +1641,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manuten��ão Programada",
+          type: "Manutenção Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -2259,7 +2259,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não est��o ativadas. Active-as primeiro nas configurações.",
+        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -2741,7 +2741,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              
+              // Fallback para authService se necessário
+              if (!result.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -2751,7 +2752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 if (fallbackResult.success) {
                   console.log("���� AuthService fallback bem-sucedido");
-                  
+                  result.success = true;
                   result.user = fallbackResult.user;
                 }
               }
@@ -5065,7 +5066,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Caudal do Furo (m��/h) *
+                                  Caudal do Furo (m³/h) *
                                 </label>
                                 <input
                                   type="number"
@@ -5789,7 +5790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "❌ N��o tem permissão para criar clientes. Contacte o administrador.",
+                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
