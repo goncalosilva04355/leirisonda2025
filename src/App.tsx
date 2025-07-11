@@ -387,7 +387,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺���� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -724,7 +724,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -4199,7 +4199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenç��es
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -8240,7 +8240,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manuten��ões
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
@@ -10250,7 +10250,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observa��ões
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -12313,8 +12313,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* User Restore Notification */}
         <UserRestoreNotificationSimple />
 
-        {/* Firebase Auto-Monitor - Discrete indicator */}
-        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
+        {/* Firebase Auto-Monitor removed */}
 
         {/* User Migration Indicator - Shows migration status */}
         <UserMigrationIndicator migrationStatus={userMigration} />
