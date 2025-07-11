@@ -165,7 +165,11 @@ class FirebaseAuthService {
   }
 
   async signUp(email: string, password: string): Promise<AuthResult> {
+    console.log("👥 Tentando criar utilizador no Firebase...");
+
     try {
+      // Sempre reinicializar para garantir instância válida
+      this.initialized = false;
       if (!(await this.initialize())) {
         return {
           success: false,
@@ -173,11 +177,27 @@ class FirebaseAuthService {
         };
       }
 
-      const userCredential = await createUserWithEmailAndPassword(
+      if (!this.auth) {
+        return {
+          success: false,
+          error: "Firebase Auth instance is null",
+        };
+      }
+
+      // Criar utilizador com timeout
+      const signupPromise = createUserWithEmailAndPassword(
         this.auth,
         email,
         password,
       );
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Signup timeout")), 8000),
+      );
+
+      const userCredential = await Promise.race([
+        signupPromise,
+        timeoutPromise,
+      ]);
 
       console.log(
         "✅ Utilizador criado no Firebase:",
@@ -189,13 +209,37 @@ class FirebaseAuthService {
         user: userCredential.user,
       };
     } catch (error: any) {
-      console.error("❌ Erro ao criar utilizador no Firebase:", error);
+      console.warn("⚠️ Firebase signup falhou:", error);
 
-      let errorMessage = "Erro ao criar conta";
-      if (error.code === "auth/email-already-in-use") {
-        errorMessage = "Email já está em uso";
-      } else if (error.code === "auth/weak-password") {
-        errorMessage = "Password muito fraca";
+      // Reset estado se erro crítico
+      if (
+        error.message &&
+        (error.message.includes("destroyed") ||
+          error.message.includes("checkDestroyed") ||
+          error.message.includes("timeout"))
+      ) {
+        console.log(
+          "🔄 Resetando Firebase Auth devido a erro crítico no signup",
+        );
+        this.initialized = false;
+        this.auth = null;
+        this.initializationPromise = null;
+      }
+
+      let errorMessage = "Firebase indisponível para criar conta";
+
+      if (error.code) {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            errorMessage = "Email já está em uso no Firebase";
+            break;
+          case "auth/weak-password":
+            errorMessage = "Password muito fraca";
+            break;
+          case "auth/invalid-email":
+            errorMessage = "Email inválido";
+            break;
+        }
       }
 
       return {
