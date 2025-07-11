@@ -69,6 +69,7 @@ import { fcmService } from "./services/fcmService";
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { firestore } from "./firebase/justFirestore";
+import { FirestoreStatus } from "./components/FirestoreStatus";
 import { isFirebaseReady } from "./firebase/config";
 import {
   isFirestoreReady,
@@ -1344,7 +1345,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "�� Firestore conectado mas pode haver problema nas regras de segurança",
+                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
               );
             }
           }
@@ -1581,7 +1582,10 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("���� Notification clicked, navigating...", event.data);
+            console.log(
+              "����� Notification clicked, navigating...",
+              event.data,
+            );
 
             const { data } = event.data;
 
@@ -1894,7 +1898,7 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("�� Auth result:", result);
+      console.log("€ Auth result:", result);
 
       if (result.success && result.user) {
         // console.log("✅ Login successful for:", result.user.email);
@@ -6401,7 +6405,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons�����vel *
+                          Técnico Respons���vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -7772,7 +7776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center mb-4">
                                 <Trash2 className="h-6 w-6 text-red-600 mr-3" />
                                 <h3 className="text-lg font-semibold text-gray-900">
-                                  Gest��o de Dados
+                                  Gest���o de Dados
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
@@ -9946,7 +9950,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec��ficas do Furo
+                          Observações Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
