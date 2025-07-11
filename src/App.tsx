@@ -165,7 +165,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("�� Persistência reparada automaticamente");
+            console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
               "❌ Não foi possível reparar a persistência automaticamente",
@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("📞 All mock and test data cleared");
+      console.log("���� All mock and test data cleared");
     };
 
     forceLogout();
@@ -2158,7 +2158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("€dress clicked:", address);
+    console.log("��dress clicked:", address);
     console.log("€ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
@@ -3081,7 +3081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <span className="text-gray-600 text-lg">→</span>
                     </button>
                     <h2 className="text-lg font-semibold text-gray-900">
-                      Pr��ximas Manutenções
+                      Próximas Manutenções
                     </h2>
                   </div>
 
@@ -7126,7 +7126,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • Certifique-se de que permite
-                                        notifica�ções no seu navegador
+                                        notificações no seu navegador
                                       </li>
                                       <li>
                                         • Em dispositivos móveis, adicione a app
@@ -10592,7 +10592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             } catch (error: any) {
               console.error("❌ Login error:", error);
               setLoginError(
-                "Erro de conexão. Verifique sua internet e tente novamente.",
+                "Erro de conex��o. Verifique sua internet e tente novamente.",
               );
             }
           }}
