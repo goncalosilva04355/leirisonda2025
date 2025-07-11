@@ -21,6 +21,7 @@ interface LocationPageProps {
 export const LocationPage: React.FC<LocationPageProps> = ({
   onBack,
   currentUser,
+  allUsers,
 }) => {
   return (
     <div className="space-y-6">
