@@ -220,11 +220,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             totalItems: prev.totalItems + 1,
           }));
 
-          window.dispatchEvent(
-            new CustomEvent("manutencoesUpdated", {
-              detail: { data: updatedManutencoes, collection: "manutencoes" },
-            }),
-          );
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(
+              new CustomEvent("manutencoesUpdated", {
+                detail: { data: updatedManutencoes, collection: "manutencoes" },
+              }),
+            );
+          }
         }
 
         return id;
