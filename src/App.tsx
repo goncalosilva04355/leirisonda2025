@@ -236,7 +236,7 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Vers��o completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
