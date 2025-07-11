@@ -2673,7 +2673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         if (firestoreId) {
           console.log("✅ Utilizador criado no Firestore:", firestoreId);
-          newUser.firestoreId = firestoreId;
+          (newUser as any).firestoreId = firestoreId;
         }
 
         // Atualizar estado local
