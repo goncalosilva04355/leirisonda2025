@@ -6,6 +6,7 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
+import { storageUtils, safeLocalStorage } from "../utils/storageUtils";
 
 export const UserDiagnostic: React.FC = () => {
   const [diagnosticData, setDiagnosticData] = useState({
