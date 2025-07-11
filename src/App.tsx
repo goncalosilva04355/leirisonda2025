@@ -10565,6 +10565,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
     return (
       <div>
+        <AppStatusIndicator />
         <LoginPage
           onLogin={async (
             email: string,
