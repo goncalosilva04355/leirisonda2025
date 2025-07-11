@@ -755,6 +755,10 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
+  // Proteção de dados críticos - NUNCA PERDER DADOS
+  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+    useDataProtection();
+
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
   const [usersLoaded, setUsersLoaded] = useState(false);
