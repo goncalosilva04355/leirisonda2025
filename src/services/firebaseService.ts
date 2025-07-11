@@ -610,14 +610,6 @@ export const workService = {
       throw new Error("Firebase not configured");
     }
 
-    const db = getDB();
-    if (!db) {
-      console.warn(
-        "⚠️ Firestore não disponível - obra não removida do Firebase",
-      );
-      return;
-    }
-
     const workRef = doc(getFirestore(), COLLECTIONS.WORKS, workId);
     await deleteDoc(workRef);
 
