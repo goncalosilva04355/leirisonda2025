@@ -557,7 +557,7 @@ function App() {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar o novo FirestoreService
-      const firestoreId = await firestoreService.createObra(data);
+      // const firestoreId = await firestoreService.createObra(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -4762,7 +4762,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��ões do Furo
+                              Medi����ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -7737,7 +7737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informaç��es de clientes</li>
-                        <li>• Histórico de manuten�������es</li>
+                        <li>• Histórico de manuten��������es</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
@@ -8971,7 +8971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n���o terminou
+                              Deixe vazio se ainda n����o terminou
                             </p>
                           </div>
                         </div>
