@@ -1737,8 +1737,13 @@ function App() {
 
     if (advancedPassword === "19867") {
       alert("✅ Palavra-passe correcta! A abrir configurações...");
-      setIsAdvancedUnlocked(true);
       setAdvancedPasswordError("");
+
+      // Usar timeout para garantir que o estado é atualizado
+      setTimeout(() => {
+        setIsAdvancedUnlocked(true);
+        alert("✅ Estado atualizado - Configurações devem abrir agora!");
+      }, 100);
     } else {
       alert(
         `❌ Palavra-passe incorrecta! Esperado: "19867", Recebido: "${advancedPassword}"`,
