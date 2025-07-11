@@ -6592,7 +6592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔍 Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -10402,19 +10402,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               console.log(`€avegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
-              if (
-                section === "utilizadores" &&
-                (!isAuthenticated || !currentUser)
-              ) {
+              // Advanced settings password (19867) provides sufficient authentication
+              if (section === "utilizadores") {
                 console.log(
-                  "€Access denied: User management requires authentication",
+                  "✅ Access granted: User management via advanced settings",
                 );
-                setLoginError(
-                  "Por favor, faça login primeiro para aceder 📞 gestão de utilizadores",
-                );
-                setShowAdvancedSettings(false);
-                setIsAdvancedUnlocked(false);
-                return;
               }
 
               navigateToSection(section);
