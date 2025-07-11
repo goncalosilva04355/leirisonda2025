@@ -576,7 +576,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("����️ Firestore não disponível, usando sistema atual");
+        console.warn("������� Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -1690,7 +1690,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manuten��ões: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
@@ -5895,7 +5895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç�������������o criada para nova piscina:",
+                                "Futura manutenç���������������o criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -7393,7 +7393,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          • Todas as manuten��ões (
+                                          • Todas as manutenções (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
