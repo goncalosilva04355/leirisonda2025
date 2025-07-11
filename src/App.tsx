@@ -576,7 +576,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("�����️ Firestore não disponível, usando sistema atual");
+        console.warn("����️ Firestore não disponível, usando sistema atual");
         return await addObra(data);
       }
     } catch (error) {
@@ -810,7 +810,7 @@ function App() {
           setUsers(parsedUsers);
         }
       } catch (error) {
-        console.error("❌ Error reloading users:", error);
+        console.error("�� Error reloading users:", error);
       }
     };
 
@@ -2146,7 +2146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("������ Maps redirect is disabled");
+        console.warn("⚠��� Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠��� No address provided");
@@ -2842,8 +2842,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 (w.assignedUserIds &&
                                   w.assignedUserIds.includes(currentUser.id)));
                             return (
-                              isNotCompleted && noSheetGenerated
-                              // Mostrar todas as obras sem folha gerada (não apenas atribuídas)
+                              isNotCompleted &&
+                              noSheetGenerated &&
+                              isAssignedToUser
+                              // Mostrar apenas obras sem folha gerada atribuídas ao utilizador
                             );
                           });
                           return worksWithoutSheets.length;
@@ -10389,8 +10391,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura����ões
-                avan��adas
+                Insira a palavra-passe para aceder às configura����ões avançadas
               </p>
             </div>
 
