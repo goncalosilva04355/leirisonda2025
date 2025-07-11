@@ -3,7 +3,7 @@ import "./polyfills";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./App_minimal";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import "./index.css";
 
