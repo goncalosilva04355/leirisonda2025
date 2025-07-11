@@ -100,7 +100,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
+import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
 import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
 import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
@@ -719,16 +719,7 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  // Temporarily disabled to prevent React error
-  // const autoSyncData = useAutoSyncSimple();
-  const autoSyncData = {
-    syncStatus: "idle" as const,
-    lastSync: null,
-    performSync: async () => {},
-    startAutoSync: () => {},
-    stopAutoSync: () => {},
-    isAutoSyncing: false,
-  };
+  const autoSyncData = useAutoSyncSimple();
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
@@ -1973,7 +1964,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELATÓRIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -4467,7 +4458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda não terminou
+                              Deixe vazio se ainda n��o terminou
                             </p>
                           </div>
                         </div>
@@ -7169,7 +7160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç��es do Sistema
+                              Informações do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
