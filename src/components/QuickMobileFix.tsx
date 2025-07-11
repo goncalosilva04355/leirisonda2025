@@ -1,5 +1,6 @@
-import React from "react";
-import { AlertTriangle, CheckCircle } from "lucide-react";
+import React, { useState } from "react";
+import { AlertTriangle, CheckCircle, RefreshCw } from "lucide-react";
+import { mobileFirebaseQuickFix } from "../utils/mobileFirebaseQuickFix";
 
 interface QuickMobileFixProps {
   onFixApplied?: () => void;
