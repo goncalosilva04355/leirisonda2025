@@ -1,2 +1,2 @@
-// DESATIVADO - Usa src/firebase.ts centralizado
+// DESATIVADO - Usa src/firebase.ts único
 export * from "../firebase";
