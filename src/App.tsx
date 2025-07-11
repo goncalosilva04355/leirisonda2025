@@ -68,7 +68,8 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-// Firebase/Firestore removed - starting fresh
+import { db } from "./firebase/cleanFirestore";
+import "./utils/testCleanFirestore";
 // Removed conflicting Firebase imports
 // Firebase configuration simplified
 
@@ -1033,7 +1034,7 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
-            "��� Users reloaded after update:",
+            "✅ Users reloaded after update:",
             parsedUsers.length,
             parsedUsers,
           );
@@ -1091,7 +1092,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+    console.log("📞 Configuraç��o Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -3489,7 +3490,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>��</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -6614,7 +6615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {[
                           "Limpeza de filtros",
-                          "Limpeza de pr��-filtro",
+                          "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento automático",
@@ -7443,7 +7444,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-blue-900 mb-2">
-                                      Notifica��ões de Obras
+                                      Notificações de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Receba notificações quando uma nova obra
@@ -11124,7 +11125,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("��� Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
