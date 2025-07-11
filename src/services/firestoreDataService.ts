@@ -13,9 +13,9 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import {
-  getFirebaseFirestore,
-  isFirebaseFirestoreAvailable,
-} from "../firebase/basicConfig";
+  getDB as getFirebaseFirestore,
+  isFirestoreReady as isFirebaseFirestoreAvailable,
+} from "../firebase";
 
 // Interface para dados básicos
 interface BaseData {
