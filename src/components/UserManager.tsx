@@ -25,7 +25,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   useEffect(() => {
     if (!isLoading && users.length === 0) {
       console.log(
-        "��️ Nenhum utilizador autorizado encontrado, inicializando...",
+        "⚠️ Nenhum utilizador autorizado encontrado, inicializando...",
       );
       const defaultUsers = [
         {
@@ -244,7 +244,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
   // Obter permissões do utilizador do sistema principal
   const getUserPermissions = (email: string) => {
-    const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+    const mainUsers = storageUtils.getJson("app-users", []);
     const user = mainUsers.find(
       (u: any) => u.email.toLowerCase() === email.toLowerCase(),
     );
