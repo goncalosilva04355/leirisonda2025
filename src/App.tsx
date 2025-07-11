@@ -71,6 +71,8 @@ import { LoginPage } from "./pages/LoginPage";
 
 import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
 import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncMock";
+import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixMock";
+import { useAutoUserMigration } from "./hooks/useAutoUserMigrationMock";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
@@ -1794,7 +1796,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Responsável: ${work.assignedTo}
+   Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -6560,7 +6562,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configurações
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
+                        Configura��ões do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
