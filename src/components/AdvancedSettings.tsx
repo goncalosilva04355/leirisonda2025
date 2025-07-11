@@ -348,8 +348,8 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               }`}
             >
               <div className="flex flex-col items-center space-y-1">
-                <Wifi className="w-4 h-4" />
-                <span>Push</span>
+                <Bell className="w-4 h-4" />
+                <span>Push FCM</span>
               </div>
             </button>
             <button
@@ -890,7 +890,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
                     • Quando uma obra é criada e atribuída a um utilizador, ele
-                    recebe uma notificação push
+                    recebe uma notificaç��o push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
