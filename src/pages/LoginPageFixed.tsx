@@ -146,6 +146,25 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     [],
   );
 
+  const handleEmergencyFix = useCallback(() => {
+    // Limpar todas as proteções Firebase
+    localStorage.removeItem("firebase-quota-exceeded");
+    localStorage.removeItem("firebase-quota-check-time");
+    localStorage.removeItem("firebase-emergency-shutdown");
+    localStorage.removeItem("firebase-circuit-breaker");
+
+    // Remover iframes duplicados
+    const firebaseIframes = document.querySelectorAll(
+      'iframe[src*="firebaseapp.com"]',
+    );
+    for (let i = 1; i < firebaseIframes.length; i++) {
+      firebaseIframes[i].remove();
+    }
+
+    setShowEmergencyFix(false);
+    alert("✅ Fix aplicado! Agora tente fazer login com password '123'");
+  }, []);
+
   return (
     <div className="min-h-screen bg-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
