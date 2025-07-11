@@ -99,6 +99,7 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
+import "./utils/testFirebaseUserSync";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
@@ -351,7 +352,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺��� Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -636,7 +637,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("�� Firestore não disponível, usando sistema atual");
+        console.warn("€ Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
         // Enviar notifica��ões mesmo no fallback
@@ -2283,7 +2284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.log("📞 All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
-          `A obra "${workTitle}" foi-lhe atribuída`,
+          `A obra "${workTitle}" foi-lhe atribu��da`,
           "work-assignment",
         );
       } else {
@@ -5075,7 +5076,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Medições do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -9878,7 +9879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Espec📞ficas do Furo
+                          Observações Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -12088,7 +12089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "N��o especificado"}
+                              : "N���o especificado"}
                           </p>
                         </div>
                       </div>
