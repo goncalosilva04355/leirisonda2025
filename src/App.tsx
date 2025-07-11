@@ -3020,7 +3020,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             w.assignedUserIds.includes(currentUser.id)));
                       return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
                     })
-                    .slice(0, 3); // Limitar a 3 obras mais recentes
+                    .slice(0, 3); // Limitar a 3 obras atribuídas mais recentes
 
                   return assignedWorks.length > 0 ? (
                     <div className="bg-white rounded-lg shadow-sm">
@@ -3858,7 +3858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr€xima manutenção:{" "}
+                                Pr���xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -5499,7 +5499,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "🔍 hasPermission clientes create:",
+                                "���� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -11185,7 +11185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ���� {selectedWork.contact}
+                            ����� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -11760,7 +11760,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificações Técnicas */}
+                    {/* Especificaç��es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
