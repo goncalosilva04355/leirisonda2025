@@ -82,7 +82,7 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
-import "./utils/firebaseDirectFix"; // Correção direta do Firestore
+import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -2272,7 +2272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           setNotificationsEnabled(true);
           safeLocalStorage.setItem("notificationsEnabled", "true");
           showNotification(
-            "Notificaç��es Ativadas",
+            "Notificações Ativadas",
             "Agora vai receber notificações de obras atribuídas",
             "success",
           );
@@ -9955,7 +9955,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ����gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
