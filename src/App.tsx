@@ -78,36 +78,36 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
-import { ForceInitialization } from "./utils/forceInitialization";
+// import { ForceInitialization } from "./utils/forceInitialization"; // TEMPORARIAMENTE DESATIVADO
 
-// Sistema de diagnóstico de persistência
-import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
-import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
-import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import "./utils/testDataPersistence";
+// Sistema de diagnóstico de persistência - TEMPORARIAMENTE DESATIVADO
+// import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+// import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+// import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
+// import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+// import "./utils/testDataPersistence";
 
-import { useDataCleanup } from "./hooks/useDataCleanup";
+// Hooks temporariamente desativados para diagnóstico
+// import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
-import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
-import UserMigrationIndicator from "./components/UserMigrationIndicator";
-// Firebase components removed - Firebase works automatically in background
+// import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
+// import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
+// import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+// import UserMigrationIndicator from "./components/UserMigrationIndicator";
 
-// Diagnóstico automático para problemas de inserção de dados
-import "./utils/datainput-diagnostic";
-import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
-import DataInputTutorial from "./components/DataInputTutorial";
+// Diagnóstico automático temporariamente desativado
+// import "./utils/datainput-diagnostic";
+// import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
+// import DataInputTutorial from "./components/DataInputTutorial";
 
-// Monitor de erros Firebase para detectar e corrigir automaticamente
-import "./utils/firebaseErrorMonitor";
-import FirebaseFixButton from "./components/FirebaseFixButton";
+// Monitor de erros Firebase temporariamente desativado
+// import "./utils/firebaseErrorMonitor";
+// import FirebaseFixButton from "./components/FirebaseFixButton";
 
-// Inicialização de emergência de utilizadores
-import "./utils/emergencyUserInit";
-import "./utils/forceUserInit";
-import { userRestoreService } from "./services/userRestoreService";
+// Inicialização de emergência temporariamente desativada
+// import "./utils/emergencyUserInit";
+// import "./utils/forceUserInit";
+// import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Production users - only real admin account
@@ -1695,7 +1695,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞ções: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����ções: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -5387,7 +5387,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "🔍 hasPermission clientes create:",
+                                "�� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
