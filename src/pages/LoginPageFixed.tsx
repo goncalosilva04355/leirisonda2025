@@ -51,18 +51,14 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             console.log("🔄 Auto-login ativo - fazendo login automático...");
 
             // Executar auto-login com credenciais salvas
-            const performAutoLogin = async () => {
-              try {
-                await onLogin(email, password, true);
-                console.log("✅ Auto-login bem-sucedido");
-              } catch (autoLoginError) {
-                console.error("❌ Erro no auto-login:", autoLoginError);
-                // Em caso de erro, limpar credenciais salvas
-                sessionStorage.removeItem("savedLoginCredentials");
-              }
-            };
-
-            performAutoLogin();
+            try {
+              await onLogin(email, password, true);
+              console.log("✅ Auto-login bem-sucedido");
+            } catch (autoLoginError) {
+              console.error("❌ Erro no auto-login:", autoLoginError);
+              // Em caso de erro, limpar credenciais salvas
+              sessionStorage.removeItem("savedLoginCredentials");
+            }
           } else {
             console.log("⚠️ Incomplete saved credentials, skipping auto-login");
           }
