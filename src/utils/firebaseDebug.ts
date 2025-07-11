@@ -1,4 +1,5 @@
 import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+import { db as fixedDb, checkFirebaseStatus } from "./firebaseDirectFix";
 import { collection, getDocs, query, limit } from "firebase/firestore";
 
 export async function debugFirestore() {
