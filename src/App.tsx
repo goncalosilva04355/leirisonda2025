@@ -81,8 +81,9 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
-import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
+import "./utils/firebaseBypass"; // BYPASS: Desativar Firebase para evitar erros getImmediate
+// import "./utils/firebaseDebug"; // Debug Firestore para verificar coleções
+// import "./utils/firebaseRobustFix"; // Correção robusta do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -120,7 +121,7 @@ import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
-// Diagnóstico automático para problemas de inserção de dados
+// Diagnóstico automático para problemas de inserç��o de dados
 import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
@@ -1049,7 +1050,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("🔄 Users updated event received, reloading...");
+      console.log("���� Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -9955,7 +9956,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ����gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
