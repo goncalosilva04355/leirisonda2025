@@ -50,6 +50,7 @@ import "./utils/clearModalStates";
 import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtection } from "./hooks/useDataProtection";
+import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import { RealtimeNotifications } from "./components/RealtimeNotifications";
 import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
 
@@ -1630,7 +1631,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("🔐 Password length:", loginForm.password?.length || 0);
+      console.log("���� Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -6792,7 +6793,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>�� Equipas atribuídas</li>
+                                <li>👥 Equipas atribuídas</li>
                                 <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -7983,7 +7984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relat��rio de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
