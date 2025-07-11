@@ -1,5 +1,5 @@
-// Passo 1: Configuração básica do Firebase
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+// DESATIVADO - Usa src/firebase.ts centralizado
+export * from "../firebase";
 
 // Configuração do novo projeto Firebase
 const firebaseConfig = {
