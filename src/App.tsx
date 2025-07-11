@@ -3093,7 +3093,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    N��o especificada
+                                    N���o especificada
                                   </span>
                                 )}
                               </div>
@@ -8130,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>📊 Dados consolidados</li>
-                        <li>• Análise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -10665,8 +10665,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
+            currentUser={currentUser}
             onNavigateToSection={(section) => {
-              console.log(`€avegando para seção: ${section}`);
+              console.log(`Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               // Advanced settings password (19867) provides sufficient authentication
