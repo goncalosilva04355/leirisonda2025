@@ -795,7 +795,7 @@ function App() {
             for (const user of defaultUsers) {
               const firestoreId = await firestoreService.createUtilizador(user);
               if (firestoreId) {
-                user.firestoreId = firestoreId;
+                (user as any).firestoreId = firestoreId;
               }
             }
           }
