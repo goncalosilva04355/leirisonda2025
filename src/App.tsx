@@ -147,7 +147,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitoriza��ão automática de persistência de dados
+    // Monitoriza📞ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -289,8 +289,8 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar�� normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom��ticas
+    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -310,7 +310,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -970,7 +970,7 @@ function App() {
       console.log(
         "🔒 SECURITY: Forced logout completed - manual login required",
       );
-      console.log("�� All mock and test data cleared");
+      console.log("📞 All mock and test data cleared");
     };
 
     forceLogout();
@@ -1054,7 +1054,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("�� Iniciando sincronização inicial com Firestore...");
+        console.log("📞 Iniciando sincronização inicial com Firestore...");
 
         try {
           await firestoreService.syncAll();
@@ -1075,7 +1075,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("€Iniciando sincroniza��ão automática em tempo real...");
+        console.log("€Iniciando sincroniza📞ão automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1103,7 +1103,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1180,7 +1180,7 @@ function App() {
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
-        console.log("�� Notifications already granted");
+        console.log("📞 Notifications already granted");
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
@@ -1205,7 +1205,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "�� Service Worker registered successfully:",
+              "📞 Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1391,7 +1391,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manuten����o realizada",
+      description: maintenanceForm.workPerformed || "Manuten📞��o realizada",
       notes: maintenanceForm.observations,
     };
 
@@ -1523,7 +1523,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("�� Navigating to dashboard");
+            console.log("📞 Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1699,7 +1699,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa��ções: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞ções: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -1728,7 +1728,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu��da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -1787,7 +1787,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT��STICAS:
+ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
@@ -1930,7 +1930,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("�� All conditions met, sending notification...");
+        console.log("📞 All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -2172,7 +2172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         window.open(mapsUrl, "_blank");
         console.log("✅ Google Maps opened successfully");
       } catch (error) {
-        console.error("�� Error opening Google Maps:", error);
+        console.error("📞 Error opening Google Maps:", error);
       }
     } else {
       if (!enableMapsRedirect) {
@@ -2431,7 +2431,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("�� Login attempt for:", email);
+            // console.log("📞 Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -2465,7 +2465,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("�� AuthService fallback bem-sucedido");
+                  console.log("📞 AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -3023,7 +3023,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu��da"
+                                        ? "Conclu📞da"
                                         : work.status}
                                 </span>
 
@@ -3197,7 +3197,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">��</span>
+                      <span className="text-blue-600">📞</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3635,7 +3635,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest��o de piscinas no sistema
+                          Gest📞o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3741,7 +3741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : "text-gray-600 hover:text-blue-600"
                               }`}
                             >
-                              �� {pool.location}
+                              📞 {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -3926,7 +3926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu����do"
+                                      ? "Conclu📞do"
                                       : maint.status}
                               </span>
                             </div>
@@ -4447,7 +4447,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo��o Santos"
+                              placeholder="Ex: Jo📞o Santos"
                             />
                             <button
                               type="button"
@@ -4523,7 +4523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "�� PARSED USERS:",
+                                  "📞 PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -4927,7 +4927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof��sico)
+                                    230V (monof📞sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -4935,7 +4935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa��ções Específicas do Furo */}
+                          {/* Observa📞ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -5556,7 +5556,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "❌ Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISS��O NEGADA: clientes.create",
+                                    "❌ PERMISS📞O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
@@ -5748,7 +5748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G��s</option>
+                          <option value="gas">Aquecimento a G📞s</option>
                         </select>
                       </div>
                     </div>
@@ -6559,7 +6559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat��rios do Sistema
+                            Relat📞rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -6615,7 +6615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist��rico de intervenções
+                                  Hist📞rico de intervenções
                                 </p>
                               </div>
                             </div>
@@ -7162,7 +7162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    ��
+                                    🏊
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -7242,7 +7242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "�� Ativo"
+                                        ? "📞 Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7382,7 +7382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          �� Todas as obras ({works.length}{" "}
+                                          📞 Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -7858,8 +7858,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>📞 Trabalhos realizados</li>
+                        <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e durações</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -7881,7 +7881,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Obras
+                          Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
                           Projetos e construções
@@ -7895,7 +7895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>�� Equipas responsáveis</li>
+                        <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
@@ -7929,8 +7929,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
-                        <li>�� Histórico de serviços</li>
+                        <li>📞 Piscinas associadas</li>
+                        <li>📞 Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -7995,7 +7995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat��rios com filtros específicos
+                        Crie relat📞rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -8037,7 +8037,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estat��sticas Rápidas
+                    Estat📞sticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -8273,7 +8273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  ��{" "}
+                                  📞{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
@@ -8376,7 +8376,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P��blica</option>
+                            <option value="publico">Entidade P📞blica</option>
                           </select>
                         </div>
                       </div>
@@ -8747,7 +8747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    �� Cliente:
+                                    📞 Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
                                     {work.clientName || work.client}
@@ -8904,7 +8904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu��das"
+                                    ? "Conclu📞das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -9379,13 +9379,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif��sico)</option>
+                            <option value="400V">400V (trif📞sico)</option>
                           </select>
                         </div>
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec��ficas do Furo
+                          Observações Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -9484,7 +9484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "��� DEBUG boreInputs found:",
+                              "📞� DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -10217,7 +10217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat��rio
+                Partilhar Relat📞rio
               </h2>
               <button
                 onClick={() => {
@@ -10318,7 +10318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>📞</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10410,7 +10410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "€Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder �� gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder 📞 gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
@@ -10453,7 +10453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura��ções avançadas
+                Insira a palavra-passe para aceder às configura📞ções avançadas
               </p>
             </div>
 
@@ -10615,7 +10615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p��gina de login */}
+        {/* Admin Page - também funciona na p📞gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -10940,7 +10940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T��tulo
+                          T📞tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
@@ -10984,7 +10984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }`}
                           disabled={!enableMapsRedirect}
                         >
-                          �� {selectedWork.location}
+                          📞 {selectedWork.location}
                         </button>
                       </div>
                       <div>
@@ -11241,7 +11241,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di��metro da Coluna
+                                Di📞metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
@@ -11308,7 +11308,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">��{selectedWork.budget}</p>
+                        <p className="text-gray-900">📞{selectedWork.budget}</p>
                       </div>
                     )}
 
