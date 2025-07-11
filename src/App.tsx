@@ -79,7 +79,7 @@ import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { LoginPage } from "./pages/LoginPage";
+import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
 import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -1877,7 +1877,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇÕES REALIZADAS:
+MANUTENÇ��ES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
@@ -6178,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Responsável *
+                          Técnico Respons��vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6973,7 +6973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Versão</span>
+                        <span className="text-gray-600">Vers��o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7505,7 +7505,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
-                                    Configuraç��es Avançadas
+                                    Configurações Avançadas
                                   </button>
                                   <button
                                     onClick={closeSettings}
@@ -7798,7 +7798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de intervenções
+                                    Histórico de interven��ões
                                   </p>
                                 </div>
                               </div>
