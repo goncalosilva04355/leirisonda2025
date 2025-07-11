@@ -140,3 +140,22 @@ export async function initializeAuthorizedUsers(): Promise<void> {
     }
   }
 }
+
+// Função para forçar ressincronização (útil quando utilizadores autorizados são alterados)
+export async function forceSyncToAppUsers(): Promise<void> {
+  console.log(
+    "🔄 Forçando ressincronização de utilizadores autorizados para app-users...",
+  );
+  const currentAuthorizedUsers = getCurrentAuthorizedUsers();
+  await syncToAppUsers(currentAuthorizedUsers);
+}
+
+// Listener para mudanças nos utilizadores autorizados
+if (typeof window !== "undefined") {
+  window.addEventListener("authorizedUsersChanged", async (event: any) => {
+    console.log(
+      "🔄 Utilizadores autorizados alterados, forçando sincronização...",
+    );
+    await forceSyncToAppUsers();
+  });
+}
