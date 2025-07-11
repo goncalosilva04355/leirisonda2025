@@ -74,6 +74,12 @@ export const app = firebaseApp;
 
 // Função para obter db seguro
 export function getDB() {
+  console.log(
+    "🚫 BYPASS: getDB retornando null (dados funcionam via localStorage)",
+  );
+  return null;
+
+  /* CÓDIGO ORIGINAL COMENTADO:
   try {
     const firestoreInstance = getFirebaseFirestore();
     if (firestoreInstance) {
@@ -83,6 +89,7 @@ export function getDB() {
     console.warn("⚠️ Firestore não disponível:", error);
   }
   return null;
+  */
 }
 
 // Função para verificar se Firestore está disponível antes de usar
