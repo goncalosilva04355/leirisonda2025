@@ -113,6 +113,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
       const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
       const newMainUser = {
         id: Date.now(),
+        uid: `user_${Date.now()}`, // Adicionar uid para compatibilidade
         name: newUser.name,
         email: newUser.email.toLowerCase(),
         password: newUser.password,
@@ -131,6 +132,19 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
 
       mainUsers.push(newMainUser);
       localStorage.setItem("app-users", JSON.stringify(mainUsers));
+
+      // Sincronizar com mock-users para compatibilidade
+      const mockUsers = JSON.parse(localStorage.getItem("mock-users") || "{}");
+      mockUsers[newMainUser.uid] = {
+        uid: newMainUser.uid,
+        email: newMainUser.email,
+        name: newMainUser.name,
+        role: newMainUser.role,
+        permissions: newMainUser.permissions,
+        active: newMainUser.active,
+        createdAt: newMainUser.createdAt,
+      };
+      localStorage.setItem("mock-users", JSON.stringify(mockUsers));
 
       // Triggerar evento para atualizar outros componentes
       window.dispatchEvent(new CustomEvent("usersUpdated"));
@@ -309,16 +323,44 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
             Gestão de Utilizadores
           </h2>
           <p className="text-gray-600 mt-1">
-            Gerir utilizadores autorizados e suas permissões
+            Gerir utilizadores autorizados e suas permissões (Sistema Unificado)
           </p>
         </div>
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Adicionar Utilizador</span>
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={() => {
+              // Diagnóstico rápido
+              const appUsers = JSON.parse(
+                localStorage.getItem("app-users") || "[]",
+              );
+              const mockUsers = JSON.parse(
+                localStorage.getItem("mock-users") || "{}",
+              );
+              const authorizedUsers = JSON.parse(
+                localStorage.getItem("authorized-users") || "[]",
+              );
+
+              alert(`📊 Diagnóstico de Utilizadores:
+
+🔵 app-users: ${appUsers.length} utilizadores
+🟡 mock-users: ${Object.keys(mockUsers).length} utilizadores
+🟢 authorized-users: ${authorizedUsers.length} utilizadores
+
+Este gestor sincroniza todos os sistemas automaticamente.`);
+            }}
+            className="bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-gray-700"
+          >
+            <Shield className="h-4 w-4" />
+            <span>Diagnóstico</span>
+          </button>
+          <button
+            onClick={() => setShowAddForm(true)}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Adicionar Utilizador</span>
+          </button>
+        </div>
       </div>
 
       {/* Mensagem de erro */}
