@@ -621,7 +621,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de manutenções:", error);
+      console.error("�� Erro no sistema de manutenções:", error);
       return await addManutencao(data);
     }
   };
@@ -1391,7 +1391,7 @@ function App() {
         | "in_progress"
         | "completed"
         | "cancelled",
-      description: maintenanceForm.workPerformed || "Manuten📞��o realizada",
+      description: maintenanceForm.workPerformed || "Manutenção realizada",
       notes: maintenanceForm.observations,
     };
 
