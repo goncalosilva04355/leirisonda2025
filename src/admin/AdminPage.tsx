@@ -14,7 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 
-// Import dos componentes de teste e configuração
+// Import dos componentes de teste e configuraç��o
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
 import { FirebaseStatus } from "../components/FirebaseStatus";
@@ -48,6 +48,7 @@ interface AdminPageProps {
 type AdminSection =
   | "overview"
   | "complete-activation"
+  | "user-diagnostic"
   | "user-management"
   | "data-migration"
   | "work-assignment-fix"
