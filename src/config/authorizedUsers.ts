@@ -107,12 +107,12 @@ async function syncToAppUsers(
 
 // Função para inicializar utilizadores autorizados se necessário
 export async function initializeAuthorizedUsers(): Promise<void> {
-  const savedUsers = localStorage.getItem("authorizedUsers");
-  const savedAppUsers = localStorage.getItem("app-users");
+  const savedUsers = safeLocalStorage.getItem("authorizedUsers");
+  const savedAppUsers = safeLocalStorage.getItem("app-users");
 
   if (!savedUsers || savedUsers.trim() === "" || savedUsers === "[]") {
     console.log("🔄 Inicializando utilizadores autorizados...");
-    localStorage.setItem("authorizedUsers", JSON.stringify(AUTHORIZED_USERS));
+    storageUtils.setJson("authorizedUsers", AUTHORIZED_USERS);
     console.log(
       "✅ Utilizadores autorizados inicializados:",
       AUTHORIZED_USERS.length,
