@@ -1237,7 +1237,7 @@ function App() {
                 setIsAuthenticated(true);
                 return; // Não fazer logout se auto-login funcionou
               } else {
-                console.warn("❌ Auto-login falhou:", result.error);
+                console.warn("�� Auto-login falhou:", result.error);
                 // Limpar credenciais inválidas
                 safeSessionStorage.removeItem("savedLoginCredentials");
                 safeLocalStorage.removeItem("autoLoginEnabled");
@@ -2884,8 +2884,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 if (fallbackResult.success) {
                   console.log("���� AuthService fallback bem-sucedido");
-                  result.success = true;
-                  result.user = fallbackResult.user;
+                  (result as any).success = true;
+                  (result as any).user = fallbackResult.user;
                 }
               }
 
