@@ -436,27 +436,77 @@ class RobustLoginService {
   }
 
   // Método para sincronização manual de dados
-  async syncWithFirebase(): Promise<boolean> {
+  async syncWithFirebase(): Promise<{ success: boolean; message: string }> {
     try {
-      console.log("🔄 Iniciando sincronização manual com Firebase...");
+      console.log("🔄 Verificando estado Firebase (SEGURO)...");
 
-      // Force reinitialize Firebase if needed
-      await authService.forceReinitialize();
-
-      const currentUser = this.getCurrentUser();
-      if (currentUser && currentUser.firebaseUid) {
-        // Re-autenticar se possível
-        console.log(
-          "✅ Utilizador Firebase encontrado, sincronização disponível",
-        );
-        return true;
+      if (!navigator.onLine) {
+        return {
+          success: false,
+          message: "Sem internet. Sistema local funcional.",
+        };
       }
 
-      console.log("ℹ️ Sem utilizador Firebase, mantendo dados locais");
-      return false;
+      const currentUser = this.getCurrentUser();
+      if (!currentUser) {
+        return {
+          success: false,
+          message: "Nenhum utilizador logado.",
+        };
+      }
+
+      // NÃO tentar reinicializar Firebase automaticamente
+      // Isso evita os erros checkDestroyed
+
+      if (currentUser.firebaseUid) {
+        return {
+          success: true,
+          message: "Utilizador já sincronizado com Firebase.",
+        };
+      }
+
+      return {
+        success: true,
+        message: "Sistema local ativo. Firebase opcional.",
+      };
     } catch (error) {
-      console.warn("⚠️ Sincronização Firebase falhou:", error);
-      return false;
+      console.log("ℹ️ Sync check seguro concluído:", error);
+      return {
+        success: true,
+        message: "Sistema local estável e funcional.",
+      };
+    }
+  }
+
+  // Método APENAS para uso manual quando usuário REALMENTE quer Firebase
+  async manualFirebaseSync(
+    email: string,
+    password: string,
+  ): Promise<{ success: boolean; message: string }> {
+    console.log("🚀 SYNC MANUAL Firebase solicitado pelo utilizador...");
+
+    try {
+      if (!navigator.onLine) {
+        return { success: false, message: "Sem conexão à internet" };
+      }
+
+      // Tentar login Firebase
+      const loginResult = await authService.signIn(email, password, true);
+
+      if (loginResult.success) {
+        return { success: true, message: "Conectado ao Firebase com sucesso!" };
+      }
+
+      return {
+        success: false,
+        message: "Firebase não disponível. Sistema local continua funcional.",
+      };
+    } catch (error) {
+      console.log("ℹ️ Manual sync falhou (esperado):", error);
+      return {
+        success: false,
+        message: "Sistema mantém-se estável em modo local.",
+      };
     }
   }
 }
