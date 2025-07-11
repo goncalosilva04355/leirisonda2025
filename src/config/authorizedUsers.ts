@@ -106,7 +106,7 @@ async function syncToAppUsers(
 }
 
 // Função para inicializar utilizadores autorizados se necessário
-export function initializeAuthorizedUsers(): void {
+export async function initializeAuthorizedUsers(): Promise<void> {
   const savedUsers = localStorage.getItem("authorizedUsers");
   const savedAppUsers = localStorage.getItem("app-users");
 
@@ -121,12 +121,22 @@ export function initializeAuthorizedUsers(): void {
     console.log("✅ Utilizadores autorizados já existem no localStorage");
   }
 
-  // Sempre sincronizar para app-users se necessário
+  // Sempre sincronizar para app-users + Firebase se necessário
   if (!savedAppUsers || savedAppUsers.trim() === "" || savedAppUsers === "[]") {
-    console.log("🔄 Sincronizando para app-users...");
+    console.log("🔄 Sincronizando para app-users + Firebase...");
     const currentAuthorizedUsers = getCurrentAuthorizedUsers();
-    syncToAppUsers(currentAuthorizedUsers);
+    await syncToAppUsers(currentAuthorizedUsers);
   } else {
-    console.log("✅ app-users já existem no localStorage");
+    console.log(
+      "✅ app-users já existem, verificando sincronização Firebase...",
+    );
+    // Mesmo que já existam app-users, garantir sincronização Firebase
+    try {
+      const { firestoreService } = await import("../services/firestoreService");
+      await firestoreService.getUtilizadores();
+      console.log("✅ Sincronização Firebase verificada");
+    } catch (error) {
+      console.warn("⚠️ Firebase não disponível:", error);
+    }
   }
 }
