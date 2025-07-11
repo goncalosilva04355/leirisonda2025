@@ -620,7 +620,7 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("€️ Erro na sincronização universal:", syncError);
+          console.warn("€��� Erro na sincronização universal:", syncError);
         }
 
         // Enviar notificações push para utilizadores atribuídos
@@ -1293,7 +1293,7 @@ function App() {
           await firestoreService.syncAll();
           console.log("€ Sincronização inicial completa!");
         } catch (error) {
-          console.error("❌ Erro na sincroniza��ão inicial:", error);
+          console.error("❌ Erro na sincronização inicial:", error);
         }
       }
     };
@@ -1405,6 +1405,31 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
+    // Add global error handler for Firebase messaging errors
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      // Check if it's a Firebase messaging error
+      if (
+        event.reason &&
+        event.reason.toString().includes("firebase") &&
+        event.reason.toString().includes("messaging")
+      ) {
+        console.warn(
+          "🔥 Firebase messaging error caught and handled:",
+          event.reason,
+        );
+        event.preventDefault(); // Prevent the error from being logged as unhandled
+      }
+    };
+
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+    // Cleanup
+    const cleanup = () => {
+      window.removeEventListener(
+        "unhandledrejection",
+        handleUnhandledRejection,
+      );
+    };
     // console.log("€Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
@@ -2198,7 +2223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("🔍 DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("���� DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -7403,7 +7428,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localização abaixo e
+                                        • Configure a sua localiza��ão abaixo e
                                         veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
@@ -9191,7 +9216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Orçamento:
+                                    Or��amento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
