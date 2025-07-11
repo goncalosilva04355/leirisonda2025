@@ -1,5 +1,5 @@
 // Teste simples para verificar se Firebase App está a funcionar (Passo 1)
-import { getFirebaseApp, isFirebaseReady } from "../firebase/basicConfig";
+import { getFirebaseApp, isFirebaseReady } from "../firebase";
 
 export function testFirebaseBasic() {
   console.log("🧪 Teste Firebase Básico - Passo 1");
