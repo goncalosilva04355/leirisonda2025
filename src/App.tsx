@@ -70,16 +70,7 @@ import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import { firestore } from "./firebase/justFirestore";
 import { FirestoreStatus } from "./components/FirestoreStatus";
-import { isFirebaseReady } from "./firebase/config";
-import {
-  isFirestoreReady,
-  testFirestore,
-  getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
-import { initializeAuthorizedUsers } from "./config/authorizedUsers";
-import { firestoreService } from "./services/firestoreService";
-// import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
+// Removed conflicting Firebase imports
 // Firebase configuration simplified
 
 // SECURITY: RegisterForm for super admin only
