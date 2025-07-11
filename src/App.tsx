@@ -1199,7 +1199,7 @@ function App() {
               // Show a success message
               setTimeout(() => {
                 showNotification(
-                  "🔔 Notificação",
+                  "��� Notificação",
                   `Navegando para obra: ${data.workTitle}`,
                   "info",
                 );
@@ -2474,7 +2474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("✅ AuthService fallback bem-sucedido");
+                  console.log("�� AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -3101,7 +3101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç������o agendada
+                          Nenhuma manutenç�������o agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenç��es aparecerão aqui
@@ -7292,6 +7292,80 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
+                          {/* Advanced Settings - Protected by Password */}
+                          <div className="bg-white rounded-lg p-6 shadow-sm border-2 border-yellow-200">
+                            <div className="flex items-center mb-4">
+                              <Shield className="h-6 w-6 text-yellow-600 mr-3" />
+                              <h3 className="text-lg font-semibold text-gray-900">
+                                Configurações Avançadas
+                              </h3>
+                            </div>
+                            <p className="text-gray-600 mb-6">
+                              Configurações protegidas por palavra-passe para
+                              administradores
+                            </p>
+
+                            {!showSettingsPage ? (
+                              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <form
+                                  onSubmit={handleSettingsPasswordSubmit}
+                                  className="space-y-4"
+                                >
+                                  <div>
+                                    <label className="block text-sm font-medium text-yellow-900 mb-2">
+                                      Palavra-passe de Administrador
+                                    </label>
+                                    <input
+                                      type="password"
+                                      value={settingsPassword}
+                                      onChange={(e) =>
+                                        setSettingsPassword(e.target.value)
+                                      }
+                                      className="w-full px-3 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                                      placeholder="Introduza a palavra-passe..."
+                                    />
+                                  </div>
+                                  {settingsPasswordError && (
+                                    <p className="text-red-600 text-sm">
+                                      {settingsPasswordError}
+                                    </p>
+                                  )}
+                                  <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+                                  >
+                                    Aceder às Configurações
+                                  </button>
+                                </form>
+                              </div>
+                            ) : (
+                              <div className="space-y-4">
+                                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                  <h4 className="font-medium text-purple-900 mb-3">
+                                    Configurações Avançadas
+                                  </h4>
+                                  <p className="text-purple-700 text-sm mb-3">
+                                    Acesso às configurações avançadas do sistema
+                                  </p>
+                                  <button
+                                    onClick={() =>
+                                      setShowAdvancedSettings(true)
+                                    }
+                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
+                                  >
+                                    Configurações Avançadas
+                                  </button>
+                                  <button
+                                    onClick={closeSettings}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                                  >
+                                    Fechar
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
                           {/* Data Management Section - Only for Super Admin */}
                           {currentUser?.role === "super_admin" && (
                             <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -7338,7 +7412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
                                         ���️ ATENÇÃO: Esta operação é
-                                        irrevers��vel!
+                                        irrevers���vel!
                                       </p>
                                       <button
                                         onClick={handleDataCleanup}
@@ -9723,7 +9797,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alterações
+                        Guardar Alteraç��es
                       </button>
                     </div>
                   </form>
@@ -10350,7 +10424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   "���� Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder �� gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
