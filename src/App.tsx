@@ -155,7 +155,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("��� Problema de persistência detectado:", status);
+          console.warn("���� Problema de persistência detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -727,11 +727,11 @@ function App() {
               "🔄 Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
-              if (!user.firestoreId) {
+              if (!(user as any).firestoreId) {
                 const firestoreId =
                   await firestoreService.createUtilizador(user);
                 if (firestoreId) {
-                  user.firestoreId = firestoreId;
+                  (user as any).firestoreId = firestoreId;
                 }
               }
             }
@@ -4083,7 +4083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manutenç��es
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
