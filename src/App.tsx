@@ -397,7 +397,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribui���ão de obra...");
+      console.log("📱 Enviando notificações de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
