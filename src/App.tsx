@@ -279,7 +279,19 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  // Temporarily disabled to prevent React error
+  // const firebaseAutoFix = useAutoFirebaseFix();
+  const firebaseAutoFix = {
+    status: {
+      isHealthy: false,
+      authAvailable: false,
+      dbAvailable: false,
+      lastCheck: 0,
+      autoFixAttempts: 0,
+    },
+    checkOnUserAction: async () => {},
+    isMonitoring: false,
+  };
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
@@ -2659,7 +2671,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("���� AuthService fallback bem-sucedido");
+                  console.log("������ AuthService fallback bem-sucedido");
                   result.success = true;
                   result.user = fallbackResult.user;
                 }
@@ -5686,7 +5698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🔍 User Role:", currentUser?.role);
                               console.log(
-                                "🔍 User Permissions:",
+                                "���� User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
