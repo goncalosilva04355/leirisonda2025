@@ -18,6 +18,8 @@ export interface UserProfile {
   permissions?: UserPermissions;
   active: boolean;
   createdAt: string;
+  firestoreId?: string;
+  password?: string;
 }
 
 export interface LoginResult {
