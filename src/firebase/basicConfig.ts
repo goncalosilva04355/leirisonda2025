@@ -1,5 +1,6 @@
 // Passo 1: Configuração básica do Firebase
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
+import { isPrivateBrowsing } from "../utils/storageUtils";
 
 // Configuração do novo projeto Firebase
 const firebaseConfig = {
@@ -20,6 +21,16 @@ let firebaseApp: FirebaseApp | null = null;
 // Função simples para inicializar Firebase
 function initializeFirebaseBasic(): FirebaseApp | null {
   try {
+    // Verificar se estamos em modo privado
+    if (isPrivateBrowsing()) {
+      console.warn(
+        "🔒 Modo privado detectado - Firebase pode ter funcionalidades limitadas",
+      );
+      console.log(
+        "💡 Sistema funcionará em modo local com funcionalidades reduzidas",
+      );
+    }
+
     // Verificar se já existe uma app
     const existingApps = getApps();
 
