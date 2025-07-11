@@ -1293,7 +1293,7 @@ function App() {
           await firestoreService.syncAll();
           console.log("€ Sincronização inicial completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
+          console.error("❌ Erro na sincroniza��ão inicial:", error);
         }
       }
     };
@@ -1425,20 +1425,23 @@ function App() {
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
-      // Clear any existing service workers first to prevent conflicts
+      // Clear only non-Firebase service workers to prevent conflicts
       navigator.serviceWorker.getRegistrations().then((registrations) => {
         registrations.forEach((registration) => {
-          registration.unregister();
+          // Don't unregister Firebase messaging service worker
+          if (!registration.scope.includes("firebase-messaging-sw")) {
+            registration.unregister();
+          }
         });
       });
 
-      // Register the service worker with a delay to ensure cleanup
+      // Register the Firebase messaging service worker specifically
       setTimeout(() => {
         navigator.serviceWorker
-          .register("/sw.js", { updateViaCache: "none" })
+          .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Service Worker registered successfully:",
+              "📞 Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1448,7 +1451,25 @@ function App() {
             }
           })
           .catch((error) => {
-            console.error("❌ Service Worker registration failed:", error);
+            console.error(
+              "❌ Firebase Messaging Service Worker registration failed:",
+              error,
+            );
+            // Fallback: try to register a basic service worker
+            return navigator.serviceWorker
+              .register("/sw.js", { updateViaCache: "none" })
+              .then((fallbackRegistration) => {
+                console.log(
+                  "📞 Fallback Service Worker registered:",
+                  fallbackRegistration.scope,
+                );
+              })
+              .catch((fallbackError) => {
+                console.error(
+                  "❌ Fallback Service Worker registration also failed:",
+                  fallbackError,
+                );
+              });
           });
 
         // Listen for messages from service worker (notification clicks)
