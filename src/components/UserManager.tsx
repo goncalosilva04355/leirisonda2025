@@ -283,7 +283,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
     if (!editingPermissions || !tempPermissions) return;
 
     try {
-      const mainUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const mainUsers = storageUtils.getJson("app-users", []);
       let userIndex = mainUsers.findIndex(
         (u: any) => u.email.toLowerCase() === editingPermissions.toLowerCase(),
       );
