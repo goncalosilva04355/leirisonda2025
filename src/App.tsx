@@ -1543,6 +1543,7 @@ function App() {
 
     return () => {
       window.removeEventListener("hashchange", handleHashChange);
+      cleanup(); // Clean up the global error handler
     };
   }, [isAuthenticated]);
 
@@ -2033,7 +2034,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞ções: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -6068,7 +6069,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Características especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter��sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -6669,7 +6670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenção
+                          Fotografias da Manutenç��o
                         </h3>
                       </div>
 
@@ -7550,7 +7551,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
+                                      Instruç��es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -8807,7 +8808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observações
+                            Notas e Observaç��es
                           </label>
                           <textarea
                             rows={4}
