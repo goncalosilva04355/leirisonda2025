@@ -26,7 +26,16 @@ export interface FirestoreEntity {
 }
 
 export class FirestoreService {
-  private db = getFirebaseFirestore();
+  private db: any = null;
+  private initialized = false;
+
+  // Inicialização lazy
+  private ensureInitialized() {
+    if (!this.initialized) {
+      this.db = getFirebaseFirestore();
+      this.initialized = true;
+    }
+  }
 
   // Verificar se Firestore está disponível
   private isAvailable(): boolean {
