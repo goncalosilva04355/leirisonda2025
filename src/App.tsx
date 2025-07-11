@@ -320,10 +320,7 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
-  // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  // Hooks removed to prevent crashes
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
@@ -2486,7 +2483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       pdf.save(pdfFilename);
 
       // Show success message
-      alert(`Relat��rio "${pdfFilename}" gerado com sucesso!`);
+      alert(`Relatório "${pdfFilename}" gerado com sucesso!`);
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
       alert("Erro ao gerar o relatório PDF. Tente novamente.");
