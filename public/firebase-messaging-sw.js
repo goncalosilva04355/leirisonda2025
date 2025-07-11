@@ -6,14 +6,17 @@ importScripts(
   "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
 );
 
-// Firebase configuration
+// Firebase configuration - must match main app configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDLXCz8h0dw0i0u8rQ4ABIB_0pU-WO6KMs",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
   authDomain: "leiria-1cfc9.firebaseapp.com",
+  databaseURL:
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leiria-1cfc9",
   storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
   appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
 // Initialize Firebase
