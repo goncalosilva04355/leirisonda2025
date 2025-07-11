@@ -8,6 +8,15 @@ import {
 } from "firebase/firestore";
 import { getDB } from "../firebase/basicConfig";
 
+// Get Firestore instance
+const getFirestore = () => {
+  const db = getDB();
+  if (!db) {
+    throw new Error("Firestore não está disponível");
+  }
+  return db;
+};
+
 /**
  * Serviço para corrigir dados existentes que podem estar isolados por utilizador
  * Garante que TODAS as obras, piscinas, manutenções e clientes sejam visíveis para todos
