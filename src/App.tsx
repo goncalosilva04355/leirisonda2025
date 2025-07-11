@@ -101,6 +101,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import "./utils/testDataPersistence";
 import "./utils/testFirebaseUserSync";
 import "./utils/completeDataSync";
+import "./utils/fullSyncStatus";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
@@ -190,7 +191,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitoriza📞ão automática de persistência de dados
+    // Monitoriza���ão automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -325,7 +326,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR��TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -1356,7 +1357,7 @@ function App() {
       //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
-      // Forçar re-render dos dados universais se necess����rio
+      // Forçar re-render dos dados universais se necess��rio
       if (collection === "obras") {
         // Trigger re-fetch das obras
         window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
@@ -2241,7 +2242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     workTitle: string,
     assignedTo: string,
   ) => {
-    console.log("������ DEBUG: sendWorkAssignmentNotification called with:", {
+    console.log("���� DEBUG: sendWorkAssignmentNotification called with:", {
       workTitle,
       assignedTo,
       currentUser: currentUser?.name,
@@ -12071,7 +12072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Última Manutenç��o
+                            Última Manutenção
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.lastMaintenance
