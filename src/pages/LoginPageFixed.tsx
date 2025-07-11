@@ -263,6 +263,16 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               <strong>Erro de Login:</strong>
               <br />
               {loginError}
+
+              {/* Mobile quick fix hint */}
+              {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
+                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-700">
+                  <strong>💡 Solução Rápida (Mobile):</strong>
+                  <br />
+                  Tente usar password:{" "}
+                  <code className="bg-yellow-100 px-1 rounded">123</code>
+                </div>
+              )}
             </div>
           )}
 
