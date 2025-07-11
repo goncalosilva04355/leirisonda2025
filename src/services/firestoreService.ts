@@ -460,5 +460,170 @@ export class FirestoreService {
   }
 }
 
-// Instância singleton
-export const firestoreService = new FirestoreService();
+// Instância singleton lazy
+let firestoreServiceInstance: FirestoreService | null = null;
+
+export const firestoreService = {
+  getInstance(): FirestoreService {
+    if (!firestoreServiceInstance) {
+      firestoreServiceInstance = new FirestoreService();
+    }
+    return firestoreServiceInstance;
+  },
+
+  // Métodos delegados para compatibilidade total
+  async createObra(obra: any): Promise<string | null> {
+    return this.getInstance().createObra(obra);
+  },
+
+  async getObras(): Promise<any[]> {
+    return this.getInstance().getObras();
+  },
+
+  async updateObra(id: string, obra: any): Promise<boolean> {
+    return this.getInstance().updateObra(id, obra);
+  },
+
+  async deleteObra(id: string): Promise<boolean> {
+    return this.getInstance().deleteObra(id);
+  },
+
+  async createPiscina(piscina: any): Promise<string | null> {
+    return this.getInstance().createPiscina(piscina);
+  },
+
+  async getPiscinas(): Promise<any[]> {
+    return this.getInstance().getPiscinas();
+  },
+
+  async updatePiscina(id: string, piscina: any): Promise<boolean> {
+    return this.getInstance().updatePiscina(id, piscina);
+  },
+
+  async deletePiscina(id: string): Promise<boolean> {
+    return this.getInstance().deletePiscina(id);
+  },
+
+  async createManutencao(manutencao: any): Promise<string | null> {
+    return this.getInstance().createManutencao(manutencao);
+  },
+
+  async getManutencoes(): Promise<any[]> {
+    return this.getInstance().getManutencoes();
+  },
+
+  async updateManutencao(id: string, manutencao: any): Promise<boolean> {
+    return this.getInstance().updateManutencao(id, manutencao);
+  },
+
+  async deleteManutencao(id: string): Promise<boolean> {
+    return this.getInstance().deleteManutencao(id);
+  },
+
+  async createCliente(cliente: any): Promise<string | null> {
+    return this.getInstance().createCliente(cliente);
+  },
+
+  async getClientes(): Promise<any[]> {
+    return this.getInstance().getClientes();
+  },
+
+  async updateCliente(id: string, cliente: any): Promise<boolean> {
+    return this.getInstance().updateCliente(id, cliente);
+  },
+
+  async deleteCliente(id: string): Promise<boolean> {
+    return this.getInstance().deleteCliente(id);
+  },
+
+  async createUtilizador(utilizador: any): Promise<string | null> {
+    return this.getInstance().createUtilizador(utilizador);
+  },
+
+  async getUtilizadores(): Promise<any[]> {
+    return this.getInstance().getUtilizadores();
+  },
+
+  async updateUtilizador(id: string, utilizador: any): Promise<boolean> {
+    return this.getInstance().updateUtilizador(id, utilizador);
+  },
+
+  async deleteUtilizador(id: string): Promise<boolean> {
+    return this.getInstance().deleteUtilizador(id);
+  },
+
+  async createLocalizacao(localizacao: any): Promise<string | null> {
+    return this.getInstance().createLocalizacao(localizacao);
+  },
+
+  async getLocalizacoes(): Promise<any[]> {
+    return this.getInstance().getLocalizacoes();
+  },
+
+  async updateLocalizacao(id: string, localizacao: any): Promise<boolean> {
+    return this.getInstance().updateLocalizacao(id, localizacao);
+  },
+
+  async deleteLocalizacao(id: string): Promise<boolean> {
+    return this.getInstance().deleteLocalizacao(id);
+  },
+
+  async createNotificacao(notificacao: any): Promise<string | null> {
+    return this.getInstance().createNotificacao(notificacao);
+  },
+
+  async createNotification(notification: any): Promise<string | null> {
+    return this.getInstance().createNotification(notification);
+  },
+
+  async getNotificacoes(): Promise<any[]> {
+    return this.getInstance().getNotificacoes();
+  },
+
+  async updateNotificacao(id: string, notificacao: any): Promise<boolean> {
+    return this.getInstance().updateNotificacao(id, notificacao);
+  },
+
+  async deleteNotificacao(id: string): Promise<boolean> {
+    return this.getInstance().deleteNotificacao(id);
+  },
+
+  async syncAll(): Promise<void> {
+    return this.getInstance().syncAll();
+  },
+
+  // Métodos CRUD genéricos
+  async create<T>(collectionName: string, data: T): Promise<string | null> {
+    return this.getInstance().create(collectionName, data);
+  },
+
+  async read<T>(collectionName: string): Promise<T[]> {
+    return this.getInstance().read(collectionName);
+  },
+
+  async readOne<T>(collectionName: string, id: string): Promise<T | null> {
+    return this.getInstance().readOne(collectionName, id);
+  },
+
+  async update<T>(
+    collectionName: string,
+    id: string,
+    data: Partial<T>,
+  ): Promise<boolean> {
+    return this.getInstance().update(collectionName, id, data);
+  },
+
+  async delete(collectionName: string, id: string): Promise<boolean> {
+    return this.getInstance().delete(collectionName, id);
+  },
+
+  async syncWithLocalStorage<T>(
+    collectionName: string,
+    localStorageKey: string,
+  ): Promise<T[]> {
+    return this.getInstance().syncWithLocalStorage(
+      collectionName,
+      localStorageKey,
+    );
+  },
+};
