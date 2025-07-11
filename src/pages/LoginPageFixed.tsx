@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Settings, AlertTriangle } from "lucide-react";
+import { QuickMobileFix } from "../components/QuickMobileFix";
 
 interface LoginPageProps {
   onLogin: (
