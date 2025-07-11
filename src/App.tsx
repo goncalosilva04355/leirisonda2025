@@ -63,9 +63,7 @@ import {
 import { firestoreService } from "./services/firestoreService";
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+// Firebase test imports temporarily removed
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -507,7 +505,7 @@ function App() {
                 );
               }
 
-              // TODO: Implementar FCM para notificações push quando app está fechada
+              // TODO: Implementar FCM para notificaç��es push quando app está fechada
               // Isso requer configuração adicional do Firebase Messaging
             } catch (pushError) {
               console.warn("⚠️ Erro ao enviar notificação push:", pushError);
@@ -1430,7 +1428,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -5877,7 +5875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criação da piscina",
+                                  "Manutennção programada durante criaç��o da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -7253,7 +7251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
+                                      Instru��ões
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -8902,7 +8900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu��das"
+                                    ? "Conclu📞das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -10584,7 +10582,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("��� Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
