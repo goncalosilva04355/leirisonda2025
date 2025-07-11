@@ -98,6 +98,7 @@ import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnosti
 import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import "./utils/testDataPersistence";
 import "./utils/testFirebaseUserSync";
 import "./utils/completeDataSync";
@@ -1964,7 +1965,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicação agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -7806,7 +7807,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
+                                  Sincronizaç��o Automática
                                 </span>
                                 <button
                                   onClick={() =>
