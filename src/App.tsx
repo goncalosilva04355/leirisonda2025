@@ -632,7 +632,7 @@ function App() {
         console.warn("€ Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
-        // Enviar notificações mesmo no fallback
+        // Enviar notifica��ões mesmo no fallback
         await sendWorkAssignmentNotifications(data);
 
         return result;
@@ -5837,7 +5837,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 currentUser?.permissions,
                               );
                               console.log(
-                                "🔍 hasPermission clientes create:",
+                                "�� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -5868,7 +5868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "€ Cliente adicionado com sucesso:",
+                                    "�� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -7102,11 +7102,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Gestão de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
-                              Criar, editar e gerir utilizadores do sistema.
+                              Para criar e gerir utilizadores, utilize o menu de
+                              administração.
                             </p>
                           </div>
 
-                          <UserPermissionsManager />
+                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                            <div className="flex items-start space-x-3">
+                              <div className="bg-blue-100 rounded-full p-2">
+                                <Users className="h-5 w-5 text-blue-600" />
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-lg font-medium text-blue-900 mb-2">
+                                  Gestão de Utilizadores Movida
+                                </h3>
+                                <p className="text-blue-700 mb-4">
+                                  A gestão de utilizadores foi consolidada no
+                                  menu de administração para evitar duplicações
+                                  e melhorar a experiência.
+                                </p>
+                                <button
+                                  onClick={() => {
+                                    setShowAdminLogin(true);
+                                  }}
+                                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+                                >
+                                  <Shield className="h-4 w-4" />
+                                  <span>Ir para Administração</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
                   </div>
@@ -11670,7 +11696,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </label>
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
-                                  ? `${selectedWork.flowRate} m³/h`
+                                  ? `${selectedWork.flowRate} m��/h`
                                   : "Não especificado"}
                               </p>
                             </div>
