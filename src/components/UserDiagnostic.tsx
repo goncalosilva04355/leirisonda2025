@@ -19,15 +19,17 @@ export const UserDiagnostic: React.FC = () => {
   const runDiagnostic = () => {
     try {
       // Verificar localStorage - authorizedUsers
-      const authorizedUsers = JSON.parse(
-        localStorage.getItem("authorizedUsers") || "[]",
-      );
+      const authorizedUsers = storageUtils.getJson("authorizedUsers", []);
 
       // Verificar localStorage - app-users
-      const appUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
+      const appUsers = storageUtils.getJson("app-users", []);
 
       // Verificar todas as chaves do localStorage
-      const allKeys = Object.keys(localStorage);
+      const allKeys = [];
+      for (let i = 0; i < safeLocalStorage.length; i++) {
+        const key = safeLocalStorage.key(i);
+        if (key) allKeys.push(key);
+      }
 
       setDiagnosticData({
         authorizedUsers,
