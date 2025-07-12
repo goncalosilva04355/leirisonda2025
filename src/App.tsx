@@ -7527,7 +7527,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As notificaç��es funcionam apenas com
+                                        • As notificaç���es funcionam apenas com
                                         HTTPS
                                       </li>
                                       <li>
@@ -8951,7 +8951,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const form = (e.target as Element).closest("form");
                           const formData = new FormData(form);
 
-                          // Validação básica
+                          // Valida��ão básica
                           const name = (
                             form.querySelector(
                               'input[placeholder="Nome completo ou razão social"]',
@@ -10966,7 +10966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         return (
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
-            currentUser={currentUser}
+            currentUser={currentUser as any}
             onNavigateToSection={(section) => {
               console.log(`Navegando para seção: ${section}`);
 
