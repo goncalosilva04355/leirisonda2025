@@ -145,16 +145,9 @@ export class EmergencyConnectivityFix {
       // Aguardar um pouco
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Reinicializar com configuração limpa
-      const firebaseConfig = {
-        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-        authDomain: "leirisonda-16f8b.firebaseapp.com",
-        projectId: "leirisonda-16f8b",
-        storageBucket: "leirisonda-16f8b.firebasestorage.app",
-        messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-        measurementId: "G-R9W43EHH2C",
-      };
+      // Reinicializar com configuração usando environment variables
+      const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+      const firebaseConfig = getLegacyFirebaseConfig();
 
       const newApp = initializeApp(firebaseConfig, "emergency-app");
       console.log("✅ Firebase app emergencial criada:", newApp.name);
