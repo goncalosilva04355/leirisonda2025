@@ -60,23 +60,33 @@ export function installReadableStreamPolyfill() {
 
       this._reader = {
         read: () => {
-          if (this._cancelled) {
-            return Promise.resolve({ done: true, value: undefined });
-          }
-
-          // If source has a pull method, try to use it
-          if (this._source && typeof this._source.pull === "function") {
-            try {
-              return Promise.resolve(this._source.pull(this._controller))
-                .then(() => ({ done: false, value: null }))
-                .catch(() => ({ done: true, value: undefined }));
-            } catch (error) {
+          try {
+            if (this._cancelled) {
               return Promise.resolve({ done: true, value: undefined });
             }
-          }
 
-          // Default behavior - return done
-          return Promise.resolve({ done: true, value: undefined });
+            // If source has a pull method, try to use it
+            if (this._source && typeof this._source.pull === "function") {
+              try {
+                const result = this._source.pull(this._controller);
+                return Promise.resolve(result)
+                  .then(() => ({ done: false, value: null }))
+                  .catch((error) => {
+                    console.warn("ReadableStream pull error:", error);
+                    return { done: true, value: undefined };
+                  });
+              } catch (error) {
+                console.warn("ReadableStream pull sync error:", error);
+                return Promise.resolve({ done: true, value: undefined });
+              }
+            }
+
+            // Default behavior - return done
+            return Promise.resolve({ done: true, value: undefined });
+          } catch (error) {
+            console.warn("ReadableStream read error:", error);
+            return Promise.resolve({ done: true, value: undefined });
+          }
         },
 
         cancel: (reason?: any) => {
