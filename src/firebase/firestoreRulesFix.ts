@@ -193,7 +193,7 @@ service cloud.firestore {
   static getManualFixInstructions(): string[] {
     return [
       "📱 Abra o Firefox Console: console.firebase.google.com",
-      "🎯 Vá para o seu projeto: leirisonda-16f8b",
+      "🎯 Vá para o seu projeto: leiria-1cfc9",
       "🔧 Clique em 'Firestore Database'",
       "📋 Clique no separador 'Regras' (Rules)",
       "✏️ Substitua as regras existentes pelas regras de desenvolvimento",
