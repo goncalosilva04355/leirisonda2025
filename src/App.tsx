@@ -8327,7 +8327,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>📞 Equipas responsáveis</li>
+                        <li>�� Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
@@ -10356,9 +10356,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             // installationDate: installationDate // Property not in Pool interface
                             // ? new Date(installationDate).toISOString()
                             // : undefined,
-                            clientPhone,
-                            clientEmail,
-                            observations,
+                            // clientPhone, // Property not in Pool interface
+                            // clientEmail, // Property not in Pool interface
+                            // observations, // Property not in Pool interface
                           });
 
                           alert("Piscina atualizada com sucesso!");
