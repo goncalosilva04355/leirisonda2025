@@ -274,6 +274,19 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
+              Database URL
+            </label>
+            <input
+              type="text"
+              value={config.databaseURL || ""}
+              onChange={(e) => handleFieldChange("databaseURL", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://projeto-default-rtdb.europe-west1.firebasedatabase.app"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Project ID *
             </label>
             <input
