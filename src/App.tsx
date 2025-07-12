@@ -1841,7 +1841,7 @@ function App() {
     email: string,
     password: string,
     rememberMe: boolean = false,
-  ) => {
+  ): Promise<{ success: boolean; error?: string; user?: any }> => {
     try {
       console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
 
@@ -12133,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç���es
+                        Manuten�����es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
