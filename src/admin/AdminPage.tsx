@@ -346,7 +346,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "data-backup":
         return <DataBackupManager />;
       case "firebase-quota":
-        return <FirebaseQuotaManager />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">
+              FirebaseQuotaManager não encontrado.
+            </p>
+          </div>
+        );
       case "user-deletion":
         return <DangerousUserDeletion />;
       case "notification-demo":
