@@ -8237,7 +8237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>��� Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -10981,7 +10981,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               maintenance,
               works,
               clients,
-              lastSync,
+              lastSync: lastSync ? new Date(lastSync) : null,
               syncWithFirebase,
               enableSync,
             }}
