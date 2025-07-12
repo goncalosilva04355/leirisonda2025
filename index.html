@@ -8,31 +8,9 @@
 
   <body>
     <div id="root">
-      <div
-        id="loading"
-        style="
-          padding: 20px;
-          text-align: center;
-          font-family: Arial, sans-serif;
-        "
-      >
-        <h1>Leirisonda</h1>
-        <p>A carregar aplicação...</p>
-      </div>
-      <noscript>
-        <p>Esta aplicação requer JavaScript para funcionar.</p>
-      </noscript>
+      <h1>Leirisonda</h1>
+      <p>Sistema de gestão de obras e piscinas</p>
     </div>
-    <script>
-      // Remove loading message after 10 seconds if React hasn't loaded
-      setTimeout(function () {
-        const loading = document.getElementById("loading");
-        if (loading && loading.parentNode) {
-          loading.innerHTML =
-            '<h1>Leirisonda</h1><p>Sistema de gestão de obras e piscinas</p><p><a href="/">Recarregar página</a></p>';
-        }
-      }, 10000);
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
