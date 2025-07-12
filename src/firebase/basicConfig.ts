@@ -2,17 +2,26 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { isPrivateBrowsing } from "../utils/storageUtils";
 
-// Configuração do novo projeto Firebase
+// Configuração do Firebase usando variáveis de ambiente
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
   databaseURL:
+    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "leiria-1cfc9",
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "632599887141",
+  appId:
+    import.meta.env.VITE_FIREBASE_APP_ID ||
+    "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
 };
 
 // Variável para armazenar a instância do Firebase
@@ -45,7 +54,7 @@ function initializeFirebaseBasic(): FirebaseApp | null {
     return firebaseApp;
   } catch (error) {
     console.warn(
-      "⚠��� Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
     );
     console.log("💡 Sistema continua funcional com autenticação local");
     firebaseApp = null;
