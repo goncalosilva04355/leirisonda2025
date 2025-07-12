@@ -2842,7 +2842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "localizacoes",
       icon: MapPin,
-      label: "Localizaç��es",
+      label: "Localizações",
       path: "/localizacoes",
     },
   ];
@@ -4886,7 +4886,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "��� ERRO AO FAZER PARSE DOS USERS:",
+                                  "����� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -4937,7 +4937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         JSON.parse(savedUsers);
                                       setUsers(parsedUsers);
                                       alert(
-                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
+                                        `�� ${parsedUsers.length} utilizadores carregados!`,
                                       );
                                     } catch (error) {
                                       console.error("Erro:", error);
@@ -5745,7 +5745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Cliente Propriet��rio *
+                          Cliente Proprietário *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -6314,7 +6314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manutenção
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven��ão de manutenção
+                        Registar interven��ão de manuten��ão
                       </p>
                     </div>
                   </div>
@@ -6576,7 +6576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Qu��micos Utilizados
+                        Produtos Químicos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -10447,7 +10447,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç����o Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -10576,8 +10576,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
 
-                            actualDuration: actualDuration || undefined,
-                            cost: cost || undefined,
                             priority,
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
