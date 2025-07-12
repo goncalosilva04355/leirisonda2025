@@ -1,6 +1,3 @@
-# SPA redirect rule for client-side routing
-/*    /index.html   200
-
 # PWA manifest and service worker
 /manifest.json    /manifest.json    200
 /sw.js           /sw.js            200
