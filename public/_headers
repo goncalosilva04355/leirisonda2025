@@ -3,9 +3,6 @@
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  X-XSS-Protection: 1; mode=block
-  Permissions-Policy: geolocation=(), microphone=(), camera=()
-  Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self' https: wss:; frame-ancestors 'none'
 
 # PWA Manifest
 /manifest.json
@@ -23,43 +20,15 @@
   Service-Worker-Allowed: /
   Cache-Control: public, max-age=0, must-revalidate
 
-# Static Assets with long cache
+# Static Assets
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
 # HTML files
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
 
-# Images with long cache
-/*.png
-  Cache-Control: public, max-age=31536000
-  Content-Type: image/png
-
-/*.svg
-  Cache-Control: public, max-age=31536000
-  Content-Type: image/svg+xml
-
-/*.webp
-  Cache-Control: public, max-age=31536000
-  Content-Type: image/webp
-
-/*.ico
-  Cache-Control: public, max-age=31536000
-  Content-Type: image/x-icon
-
-# JavaScript and CSS
-/*.js
-  Cache-Control: public, max-age=31536000
-  Content-Type: application/javascript
-
-/*.css
-  Cache-Control: public, max-age=31536000
-  Content-Type: text/css
-
-# Debug and emergency scripts (no cache)
+# Debug scripts
 /debug-chrome.js
   Content-Type: application/javascript
   Cache-Control: public, max-age=0, must-revalidate
