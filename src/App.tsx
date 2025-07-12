@@ -3332,7 +3332,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                                    �� Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -5548,7 +5548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="Nível da Água"]',
+                                    'input[placeholder*="Nível da ��gua"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
@@ -10511,7 +10511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -10567,7 +10567,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             scheduledDate: scheduledDate
                               ? new Date(scheduledDate).toISOString()
                               : undefined,
-                            technician,
                             type,
                             status: status as
                               | "pending"
