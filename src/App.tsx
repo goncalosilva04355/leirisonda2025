@@ -9387,7 +9387,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
-                                      setWorks(existingWorks);
                                     }
 
                                     // Atualizar via dataSync se disponível
