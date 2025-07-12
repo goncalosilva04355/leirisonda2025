@@ -10344,7 +10344,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             status,
                             type: poolType,
-                            dimensions,
+                            // dimensions, // Property not in Pool interface
                             volume: volume || undefined,
                             filtrationSystem,
                             installationDate: installationDate
