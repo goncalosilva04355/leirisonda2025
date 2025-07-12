@@ -26,28 +26,28 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
 
       let dbService = null;
       let rulesTest = null;
+      let compatibilityStatus = safariCompatibility.getCompatibilityStatus();
 
-      try {
-        dbService = await getDB();
-      } catch (error) {
-        console.log("Firestore not available:", error);
-      }
+      // Use Safari-safe operations
+      dbService = await safariCompatibility.safeFirebaseOperation(async () => {
+        return await getDB();
+      });
 
       // Test Firestore rules if database is available
       if (dbService) {
-        try {
-          const { FirestoreRulesFix } = await import(
-            /* webpackIgnore: true */ "../firebase/firestoreRulesFix"
-          );
-          rulesTest = await FirestoreRulesFix.testFirestoreAccess();
-        } catch (error) {
-          console.log("Rules test failed:", error);
-          rulesTest = {
+        rulesTest = await safariCompatibility.safeFirebaseOperation(
+          async () => {
+            const { FirestoreRulesFix } = await import(
+              /* webpackIgnore: true */ "../firebase/firestoreRulesFix"
+            );
+            return await FirestoreRulesFix.testFirestoreAccess();
+          },
+          {
             canRead: false,
             canWrite: false,
-            error: "Rules test failed",
-          };
-        }
+            error: "Rules test failed with Safari compatibility",
+          },
+        );
       }
 
       // Check quota and performance
@@ -215,7 +215,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
                   </div>
                   <div>
                     Permissão escrita:{" "}
-                    {status.firestore.canWrite ? "✅ Sim" : "❌ Não"}
+                    {status.firestore.canWrite ? "✅ Sim" : "��� Não"}
                   </div>
                   {status.firestore.rulesError && (
                     <div className="text-red-600">
