@@ -2874,7 +2874,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               );
 
               // Fallback para authService se necessário
-              if (!result || typeof result !== "object" || !result.success) {
+              if (
+                !result ||
+                typeof result !== "object" ||
+                !(result as any)?.success
+              ) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -7085,7 +7089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-4">
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
+                                  Notifica��ões Push
                                 </span>
                                 <button
                                   onClick={requestNotificationPermission}
