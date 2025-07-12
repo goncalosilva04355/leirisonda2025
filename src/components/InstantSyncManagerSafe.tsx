@@ -1,13 +1,11 @@
 import React from "react";
 
-interface InstantSyncManagerProps {
+interface InstantSyncManagerSafeProps {
   children: React.ReactNode;
 }
 
-export const InstantSyncManagerSafe: React.FC<InstantSyncManagerProps> = ({
+export const InstantSyncManagerSafe: React.FC<InstantSyncManagerSafeProps> = ({
   children,
 }) => {
-  // Simple wrapper without complex sync hooks
-  // Just render children without causing hook errors
   return <>{children}</>;
 };
