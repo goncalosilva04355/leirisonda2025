@@ -19,6 +19,24 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
     if (isChecking) return; // Prevent concurrent checks
     setIsChecking(true);
     setHasError(false);
+
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      setIsChecking(false);
+      setHasError(true);
+      setStatus({
+        error: "Timeout - Verificação demorou muito tempo",
+        timestamp: new Date().toISOString(),
+        firestore: {
+          available: false,
+          canRead: false,
+          canWrite: false,
+          rulesError: "Timeout",
+        },
+        quota: { exceeded: false, emergencyShutdown: false },
+        compatibility: { safari: false, incognito: false },
+      });
+    }, 10000); // 10 second timeout
     try {
       // Check Firestore status with Safari compatibility
       const { safariCompatibility } = await import(
@@ -305,7 +323,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
                     <div>• Sistema em modo de emergência</div>
                   )}
                   {!status.firestore.available && (
-                    <div>• Firestore não está disponível</div>
+                    <div>• Firestore não está dispon��vel</div>
                   )}
                   {!status.firestore.canRead && (
                     <div>• Sem permissão de leitura</div>
