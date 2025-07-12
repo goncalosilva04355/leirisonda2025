@@ -762,7 +762,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("��� addClient iniciado com Firestore ativo");
+      console.log("����� addClient iniciado com Firestore ativo");
 
       const firestoreId = await firestoreService.createCliente(data);
 
@@ -2908,7 +2908,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
-                setCurrentUser(result.user);
+                setCurrentUser(finalResult.user);
                 setIsAuthenticated(true);
 
                 // Navigate to dashboard or requested section with validation
@@ -5927,7 +5927,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 currentUser?.permissions,
                               );
                               console.log(
-                                "�� hasPermission clientes create:",
+                                "��� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -8964,7 +8964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const form = (e.target as Element).closest("form");
                           const formData = new FormData(form);
 
-                          // Valida��ão básica
+                          // Valida���ão básica
                           const name = (
                             form.querySelector(
                               'input[placeholder="Nome completo ou razão social"]',
