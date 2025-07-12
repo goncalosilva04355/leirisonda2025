@@ -262,6 +262,31 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
                   {!status.firestore.canWrite && (
                     <div>• Sem permissão de escrita</div>
                   )}
+
+                  {/* Botão para mostrar helper de regras quando há problemas de permissões */}
+                  {(!status.firestore.canRead ||
+                    !status.firestore.canWrite) && (
+                    <div className="mt-2 pt-2 border-t border-yellow-400">
+                      <button
+                        onClick={() => setShowRulesHelper(!showRulesHelper)}
+                        className="flex items-center space-x-1 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+                      >
+                        <Settings className="h-3 w-3" />
+                        <span>
+                          {showRulesHelper ? "Ocultar" : "Corrigir Regras"}
+                        </span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Helper de regras Firestore */}
+              {showRulesHelper && (
+                <div className="mt-3">
+                  {React.createElement(
+                    React.lazy(() => import("./FirestoreRulesHelper")),
+                  )}
                 </div>
               )}
             </>
