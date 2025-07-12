@@ -759,7 +759,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("��� addClient iniciado com Firestore ativo");
+      console.log("���� addClient iniciado com Firestore ativo");
 
       const firestoreId = await firestoreService.createCliente(data);
 
@@ -1864,13 +1864,13 @@ function App() {
           }
         }, 100);
 
-        return;
+        return result;
       } else {
-        throw new Error(result.error || "Login failed");
+        return { success: false, error: result.error || "Login failed" };
       }
     } catch (error) {
       console.error("❌ Login error:", error);
-      throw error;
+      return { success: false, error: String(error) };
     }
   };
 
