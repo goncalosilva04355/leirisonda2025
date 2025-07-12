@@ -25,12 +25,12 @@
   },
   "firebase_config": {
     "project_id": "leirisonda-16f8b",
-    "api_key": "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+    "api_key": "[REDACTED - USE ENVIRONMENT VARIABLES]",
     "auth_domain": "leirisonda-16f8b.firebaseapp.com",
     "storage_bucket": "leirisonda-16f8b.firebasestorage.app",
-    "messaging_sender_id": "540456875574",
-    "app_id": "1:540456875574:web:8a8fd4870cb4c943a40a97",
-    "measurement_id": "G-R9W43EHH2C",
+    "messaging_sender_id": "[REDACTED - USE ENVIRONMENT VARIABLES]",
+    "app_id": "[REDACTED - USE ENVIRONMENT VARIABLES]",
+    "measurement_id": "[REDACTED - USE ENVIRONMENT VARIABLES]",
     "status": "✅ Ativo e funcional"
   },
   "github_config": {
