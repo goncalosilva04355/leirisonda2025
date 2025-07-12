@@ -1432,7 +1432,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleções
+    // Adicionar listeners para todas as coleç��es
     const collections = [
       "obras",
       "piscinas",
@@ -10326,7 +10326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             client,
                             location,
                             status,
-                            poolType,
+                            type: poolType,
                             dimensions,
                             volume: volume || undefined,
                             filtrationSystem,
@@ -10446,7 +10446,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Real (horas)
+                          Duraç��o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -11369,7 +11369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     }`}
                   >
                     <MapPin className="h-5 w-5" />
-                    <span>Localizações</span>
+                    <span>Localiza��ões</span>
                   </button>
                 )}
               </nav>
