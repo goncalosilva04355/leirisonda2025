@@ -350,7 +350,7 @@ export const CompleteDeviceActivation: React.FC = () => {
         const { syncManager } = await import("../utils/syncManager");
 
         // Testar sincronização
-        await syncManager.performFullSync();
+        // await syncManager.performFullSync(); // Method not available
       } catch (syncError) {
         console.warn("Sync manager not available:", syncError);
         // Continuar sem falhar
