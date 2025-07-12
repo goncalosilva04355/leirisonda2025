@@ -3315,7 +3315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📍 Morada:
+                                  ��� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -10599,7 +10599,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
                             // estimatedDuration: estimatedDuration || undefined, // Property not in Maintenance interface
-                            actualDuration: actualDuration || undefined,
+                            // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
                             cost: cost || undefined,
                             priority,
                             completedDate: completedDate
@@ -12187,7 +12187,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observações */}
+                    {/* Observa��ões */}
                     {selectedPool.observations && (
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
