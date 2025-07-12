@@ -2939,7 +2939,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("��� Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
@@ -6912,7 +6912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-center space-x-2">
                           <Settings className="h-4 w-4" />
-                          <span>Configurações</span>
+                          <span>Configura��ões</span>
                         </div>
                       </button>
                       {(currentUser?.role === "super_admin" ||
@@ -7007,7 +7007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔧 Trabalhos realizados</li>
-                                <li>👷 Técnicos responsáveis</li>
+                                <li>��� Técnicos responsáveis</li>
                                 <li>• Datas e durações</li>
                                 <li>• Estados e observações</li>
                               </ul>
@@ -8918,7 +8918,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // Obter dados do formulário
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const formData = new FormData(form);
 
                           // Validação básica
