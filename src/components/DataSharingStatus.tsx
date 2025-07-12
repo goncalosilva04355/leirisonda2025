@@ -89,10 +89,10 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
           realtimeDbStatus = {
             connected: true,
             dataCount:
-              realtimeData.works.length +
-              realtimeData.pools.length +
-              realtimeData.maintenance.length +
-              realtimeData.clients.length,
+              (realtimeData as any)?.works?.length +
+                (realtimeData as any)?.pools?.length +
+                (realtimeData as any)?.maintenance?.length +
+                (realtimeData as any)?.clients?.length || 0,
           };
         }
       } catch (error) {
