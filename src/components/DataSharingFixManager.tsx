@@ -234,7 +234,7 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
                 </div>
                 <div className="border-t pt-1 flex justify-between font-semibold">
                   <span>Total:</span>
-                  <span>{getSharedDataCount()}</span>
+                  <span>{String(getSharedDataCount())}</span>
                 </div>
               </div>
             ) : (
