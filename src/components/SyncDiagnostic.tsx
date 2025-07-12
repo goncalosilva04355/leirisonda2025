@@ -35,7 +35,8 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
 
   const loadDiagnosticData = async () => {
     try {
-      const currentUser = authService.getCurrentUserProfile();
+      // const currentUser = authService.getCurrentUserProfile(); // Service not available
+      const currentUser = null;
       const firebaseStatus = {
         isInitialized: realFirebaseService.initialize(),
         isReady: realFirebaseService.isReady(),
