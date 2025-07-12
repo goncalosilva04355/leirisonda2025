@@ -10568,7 +10568,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
 
-                            priority,
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
                               : undefined,
@@ -12031,7 +12030,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ���� {selectedPool.location}
+                            ����� {selectedPool.location}
                           </button>
                         </div>
                       </div>
@@ -12113,7 +12112,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <p className="text-gray-900">
                             {selectedPool.depth
                               ? `${selectedPool.depth} m`
-                              : "Não especificado"}
+                              : "N��o especificado"}
                           </p>
                         </div>
                       </div>
