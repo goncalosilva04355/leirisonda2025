@@ -51,7 +51,10 @@ import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { useDataSync } from "./hooks/useDataSync_simple";
-import { authService, UserProfile } from "./services/authService";
+import {
+  hybridAuthService as authService,
+  UserProfile,
+} from "./services/hybridAuthService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
 // import { useAutoSync } from "./hooks/useAutoSync"; // Temporarily disabled due to React hook error
 
