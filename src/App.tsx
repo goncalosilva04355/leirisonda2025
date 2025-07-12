@@ -10352,10 +10352,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type: poolType,
                             // dimensions, // Property not in Pool interface
                             // volume: volume || undefined, // Property not in Pool interface
-                                                        // filtrationSystem, // Property not in Pool interface
+                            // filtrationSystem, // Property not in Pool interface
                             // installationDate: installationDate // Property not in Pool interface
-                              ? new Date(installationDate).toISOString()
-                              : undefined,
+                            // ? new Date(installationDate).toISOString()
+                            // : undefined,
                             clientPhone,
                             clientEmail,
                             observations,
@@ -12157,7 +12157,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç���es
+                        Manutenç�����es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
