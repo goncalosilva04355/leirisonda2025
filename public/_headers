@@ -58,3 +58,12 @@
 /*.css
   Cache-Control: public, max-age=31536000
   Content-Type: text/css
+
+# Debug and emergency scripts (no cache)
+/debug-chrome.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=0, must-revalidate
+
+/emergency-recovery.js
+  Content-Type: application/javascript
+  Cache-Control: public, max-age=0, must-revalidate
