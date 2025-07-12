@@ -14,7 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 
-// Import dos componentes de teste e configuraç��o
+// Import dos componentes de teste e configuraç����o
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
 import { FirebaseStatus } from "../components/FirebaseStatus";
@@ -302,7 +302,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "sync-manager":
         return <FullSyncManager />;
       case "firebase-status":
-        return <FirebaseStatus />;
+        return <FirebaseStatus isConnected={true} />;
       case "user-debugger":
         return <UserDebugger />;
       case "data-cleanup":
