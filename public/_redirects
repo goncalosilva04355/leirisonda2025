@@ -1,9 +1,9 @@
-# SPA redirect rule for client-side routing
-/*    /index.html   200
+# API function rules for Netlify (must come first for priority)
+/api/*    /.netlify/functions/:splat    200
 
 # PWA manifest and service worker
 /manifest.json    /manifest.json    200
-/sw.js           /sw.js            200
+/sw.js    /sw.js    200
 
-# API function rules for Netlify
-/api/*           /.netlify/functions/:splat       200
+# SPA redirect rule for client-side routing (must be last)
+/*    /index.html    200
