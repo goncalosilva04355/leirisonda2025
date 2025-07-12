@@ -8188,12 +8188,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
               </div>
             </div>
-          );
+                    );
 
-        case "relatorios":
-          return (
-            <div className="min-h-screen bg-gray-50">
-              <div className="px-4 py-4 space-y-6">
+        // case "relatorios": // DUPLICATED CASE - COMMENTED OUT
+        //   return (
+        //     <div className="min-h-screen bg-gray-50">
+        //       <div className="px-4 py-4 space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center justify-between">
@@ -8377,7 +8377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
-                        <li>• Estatísticas gerais</li>
+                        <li>• Estat��sticas gerais</li>
                         <li>📊 Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
