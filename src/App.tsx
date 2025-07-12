@@ -7278,7 +7278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "relatorios":
+        case "relatorios-old":
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
@@ -8344,7 +8344,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>📞 Piscinas associadas</li>
                         <li>��� Histórico de serviços</li>
-                        <li>• Informações contratuais</li>
+                        <li>• Informa��ões contratuais</li>
                       </ul>
                     </div>
                     <button
