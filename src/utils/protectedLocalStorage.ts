@@ -37,7 +37,8 @@ export class ProtectedLocalStorage {
       DataProtectionService.autoBackupBeforeOperation(`remove_${key}`);
     }
 
-    localStorage.removeItem(key);
+    // Use the original method to avoid recursion
+    this.originalRemoveItem.call(localStorage, key);
     console.log(`🗑️ Dados removidos: ${key}`);
   }
 
