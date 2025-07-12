@@ -200,7 +200,7 @@ export interface Pool {
   clientName: string;
   clientPhone: string;
   clientEmail: string;
-  poolType?: string;
+  poolType?: "outdoor" | "indoor" | "spa" | "olympic" | string;
   waterCubicage: string;
   status: "active" | "inactive" | "seasonal";
   photos: PoolPhoto[];
