@@ -4697,7 +4697,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="pending">Pendente</option>
                             <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
+                            <option value="completed">Conclu��da</option>
                             <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
@@ -8918,7 +8918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��es
+                            Notas e Observaç���es
                           </label>
                           <textarea
                             rows={4}
@@ -11154,7 +11154,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb€m funciona na página de login */}
+        {/* Admin Login Modal - tamb€m funciona na p��gina de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -12181,7 +12181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </label>
                       <p className="text-gray-900">
                         {new Date(
-                          selectedPool.createdAt || new Date(),
+                          selectedPool.createdAt || new Date().toISOString(),
                         ).toLocaleString("pt-PT")}
                       </p>
                     </div>
