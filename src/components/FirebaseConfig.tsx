@@ -171,6 +171,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       setConfig({
         apiKey: "",
         authDomain: "",
+        databaseURL: "",
         projectId: "",
         storageBucket: "",
         messagingSenderId: "",
