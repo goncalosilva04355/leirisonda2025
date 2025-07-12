@@ -762,7 +762,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("����� addClient iniciado com Firestore ativo");
+      console.log("������ addClient iniciado com Firestore ativo");
 
       const firestoreId = await firestoreService.createCliente(data);
 
@@ -8363,7 +8363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>📞 Piscinas associadas</li>
                         <li>��� Histórico de serviços</li>
-                        <li>• Informa��ões contratuais</li>
+                        <li>�� Informa��ões contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8711,7 +8711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </button>
                               </div>
                               <div>
-                                <p className="font-medium">Informações:</p>
+                                <p className="font-medium">Informa��ões:</p>
                                 <p>Tipo: {client.type}</p>
                                 <p>
                                   Cliente desde:{" "}
@@ -11003,7 +11003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               maintenance,
               works,
               clients,
-              lastSync,
+              lastSync: lastSync ? new Date(lastSync) : new Date(),
               syncWithFirebase,
               enableSync,
             }}
@@ -12117,7 +12117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificaç��es Técnicas */}
+                    {/* Especificaç��es T��cnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
