@@ -756,7 +756,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de manutenções:", error);
+      console.error("❌ Erro no sistema de manutenç��es:", error);
       return await addManutencao(data);
     }
   };
@@ -2388,7 +2388,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const testPushNotification = () => {
     if (Notification.permission === "granted") {
       showNotification(
-        "Teste de Notificação",
+        "Teste de Notificaç��o",
         "As notificações estão a funcionar corretamente!",
         "test",
       );
@@ -5016,7 +5016,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                ���� Recarregar Utilizadores
+                                ����� Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -7209,7 +7209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Gestão de Utilizadores Movida
                                 </h3>
                                 <p className="text-blue-700 mb-4">
-                                  A gestão de utilizadores foi consolidada no
+                                  A gest��o de utilizadores foi consolidada no
                                   menu de administração para evitar duplicações
                                   e melhorar a experiência.
                                 </p>
@@ -10605,8 +10605,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             // completedDate: completedDate // Property not in Maintenance interface
                             // ? new Date(completedDate).toISOString()
                             // : undefined,
-                            materialsUsed,
-                            observations,
+                            // materialsUsed, // Property not in Maintenance interface
+                            // observations, // Property not in Maintenance interface
                           });
 
                           alert("Manutenção atualizada com sucesso!");
