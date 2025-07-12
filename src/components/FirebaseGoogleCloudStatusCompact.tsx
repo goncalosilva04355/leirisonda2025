@@ -16,7 +16,10 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const checkStatus = async () => {
     setIsChecking(true);
     try {
-      // Check Firestore status
+      // Check Firestore status with Safari compatibility
+      const { safariCompatibility } = await import(
+        /* webpackIgnore: true */ "../services/safariCompatibilityService"
+      );
       const { getDB } = await import(
         /* webpackIgnore: true */ "../firebase/config"
       );
