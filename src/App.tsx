@@ -1520,7 +1520,7 @@ function App() {
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
-        console.log("📞 Notifications already granted");
+        console.log("�� Notifications already granted");
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
@@ -7278,32 +7278,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "relatorios":
-          return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-8 w-8 text-blue-600" />
-                </div>
-                <h1 className="text-xl font-bold text-gray-900 mb-2">
-                  Relatórios Movidos
-                </h1>
-                <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configura������es.
-                </p>
-                <button
-                  onClick={() => {
-                    setActiveAdminTab("relatorios");
-                    navigateToSection("configuracoes");
-                  }}
-                  className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-                >
-                  Ir para Configurações
-                </button>
-              </div>
-            </div>
-          );
-
         case "utilizadores":
           // SECURITY: Only super admin can access user management
           if (currentUser?.role !== "super_admin") {
@@ -10924,7 +10898,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon��alo Fonseca",
+  //       name: "Gon����alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
