@@ -8,6 +8,7 @@ interface FirebaseConfigProps {
 interface FirebaseSettings {
   apiKey: string;
   authDomain: string;
+  databaseURL?: string;
   projectId: string;
   storageBucket: string;
   messagingSenderId: string;
@@ -21,6 +22,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
   const [config, setConfig] = useState<FirebaseSettings>({
     apiKey: "",
     authDomain: "",
+    databaseURL: "",
     projectId: "",
     storageBucket: "",
     messagingSenderId: "",
@@ -59,6 +61,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       const defaultConfig = {
         apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
         authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "leiria-1cfc9",
         storageBucket: "leiria-1cfc9.firebasestorage.app",
         messagingSenderId: "632599887141",
@@ -122,6 +126,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     const defaultConfig = {
       apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
       authDomain: "leiria-1cfc9.firebaseapp.com",
+      databaseURL:
+        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "leiria-1cfc9",
       storageBucket: "leiria-1cfc9.firebasestorage.app",
       messagingSenderId: "632599887141",
@@ -130,9 +136,58 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     };
 
     setConfig(defaultConfig);
-    // Default config applied automatically
+    // Salvar a nova configuração no localStorage
+    localStorage.setItem("firebase-config", JSON.stringify(defaultConfig));
     setSuccess(true);
     setError("");
+    console.log("🔧 FirebaseConfig: Configuração atualizada e salva");
+  };
+
+  const handleClearAll = () => {
+    if (
+      window.confirm(
+        "⚠️ ATENÇÃO: Isto vai apagar TODA a configuração Firebase guardada. Esta ação não pode ser desfeita. Confirma?",
+      )
+    ) {
+      // Limpar toda a configuração do localStorage
+      localStorage.removeItem("firebase-config");
+
+      // Limpar também outras chaves relacionadas com Firebase
+      const firebaseKeys = [
+        "firebase-auth-state",
+        "firebase-user",
+        "firebase-token",
+        "firestore-cache",
+        "firebase-persistence",
+        "firebase-initialized",
+      ];
+
+      firebaseKeys.forEach((key) => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
+
+      // Reset do estado do componente
+      setConfig({
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+        measurementId: "",
+      });
+
+      setSuccess(false);
+      setIsConfigLoaded(false);
+      setError("");
+
+      console.log("🧹 FirebaseConfig: Toda a configuração Firebase foi limpa");
+      alert(
+        "✅ Configuração Firebase completamente limpa! Pode agora inserir uma nova configuração.",
+      );
+    }
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
@@ -170,6 +225,13 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             >
               <RefreshCw className="w-4 h-4" />
               Restaurar Padrão
+            </button>
+            <button
+              onClick={handleClearAll}
+              className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <AlertCircle className="w-4 h-4" />
+              🧹 LIMPAR TUDO
             </button>
           </div>
         </div>
@@ -215,6 +277,19 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
               onChange={(e) => handleFieldChange("authDomain", e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="projeto.firebaseapp.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Database URL
+            </label>
+            <input
+              type="text"
+              value={config.databaseURL || ""}
+              onChange={(e) => handleFieldChange("databaseURL", e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://projeto-default-rtdb.europe-west1.firebasedatabase.app"
             />
           </div>
 
@@ -296,22 +371,33 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={handleReset}
+                disabled={loading}
+                className="bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <RefreshCw className="w-5 h-5" />
+                <span>Restaurar</span>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <Save className="w-5 h-5" />
+                <span>{loading ? "A guardar..." : "Guardar"}</span>
+              </button>
+            </div>
+
             <button
-              onClick={handleReset}
+              onClick={handleClearAll}
               disabled={loading}
-              className="bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
-              <RefreshCw className="w-5 h-5" />
-              <span>Restaurar</span>
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            >
-              <Save className="w-5 h-5" />
-              <span>{loading ? "A guardar..." : "Guardar"}</span>
+              <AlertCircle className="w-5 h-5" />
+              <span>🧹 LIMPAR TODA A CONFIGURAÇÃO</span>
             </button>
           </div>
         </div>
