@@ -4937,7 +4937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         JSON.parse(savedUsers);
                                       setUsers(parsedUsers);
                                       alert(
-                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
+                                        `��� ${parsedUsers.length} utilizadores carregados!`,
                                       );
                                     } catch (error) {
                                       console.error("Erro:", error);
@@ -7622,7 +7622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "�� Ativo"
+                                        ? "���� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7669,7 +7669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configurações protegidas por palavra-passe para
+                              Configuraç��es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -9361,7 +9361,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
-                                      setWorks(existingWorks);
                                     }
 
                                     // Atualizar via dataSync se disponível
@@ -12025,7 +12024,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações do Cliente
+                        Informa��ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
