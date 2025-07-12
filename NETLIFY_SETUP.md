@@ -27,13 +27,13 @@ VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 #### Projeto Legacy (Leirisonda) - Opcional
 
 ```
-VITE_LEIRISONDA_FIREBASE_API_KEY=AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE
-VITE_LEIRISONDA_FIREBASE_AUTH_DOMAIN=leirisonda-16f8b.firebaseapp.com
-VITE_LEIRISONDA_FIREBASE_DATABASE_URL=https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app
-VITE_LEIRISONDA_FIREBASE_PROJECT_ID=leirisonda-16f8b
-VITE_LEIRISONDA_FIREBASE_STORAGE_BUCKET=leirisonda-16f8b.firebasestorage.app
-VITE_LEIRISONDA_FIREBASE_MESSAGING_SENDER_ID=1067024677476
-VITE_LEIRISONDA_FIREBASE_APP_ID=1:1067024677476:web:a5e5e30ed4b5a64b123456
+VITE_LEIRISONDA_FIREBASE_API_KEY=your_legacy_firebase_api_key_here
+VITE_LEIRISONDA_FIREBASE_AUTH_DOMAIN=your-legacy-project.firebaseapp.com
+VITE_LEIRISONDA_FIREBASE_DATABASE_URL=https://your-legacy-project-default-rtdb.region.firebasedatabase.app
+VITE_LEIRISONDA_FIREBASE_PROJECT_ID=your-legacy-project-id
+VITE_LEIRISONDA_FIREBASE_STORAGE_BUCKET=your-legacy-project.firebasestorage.app
+VITE_LEIRISONDA_FIREBASE_MESSAGING_SENDER_ID=your_legacy_messaging_sender_id
+VITE_LEIRISONDA_FIREBASE_APP_ID=your_legacy_app_id
 ```
 
 #### Configuração de Projeto
