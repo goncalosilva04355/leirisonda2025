@@ -169,12 +169,9 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
       {/* Status resumido sempre visível */}
       <div className="mt-2 text-xs text-gray-600">
         <div className="flex items-center justify-between">
-          <span>Firebase: {status.firebase?.ready ? "✅" : "❌"}</span>
-          <span>Auth: {status.firebase?.auth ? "✅" : "❌"}</span>
-          <span>DB: {status.firebase?.database ? "✅" : "❌"}</span>
-          <span>
-            GCP: {status.googleCloud?.status === "active" ? "✅" : "⚠️"}
-          </span>
+          <span>Disponível: {status.firestore?.available ? "✅" : "❌"}</span>
+          <span>Leitura: {status.firestore?.canRead ? "✅" : "❌"}</span>
+          <span>Escrita: {status.firestore?.canWrite ? "✅" : "❌"}</span>
         </div>
       </div>
 
