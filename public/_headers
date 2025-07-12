@@ -3,8 +3,8 @@
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  X-XSS-Protection: 1; mode=block
-    Permissions-Policy: geolocation=(), microphone=(), camera=()
+    X-XSS-Protection: 1; mode=block
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
   Content-Security-Policy: default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https: *.builder.io cdn.builder.io; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; worker-src 'self'; connect-src 'self' https: wss: *.googleapis.com *.firebaseio.com *.firebase.com; frame-ancestors 'none'
 
 # PWA Manifest
