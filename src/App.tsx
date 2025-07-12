@@ -6260,7 +6260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criação da piscina",
+                                  "Manutennç��o programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6402,7 +6402,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons���vel *
+                          Técnico Respons����vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -12330,7 +12330,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* <RealtimeNotifications /> */}
 
         {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
+        <WorkAssignmentNotifications currentUser={currentUser as any} />
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
