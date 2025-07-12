@@ -1,15 +1,12 @@
-# Global security headers
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# PWA Manifest
 /manifest.json
   Content-Type: application/manifest+json
   Cache-Control: public, max-age=86400
 
-# Service Workers
 /sw.js
   Content-Type: application/javascript
   Service-Worker-Allowed: /
@@ -20,15 +17,12 @@
   Service-Worker-Allowed: /
   Cache-Control: public, max-age=0, must-revalidate
 
-# Static Assets
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML files
 /*.html
   Cache-Control: public, max-age=0, must-revalidate
 
-# Debug scripts
 /debug-chrome.js
   Content-Type: application/javascript
   Cache-Control: public, max-age=0, must-revalidate
