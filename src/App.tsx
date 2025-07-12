@@ -1390,7 +1390,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("€Iniciando sincroniza📞ão automática em tempo real...");
+        console.log("��Iniciando sincroniza📞ão automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -8944,7 +8944,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // Obter dados do formulário
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const formData = new FormData(form);
 
                           // Validação básica
@@ -10319,7 +10321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = (inputs[10] as HTMLInputElement)
                             .value; // Email do Cliente
                           const observations = (inputs[11] as HTMLInputElement)
-                            .value; // Observações
+                            .value; // Observaç��es
 
                           dataSync.updatePool(editingPool.id, {
                             name,
