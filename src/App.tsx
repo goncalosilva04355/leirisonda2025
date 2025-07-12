@@ -2939,7 +2939,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("��� Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
@@ -4937,7 +4937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         JSON.parse(savedUsers);
                                       setUsers(parsedUsers);
                                       alert(
-                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
+                                        `��� ${parsedUsers.length} utilizadores carregados!`,
                                       );
                                     } catch (error) {
                                       console.error("Erro:", error);
@@ -6912,7 +6912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-center space-x-2">
                           <Settings className="h-4 w-4" />
-                          <span>Configurações</span>
+                          <span>Configura��ões</span>
                         </div>
                       </button>
                       {(currentUser?.role === "super_admin" ||
@@ -7007,7 +7007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔧 Trabalhos realizados</li>
-                                <li>👷 Técnicos responsáveis</li>
+                                <li>��� Técnicos responsáveis</li>
                                 <li>• Datas e durações</li>
                                 <li>• Estados e observações</li>
                               </ul>
@@ -7622,7 +7622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "�� Ativo"
+                                        ? "���� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7669,7 +7669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configurações protegidas por palavra-passe para
+                              Configuraç��es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -8918,7 +8918,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // Obter dados do formulário
-                          const form = e.target.closest("form");
+                          const form = (e.target as HTMLElement).closest(
+                            "form",
+                          );
                           const formData = new FormData(form);
 
                           // Validação básica
@@ -9361,7 +9363,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
-                                      setWorks(existingWorks);
                                     }
 
                                     // Atualizar via dataSync se disponível
@@ -12025,7 +12026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações do Cliente
+                        Informa��ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

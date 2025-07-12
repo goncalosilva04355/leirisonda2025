@@ -24,14 +24,10 @@ export class FirestoreServiceFix {
         app = existingApps[0];
         console.log("✅ Found existing Firebase app");
       } else {
-        const config = {
-          apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-          authDomain: "leirisonda-16f8b.firebaseapp.com",
-          projectId: "leirisonda-16f8b",
-          storageBucket: "leirisonda-16f8b.firebasestorage.app",
-          messagingSenderId: "540456875574",
-          appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-        };
+        const { getLegacyFirebaseConfig } = await import(
+          "../config/firebaseEnv"
+        );
+        const config = getLegacyFirebaseConfig();
 
         app = initializeApp(config);
         console.log("✅ Initialized new Firebase app");
@@ -145,14 +141,10 @@ export class FirestoreServiceFix {
           await deleteApp(app);
         }
 
-        const config = {
-          apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-          authDomain: "leirisonda-16f8b.firebaseapp.com",
-          projectId: "leirisonda-16f8b",
-          storageBucket: "leirisonda-16f8b.firebasestorage.app",
-          messagingSenderId: "540456875574",
-          appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-        };
+        const { getLegacyFirebaseConfig } = await import(
+          "../config/firebaseEnv"
+        );
+        const config = getLegacyFirebaseConfig();
 
         const app = initializeApp(config, `firestore-fix-${Date.now()}`);
         return getFirestore(app);

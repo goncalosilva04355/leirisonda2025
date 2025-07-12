@@ -11,6 +11,14 @@ const CRITICAL_KEYS = [
   "interventions",
 ];
 
+// Guardar referências originais antes de interceptar
+const originalLocalStorage = {
+  setItem: localStorage.setItem.bind(localStorage),
+  getItem: localStorage.getItem.bind(localStorage),
+  removeItem: localStorage.removeItem.bind(localStorage),
+  clear: localStorage.clear.bind(localStorage),
+};
+
 // Wrapper para localStorage que faz backup automático
 export class ProtectedLocalStorage {
   static setItem(key: string, value: string): void {
@@ -20,14 +28,14 @@ export class ProtectedLocalStorage {
       DataProtectionService.autoBackupBeforeOperation(`save_${key}`);
     }
 
-    // Guardar no localStorage normal
-    localStorage.setItem(key, value);
+    // Guardar no localStorage usando método original
+    originalLocalStorage.setItem(key, value);
 
     console.log(`✅ Dados guardados: ${key} (${value.length} chars)`);
   }
 
   static getItem(key: string): string | null {
-    return localStorage.getItem(key);
+    return originalLocalStorage.getItem(key);
   }
 
   static removeItem(key: string): void {
@@ -37,23 +45,20 @@ export class ProtectedLocalStorage {
       DataProtectionService.autoBackupBeforeOperation(`remove_${key}`);
     }
 
-    localStorage.removeItem(key);
+    // Remover usando método original
+    originalLocalStorage.removeItem(key);
     console.log(`🗑️ Dados removidos: ${key}`);
   }
 
   static clear(): void {
     console.log("🚨 BACKUP COMPLETO antes de limpar localStorage");
     DataProtectionService.autoBackupBeforeOperation("clear_localStorage");
-    localStorage.clear();
+    // Limpar usando método original
+    originalLocalStorage.clear();
   }
 
   // Interceptar operações diretas no localStorage original
   static interceptLocalStorage(): void {
-    // Guardar referências originais
-    const originalSetItem = localStorage.setItem;
-    const originalRemoveItem = localStorage.removeItem;
-    const originalClear = localStorage.clear;
-
     // Interceptar setItem
     localStorage.setItem = function (key: string, value: string) {
       ProtectedLocalStorage.setItem(key, value);
@@ -72,6 +77,15 @@ export class ProtectedLocalStorage {
     console.log(
       "🛡️ LocalStorage protegido ativado - backup automático em todas as operações críticas",
     );
+  }
+
+  // Método para restaurar comportamento original (útil para debug)
+  static restoreOriginalLocalStorage(): void {
+    localStorage.setItem = originalLocalStorage.setItem;
+    localStorage.getItem = originalLocalStorage.getItem;
+    localStorage.removeItem = originalLocalStorage.removeItem;
+    localStorage.clear = originalLocalStorage.clear;
+    console.log("🔓 LocalStorage restaurado ao comportamento original");
   }
 }
 
