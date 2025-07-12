@@ -495,7 +495,7 @@ function App() {
         return;
       }
 
-      // Preparar dados da notifica��ão
+      // Preparar dados da notifica���ão
       const notificationData = {
         title: "🔔 Nova Obra Atribuída",
         body: `${workData.title} - ${workData.client}`,
@@ -9285,7 +9285,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {work.contact}
+                                        ����� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -10231,7 +10231,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="sand">Areia</option>
                           <option value="cartridge">Cartucho</option>
-                          <option value="diatomaceous">Terra Diatomácea</option>
+                          <option value="diatomaceous">
+                            Terra Diatom��cea
+                          </option>
                           <option value="other">Outro</option>
                         </select>
                       </div>
@@ -10331,7 +10333,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             client,
                             location,
                             status,
-                            poolType,
+                            type: poolType,
                             dimensions,
                             volume: volume || undefined,
                             filtrationSystem,
