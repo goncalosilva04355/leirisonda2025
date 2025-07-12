@@ -142,7 +142,9 @@ export const DangerousUserDeletion: React.FC = () => {
           sessionStorageCleared: false,
           superAdminRecreated: false,
           errors: [error.message],
-        },
+          maintenanceDataCleared: false,
+          interventionsDeleted: false,
+        } as any,
       });
     } finally {
       setIsLoading(false);
