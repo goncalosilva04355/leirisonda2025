@@ -1,2 +1,5 @@
-/api/* /.netlify/functions/:splat 200
-/* /index.html 200
+# API routes to Netlify functions
+/api/*  /.netlify/functions/:splat  200
+
+# SPA fallback - all other routes to index.html
+/*  /index.html  200
