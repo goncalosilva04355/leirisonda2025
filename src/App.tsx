@@ -47,8 +47,8 @@ import SyncStatusIndicator from "./components/SyncStatusIndicator";
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-// import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe"; // TEMPORARIAMENTE DESATIVADO
-// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe"; // TEMPORARIAMENTE DESATIVADO
+import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 // import { RealtimeNotifications } from "./components/RealtimeNotifications"; // TEMPORARIAMENTE DESATIVADO
 // import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications"; // TEMPORARIAMENTE DESATIVADO
 
@@ -6917,7 +6917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center mb-4">
                       <Bell className="h-6 w-6 text-blue-600 mr-3" />
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Notificações
+                        Notifica��ões
                       </h3>
                     </div>
                     <div className="space-y-4">
@@ -9455,7 +9455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif📞sico)</option>
+                            <option value="400V">400V (trif����sico)</option>
                           </select>
                         </div>
                       </div>
