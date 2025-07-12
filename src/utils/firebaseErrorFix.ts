@@ -5,8 +5,8 @@
 
 export class FirebaseErrorFix {
   private static retryAttempts = 0;
-  private static maxRetries = 3;
-  private static retryDelay = 1000;
+  private static maxRetries = 2;
+  private static retryDelay = 2000;
 
   /**
    * Detectar e corrigir erro de ReadableStream
