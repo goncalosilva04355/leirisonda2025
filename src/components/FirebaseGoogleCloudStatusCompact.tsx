@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Database, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Database,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  Settings,
+} from "lucide-react";
 
 export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const [status, setStatus] = useState<any>(null);
