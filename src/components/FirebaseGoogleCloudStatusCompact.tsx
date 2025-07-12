@@ -10,7 +10,9 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
     setIsChecking(true);
     try {
       // Check Firestore status
-      const { getDB } = await import("../firebase/config");
+      const { getDB } = await import(
+        /* webpackIgnore: true */ "../firebase/config"
+      );
 
       let dbService = null;
       let rulesTest = null;
@@ -25,7 +27,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
       if (dbService) {
         try {
           const { FirestoreRulesFix } = await import(
-            "../firebase/firestoreRulesFix"
+            /* webpackIgnore: true */ "../firebase/firestoreRulesFix"
           );
           rulesTest = await FirestoreRulesFix.testFirestoreAccess();
         } catch (error) {
