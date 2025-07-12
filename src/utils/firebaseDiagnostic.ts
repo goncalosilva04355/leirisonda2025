@@ -9,16 +9,9 @@ import { getAuth } from "firebase/auth";
 
 // Import the main Firebase config instead of duplicating it
 import { getDB, getAuthService, waitForFirebaseInit } from "../firebase/config";
+import { getLegacyFirebaseConfig } from "../config/firebaseEnv";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-  authDomain: "leirisonda-16f8b.firebaseapp.com",
-  projectId: "leirisonda-16f8b",
-  storageBucket: "leirisonda-16f8b.firebasestorage.app",
-  messagingSenderId: "540456875574",
-  appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-  measurementId: "G-R9W43EHH2C",
-};
+const firebaseConfig = getLegacyFirebaseConfig();
 
 export class FirebaseDiagnostic {
   static async runFullDiagnostic() {
