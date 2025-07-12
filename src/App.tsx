@@ -2874,7 +2874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               );
 
               // Fallback para authService se necessário
-              if (!result?.success) {
+              if (!result || typeof result !== "object" || !result.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -4915,7 +4915,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {!usersLoaded && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-blue-800">
-                                🔄 Carregando utilizadores...
+                                ��� Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -10280,7 +10280,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingPool?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={3}
-                        placeholder="Observações sobre a piscina, equipamentos instalados, etc."
+                        placeholder="Observa��ões sobre a piscina, equipamentos instalados, etc."
                       />
                     </div>
 
