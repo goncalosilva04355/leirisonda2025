@@ -15,7 +15,6 @@ import {
   Eye,
   EyeOff,
   Edit2,
-  Play,
   Trash2,
   Save,
   UserPlus,
@@ -25,96 +24,28 @@ import {
   Download,
   ArrowLeft,
   Bell,
-  FileText,
-  MapPin,
-  Share,
-  Database,
 } from "lucide-react";
 import jsPDF from "jspdf";
-// import { FirebaseConfig } from "./components/FirebaseConfig";
+import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
-import InstallPromptSimple from "./components/InstallPromptSimple";
-// import { UserPermissionsManager } from "./components/UserPermissionsManager";
-// import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
-
-import { LocationPage } from "./components/LocationPage";
-import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import SyncStatusIndicator from "./components/SyncStatusIndicator";
-
-// Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
-
-// Security: Startup cleanup to prevent blocked users from accessing
-// import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
-
-import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
-import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/config";
-import {
-  isFirestoreReady,
-  testFirestore,
-  getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
-import { firestoreService } from "./services/firestoreService";
-// import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-
-// SECURITY: RegisterForm for super admin only
+import { SyncStatusDisplay } from "./components/SyncStatusDisplay";
+import { InstallPrompt } from "./components/InstallPrompt";
+import { UserPermissionsManager } from "./components/UserPermissionsManager";
 import { RegisterForm } from "./components/RegisterForm";
+
+import { AutoSyncProvider } from "./components/AutoSyncProvider";
+import { SyncStatusIcon } from "./components/SyncStatusIndicator";
+import { FirebaseQuotaWarning } from "./components/FirebaseQuotaWarning";
+
+// SECURITY: RegisterForm removed - only super admin can create users
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
-import { LoginPage } from "./pages/LoginPage";
-
-import { useDataSyncSimple } from "./hooks/useDataSyncSimple";
-import { useUniversalDataSyncSafe as useUniversalDataSync } from "./hooks/useUniversalDataSyncSafe";
-import { hybridAuthService as authService } from "./services/hybridAuthService";
-import { UserProfile } from "./services/robustLoginService";
-import { DataProtectionService } from "./utils/dataProtection";
-import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
-
-// Firebase works silently in background - no diagnostics or UI needed
-import("./firebase/ultimateSimpleFirebase");
-import { ForceInitialization } from "./utils/forceInitialization";
-
-// Sistema de diagnóstico de persistência
-import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
-import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
-import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import "./utils/testDataPersistence";
-
+import { useDataSync } from "./hooks/useDataSync";
+import { authService, UserProfile } from "./services/authService";
 import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimple } from "./hooks/useAutoSyncSimple";
-import { useAutoFirebaseFix } from "./hooks/useAutoFirebaseFix";
-import { useAutoUserMigration } from "./hooks/useAutoUserMigration";
-import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
-import UserMigrationIndicator from "./components/UserMigrationIndicator";
-// Firebase components removed - Firebase works automatically in background
+import { useAutoSync } from "./hooks/useAutoSync";
 
-// Diagnóstico automático para problemas de inserção de dados
-import "./utils/datainput-diagnostic";
-import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
-import DataInputTutorial from "./components/DataInputTutorial";
-
-// Monitor de erros Firebase para detectar e corrigir automaticamente
-import "./utils/firebaseErrorMonitor";
-import FirebaseFixButton from "./components/FirebaseFixButton";
-
-// Inicialização de emergência de utilizadores
-import "./utils/emergencyUserInit";
-import "./utils/forceUserInit";
-import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
-
-// Production users - only real admin account
+// Mock users database - only super admin
 const initialUsers = [
   {
     id: 1,
@@ -140,61 +71,34 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
-  // Debug logging disabled for production
-
-  // Monitoramento de integridade de dados e restauração de utilizadores
+  // Debug logging for authentication state changes
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
+    console.log("�� Auth State Debug:", {
+      isAuthenticated,
+      currentUser: currentUser
+        ? `${currentUser.name} (${currentUser.email})`
+        : null,
+      timestamp: new Date().toISOString(),
+    });
+  }, [isAuthenticated, currentUser]);
 
-    // Monitoriza📞ão automática de persistência de dados
-    const initDataPersistenceMonitoring = async () => {
-      try {
-        // Aguardar um pouco antes de iniciar verificação
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-
-        // Verificar estado da persistência
-        const status = await dataPersistenceManager.diagnoseDataPersistence();
-
-        if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
-          setPersistenceIssueDetected(true);
-
-          // Tentar reparar automaticamente
-          const repaired = await dataPersistenceManager.repairDataPersistence();
-
-          if (repaired) {
-            setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
-          } else {
-            console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
-            );
-          }
-        } else {
-          console.log("✅ Sistema de persistência está funcional");
-        }
-      } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
-      }
-    };
-
-    initDataPersistenceMonitoring();
-
+  // Monitoramento de integridade de dados
+  useEffect(() => {
     // Cleanup ao desmontar componente
     return () => {
       // Cleanup functions if needed
     };
   }, []);
 
-  // Firebase handles auth state automatically - no manual clearing needed
+  // No auto-login - users must login manually
   useEffect(() => {
-    console.log("€ Firebase handles auth state automatically");
+    // Clear any existing auth data on app start
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("mock-current-user");
+    console.log("🔒 SECURITY: Auth data cleared - manual login required");
   }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("dashboard");
-  const [activeAdminTab, setActiveAdminTab] = useState("relatorios");
-  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
   // SECURITY: Register form removed - only super admin can create users
   const [showNewClientForm, setShowNewClientForm] = useState(false);
   const [newClientForm, setNewClientForm] = useState({
@@ -234,426 +138,24 @@ function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
-  // Data persistence diagnostic states
-  const [showDataDiagnostic, setShowDataDiagnostic] = useState(false);
-  const [persistenceIssueDetected, setPersistenceIssueDetected] =
-    useState(false);
-
-  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
-  // Firebase ativo como solicitado
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
-
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
-
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
-
-  // Log migration status changes
-  useEffect(() => {
-    if (userMigration.status.completed && userMigration.status.migrated > 0) {
-      console.log(
-        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
-      );
-      console.log(
-        "✅ AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
-      );
-    }
-  }, [userMigration.status.completed, userMigration.status.migrated]);
-
-  // Backup and complex initialization temporarily disabled for stability
-
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
-  // useEffect(() => {
-  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
-  //     obras: universalSync.obras.length,
-  //     manutencoes: universalSync.manutencoes.length,
-  //     piscinas: universalSync.piscinas.length,
-  //     clientes: universalSync.clientes.length,
-  //     total: universalSync.totalItems,
-  //     status: universalSync.syncStatus,
-  //   });
-  // }, [
-  //   universalSync.obras,
-  //   universalSync.manutencoes,
-  //   universalSync.piscinas,
-  //   universalSync.clientes,
-  //   universalSync.syncStatus,
-  // ]);
-
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
-  useEffect(() => {
-    console.log(
-      "🛡️ Data protection initialized (checks disabled for performance)",
-    );
-
-    // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
-  }, []);
-
-  // Sincronizar configurações entre componentes
-  useEffect(() => {
-    const handlePhoneDialerToggle = (event: CustomEvent) => {
-      setEnablePhoneDialer(event.detail.enabled);
-      localStorage.setItem(
-        "enablePhoneDialer",
-        event.detail.enabled.toString(),
-      );
-      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
-    };
-
-    const handleMapsRedirectToggle = (event: CustomEvent) => {
-      setEnableMapsRedirect(event.detail.enabled);
-      localStorage.setItem(
-        "enableMapsRedirect",
-        event.detail.enabled.toString(),
-      );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
-    };
-
-    window.addEventListener(
-      "phoneDialerToggled",
-      handlePhoneDialerToggle as EventListener,
-    );
-    window.addEventListener(
-      "mapsRedirectToggled",
-      handleMapsRedirectToggle as EventListener,
-    );
-
-    return () => {
-      window.removeEventListener(
-        "phoneDialerToggled",
-        handlePhoneDialerToggle as EventListener,
-      );
-      window.removeEventListener(
-        "mapsRedirectToggled",
-        handleMapsRedirectToggle as EventListener,
-      );
-    };
-  }, []);
-  // DADOS UNIVERSAIS - Partilhados entre todos os utilizadores
+  // Data sync hook - manages all data with optional Firebase sync
+  const dataSync = useDataSync();
   const {
-    obras,
-    manutencoes,
-    piscinas,
-    clientes,
+    pools,
+    maintenance,
+    futureMaintenance,
+    works,
+    clients,
     isLoading: syncLoading,
     lastSync,
     error: syncError,
-    addObra,
-    addManutencao,
-    addPiscina,
-    addCliente,
-    updateObra,
-    updateManutencao,
-    updatePiscina,
-    updateCliente,
-    deleteObra,
-    deleteManutencao,
-    deletePiscina,
-    deleteCliente,
-    forceSyncAll,
-    syncStatus,
-  } = universalSync;
-
-  // Mapear dados universais para compatibilidade com código existente
-  const pools = piscinas;
-  const maintenance = manutencoes;
-  const works = obras;
-  const clients = clientes;
-
-  // Calcular manutenções futuras
-  const today = new Date();
-  const futureMaintenance = manutencoes.filter(
-    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
-  );
-
-  // Funções de compatibilidade simplificadas
-  const addPool = async (data: any) => {
-    try {
-      console.log("🏊 addPool iniciado com sistema local");
-      return await addPiscina(data);
-    } catch (error) {
-      console.error("❌ Erro no sistema de piscinas:", error);
-      return await addPiscina(data);
-    }
-  };
-
-  // Função para enviar notificações push quando uma obra é atribuída
-  const sendWorkAssignmentNotifications = async (workData: any) => {
-    try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
-
-      // Verificar se há utilizadores atribuídos
-      if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
-        console.log(
-          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
-        );
-        return;
-      }
-
-      // Preparar dados da notificação
-      const notificationData = {
-        title: "🔔 Nova Obra Atribuída",
-        body: `${workData.title} - ${workData.client}`,
-        icon: "/icon.svg",
-        badge: "/icon.svg",
-        data: {
-          workId: workData.id,
-          workTitle: workData.title,
-          client: workData.client,
-          location: workData.location,
-          startDate: workData.startDate,
-          type: "work_assignment",
-          url: `/obras/${workData.id}`,
-        },
-      };
-
-      // Carregar todos os utilizadores para obter tokens FCM
-      const allUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-
-      // Para cada utilizador atribuído
-      for (const assignedUser of workData.assignedUsers) {
-        try {
-          const user = allUsers.find((u: any) => u.id === assignedUser.id);
-          if (!user) {
-            console.warn(
-              `€️ Utilizador ${assignedUser.name} não encontrado na lista`,
-            );
-            continue;
-          }
-
-          // console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
-
-          // Salvar notificação local para o utilizador
-          const userNotifications = JSON.parse(
-            localStorage.getItem(`work-notifications-${assignedUser.id}`) ||
-              "[]",
-          );
-
-          const newNotification = {
-            id: `${workData.id}-${Date.now()}`,
-            workId: workData.id,
-            workTitle: workData.title,
-            client: workData.client,
-            location: workData.location,
-            startDate: workData.startDate,
-            type: "new_assignment",
-            timestamp: Date.now(),
-            read: false,
-            urgent: workData.priority === "urgent",
-          };
-
-          userNotifications.unshift(newNotification);
-          // Manter apenas as últimas 50 notificações
-          const limitedNotifications = userNotifications.slice(0, 50);
-
-          localStorage.setItem(
-            `work-notifications-${assignedUser.id}`,
-            JSON.stringify(limitedNotifications),
-          );
-
-          // Disparar evento customizado para atualizar UI em tempo real
-          const customEvent = new CustomEvent("worksUpdated", {
-            detail: {
-              type: "assignment",
-              workId: workData.id,
-              workTitle: workData.title,
-              client: workData.client,
-              location: workData.location,
-              startDate: workData.startDate,
-              assignedUser: assignedUser,
-            },
-          });
-          window.dispatchEvent(customEvent);
-
-          // Tentar enviar notificação push via Firebase (se disponível)
-          if ("serviceWorker" in navigator && "PushManager" in window) {
-            try {
-              const registration = await navigator.serviceWorker.ready;
-
-              // Verificar se o utilizador tem permissão para notificações
-              const permission = await Notification.requestPermission();
-
-              if (permission === "granted") {
-                // Mostrar notificação local imediatamente
-                const notification = new Notification(notificationData.title, {
-                  body: notificationData.body,
-                  icon: notificationData.icon,
-                  badge: notificationData.badge,
-                  tag: `work-${workData.id}`,
-                  requireInteraction: true,
-                  data: notificationData.data,
-                });
-
-                // Auto-close notification after 10 seconds
-                setTimeout(() => {
-                  notification.close();
-                }, 10000);
-
-                // Handle notification click
-                notification.onclick = () => {
-                  window.focus();
-                  notification.close();
-                  // Opcional: navegar para a obra
-                };
-
-                console.log(
-                  `€ Notificação local enviada para ${assignedUser.name}`,
-                );
-              } else {
-                console.warn(
-                  `⚠€ Permissão de notificação negada para ${assignedUser.name}`,
-                );
-              }
-
-              // TODO: Implementar FCM para notificações push quando app está fechada
-              // Isso requer configuração adicional do Firebase Messaging
-            } catch (pushError) {
-              console.warn("⚠️ Erro ao enviar notificação push:", pushError);
-            }
-          }
-
-          // Salvar notificação no Firestore (se disponível)
-          try {
-            if (firestoreService) {
-              await firestoreService.createNotification({
-                userId: assignedUser.id,
-                workId: workData.id,
-                type: "work_assignment",
-                title: notificationData.title,
-                body: notificationData.body,
-                data: notificationData.data,
-                timestamp: new Date().toISOString(),
-                read: false,
-              });
-              console.log(
-                `✅ Notificação salva no Firestore para ${assignedUser.name}`,
-              );
-            }
-          } catch (firestoreError) {
-            console.warn(
-              "⚠️ Erro ao salvar notificação no Firestore:",
-              firestoreError,
-            );
-          }
-        } catch (userError) {
-          console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
-            userError,
-          );
-        }
-      }
-
-      console.log("✅ Processo de notificações concluído");
-    } catch (error) {
-      console.error("❌ Erro no sistema de notificações:", error);
-    }
-  };
-
-  const addWork = async (data: any) => {
-    try {
-      console.log("🔧 addWork iniciado com Firestore ativo");
-
-      // Usar o novo FirestoreService
-      const firestoreId = await firestoreService.createObra(data);
-
-      if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
-
-        // Sincronizar com sistema universal também
-        try {
-          await addObra(data);
-        } catch (syncError) {
-          console.warn("€️ Erro na sincronização universal:", syncError);
-        }
-
-        // Enviar notificações push para utilizadores atribuídos
-        await sendWorkAssignmentNotifications(data);
-
-        return firestoreId;
-      } else {
-        // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não disponível, usando sistema atual");
-        return await addObra(data);
-      }
-    } catch (error) {
-      console.error("❌ Erro no sistema de obras:", error);
-
-      // Fallback final para localStorage
-      const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      const newWork = {
-        ...data,
-        id: data.id || Date.now().toString(),
-        createdAt: data.createdAt || new Date().toISOString(),
-      };
-
-      const exists = existingWorks.some((w: any) => w.id === newWork.id);
-      if (!exists) {
-        existingWorks.push(newWork);
-        localStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("€ Obra guardada no localStorage como fallback");
-      }
-
-      return newWork.id;
-    }
-  };
-  const addMaintenance = async (data: any) => {
-    try {
-      console.log("🔧 addMaintenance iniciado com Firestore ativo");
-
-      const firestoreId = await firestoreService.createManutencao(data);
-
-      if (firestoreId) {
-        console.log("✅ Manutenção criada no Firestore:", firestoreId);
-
-        // Sincronizar com sistema universal
-        try {
-          await addManutencao(data);
-        } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        return await addManutencao(data);
-      }
-    } catch (error) {
-      console.error("❌ Erro no sistema de manutenções:", error);
-      return await addManutencao(data);
-    }
-  };
-  const addClient = async (data: any) => {
-    try {
-      console.log("👥 addClient iniciado com Firestore ativo");
-
-      const firestoreId = await firestoreService.createCliente(data);
-
-      if (firestoreId) {
-        console.log("✅ Cliente criado no Firestore:", firestoreId);
-
-        // Sincronizar com sistema universal
-        try {
-          await addCliente(data);
-        } catch (syncError) {
-          console.warn("€️ Erro na sincronização universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        return await addCliente(data);
-      }
-    } catch (error) {
-      console.error("❌ Erro no sistema de clientes:", error);
-      return await addCliente(data);
-    }
-  };
-  const syncWithFirebase = () => forceSyncAll();
-  const enableSync = (enabled: boolean) => {
-    console.log("Sync is always enabled in Universal Sync mode:", enabled);
-  };
+    syncWithFirebase,
+    enableSync,
+    addPool,
+    addWork,
+    addMaintenance,
+    addClient,
+  } = dataSync;
 
   // Data cleanup hook - temporarily disabled to debug hooks issue
   // const {
@@ -665,160 +167,13 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
-  const { syncStatus: autoSyncStatus } = autoSyncData;
+  // Auto-sync hook for automatic Firebase �� localStorage synchronization
+  const autoSyncData = useAutoSync();
+  const { syncStatus, isAutoSyncing } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
-
-  // Debug logging removed to prevent re-render loops
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
-
-  // Load users from Firestore and localStorage on app start
-  useEffect(() => {
-    const loadUsers = async () => {
-      console.log("🔄 Loading users from Firestore + localStorage...");
-
-      try {
-        // Aguardar Firestore estar pronto
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (isFirestoreReady()) {
-          console.log("📱 Carregando utilizadores do Firestore...");
-
-          // Tentar carregar do Firestore
-          const firestoreUsers = await firestoreService.getUtilizadores();
-
-          if (firestoreUsers.length > 0) {
-            console.log(
-              "✅ Utilizadores carregados do Firestore:",
-              firestoreUsers.length,
-            );
-            setUsers(firestoreUsers);
-            return;
-          }
-        }
-
-        // Fallback para localStorage se Firestore não tiver dados
-        const savedUsers = localStorage.getItem("app-users");
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
-          setUsers(parsedUsers);
-
-          // Sincronizar com Firestore se disponível
-          if (isFirestoreReady()) {
-            console.log(
-              "🔄 Sincronizando utilizadores locais para Firestore...",
-            );
-            for (const user of parsedUsers) {
-              if (!(user as any).firestoreId) {
-                const firestoreId =
-                  await firestoreService.createUtilizador(user);
-                if (firestoreId) {
-                  (user as any).firestoreId = firestoreId;
-                }
-              }
-            }
-          }
-        } else {
-          console.log(
-            "📝 No saved users found, initializing with default users",
-          );
-
-          // Initialize with default admin user
-          const defaultUsers = [
-            {
-              id: 1,
-              name: "Gonçalo Fonseca",
-              email: "gongonsilva@gmail.com",
-              active: true,
-              role: "super_admin",
-              password: "19867gsf",
-              permissions: {
-                obras: { view: true, create: true, edit: true, delete: true },
-                manutencoes: {
-                  view: true,
-                  create: true,
-                  edit: true,
-                  delete: true,
-                },
-                piscinas: {
-                  view: true,
-                  create: true,
-                  edit: true,
-                  delete: true,
-                },
-                utilizadores: {
-                  view: true,
-                  create: true,
-                  edit: true,
-                  delete: true,
-                },
-                relatorios: {
-                  view: true,
-                  create: true,
-                  edit: true,
-                  delete: true,
-                },
-                clientes: {
-                  view: true,
-                  create: true,
-                  edit: true,
-                  delete: true,
-                },
-              },
-              createdAt: new Date().toISOString(),
-            },
-          ];
-
-          setUsers(defaultUsers);
-          localStorage.setItem("app-users", JSON.stringify(defaultUsers));
-
-          // Criar no Firestore também
-          if (isFirestoreReady()) {
-            for (const user of defaultUsers) {
-              const firestoreId = await firestoreService.createUtilizador(user);
-              if (firestoreId) {
-                (user as any).firestoreId = firestoreId;
-              }
-            }
-          }
-        }
-      } catch (error) {
-        console.error("❌ Error loading users:", error);
-        // Fallback to initial users
-        setUsers(initialUsers);
-      }
-    };
-
-    loadUsers();
-
-    // Listen for user updates from other components
-    const handleUsersUpdated = () => {
-      console.log("🔄 Users updated event received, reloading...");
-      try {
-        const savedUsers = localStorage.getItem("app-users");
-        if (savedUsers) {
-          const parsedUsers = JSON.parse(savedUsers);
-          console.log(
-            "✅ Users reloaded after update:",
-            parsedUsers.length,
-            parsedUsers,
-          );
-          setUsers(parsedUsers);
-        }
-      } catch (error) {
-        console.error("❌ Error reloading users:", error);
-      }
-    };
-
-    window.addEventListener("usersUpdated", handleUsersUpdated);
-    return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
-  }, []);
-
-  // Firebase handles user updates automatically via real-time listeners
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
@@ -836,7 +191,6 @@ function App() {
   const [assignedUsers, setAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
-  const [autoSyncActive, setAutoSyncActive] = useState(false);
   const [editAssignedUsers, setEditAssignedUsers] = useState<
     Array<{ id: string; name: string }>
   >([]);
@@ -848,76 +202,14 @@ function App() {
   const [editingMaintenance, setEditingMaintenance] = useState(null);
   const [selectedWork, setSelectedWork] = useState(null);
   const [viewingWork, setViewingWork] = useState(false);
-  const [selectedPool, setSelectedPool] = useState(null);
-  const [viewingPool, setViewingPool] = useState(false);
-  const [selectedMaintenance, setSelectedMaintenance] = useState(null);
-  const [viewingMaintenance, setViewingMaintenance] = useState(false);
 
   // Clickable links settings
-  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
-  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
-
-  // Settings toggle functions with persistence
-  const togglePhoneDialer = (enabled: boolean) => {
-    setEnablePhoneDialer(enabled);
-    localStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
-
-    // Dispatch event for other components
-    window.dispatchEvent(
-      new CustomEvent("phoneDialerToggled", {
-        detail: { enabled },
-      }),
-    );
-  };
-
-  const toggleMapsRedirect = (enabled: boolean) => {
-    setEnableMapsRedirect(enabled);
-    localStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
-
-    // Dispatch event for other components
-    window.dispatchEvent(
-      new CustomEvent("mapsRedirectToggled", {
-        detail: { enabled },
-      }),
-    );
-  };
-
-  // Load settings from localStorage on startup
-  useEffect(() => {
-    const loadSettings = () => {
-      try {
-        const savedMapsRedirect = localStorage.getItem("enableMapsRedirect");
-        if (savedMapsRedirect !== null) {
-          setEnableMapsRedirect(JSON.parse(savedMapsRedirect));
-          console.log(
-            "✅ Configuração Google Maps carregada:",
-            JSON.parse(savedMapsRedirect),
-          );
-        }
-
-        const savedPhoneDialer = localStorage.getItem("enablePhoneDialer");
-        if (savedPhoneDialer !== null) {
-          setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
-          console.log(
-            "✅ Configuração Phone Dialer carregada:",
-            JSON.parse(savedPhoneDialer),
-          );
-        }
-
-        // Load notification preference
-        const savedNotifications = localStorage.getItem("notificationsEnabled");
-        if (savedNotifications !== null) {
-          setNotificationsEnabled(JSON.parse(savedNotifications));
-        }
-      } catch (error) {
-        console.error("❌ Erro ao carregar configurações:", error);
-      }
-    };
-
-    loadSettings();
-  }, []);
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(() => {
+    return localStorage.getItem("enablePhoneDialer") === "true";
+  });
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(() => {
+    return localStorage.getItem("enableMapsRedirect") === "true";
+  });
 
   // Maintenance form state
   const [maintenanceForm, setMaintenanceForm] = useState({
@@ -943,207 +235,50 @@ function App() {
   useEffect(() => {
     console.log("🔒 SECURITY: App initialization started");
 
-    // SECURITY: Force complete logout on app start
-    const forceLogout = async () => {
+    // Try to restore user from localStorage first
+    const storedUser =
+      localStorage.getItem("currentUser") ||
+      localStorage.getItem("mock-current-user");
+
+    if (storedUser) {
       try {
-        // Clear Firebase auth state
-        await authService.logout();
-        console.log("🔒 Firebase auth cleared");
-      } catch (error) {
-        console.log("€ Firebase logout error (expected):", error);
-      }
-
-      // Ensure user starts in unauthenticated state
-      setCurrentUser(null);
-      setIsAuthenticated(false);
-
-      // Clear any stored auth data
-      localStorage.removeItem("currentUser");
-      sessionStorage.removeItem("savedLoginCredentials");
-
-      // Clear all mock and test data
-      localStorage.removeItem("mock-users");
-      localStorage.removeItem("mock-current-user");
-      localStorage.removeItem("test-data");
-      localStorage.removeItem("sample-data");
-
-      console.log(
-        "🔒 SECURITY: Forced logout completed - manual login required",
-      );
-      console.log("🗑️ All mock and test data cleared");
-    };
-
-    forceLogout();
-  }, []);
-
-  // Passo 3: Teste completo do Firestore com operações reais
-  useEffect(() => {
-    const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
-
-      // Aguardar um pouco para Firebase se inicializar
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      try {
-        const firestoreResult = await testFirestore();
-
-        if (firestoreResult) {
-          console.log("✅ Passo 3: Firestore ativo e funcional!");
-
-          // Teste prático: tentar escrever e ler dados
-          const db = getFirebaseFirestore();
-          if (db) {
-            try {
-              // Importar funções do Firestore dinamicamente
-              const { doc, setDoc, getDoc } = await import(
-                "firebase/firestore"
-              );
-
-              // Documento de teste
-              const testDoc = doc(db, "system_tests", "firestore_test");
-              const testData = {
-                message: "Firestore funcional!",
-                timestamp: new Date().toISOString(),
-                step: "Passo 3 completado",
-              };
-
-              // Escrever teste
-              await setDoc(testDoc, testData);
-              console.log(
-                "📝 Passo 3: Dados escritos no Firestore com sucesso",
-              );
-
-              // Ler teste
-              const docSnap = await getDoc(testDoc);
-              if (docSnap.exists()) {
-                console.log(
-                  "📖 Passo 3: Dados lidos do Firestore:",
-                  docSnap.data(),
-                );
-                console.log(
-                  "🎉 PASSO 3 COMPLETADO: Firestore totalmente funcional!",
-                );
-              }
-            } catch (writeError) {
-              console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
-                writeError,
-              );
-              console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
-              );
-            }
-          }
-        } else {
-          console.log(
-            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
-          );
-        }
-      } catch (error) {
-        console.warn("❌ Passo 3: Erro no teste Firestore:", error);
-      }
-    };
-
-    testFirestoreStep3();
-  }, []);
-
-  // Sincronização inicial de todos os dados com Firestore
-  useEffect(() => {
-    const syncAllData = async () => {
-      // Aguardar um pouco para o Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-
-      if (isFirestoreReady()) {
-        console.log("📞 Iniciando sincronização inicial com Firestore...");
-
-        try {
-          await firestoreService.syncAll();
-          console.log("€ Sincronização inicial completa!");
-        } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
-        }
-      }
-    };
-
-    syncAllData();
-  }, []);
-
-  // Inicializar sincronização automática em tempo real
-  useEffect(() => {
-    const initAutoSync = async () => {
-      // Aguardar Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-
-      if (isFirestoreReady()) {
-        console.log("€Iniciando sincroniza📞ão automática em tempo real...");
-
-        try {
-          await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
-
-          // Adicionar indicador visual
-          setAutoSyncActive(true);
-          window.dispatchEvent(new CustomEvent("autoSyncStarted"));
-        } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização automática:", error);
-        }
-      }
-    };
-
-    initAutoSync();
-
-    // Cleanup quando componente for desmontado
-    return () => {
-      autoSyncService.stopAutoSync();
-    };
-  }, []);
-
-  // Listeners para atualizações automáticas da UI
-  useEffect(() => {
-    const handleDataUpdate = (event: CustomEvent) => {
-      const { data, collection } = event.detail;
-      // console.log(
-      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
-      // );
-
-      // Forçar re-render dos dados universais se necessário
-      if (collection === "obras") {
-        // Trigger re-fetch das obras
-        window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
-      } else if (collection === "utilizadores") {
-        // Atualizar lista de utilizadores
-        setUsers(data);
-        window.dispatchEvent(new CustomEvent("usersUpdated"));
-      }
-    };
-
-    // Adicionar listeners para todas as coleções
-    const collections = [
-      "obras",
-      "piscinas",
-      "manutencoes",
-      "utilizadores",
-      "clientes",
-      "localizacoes",
-      "notificacoes",
-    ];
-
-    collections.forEach((collection) => {
-      window.addEventListener(
-        `${collection}Updated`,
-        handleDataUpdate as EventListener,
-      );
-    });
-
-    // Cleanup listeners
-    return () => {
-      collections.forEach((collection) => {
-        window.removeEventListener(
-          `${collection}Updated`,
-          handleDataUpdate as EventListener,
+        const user = JSON.parse(storedUser);
+        console.log(
+          "����� App init: Restoring user from localStorage:",
+          user.email,
         );
-      });
-    };
+        setCurrentUser(user);
+        setIsAuthenticated(true);
+        console.log("✅ User session restored successfully");
+        return; // Exit early if user is restored
+      } catch (e) {
+        console.warn(
+          "App init: Error parsing stored user, clearing localStorage:",
+          e,
+        );
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("mock-current-user");
+      }
+    }
+
+    // Only clear auth state if no valid stored user found
+    console.log("🔒 No valid stored user found, ensuring clean state");
+    sessionStorage.clear(); // Clear any session data
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+
+    // Firebase auth disabled to prevent crashes
+    console.log("��� SECURITY: Firebase auth listeners disabled for stability");
+    // Firebase auth code removed to fix syntax errors
+
+    // DO NOT initialize default admin automatically - this was causing the security issue
+    // Users must always login manually for security
+    console.log(
+      "��� SECURITY: No automatic admin initialization - manual login required",
+    );
+
+    // Return empty cleanup function since unsubscribe is handled inside the promise
+    return () => {};
   }, []);
 
   // Auth state check disabled to prevent errors
@@ -1172,22 +307,22 @@ function App() {
 
   // Initialize notification permission state and register service worker
   useEffect(() => {
-    // console.log("€Initializing notifications...");
+    console.log("🔔 Initializing notifications...");
     if ("Notification" in window) {
       const permission = Notification.permission;
-      console.log("€rrent notification permission:", permission);
+      console.log("🔔 Current notification permission:", permission);
       setPushPermission(permission);
       setNotificationsEnabled(permission === "granted");
 
       if (permission === "granted") {
-        console.log("📞 Notifications already granted");
+        console.log("✅ Notifications already granted");
       } else if (permission === "denied") {
         console.warn("❌ Notifications denied by user");
       } else {
         console.log("⏳ Notifications permission not yet requested");
       }
     } else {
-      console.warn("⚠️ Notifications not supported in this browser");
+      console.warn("��� Notifications not supported in this browser");
     }
 
     // Register service worker for better push notification support
@@ -1205,7 +340,7 @@ function App() {
           .register("/sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Service Worker registered successfully:",
+              "✅ Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1217,47 +352,21 @@ function App() {
           .catch((error) => {
             console.error("❌ Service Worker registration failed:", error);
           });
-
-        // Listen for messages from service worker (notification clicks)
-        navigator.serviceWorker.addEventListener("message", (event) => {
-          if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("📱 Notification clicked, navigating...", event.data);
-
-            const { data } = event.data;
-
-            // Navigate to obras section if it's a work notification
-            if (data.workId) {
-              setActiveSection("obras");
-
-              // Show a success message
-              setTimeout(() => {
-                showNotification(
-                  "€ Notificação",
-                  `Navegando para obra: ${data.workTitle}`,
-                  "info",
-                );
-              }, 500);
-            }
-          }
-        });
       }, 1000);
     }
 
     // Handle URL hash for PWA shortcuts
     const handleHashChange = () => {
       const hash = window.location.hash.substring(1); // Remove the '#'
-      if (hash === "administracao") {
-        // Handle admin access regardless of authentication state
-        setShowAdminLogin(true);
-        // Clear the hash to avoid loops
-        window.history.replaceState(null, "", window.location.pathname);
-      } else if (hash && isAuthenticated) {
+      if (hash && isAuthenticated) {
         setActiveSection(hash);
       }
     };
 
-    // Check initial hash on load
-    handleHashChange();
+    // Check initial hash on load if authenticated
+    if (isAuthenticated) {
+      handleHashChange();
+    }
 
     // Listen for hash changes
     window.addEventListener("hashchange", handleHashChange);
@@ -1276,6 +385,65 @@ function App() {
       }
     }
   }, [isAuthenticated]);
+
+  // Notify Alexandre about assigned works when he logs in
+  useEffect(() => {
+    if (
+      currentUser?.name.toLowerCase().includes("alexandre") &&
+      works.length > 0
+    ) {
+      console.log("🔍 DEBUG Alexandre - Data loaded:", {
+        currentUser: currentUser.name,
+        worksCount: works.length,
+        works: works.map((w) => ({
+          id: w.id,
+          title: w.title,
+          assignedTo: w.assignedTo,
+          assignedUsers: w.assignedUsers,
+        })),
+        localStorage: {
+          pools: JSON.parse(localStorage.getItem("pools") || "[]").length,
+          works: JSON.parse(localStorage.getItem("works") || "[]").length,
+          maintenance: JSON.parse(localStorage.getItem("maintenance") || "[]")
+            .length,
+        },
+      });
+
+      // Find works assigned to Alexandre
+      const alexandreWorks = works.filter(
+        (work) =>
+          work &&
+          work.assignedTo &&
+          (work.assignedTo.toLowerCase().includes("alexandre") ||
+            work.assignedUsers?.some(
+              (user) =>
+                user.name && user.name.toLowerCase().includes("alexandre"),
+            )),
+      );
+
+      // Notify Alexandre about his assigned works
+      if (
+        alexandreWorks.length > 0 &&
+        notificationsEnabled &&
+        Notification.permission === "granted"
+      ) {
+        console.log(
+          "🔔 Sending notification to Alexandre about assigned works:",
+          alexandreWorks.length,
+        );
+
+        setTimeout(() => {
+          showNotification(
+            "Obras Atribuídas",
+            `Olá Alexandre! Tens ${alexandreWorks.length} obra${alexandreWorks.length > 1 ? "s" : ""} atribuída${alexandreWorks.length > 1 ? "s" : ""}.`,
+            "work",
+          );
+        }, 2000); // Delay to ensure notification system is ready
+      } else if (alexandreWorks.length > 0) {
+        console.log("ℹ️ Alexandre has works but notifications are not enabled");
+      }
+    }
+  }, [currentUser, works, notificationsEnabled]);
 
   // Login form state
   const [loginForm, setLoginForm] = useState({
@@ -1323,16 +491,16 @@ function App() {
 
   const handleSaveIntervention = () => {
     // SECURITY: Check if user has permission to create maintenance
-    if (!hasPermission("manutencoes", "create")) {
+    if (!currentUser?.permissions?.manutencoes?.create) {
       alert(
-        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
+        "Não tem permissão para criar manutenções. Contacte o administrador.",
       );
       return;
     }
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat€rios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigatórios (Piscina e Técnico).");
       return;
     }
 
@@ -1383,7 +551,7 @@ function App() {
     const newMaintenance = {
       poolId: interventionData.poolId,
       poolName: interventionData.poolName,
-      type: "Manutenç€egular",
+      type: "Manutenção Regular",
       scheduledDate: maintenanceForm.date,
       technician: interventionData.technician,
       status: maintenanceForm.status as
@@ -1492,10 +660,10 @@ function App() {
         loginForm.password,
       );
 
-      console.log("€ Auth result:", result);
+      console.log("🔐 Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1503,7 +671,7 @@ function App() {
         // Set user state and authentication
         setCurrentUser(result.user);
         setIsAuthenticated(true);
-        // Firebase handles user persistence automatically
+        localStorage.setItem("currentUser", JSON.stringify(result.user));
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
@@ -1523,12 +691,12 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("📞 Navigating to dashboard");
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
       } else {
-        console.warn("❌ Login failed:", result.error);
+        console.warn("�� Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -1539,7 +707,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
-      console.log("🚪 Initiating logout process...");
+      console.log("�� Initiating logout process...");
 
       // Close sidebar immediately
       setSidebarOpen(false);
@@ -1547,21 +715,16 @@ function App() {
       // Clear current user state immediately for better UX
       setCurrentUser(null);
       setIsAuthenticated(false);
+      localStorage.removeItem("currentUser");
 
-      // Clear saved login credentials when user manually logs out
-      sessionStorage.removeItem("savedLoginCredentials");
-      // Firebase handles auth state clearing automatically
-
-      // Clear form
+      // Clear form and navigate to dashboard
       setLoginForm({ email: "", password: "" });
-
-      // Clear URL hash to go back to login
-      window.location.hash = "";
+      navigateToSection("dashboard");
 
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully - redirected to login");
+      console.log("��� Logout completed successfully");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -1569,15 +732,11 @@ function App() {
       setSidebarOpen(false);
       setCurrentUser(null);
       setIsAuthenticated(false);
-      // Clear saved login credentials on emergency logout
-      sessionStorage.removeItem("savedLoginCredentials");
-      // Firebase handles auth state clearing automatically
+      localStorage.removeItem("currentUser");
       setLoginForm({ email: "", password: "" });
+      navigateToSection("dashboard");
 
-      // Clear URL hash
-      window.location.hash = "";
-
-      console.log("€Forced logout state clear completed - redirected to login");
+      console.log("🔧 Forced logout state clear completed");
     }
   };
 
@@ -1606,12 +765,12 @@ function App() {
   const handleDataCleanup = async () => {
     if (
       window.confirm(
-        "ATENCAO: Esta acao vai eliminar permanentemente todas as obras, manutencoes e piscinas. Os utilizadores serao mantidos. Confirma?",
+        "ATENÇÃO: Esta ação vai eliminar permanentemente todas as obras, manutenções e piscinas. Os utilizadores serão mantidos. Confirma?",
       )
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplica��ão agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -1622,30 +781,11 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    // Manter histórico de navegação simples
-    const sectionHistory = {
-      "nova-obra": "obras",
-      "nova-manutencao": "manutencoes",
-      utilizadores: "configuracoes",
-      relatorios: "dashboard",
-      configuracoes: "dashboard",
-      clientes: "dashboard",
-      localizacoes: "dashboard",
-    };
-
-    const previousSection =
-      sectionHistory[activeSection as keyof typeof sectionHistory];
-
-    if (previousSection) {
-      navigateToSection(previousSection);
-    } else if (activeSection !== "dashboard") {
-      // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
-      navigateToSection("dashboard");
+    if (window.history.length > 1) {
+      window.history.back();
     } else {
-      // Se já estiver no dashboard, tenta usar o history do browser
-      if (window.history.length > 1) {
-        window.history.back();
-      }
+      // Fallback to dashboard if no history
+      navigateToSection("dashboard");
     }
   };
 
@@ -1663,7 +803,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç€: ${pool.location}
+   Localização: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -1672,7 +812,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -1682,7 +822,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+LEIRISONDA - RELAT��RIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -1699,12 +839,12 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞ções: ${maint.notes}` : ""}
+   ${maint.notes ? `Observações: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -1726,12 +866,12 @@ ${works
     (work, index) => `
 ${index + 1}. ${work.title}
    Cliente: ${work.client}
-   Localização: ${work.location}
+   Localizaç������o: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Concluída" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or���amento: ��${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -1787,10 +927,10 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT📞STICAS:
+ESTATÍSTICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
-- Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
+- Manutenções Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Obras Pendentes: ${works.filter((w) => w.status === "pending").length}
 
 PRÓXIMAS AÇÕES:
 ${futureMaintenance
@@ -1824,7 +964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   )
   .join("")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+���� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -1848,7 +988,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         setPushPermission(permission);
         if (permission === "granted") {
           setNotificationsEnabled(true);
-          localStorage.setItem("notificationsEnabled", "true");
           showNotification(
             "Notificações Ativadas",
             "Agora vai receber notificações de obras atribuídas",
@@ -1860,11 +999,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("€️ Error requesting notification permission:", error);
+        console.error("❌ Error requesting notification permission:", error);
         return "error";
       }
     }
-    console.warn("⚠️ Notifications not supported in this browser");
+    console.warn("❌ Notifications not supported in this browser");
     return "denied";
   };
 
@@ -1907,15 +1046,23 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     };
     setAssignedWorks((prev) => [newAssignedWork, ...prev]);
 
-    // Check notification conditions
+    // Debug: Check notification conditions
+    console.log("🔍 DEBUG: Notification conditions:", {
+      hasCurrentUser: !!currentUser,
+      currentUserName: currentUser?.name,
+      assignedTo: assignedTo,
+      userMatches: currentUser?.name === assignedTo,
+      notificationsEnabled,
+      permissionGranted: Notification.permission === "granted",
+    });
 
     // Check if current user is the one assigned (exact match or partial match for combined assignments)
     const isAssignedToCurrentUser =
       currentUser &&
       assignedTo &&
-      (assignedTo === currentUser?.name ||
-        assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
-        currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
+      (assignedTo === currentUser.name ||
+        assignedTo.toLowerCase().includes(currentUser.name.toLowerCase()) ||
+        currentUser.name.toLowerCase().includes(assignedTo.toLowerCase()));
 
     console.log("🔍 DEBUG: Assignment check:", {
       currentUser: currentUser?.name,
@@ -1930,7 +1077,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Send notification if user is assigned to current user and notifications are enabled
     if (isAssignedToCurrentUser) {
       if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("📞 All conditions met, sending notification...");
+        console.log("✅ All conditions met, sending notification...");
         showNotification(
           "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
@@ -1945,7 +1092,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Show alert as fallback for better user experience
         setTimeout(() => {
           alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
+            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribu����da a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
           );
         }, 1000);
       }
@@ -1958,7 +1105,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`����️ OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -1971,7 +1118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     } else {
       alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
+        "As notificaç����es não est�����o ativadas. Active-as primeiro nas configurações.",
       );
     }
   };
@@ -2034,15 +1181,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    files.forEach((file) => {
-      const newPhoto = {
-        id: Date.now() + Math.random(),
-        name: file.name,
-        url: URL.createObjectURL(file),
-        file: file,
-      };
-      setUploadedPhotos([...uploadedPhotos, newPhoto]);
-    });
+    const fakeEvent = { target: { files } };
+    handlePhotoUpload(fakeEvent);
   };
 
   const downloadPDF = (content: string, filename: string) => {
@@ -2138,13 +1278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Permission check function
   const hasPermission = (module: string, action: string): boolean => {
-    if (!currentUser) return false;
-
-    // Super admins have access to everything
-    if (currentUser.role === "super_admin") return true;
-
-    // Check specific permissions for other roles
-    if (!currentUser.permissions) return false;
+    if (!currentUser || !currentUser.permissions) return false;
     return currentUser.permissions[module]?.[action] || false;
   };
 
@@ -2158,30 +1292,25 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleAddressClick = (address: string) => {
-    console.log("€dress clicked:", address);
-    console.log("€ Maps redirect enabled:", enableMapsRedirect);
-
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
       const encodedAddress = encodeURIComponent(address);
-      const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
-
-      console.log("€pening Google Maps:", mapsUrl);
-
-      try {
-        window.open(mapsUrl, "_blank");
-        console.log("✅ Google Maps opened successfully");
-      } catch (error) {
-        console.error("📞 Error opening Google Maps:", error);
-      }
-    } else {
-      if (!enableMapsRedirect) {
-        console.warn("⚠€ Maps redirect is disabled");
-      }
-      if (!address) {
-        console.warn("⚠€ No address provided");
-      }
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
+        "_blank",
+      );
     }
+  };
+
+  // Settings persistence functions
+  const togglePhoneDialer = (enabled: boolean) => {
+    setEnablePhoneDialer(enabled);
+    localStorage.setItem("enablePhoneDialer", enabled.toString());
+  };
+
+  const toggleMapsRedirect = (enabled: boolean) => {
+    setEnableMapsRedirect(enabled);
+    localStorage.setItem("enableMapsRedirect", enabled.toString());
   };
 
   const handleDeleteUser = (userId) => {
@@ -2208,57 +1337,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     try {
       if (editingUser) {
         // Update existing user
-        console.log(
-          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
+        setUsers(
+          users.map((u) =>
+            u.id === editingUser.id
+              ? {
+                  ...u,
+                  ...userForm,
+                }
+              : u,
+          ),
         );
 
-        const updatedUser = {
-          ...editingUser,
-          ...userForm,
-          updatedAt: new Date().toISOString(),
-        };
-
-        // Atualizar no Firestore
-        const firestoreSuccess = await firestoreService.updateUtilizador(
-          editingUser.id?.toString() || editingUser.id,
-          updatedUser,
-        );
-
-        if (firestoreSuccess) {
-          console.log("✅ Utilizador atualizado no Firestore");
-        }
-
-        // Atualizar estado local
-        setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
-
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
           id: Math.max(...users.map((u) => u.id)) + 1,
           ...userForm,
-          createdAt: new Date().toISOString(),
+          createdAt: new Date().toISOString().split("T")[0],
         };
-
-        console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
-
-        // Criar no Firestore primeiro
-        const firestoreId = await firestoreService.createUtilizador(newUser);
-
-        if (firestoreId) {
-          console.log("✅ Utilizador criado no Firestore:", firestoreId);
-          newUser.firestoreId = firestoreId;
-        }
-
-        // Atualizar estado local
         setUsers([...users, newUser]);
 
-        // Try to register with robustLoginService
+        // Try to register with Firebase for automatic synchronization
         try {
-          const { robustLoginService } = await import(
-            "./services/robustLoginService"
-          );
-          const result = await robustLoginService.register(
+          const result = await authService.register(
             userForm.email,
             userForm.password,
             userForm.name,
@@ -2267,7 +1369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           if (result.success) {
             console.log(
-              `🔥 Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase Auth + Firestore`,
+              `✅ Utilizador ${userForm.name} criado e sincronizado automaticamente com Firebase`,
             );
 
             // Show success message
@@ -2278,12 +1380,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }, 100);
           } else {
             console.log(
-              `€tilizador ${userForm.name} criado no Firestore. Firebase Auth: ${result.error}`,
+              `⚠️ Utilizador ${userForm.name} criado localmente. Sincroniza��ão Firebase: ${result.error}`,
             );
           }
         } catch (syncError) {
           console.log(
-            `⚠️ Utilizador ${userForm.name} criado no Firestore. Erro de sincronização Auth:`,
+            `����� Utilizador ${userForm.name} criado localmente. Erro de sincronizaç��o:`,
             syncError,
           );
         }
@@ -2291,7 +1393,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("❌ Erro ao salvar utilizador:", error);
+      console.error("Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -2396,144 +1498,70 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     { id: "obras", icon: Building2, label: "Obras", path: "/obras" },
     { id: "nova-obra", icon: Plus, label: "Nova Obra", path: "/obras/nova" },
     {
-      id: "manutencoes",
-      icon: Wrench,
-      label: "Manutenções",
-      path: "/manutencoes",
-    },
-    {
       id: "nova-manutencao",
-      icon: Plus,
+      icon: Wrench,
       label: "Nova Manutenção",
       path: "/manutencao/nova",
     },
     {
-      id: "piscinas",
+      id: "futuras-manutencoes",
       icon: Waves,
       label: "Piscinas",
       path: "/piscinas",
     },
     {
-      id: "localizacoes",
-      icon: MapPin,
-      label: "Localizações",
-      path: "/localizacoes",
+      id: "utilizadores",
+      icon: UserCheck,
+      label: "Utilizadores",
+      path: "/utilizadores",
+    },
+    {
+      id: "relatorios",
+      icon: BarChart3,
+      label: "Relatórios",
+      path: "/relatorios",
+    },
+    { id: "clientes", icon: Users, label: "Clientes", path: "/clientes" },
+    {
+      id: "configuracoes",
+      icon: Settings,
+      label: "Configurações",
+      path: "/configuracoes",
+    },
+    {
+      id: "admin",
+      icon: Shield,
+      label: "Administração",
+      path: "/admin",
+      requiresAuth: true,
     },
   ];
 
   const renderContent = () => {
-    // Show login page when user not authenticated
+    // Add loading state check with timeout
     if (!currentUser || !isAuthenticated) {
+      console.log("🔄 renderContent: Waiting for auth state", {
+        currentUser: !!currentUser,
+        isAuthenticated,
+        activeSection,
+      });
       return (
-        <LoginPage
-          onLogin={async (
-            email: string,
-            password: string,
-            rememberMe: boolean = false,
-          ) => {
-            // console.log("📞 Login attempt for:", email);
-
-            // Clear any previous errors
-            setLoginError("");
-
-            // Basic validation
-            if (!email?.trim() || !password?.trim()) {
-              setLoginError("Por favor, preencha todos os campos");
-              return;
-            }
-
-            try {
-              // Importar serviço robusto
-              const { robustLoginService } = await import(
-                "./services/robustLoginService"
-              );
-
-              console.log("🔐 Usando serviço de login robusto...");
-              const result = await robustLoginService.login(
-                email.trim(),
-                password,
-                rememberMe,
-              );
-
-              // Fallback para authService se necessário
-              if (!result.success) {
-                console.log("🔄 Tentando authService como fallback...");
-                const fallbackResult = await authService.login(
-                  email.trim(),
-                  password,
-                  rememberMe,
-                );
-
-                if (fallbackResult.success) {
-                  console.log("📞 AuthService fallback bem-sucedido");
-                  result.success = true;
-                  result.user = fallbackResult.user;
-                }
-              }
-
-              // console.log("🔐 Auth result:", result);
-
-              if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
-
-                // Update state
-                setCurrentUser(result.user);
-                setIsAuthenticated(true);
-
-                // Navigate to dashboard or requested section with validation
-                const hash = window.location.hash.substring(1);
-                if (hash && hash !== "login") {
-                  // Validate that the section exists and user has access
-                  const validSections = [
-                    "dashboard",
-                    "obras",
-                    "piscinas",
-                    "manutencoes",
-                    "futuras-manutencoes",
-                    "nova-obra",
-                    "nova-piscina",
-                    "nova-manutencao",
-                    "clientes",
-                    "novo-cliente",
-                    "configuracoes",
-                    "relatorios",
-                    "utilizadores",
-                    "localizacoes",
-                    "register",
-                    "editar-obra",
-                    "editar-piscina",
-                    "editar-manutencao",
-                  ];
-
-                  if (validSections.includes(hash)) {
-                    // Use setTimeout to ensure state is properly set before navigation
-                    setTimeout(() => {
-                      setActiveSection(hash);
-                    }, 100);
-                  } else {
-                    // Invalid hash, redirect to dashboard
-                    window.location.hash = "";
-                    navigateToSection("dashboard");
-                  }
-                } else {
-                  navigateToSection("dashboard");
-                }
-
-                // console.log("✅ Login state updated successfully");
-              } else {
-                console.warn("❌ Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
-              }
-            } catch (error: any) {
-              console.error("❌ Login error:", error);
-              setLoginError("Erro de sistema. Por favor, tente novamente.");
-            }
-          }}
-          loginError={loginError}
-          isLoading={false}
-        />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">A carregar aplicação...</p>
+            <p className="mt-2 text-sm text-gray-500">
+              Se esta mensagem persistir, recarregue a página
+            </p>
+          </div>
+        </div>
       );
     }
+
+    console.log("✅ renderContent: Auth state valid, rendering", {
+      activeSection,
+      userRole: currentUser?.role,
+    });
 
     // Add error boundary
     try {
@@ -2543,88 +1571,95 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Simple Welcome Header */}
-                <div
-                  className="rounded-lg p-4 shadow-sm relative overflow-hidden"
-                  style={{
-                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F4aa5ed953548445997f9d2fcbd4d2e2b?format=webp&width=800')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                  }}
-                >
-                  {/* Overlay para melhor legibilidade do texto */}
-                  <div className="absolute inset-0 bg-white bg-opacity-60 rounded-lg"></div>
-
-                  {/* Conteúdo por cima do overlay */}
-                  <div className="relative z-10">
-                    {/* Logo and Time Row */}
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
+                {/* Header Card */}
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                      <div className="w-8 h-8 bg-white rounded-lg shadow-md p-1">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
                       </div>
-                      <span className="text-sm text-gray-800 font-medium">
-                        {new Date().toLocaleTimeString("pt-PT", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
                     </div>
-
-                    {/* Main Content */}
-                    <div className="text-center mb-3">
-                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                    <div>
+                      <h1 className="text-lg font-semibold text-gray-900">
+                        Olá, {currentUser?.name || "Utilizador"}
                       </h1>
-                      <p className="text-gray-800 text-sm font-medium">
-                        {new Date().toLocaleDateString("pt-PT", {
-                          weekday: "long",
-                          day: "2-digit",
-                          month: "long",
-                        })}
-                      </p>
-                    </div>
-                  </div>
+                      {currentUser?.name
+                        .toLowerCase()
+                        .includes("alexandre") && (
+                        <div className="mt-2 space-y-1">
+                          <button
+                            onClick={() => {
+                              const alexandreWorks = works.filter(
+                                (w) =>
+                                  w.assignedTo
+                                    .toLowerCase()
+                                    .includes("alexandre") ||
+                                  w.assignedUsers?.some((user) =>
+                                    user.name
+                                      .toLowerCase()
+                                      .includes("alexandre"),
+                                  ),
+                              );
 
-                  {/* Firebase, Firestore & AutoSync Status LEDs - Bottom Right Corner */}
-                  <div className="absolute bottom-2 right-2 z-20">
-                    <div className="flex items-center space-x-1">
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          isFirebaseReady() ? "bg-green-500" : "bg-red-500"
-                        }`}
-                        title={
-                          isFirebaseReady()
-                            ? "Firebase Ativo"
-                            : "Firebase Inativo"
-                        }
-                      ></div>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          isFirestoreReady() ? "bg-blue-500" : "bg-orange-500"
-                        }`}
-                        title={
-                          isFirestoreReady()
-                            ? "Firestore Ativo"
-                            : "Firestore Inativo"
-                        }
-                      ></div>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          autoSyncActive
-                            ? "bg-purple-500 animate-pulse"
-                            : "bg-gray-400"
-                        }`}
-                        title={
-                          autoSyncActive
-                            ? "Sincronização Automática Ativa"
-                            : "Sincronização Automática Inativa"
-                        }
-                      ></div>
+                              const debugInfo = {
+                                currentUser: currentUser.name,
+                                totalWorks: works.length,
+                                alexandreWorks: alexandreWorks,
+                                localStorage: {
+                                  pools: JSON.parse(
+                                    localStorage.getItem("pools") || "[]",
+                                  ).length,
+                                  works: JSON.parse(
+                                    localStorage.getItem("works") || "[]",
+                                  ).length,
+                                  maintenance: JSON.parse(
+                                    localStorage.getItem("maintenance") || "[]",
+                                  ).length,
+                                },
+                                notificationsEnabled,
+                                notificationPermission: Notification.permission,
+                              };
+                              console.log(
+                                "🔍 Alexandre Debug Info:",
+                                debugInfo,
+                              );
+                              alert(
+                                `Debug Alexandre:\n` +
+                                  `Obras no sistema: ${works.length}\n` +
+                                  `Obras atribuídas ao Alexandre: ${alexandreWorks.length}\n` +
+                                  `Notificaç��es ativadas: ${notificationsEnabled ? "Sim" : "Não"}\n` +
+                                  `Permissão notificações: ${Notification.permission}\n\n` +
+                                  `Ver console para mais detalhes`,
+                              );
+                            }}
+                            className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:bg-yellow-600"
+                          >
+                            Debug Dados Alexandre
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              console.log(
+                                "🧪 Testando notificação para Alexandre...",
+                              );
+                              sendWorkAssignmentNotification(
+                                "Obra de Teste para Alexandre",
+                                "Alexandre",
+                              );
+                            }}
+                            className="px-3 py-1 bg-green-500 text-white text-xs rounded hover:bg-green-600"
+                          >
+                            Testar Notifica����o
+                          </button>
+                        </div>
+                      )}
+                      <p className="text-gray-600 text-sm">
+                        Bem-vindo ao sistema Leirisonda
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -2646,49 +1681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar obras pendentes atribuídas ao utilizador atual
-                          const pendingWorks = works.filter((w) => {
-                            const isPending =
-                              w.status === "pending" || w.status === "pendente";
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isPending && isAssignedToUser; // Mostrar apenas obras pendentes atribuídas
-                          });
-                          console.log(
-                            "📊 Dashboard - Obras Pendentes Atribuídas:",
-                            pendingWorks.length,
-                            "Utilizador:",
-                            currentUser?.name,
-                            pendingWorks.map((w) => ({
-                              id: w.id,
-                              status: w.status,
-                              title: w.workSheetNumber,
-                              assignedTo: w.assignedTo,
-                              assignedUsers: w.assignedUsers,
-                            })),
-                          );
-                          return pendingWorks.length;
-                        })()}
+                        {works.filter((w) => w.status === "pending").length}
                       </div>
                     </div>
                   </button>
@@ -2708,37 +1701,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar obras em progresso atribuídas ao utilizador atual
-                          const inProgressWorks = works.filter((w) => {
-                            const isInProgress =
-                              w.status === "in_progress" ||
-                              w.status === "em_progresso";
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isInProgress && isAssignedToUser; // Mostrar apenas obras em progresso atribuídas
-                          });
-                          return inProgressWorks.length;
-                        })()}
+                        {works.filter((w) => w.status === "in_progress").length}
                       </div>
                     </div>
                   </button>
@@ -2758,33 +1721,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          const completedWorks = works.filter((w) => {
-                            const isCompleted =
-                              w.status === "completed" ||
-                              w.status === "concluida";
-                            const isAssignedToUser =
-                              currentUser &&
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isCompleted && isAssignedToUser;
-                          });
-                          return completedWorks.length;
-                        })()}
+                        {works.filter((w) => w.status === "completed").length}
                       </div>
                     </div>
                   </button>
@@ -2804,43 +1741,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir concluídas)
-                          const worksWithoutSheets = works.filter((w) => {
-                            const isNotCompleted =
-                              w.status !== "completed" &&
-                              w.status !== "concluida";
-                            const noSheetGenerated = !w.folhaGerada;
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return (
-                              isNotCompleted &&
-                              noSheetGenerated &&
-                              isAssignedToUser
-                              // Mostrar apenas obras sem folha gerada atribuídas ao utilizador
-                            );
-                          });
-                          return worksWithoutSheets.length;
-                        })()}
+                        {
+                          works.filter(
+                            (w) => !w.folhaGerada && w.status !== "completed",
+                          ).length
+                        }
                       </div>
                     </div>
                   </button>
@@ -2853,223 +1758,117 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between">
                       <div className="text-left">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Obras Atribuídas
+                          Todas as Obras
                         </h3>
-                        <p className="text-sm text-gray-500">
-                          Atribuídas a mim
-                        </p>
+                        <p className="text-sm text-gray-500">No sistema</p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
-                        {(() => {
-                          // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
-                          const assignedWorks = works.filter((w) => {
-                            const isNotCompleted =
-                              w.status !== "completed" &&
-                              w.status !== "concluida";
-                            const isAssignedToUser =
-                              currentUser &&
-                              // Verificar assignedTo (campo legacy)
-                              ((w.assignedTo &&
-                                (w.assignedTo === currentUser.name ||
-                                  w.assignedTo
-                                    .toLowerCase()
-                                    .includes(currentUser.name.toLowerCase()) ||
-                                  currentUser.name
-                                    .toLowerCase()
-                                    .includes(w.assignedTo.toLowerCase()))) ||
-                                // Verificar assignedUsers array
-                                (w.assignedUsers &&
-                                  w.assignedUsers.some(
-                                    (user) =>
-                                      user.name === currentUser.name ||
-                                      user.id === currentUser.id,
-                                  )) ||
-                                // Verificar assignedUserIds array
-                                (w.assignedUserIds &&
-                                  w.assignedUserIds.includes(currentUser.id)));
-                            return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
-                          });
-                          return assignedWorks.length;
-                        })()}
+                        {works.length}
                       </div>
                     </div>
                   </button>
                 </div>
 
-                {/* Lista das Últimas 3 Obras */}
-                {(() => {
-                  // Filtrar obras atribuídas ao utilizador atual (excluir concluídas)
-                  const assignedWorks = works.filter((w) => {
-                    const isNotCompleted =
-                      w.status !== "completed" && w.status !== "concluida";
-                    const isAssignedToUser =
-                      currentUser &&
-                      // Verificar assignedTo (campo legacy)
-                      ((w.assignedTo &&
-                        (w.assignedTo === currentUser.name ||
-                          w.assignedTo
-                            .toLowerCase()
-                            .includes(currentUser.name.toLowerCase()) ||
-                          currentUser.name
-                            .toLowerCase()
-                            .includes(w.assignedTo.toLowerCase()))) ||
-                        // Verificar assignedUsers array
-                        (w.assignedUsers &&
-                          w.assignedUsers.some(
-                            (user) =>
-                              user.name === currentUser.name ||
-                              user.id === currentUser.id,
-                          )) ||
-                        // Verificar assignedUserIds array
-                        (w.assignedUserIds &&
-                          w.assignedUserIds.includes(currentUser.id)));
-                    return true; // Mostrar todas as obras na lista
-                  }); // Remover limitação - mostrar todas as obras
-
-                  return assignedWorks.length > 0 ? (
-                    <div className="bg-white rounded-lg shadow-sm">
-                      <div className="flex items-center p-4 border-b border-gray-100">
-                        <Building2 className="h-5 w-5 text-purple-600 mr-3" />
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Últimas 3 Obras
-                        </h2>
-                      </div>
-                      <div className="p-4 space-y-3">
-                        {assignedWorks.map((work) => (
-                          <div
-                            key={work.id}
-                            className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
-                          >
-                            <div className="space-y-3">
-                              <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-600">
-                                  📍 Morada:
-                                </span>
-                                {work.location ? (
-                                  <button
-                                    onClick={() =>
-                                      handleAddressClick(work.location)
-                                    }
-                                    className={`text-sm cursor-pointer hover:opacity-80 ${
-                                      enableMapsRedirect
-                                        ? "text-blue-600 hover:text-blue-800 underline"
-                                        : "text-gray-900 hover:text-blue-600"
-                                    }`}
-                                  >
-                                    {work.location}
-                                  </button>
-                                ) : (
-                                  <span className="text-sm text-gray-500">
-                                    Não especificada
-                                  </span>
-                                )}
+                {/* Lista de Todas as Obras */}
+                {works.length > 0 && (
+                  <div className="bg-white rounded-lg shadow-sm">
+                    <div className="flex items-center p-4 border-b border-gray-100">
+                      <Building2 className="h-5 w-5 text-purple-600 mr-3" />
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Todas as Obras
+                      </h2>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      {works.map((work) => (
+                        <div
+                          key={work.id}
+                          className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 cursor-pointer hover:bg-purple-100 transition-colors"
+                          onClick={() => {
+                            setSelectedWork(work);
+                            setViewingWork(true);
+                          }}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start space-x-3">
+                              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                <Building2 className="h-5 w-5 text-purple-600" />
                               </div>
-                              <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-600">
-                                  👤 Cliente:
-                                </span>
-                                <span className="text-sm text-gray-900">
-                                  {work.client || "Não especificado"}
-                                </span>
-                              </div>
-                              {work.contact && (
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                              <div>
+                                <h3 className="font-semibold text-gray-900">
+                                  {work.title}
+                                </h3>
+                                <div className="flex items-center space-x-1 text-gray-600 text-sm">
+                                  <span>👤</span>
+                                  <span>
+                                    Atribu��da a:{" "}
+                                    {work.assignedUsers &&
+                                    work.assignedUsers.length > 0
+                                      ? work.assignedUsers
+                                          .map((u) => u.name)
+                                          .join(", ")
+                                      : work.assignedTo || "Não atribuída"}
                                   </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      if (enablePhoneDialer) {
-                                        window.location.href = `tel:${work.contact}`;
-                                      }
-                                    }}
-                                    className={`text-sm ${
-                                      enablePhoneDialer
-                                        ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                        : "text-gray-900"
-                                    }`}
-                                  >
-                                    {work.contact}
-                                  </button>
                                 </div>
-                              )}
-                              <div className="flex items-center space-x-2">
-                                <span className="text-sm font-medium text-gray-600">
-                                  €abalho:
-                                </span>
-                                <span className="text-sm text-gray-900">
-                                  {work.workPerformed ||
-                                    work.type ||
-                                    "Não especificado"}
-                                </span>
-                              </div>
-
-                              {/* Estado e Ações */}
-                              <div className="flex items-center justify-between pt-2 border-t border-purple-200">
+                                <div className="flex items-center space-x-1 text-gray-500 text-sm">
+                                  <span>📍</span>
+                                  <span>
+                                    Criada em:{" "}
+                                    {new Date(
+                                      work.createdAt,
+                                    ).toLocaleDateString("pt-PT")}
+                                  </span>
+                                </div>
                                 <span
-                                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                                    work.status === "pending"
-                                      ? "bg-red-100 text-red-700"
-                                      : work.status === "in_progress"
-                                        ? "bg-orange-100 text-orange-700"
-                                        : work.status === "completed"
-                                          ? "bg-green-100 text-green-700"
-                                          : "bg-gray-100 text-gray-700"
+                                  className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${
+                                    work.status === "in_progress"
+                                      ? "bg-yellow-100 text-yellow-800"
+                                      : work.status === "completed"
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-blue-100 text-blue-800"
                                   }`}
                                 >
-                                  {work.status === "pending"
-                                    ? "Pendente"
-                                    : work.status === "in_progress"
-                                      ? "Em Progresso"
-                                      : work.status === "completed"
-                                        ? "Conclu📞da"
-                                        : work.status}
+                                  {work.status}
                                 </span>
-
-                                <div className="flex items-center space-x-2">
-                                  {/* Botão Visualizar */}
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setSelectedWork(work);
-                                      setViewingWork(true);
-                                    }}
-                                    className="p-2 bg-blue-100 hover:bg-blue-200 text-blue-600 rounded-lg transition-colors"
-                                    title="Visualizar detalhes"
-                                  >
-                                    <Eye className="h-4 w-4" />
-                                  </button>
-
-                                  {/* Botão Iniciar Obra (só se pendente) */}
-                                  {work.status === "pending" && (
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        dataSync.updateWork(work.id, {
-                                          status: "in_progress",
-                                        });
-                                        showNotification(
-                                          "Obra Iniciada",
-                                          `A obra "${work.client}" foi iniciada`,
-                                          "success",
-                                        );
-                                      }}
-                                      className="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition-colors"
-                                      title="Iniciar obra"
-                                    >
-                                      <Play className="h-4 w-4" />
-                                    </button>
-                                  )}
-                                </div>
                               </div>
                             </div>
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the parent click
+                                  if (work.status !== "in_progress") {
+                                    dataSync.updateWork(work.id, {
+                                      status: "in_progress",
+                                    });
+                                  }
+                                }}
+                                className={`px-3 py-1 text-white text-sm rounded-lg transition-colors ${
+                                  work.status === "in_progress"
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-purple-600 hover:bg-purple-700"
+                                }`}
+                                disabled={work.status === "in_progress"}
+                              >
+                                {work.status === "in_progress"
+                                  ? "Em Progresso"
+                                  : "Iniciar"}
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation(); // Prevent triggering the parent click
+                                  setSelectedWork(work);
+                                  setViewingWork(true);
+                                }}
+                                className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded-lg transition-colors"
+                              >
+                                Ver Detalhes
+                              </button>
+                            </div>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  ) : null;
-                })()}
+                  </div>
+                )}
 
                 {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
@@ -3092,7 +1891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç€endada
+                          Nenhuma manutenção agendada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -3153,7 +1952,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>🕒</span>
+                                      <span>⏰</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -3197,7 +1996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">📞</span>
+                      <span className="text-blue-600">🔍</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3232,12 +2031,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">📊</div>
+                            <div className="text-gray-400 mb-2">📅</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
-                              Adicione obras, piscinas, manutenções ou clientes
+                              Adicione obras, piscinas, manuten��ões ou clientes
                               primeiro
                             </p>
                           </div>
@@ -3385,7 +2184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} €{pool.location}
+                                            {pool.client} �� {pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -3518,7 +2317,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {client.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {client.email} • {client.phone}
+                                            {client.email} ��� {client.phone}
                                           </p>
                                         </div>
                                       </div>
@@ -3598,7 +2397,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">€ </div>
+                                  <div className="text-gray-400 mb-2">���</div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -3635,7 +2434,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest📞o de piscinas no sistema
+                          Gest���o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3730,18 +2529,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {pool.name}
                             </h3>
                             <button
-                              onClick={() => {
-                                if (pool?.location) {
-                                  handleAddressClick(pool.location);
-                                }
-                              }}
-                              className={`text-left cursor-pointer hover:opacity-80 ${
+                              onClick={() => handleAddressClick(pool.location)}
+                              className={`text-left ${
                                 enableMapsRedirect
-                                  ? "text-blue-600 hover:text-blue-800 underline"
-                                  : "text-gray-600 hover:text-blue-600"
+                                  ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                                  : "text-gray-600"
                               }`}
+                              disabled={!enableMapsRedirect}
                             >
-                              📞 {pool.location}
+                              📍 {pool.location}
                             </button>
                             <div className="flex items-center space-x-4 mt-2">
                               <span className="text-sm text-gray-500">
@@ -3762,7 +2558,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr€xima manutenção:{" "}
+                                Próxima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -3770,16 +2566,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             )}
                           </div>
                           <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => {
-                                setSelectedPool(pool);
-                                setViewingPool(true);
-                              }}
-                              className="p-2 text-gray-400 hover:text-blue-600"
-                              title="Visualizar detalhes"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </button>
                             {hasPermission("piscinas", "edit") && (
                               <button
                                 onClick={() => {
@@ -3926,7 +2712,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu📞do"
+                                      ? "Concluído"
                                       : maint.status}
                               </span>
                             </div>
@@ -3958,7 +2744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        ��� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -3968,11 +2754,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <div>
                                   <span className="font-medium">Local:</span>{" "}
                                   <button
-                                    onClick={() => {
-                                      if (maint?.location) {
-                                        handleAddressClick(maint.location);
-                                      }
-                                    }}
+                                    onClick={() =>
+                                      handleAddressClick(maint.location)
+                                    }
                                     className={`text-xs ${
                                       enableMapsRedirect
                                         ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -3980,7 +2764,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    �� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -3995,16 +2779,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <button
-                              onClick={() => {
-                                setSelectedMaintenance(maint);
-                                setViewingMaintenance(true);
-                              }}
-                              className="p-2 text-gray-400 hover:text-blue-600"
-                              title="Visualizar detalhes"
-                            >
-                              <Eye className="h-4 w-4" />
-                            </button>
                             {hasPermission("manutencoes", "edit") && (
                               <button
                                 onClick={() => {
@@ -4055,7 +2829,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç€es agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -4064,7 +2838,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç€</span>
+                      <span>Agendar Manutenção</span>
                     </button>
                   </div>
                 </div>
@@ -4152,7 +2926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </span>
                               <span className="text-gray-500">
-                                {maint.technician}
+                                👨‍🔧 {maint.technician}
                               </span>
                             </div>
                           </div>
@@ -4222,7 +2996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informa��ões Básicas
                         </h3>
                       </div>
 
@@ -4258,7 +3032,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="">Selecionar tipo</option>
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç€</option>
+                            <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
@@ -4334,14 +3108,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <label className="block text-sm font-medium text-gray-700 mb-2">
                             Estado da Obra *
                           </label>
-                          <select
-                            name="status"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="pending">Pendente</option>
-                            <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
-                            <option value="cancelled">Cancelada</option>
+                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="pendente">Pendente</option>
+                            <option value="em-progresso">Em Progresso</option>
+                            <option value="concluida">Concluída</option>
+                            <option value="cancelada">Cancelada</option>
                           </select>
                         </div>
 
@@ -4368,7 +3139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Viaturas e Técnicos
+                          Viaturas e T��cnicos
                         </h3>
                       </div>
 
@@ -4447,7 +3218,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 setCurrentTechnician(e.target.value)
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Ex: Jo📞o Santos"
+                              placeholder="Ex: João Santos"
                             />
                             <button
                               type="button"
@@ -4501,142 +3272,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Usuarios Atribuidos ({users.length} utilizadores
-                            disponiveis)
+                            Usuários Atribuídos ({users.length} utilizadores
+                            disponíveis)
                           </label>
-                          {(() => {
-                            console.log(
-                              "📊 TOTAL UTILIZADORES CARREGADOS:",
-                              users.length,
-                              users,
-                            );
-
-                            // Check localStorage directly
-                            const localStorageUsers =
-                              localStorage.getItem("app-users");
-                            console.log(
-                              "💾 USERS NO LOCALSTORAGE (app-users):",
-                              localStorageUsers,
-                            );
-
-                            if (localStorageUsers) {
-                              try {
-                                const parsed = JSON.parse(localStorageUsers);
-                                console.log(
-                                  "📞 PARSED USERS:",
-                                  parsed.length,
-                                  parsed,
-                                );
-                              } catch (e) {
-                                console.error(
-                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
-                                  e,
-                                );
-                              }
-                            }
-
-                            return null;
-                          })()}
                           <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuarios responsaveis por esta obra.
-                            Utilizadores inativos sao marcados como "(Inativo)".
+                            Selecione os usuários responsáveis por esta obra
                           </p>
-                          {users.length === 0 && (
-                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                              <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado. Vá à Área de de
-                                Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
-                              </p>
-                            </div>
-                          )}
-
-                          {/* Botão para recarregar utilizadores quando lista está vazia */}
-                          {users.length === 0 && (
-                            <div className="mb-3">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  console.log(
-                                    "🔄 Recarregando utilizadores...",
-                                  );
-                                  const savedUsers =
-                                    localStorage.getItem("app-users");
-                                  if (savedUsers) {
-                                    try {
-                                      const parsedUsers =
-                                        JSON.parse(savedUsers);
-                                      setUsers(parsedUsers);
-                                      alert(
-                                        `✅ ${parsedUsers.length} utilizadores carregados!`,
-                                      );
-                                    } catch (error) {
-                                      console.error("Erro:", error);
-                                      alert("❌ Erro ao carregar utilizadores");
-                                    }
-                                  } else {
-                                    const defaultUser = {
-                                      id: 1,
-                                      name: "Gonçalo Fonseca",
-                                      email: "gongonsilva@gmail.com",
-                                      active: true,
-                                      role: "super_admin",
-                                      password: "19867gsf",
-                                      permissions: {
-                                        obras: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                        manutencoes: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                        piscinas: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                        utilizadores: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                        relatorios: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                        clientes: {
-                                          view: true,
-                                          create: true,
-                                          edit: true,
-                                          delete: true,
-                                        },
-                                      },
-                                      createdAt: new Date().toISOString(),
-                                    };
-                                    setUsers([defaultUser]);
-                                    localStorage.setItem(
-                                      "app-users",
-                                      JSON.stringify([defaultUser]),
-                                    );
-                                    alert("✅ Utilizador padrão criado!");
-                                  }
-                                }}
-                                className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                              >
-                                🔄 Recarregar Utilizadores
-                              </button>
-                            </div>
-                          )}
-
                           <div className="flex space-x-2">
                             <select
                               value={currentAssignedUser}
@@ -4648,35 +3289,30 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
+                                  : "Nenhum utilizador dispon��vel"}
                               </option>
                               {users
                                 .filter((user) => {
-                                  // Show ALL users (active and inactive) but mark inactive ones
-                                  const alreadyAssigned = assignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(user.id),
-                                  );
-
                                   console.log(
-                                    "€ILTRO UTILIZADOR:",
+                                    "Nova obra - User:",
                                     user.name,
-                                    "| Role:",
+                                    "Role:",
                                     user.role,
-                                    "| Ativo:",
+                                    "Active:",
                                     user.active,
-                                    "| Já atribuído:",
-                                    alreadyAssigned,
-                                    "| PASSA FILTRO:",
-                                    !alreadyAssigned,
                                   );
-
-                                  return !alreadyAssigned;
+                                  return (
+                                    user.role !== "viewer" &&
+                                    user.active !== false &&
+                                    !assignedUsers.some(
+                                      (assigned) =>
+                                        assigned.id === String(user.id),
+                                    )
+                                  );
                                 })
                                 .map((user) => (
                                   <option key={user.id} value={user.id}>
-                                    {user.name}{" "}
-                                    {user.active === false ? "(Inativo)" : ""}
+                                    {user.name}
                                   </option>
                                 ))}
                             </select>
@@ -4762,7 +3398,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
-                      <div id="furo-details">
+                      <div>
                         <div className="flex items-center space-x-3 mb-6">
                           <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
                             <Waves className="h-4 w-4 text-cyan-600" />
@@ -4794,7 +3430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N€vel da Água (m) *
+                                  Nível da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -4927,7 +3563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof📞sico)
+                                    230V (monof��sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -4935,10 +3571,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa📞ções Específicas do Furo */}
+                          {/* Observações Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observaç��es Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -5083,11 +3719,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={async (e) => {
+                        onClick={(e) => {
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create works
-                          if (!hasPermission("obras", "create")) {
+                          if (!currentUser?.permissions?.obras?.create) {
                             alert(
                               "Não tem permissão para criar obras. Contacte o administrador.",
                             );
@@ -5114,19 +3750,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="João Silva"]',
+                                'input[placeholder*="Cliente"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
                             (
                               form.querySelector(
-                                'input[placeholder*="244 123 456"]',
+                                'input[placeholder*="Contacto"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const location =
                             (
                               form.querySelector(
-                                'input[placeholder*="Rua das Flores"]',
+                                'input[placeholder*="Morada"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const startTime =
@@ -5153,129 +3789,28 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 'textarea[placeholder*="Descrição"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
-                          const observations =
-                            (
-                              form.querySelector(
-                                'textarea[placeholder*="Observações sobre a obra"]',
-                              ) as HTMLTextAreaElement
-                            )?.value || "";
                           const budget =
                             (
                               form.querySelector(
                                 'input[placeholder*="Orçamento"]',
                               ) as HTMLInputElement
                             )?.value || "";
-
-                          // Extract bore/water hole specific data if work type is "furo"
-                          let boreData = {};
-                          if (selectedWorkType === "furo") {
-                            boreData = {
-                              boreDepth:
-                                (
-                                  form.querySelector(
-                                    'input[placeholder*="Profundidade do Furo"]',
-                                  ) as HTMLInputElement
-                                )?.value || "",
-                              waterLevel:
-                                (
-                                  form.querySelector(
-                                    'input[placeholder*="Nível da Água"]',
-                                  ) as HTMLInputElement
-                                )?.value || "",
-                              pumpDepth:
-                                (
-                                  form.querySelector(
-                                    'input[placeholder*="Profundidade da Bomba"]',
-                                  ) as HTMLInputElement
-                                )?.value || "",
-                              flowRate:
-                                (
-                                  form.querySelector(
-                                    'input[placeholder*="Caudal do Furo"]',
-                                  ) as HTMLInputElement
-                                )?.value || "",
-                              columnType:
-                                (
-                                  form.querySelector(
-                                    "select",
-                                  ) as HTMLSelectElement
-                                )?.value || "",
-                              columnDiameter:
-                                (
-                                  form.querySelectorAll(
-                                    "select",
-                                  )[1] as HTMLSelectElement
-                                )?.value || "",
-                              pumpModel:
-                                (
-                                  form.querySelector(
-                                    'input[placeholder*="Modelo da Bomba"]',
-                                  ) as HTMLInputElement
-                                )?.value || "",
-                              motorPower:
-                                (
-                                  form.querySelectorAll(
-                                    "select",
-                                  )[2] as HTMLSelectElement
-                                )?.value || "",
-                              pumpVoltage:
-                                (
-                                  form.querySelectorAll(
-                                    "select",
-                                  )[3] as HTMLSelectElement
-                                )?.value || "",
-                              boreObservations:
-                                (
-                                  form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
-                                  ) as HTMLTextAreaElement
-                                )?.value || "",
-                            };
-                          }
-
-                          // Create complete work data object (matching Work interface)
+                          // Create complete work data object
                           const workData = {
-                            id: Date.now().toString(),
+                            id: Date.now(),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
-                            type: (() => {
-                              const validTypes = [
-                                "piscina",
-                                "manutencao",
-                                "avaria",
-                                "montagem",
-                              ];
-                              if (workType === "instalacao") return "montagem"; // Map instalacao to montagem
-                              if (workType === "reparacao") return "avaria"; // Map reparacao to avaria
-                              if (workType === "limpeza") return "manutencao"; // Map limpeza to manutencao
-                              if (workType === "furo") return "montagem"; // Map furo to montagem
-                              return validTypes.includes(workType)
-                                ? (workType as
-                                    | "piscina"
-                                    | "manutencao"
-                                    | "avaria"
-                                    | "montagem")
-                                : "piscina";
-                            })(),
-                            clientName: client || "",
+                            title: workTitle || "",
+                            type: workType || "",
+                            client: client || "",
                             contact: contact || "",
-                            address: location || "",
-                            entryTime: startTime || new Date().toISOString(),
-                            exitTime: endTime || undefined,
-                            status: (() => {
-                              switch (status) {
-                                case "pending":
-                                  return "pendente";
-                                case "in_progress":
-                                  return "em_progresso";
-                                case "completed":
-                                  return "concluida";
-                                default:
-                                  return "pendente";
-                              }
-                            })(),
-                            ...boreData, // Spread bore-specific data if applicable
+                            location: location || "",
+                            startTime: startTime || "",
+                            endTime: endTime || "",
+                            status: status || "pending",
+                            description: description || "",
+                            budget: budget ? parseFloat(budget) : null,
                             assignedTo:
                               assignedUsers.length > 0
                                 ? assignedUsers.map((u) => u.name).join(", ")
@@ -5286,34 +3821,58 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : [], // Store user IDs
                             vehicles: workVehicles || [],
                             technicians: workTechnicians || [],
-                            photos:
-                              uploadedPhotos.map((photo) => ({
-                                id: photo.id,
-                                url: photo.data,
-                                filename: photo.name,
-                                uploadedAt: new Date().toISOString(),
-                              })) || [],
-                            observations: observations || "",
-                            workPerformed: description || "",
+                            photos: uploadedPhotos || [],
+                            photoCount: uploadedPhotos
+                              ? uploadedPhotos.length
+                              : 0,
+                            observations: "",
+                            workPerformed: "",
                             workSheetCompleted: false,
                             createdAt: new Date().toISOString(),
-                            updatedAt: new Date().toISOString(),
+                            startDate: new Date().toISOString(),
                           };
 
                           // Use sync system to add work (will handle Firebase and localStorage)
-                          try {
-                            const newWork = await addWork(workData);
+                          addWork(workData);
 
-                            // Success - no notification needed
-                          } catch (error) {
-                            console.error("❌ Error creating work:", error);
-                            alert(
-                              `Erro ao criar obra: ${error.message || error}`,
+                          // Send notifications to all assigned users
+                          assignedUsers.forEach((assignedUser) => {
+                            sendWorkAssignmentNotification(
+                              workTitle,
+                              assignedUser.name,
                             );
-                            return;
+                          });
+
+                          // Save water bore data if work type is "furo"
+                          if (selectedWorkType === "furo") {
+                            const waterBoreData = {
+                              id: Date.now(),
+                              workTitle: workTitle,
+                              date: new Date().toISOString(),
+                              photos: uploadedPhotos,
+                              photoCount: uploadedPhotos.length,
+                              workType: "furo",
+                            };
+
+                            const savedWaterBores = JSON.parse(
+                              localStorage.getItem("waterBores") || "[]",
+                            );
+                            savedWaterBores.push(waterBoreData);
+                            localStorage.setItem(
+                              "waterBores",
+                              JSON.stringify(savedWaterBores),
+                            );
                           }
 
-                          // Complex processing removed to prevent instability
+                          alert(
+                            `Obra "${workTitle}" criada com sucesso! ` +
+                              (assignedUsers.length > 0
+                                ? `Notificações enviadas a ${assignedUsers.length} respons����vel(eis).`
+                                : "") +
+                              (selectedWorkType === "furo"
+                                ? " Dados do furo registados."
+                                : ""),
+                          );
 
                           // Clear form data
                           setSelectedWorkType("");
@@ -5381,30 +3940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
-                            console.log(
-                              "🔍 Select cliente onChange:",
-                              e.target.value,
-                            );
                             if (e.target.value === "novo") {
-                              console.log(
-                                "🔍 Tentando mostrar formulário de novo cliente...",
-                              );
-                              console.log("🔍 Current User:", currentUser);
-                              console.log(
-                                "🔍 hasPermission clientes create:",
-                                hasPermission("clientes", "create"),
-                              );
-
-                              if (!hasPermission("clientes", "create")) {
-                                alert(
-                                  "❌ Não tem permissão para criar clientes. Contacte o administrador.",
-                                );
-                                return;
-                              }
-
-                              console.log(
-                                "✅ Mostrando formulário de novo cliente",
-                              );
                               setShowNewClientForm(true);
                             }
                           }}
@@ -5535,35 +4071,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <button
                             type="button"
                             onClick={() => {
-                              console.log(
-                                "€DEBUG: Tentando adicionar cliente...",
-                              );
-                              console.log("🔍 Current User:", currentUser);
-                              console.log("🔍 User Role:", currentUser?.role);
-                              console.log(
-                                "🔍 User Permissions:",
-                                currentUser?.permissions,
-                              );
-                              console.log(
-                                "🔍 hasPermission clientes create:",
-                                hasPermission("clientes", "create"),
-                              );
-
                               if (newClientForm.name.trim()) {
-                                // Check permissions first
-                                if (!hasPermission("clientes", "create")) {
-                                  alert(
-                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
-                                  );
-                                  console.error(
-                                    "❌ PERMISS📞O NEGADA: clientes.create",
-                                  );
-                                  return;
-                                }
-
-                                console.log(
-                                  "✅ Permissão validada, criando cliente...",
-                                );
                                 // Add client to the system
                                 const newClient = {
                                   name: newClientForm.name,
@@ -5572,23 +4080,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   address: newClientForm.address,
                                   pools: [],
                                 };
-
-                                try {
-                                  dataSync.addClient(newClient);
-                                  console.log(
-                                    "€ Cliente adicionado com sucesso:",
-                                    newClient,
-                                  );
-                                } catch (error) {
-                                  console.error(
-                                    "€ Erro ao adicionar cliente:",
-                                    error,
-                                  );
-                                  alert(
-                                    "❌ Erro ao adicionar cliente: " + error,
-                                  );
-                                  return;
-                                }
+                                dataSync.addClient(newClient);
 
                                 // Reset form and close
                                 setNewClientForm({
@@ -5748,7 +4240,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G📞s</option>
+                          <option value="gas">Aquecimento a Gás</option>
                         </select>
                       </div>
                     </div>
@@ -5804,7 +4296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // SECURITY: Check if user has permission to create pools
-                          if (!hasPermission("piscinas", "create")) {
+                          if (!currentUser?.permissions?.piscinas?.create) {
                             alert(
                               "Não tem permissão para criar piscinas. Contacte o administrador.",
                             );
@@ -5818,7 +4310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Collect all form data
                           const poolData = {
-                            id: Date.now().toString(),
+                            id: Date.now(),
                             name:
                               (
                                 form.querySelector(
@@ -5879,7 +4371,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criação da piscina",
+                                  "Manutenção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -5889,7 +4381,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               addMaintenance(futureMaintenance);
                               console.log(
-                                "Futura manutenç€ara nova piscina:",
+                                "Futura manutenção criada para nova piscina:",
                                 futureMaintenance,
                               );
                             }
@@ -5930,7 +4422,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar intervenção de manutenção
@@ -6374,7 +4866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenção
+                          Fotografias da Manutenç��o
                         </h3>
                       </div>
 
@@ -6392,7 +4884,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenç€
+                          manutenção
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -6481,422 +4973,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        case "configuracoes_unused":
-          // Safety check for activeAdminTab
-          const safeActiveAdminTab = activeAdminTab || "relatorios";
-
-          return (
-            <div className="min-h-screen bg-gray-50">
-              <div className="px-4 py-4 space-y-6">
-                {/* Header */}
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Settings className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Configurações
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                {/* Tabs Navigation */}
-                <div className="bg-white rounded-lg shadow-sm">
-                  <div className="border-b border-gray-200">
-                    <nav className="-mb-px flex space-x-8 px-6">
-                      <button
-                        onClick={() => setActiveAdminTab("relatorios")}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                          safeActiveAdminTab === "relatorios"
-                            ? "border-red-500 text-red-600"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <BarChart3 className="h-4 w-4" />
-                          <span>Relatórios</span>
-                        </div>
-                      </button>
-                      <button
-                        onClick={() => setActiveAdminTab("configuracoes")}
-                        className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                          safeActiveAdminTab === "configuracoes"
-                            ? "border-red-500 text-red-600"
-                            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Settings className="h-4 w-4" />
-                          <span>Configurações</span>
-                        </div>
-                      </button>
-                      {(currentUser?.role === "super_admin" ||
-                        currentUser?.role === "admin") && (
-                        <button
-                          onClick={() => setActiveAdminTab("utilizadores")}
-                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                            safeActiveAdminTab === "utilizadores"
-                              ? "border-red-500 text-red-600"
-                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <UserPlus className="h-4 w-4" />
-                            <span>Utilizadores</span>
-                          </div>
-                        </button>
-                      )}
-                    </nav>
-                  </div>
-
-                  {/* Tab Content */}
-                  <div className="p-6">
-                    {safeActiveAdminTab === "relatorios" && (
-                      <div className="space-y-6">
-                        <div>
-                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat📞rios do Sistema
-                          </h2>
-                          <p className="text-gray-600 mb-6">
-                            Gere relatórios detalhados em PDF sobre piscinas,
-                            manutenções e obras.
-                          </p>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {/* Pool Reports */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center space-x-3 mb-4">
-                              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                <Waves className="h-6 w-6 text-blue-600" />
-                              </div>
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                  Relatório de Piscinas
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                  Lista completa de piscinas
-                                </p>
-                              </div>
-                            </div>
-                            <div className="space-y-3 mb-4">
-                              <p className="text-sm text-gray-600">
-                                <strong>{pools.length}</strong> piscinas
-                                registadas
-                              </p>
-                              <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🔍 Estado e localização</li>
-                                <li>• Informações de clientes</li>
-                                <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
-                              </ul>
-                            </div>
-                            <button
-                              onClick={() => generatePoolsPDF()}
-                              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-                            >
-                              <Download className="h-4 w-4" />
-                              <span>Gerar PDF</span>
-                            </button>
-                          </div>
-
-                          {/* Maintenance Reports */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center space-x-3 mb-4">
-                              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                <Wrench className="h-6 w-6 text-green-600" />
-                              </div>
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                  Relatório de Manutenções
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenções
-                                </p>
-                              </div>
-                            </div>
-                            <div className="space-y-3 mb-4">
-                              <p className="text-sm text-gray-600">
-                                <strong>{maintenance.length}</strong>{" "}
-                                manutenções registadas
-                              </p>
-                              <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🔧 Trabalhos realizados</li>
-                                <li>👷 Técnicos responsáveis</li>
-                                <li>• Datas e durações</li>
-                                <li>• Estados e observações</li>
-                              </ul>
-                            </div>
-                            <button
-                              onClick={() => generateMaintenancePDF()}
-                              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
-                            >
-                              <Download className="h-4 w-4" />
-                              <span>Gerar PDF</span>
-                            </button>
-                          </div>
-
-                          {/* Works Reports */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center space-x-3 mb-4">
-                              <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                                <Building2 className="h-6 w-6 text-orange-600" />
-                              </div>
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                  Relatório de Obras
-                                </h3>
-                                <p className="text-sm text-gray-600">
-                                  Lista de projetos
-                                </p>
-                              </div>
-                            </div>
-                            <div className="space-y-3 mb-4">
-                              <p className="text-sm text-gray-600">
-                                <strong>{works.length}</strong> obras registadas
-                              </p>
-                              <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🏗️ Estado dos projetos</li>
-                                <li>👥 Equipas atribuídas</li>
-                                <li>• Prazos e orçamentos</li>
-                                <li>• Clientes e localizações</li>
-                              </ul>
-                            </div>
-                            <button
-                              onClick={() => generateWorksPDF()}
-                              className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
-                            >
-                              <Download className="h-4 w-4" />
-                              <span>Gerar PDF</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {safeActiveAdminTab === "configuracoes" && (
-                      <div className="space-y-6">
-                        <div>
-                          <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Configurações do Sistema
-                          </h2>
-                          <p className="text-gray-600 mb-6">
-                            Gerir configurações da aplicação, notificações e
-                            preferências.
-                          </p>
-                        </div>
-
-                        {/* Settings Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold mb-4">
-                              Notificações
-                            </h3>
-                            <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-red-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
-                                </span>
-                                <button
-                                  onClick={() =>
-                                    setAutoSyncEnabled(!autoSyncEnabled)
-                                  }
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    autoSyncEnabled
-                                      ? "bg-red-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      autoSyncEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold mb-4">
-                              Sistema
-                            </h3>
-                            <div className="space-y-4">
-                              <button
-                                onClick={() => setShowDataCleanup(true)}
-                                className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
-                              >
-                                <div className="flex items-center space-x-3">
-                                  <Database className="h-5 w-5 text-yellow-600" />
-                                  <div>
-                                    <p className="font-medium text-yellow-800">
-                                      Limpeza de Dados
-                                    </p>
-                                    <p className="text-sm text-yellow-600">
-                                      Eliminar dados de teste
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-
-                              <button
-                                onClick={() => setShowAdvancedSettings(true)}
-                                className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
-                              >
-                                <div className="flex items-center space-x-3">
-                                  <Settings className="h-5 w-5 text-gray-600" />
-                                  <div>
-                                    <p className="font-medium text-gray-800">
-                                      Configurações Avançadas
-                                    </p>
-                                    <p className="text-sm text-gray-600">
-                                      Firebase, APIs e desenvolvimento
-                                    </p>
-                                  </div>
-                                </div>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {safeActiveAdminTab === "utilizadores" &&
-                      (currentUser?.role === "super_admin" ||
-                        currentUser?.role === "admin") && (
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gestão de Utilizadores
-                            </h2>
-                            <p className="text-gray-600 mb-6">
-                              Criar, editar e gerir utilizadores do sistema.
-                            </p>
-                          </div>
-
-                          <UserPermissionsManager />
-                        </div>
-                      )}
-                  </div>
-                </div>
-                ) : ( /* Simple configuration for non-admin users */
-                <div className="space-y-6">
-                  {/* System Information */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Informações do Sistema
-                    </h3>
-                    <div className="grid gap-3">
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Versão</span>
-                        <span className="font-medium">1.0.0</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Utilizador Ativo</span>
-                        <span className="font-medium">{currentUser?.name}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Perfil</span>
-                        <span className="font-medium capitalize">
-                          {currentUser?.role?.replace("_", " ")}
-                        </span>
-                      </div>
-                      <div className="flex justify-between py-2">
-                        <span className="text-gray-600">Modo de Dados</span>
-                        <span className="font-medium">Armazenamento Local</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Basic Notifications for all users */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center mb-4">
-                      <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Notificações
-                      </h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">
-                          Notificações Push
-                        </span>
-                        <button
-                          onClick={requestNotificationPermission}
-                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                            notificationsEnabled ? "bg-blue-600" : "bg-gray-200"
-                          }`}
-                        >
-                          <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                              notificationsEnabled
-                                ? "translate-x-5"
-                                : "translate-x-0"
-                            }`}
-                          />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-
-        case "relatorios":
-          return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-              <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 className="h-8 w-8 text-blue-600" />
-                </div>
-                <h1 className="text-xl font-bold text-gray-900 mb-2">
-                  Relatórios Movidos
-                </h1>
-                <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configurações.
-                </p>
-                <button
-                  onClick={() => {
-                    setActiveAdminTab("relatorios");
-                    navigateToSection("configuracoes");
-                  }}
-                  className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
-                >
-                  Ir para Configurações
-                </button>
-              </div>
-            </div>
-          );
-
         case "utilizadores":
           // SECURITY: Only super admin can access user management
           if (currentUser?.role !== "super_admin") {
@@ -6918,856 +4994,340 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
                 <UserPermissionsManager />
-                <EmergencyLogoutManager />
               </div>
             </div>
           );
 
         case "configuracoes":
-          // Safety check for activeAdminTab
-          const safeActiveConfigTab = activeAdminTab || "configuracoes";
-
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                {/* Header */}
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Settings className="h-4 w-4 text-blue-600" />
+                {/* System Information */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                    Informações do Sistema
+                  </h3>
+                  <div className="grid gap-3">
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Versão</span>
+                      <span className="font-medium">1.0.0</span>
                     </div>
-                    <div>
-                      <h1 className="text-2xl font-bold text-gray-900">
-                        Configurações
-                      </h1>
-                      <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
-                      </p>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Utilizador Ativo</span>
+                      <span className="font-medium">{currentUser.name}</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Perfil</span>
+                      <span className="font-medium capitalize">
+                        {currentUser.role.replace("_", " ")}
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-600">Modo de Dados</span>
+                      <span className="font-medium">Armazenamento Local</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Tabs Navigation - Show additional tabs for admin users */}
-                {currentUser?.role === "super_admin" ||
-                currentUser?.role === "admin" ? (
-                  <div className="bg-white rounded-lg shadow-sm">
-                    <div className="border-b border-gray-200">
-                      <nav className="-mb-px flex space-x-8 px-6">
-                        <button
-                          onClick={() => setActiveAdminTab("configuracoes")}
-                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                            safeActiveConfigTab === "configuracoes"
-                              ? "border-blue-500 text-blue-600"
-                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <Settings className="h-4 w-4" />
-                            <span>Configurações</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => setActiveAdminTab("relatorios")}
-                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                            safeActiveConfigTab === "relatorios"
-                              ? "border-blue-500 text-blue-600"
-                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <BarChart3 className="h-4 w-4" />
-                            <span>Relatórios</span>
-                          </div>
-                        </button>
-                        <button
-                          onClick={() => setActiveAdminTab("utilizadores")}
-                          className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                            safeActiveConfigTab === "utilizadores"
-                              ? "border-blue-500 text-blue-600"
-                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center space-x-2">
-                            <UserPlus className="h-4 w-4" />
-                            <span>Utilizadores</span>
-                          </div>
-                        </button>
-                      </nav>
+                {/* Notifications Section */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Bell className="h-6 w-6 text-blue-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Notificações Push
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Ative as notificações para receber alertas sobre novas obras
+                    atribuídas e atualizações importantes.
+                  </p>
+
+                  <div className="space-y-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-blue-900 mb-2">
+                            Notificações de Obras
+                          </h4>
+                          <p className="text-blue-700 text-sm mb-3">
+                            Receba notificações quando uma nova obra for
+                            atribuída a si.
+                          </p>
+                          <button
+                            onClick={() => {
+                              if ("Notification" in window) {
+                                if (Notification.permission === "default") {
+                                  Notification.requestPermission().then(
+                                    (permission) => {
+                                      if (permission === "granted") {
+                                        new Notification("Leirisonda", {
+                                          body: "Notificações ativadas com sucesso!",
+                                          icon: "/icon.svg",
+                                        });
+                                      }
+                                    },
+                                  );
+                                } else if (
+                                  Notification.permission === "granted"
+                                ) {
+                                  new Notification("Leirisonda", {
+                                    body: "Notificações já estão ativadas!",
+                                    icon: "/icon.svg",
+                                  });
+                                } else {
+                                  alert(
+                                    "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
+                                  );
+                                }
+                              } else {
+                                alert(
+                                  "Este navegador n��o suporta notificações.",
+                                );
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                          >
+                            Ativar Notificações
+                          </button>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Tab Content */}
-                    <div className="p-6">
-                      {/* Configurações Tab */}
-                      {safeActiveConfigTab === "configuracoes" && (
-                        <div className="space-y-6">
-                          {/* System Information */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informações do Sistema
-                            </h3>
-                            <div className="grid gap-3">
-                              <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Versão</span>
-                                <span className="font-medium">1.0.0</span>
-                              </div>
-                              <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">
-                                  Utilizador Ativo
-                                </span>
-                                <span className="font-medium">
-                                  {currentUser?.name}
-                                </span>
-                              </div>
-                              <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Perfil</span>
-                                <span className="font-medium capitalize">
-                                  {currentUser?.role?.replace("_", " ")}
-                                </span>
-                              </div>
-                              <div className="flex justify-between py-2">
-                                <span className="text-gray-600">
-                                  Modo de Dados
-                                </span>
-                                <span className="font-medium">
-                                  Armazenamento Local
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Notifications Section */}
-                          <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações Push
-                              </h3>
-                            </div>
-                            <p className="text-gray-600 mb-6">
-                              Ative as notificações para receber alertas sobre
-                              novas obras atribuídas e atualizações importantes.
-                            </p>
-
-                            <div className="space-y-4">
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-blue-900 mb-2">
-                                      Notificações de Obras
-                                    </h4>
-                                    <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificações quando uma nova obra
-                                      for atribuída a si.
-                                    </p>
-                                    <button
-                                      onClick={() => {
-                                        if ("Notification" in window) {
-                                          if (
-                                            Notification.permission ===
-                                            "default"
-                                          ) {
-                                            Notification.requestPermission().then(
-                                              (permission) => {
-                                                if (permission === "granted") {
-                                                  new Notification(
-                                                    "Leirisonda",
-                                                    {
-                                                      body: "Notificações ativadas com sucesso!",
-                                                      icon: "/icon.svg",
-                                                    },
-                                                  );
-                                                }
-                                              },
-                                            );
-                                          } else if (
-                                            Notification.permission ===
-                                            "granted"
-                                          ) {
-                                            new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
-                                              icon: "/icon.svg",
-                                            });
-                                          } else {
-                                            alert(
-                                              "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
-                                            );
-                                          }
-                                        } else {
-                                          alert(
-                                            "Este navegador não suporta notificaç€.",
-                                          );
-                                        }
-                                      }}
-                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                      Ativar Notificaç€s
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Configurações de Localização Individual - Apenas para super_admin */}
-                              {currentUser?.role === "super_admin" && (
-                                <PersonalLocationSettings />
-                              )}
-
-                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
-                                    </h4>
-                                    <ul className="text-gray-700 text-sm space-y-1">
-                                      <li>
-                                        • As notificaç€es funcionam apenas com
-                                        HTTPS
-                                      </li>
-                                      <li>
-                                        • Certifique-se de que permite
-                                        notificações no seu navegador
-                                      </li>
-                                      <li>
-                                        • Em dispositivos móveis, adicione a app
-                                        ao ecrã inicial
-                                      </li>
-                                      <li>
-                                        • Configure a sua localização abaixo e
-                                        veja o mapa da equipa na página
-                                        "Localizações"
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Mobile Interaction Settings */}
-                          <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <div className="flex items-center mb-4">
-                              <Settings className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Interação Mobile
-                              </h3>
-                            </div>
-                            <p className="text-gray-600 mb-6">
-                              Configure o comportamento de cliques em contactos
-                              e moradas
-                            </p>
-
-                            <div className="space-y-4">
-                              {/* Phone Dialer Setting */}
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    🏊
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center justify-between mb-2">
-                                      <h4 className="font-medium text-blue-900">
-                                        Marcação Automática
-                                      </h4>
-                                      <button
-                                        onClick={() =>
-                                          togglePhoneDialer(!enablePhoneDialer)
-                                        }
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                          enablePhoneDialer
-                                            ? "bg-blue-600"
-                                            : "bg-gray-300"
-                                        }`}
-                                      >
-                                        <span
-                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                            enablePhoneDialer
-                                              ? "translate-x-6"
-                                              : "translate-x-1"
-                                          }`}
-                                        />
-                                      </button>
-                                    </div>
-                                    <p className="text-blue-700 text-sm mb-3">
-                                      Quando ativado, clicar num número de
-                                      telefone abrir€ diretamente o marcador do
-                                      telefone.
-                                    </p>
-                                    <p className="text-blue-600 text-xs">
-                                      Estado:{" "}
-                                      {enablePhoneDialer
-                                        ? "✅ Ativo"
-                                        : "⭕ Inativo"}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Maps Redirect Setting */}
-                              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    🔧
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center justify-between mb-2">
-                                      <h4 className="font-medium text-green-900">
-                                        Navegação Maps
-                                      </h4>
-                                      <button
-                                        onClick={() =>
-                                          toggleMapsRedirect(
-                                            !enableMapsRedirect,
-                                          )
-                                        }
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                          enableMapsRedirect
-                                            ? "bg-green-600"
-                                            : "bg-gray-300"
-                                        }`}
-                                      >
-                                        <span
-                                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                            enableMapsRedirect
-                                              ? "translate-x-6"
-                                              : "translate-x-1"
-                                          }`}
-                                        />
-                                      </button>
-                                    </div>
-                                    <p className="text-green-700 text-sm mb-3">
-                                      Quando ativado, clicar numa morada abrirá
-                                      o Google Maps para navegação.
-                                    </p>
-                                    <p className="text-green-600 text-xs">
-                                      Estado:{" "}
-                                      {enableMapsRedirect
-                                        ? "📞 Ativo"
-                                        : "⭕ Inativo"}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Instructions */}
-                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
-                                    </h4>
-                                    <ul className="text-gray-700 text-sm space-y-1">
-                                      <li>
-                                        • As definições são guardadas localmente
-                                        no dispositivo
-                                      </li>
-                                      <li>
-                                        • A marcaç€ automática funciona melhor
-                                        em dispositivos móveis
-                                      </li>
-                                      <li>
-                                        €O Google Maps abre numa nova janela/tab
-                                      </li>
-                                      <li>
-                                        • Pode ativar ou desativar cada
-                                        funcionalidade independentemente
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Advanced Settings - Protected by Password */}
-                          <div className="bg-white rounded-lg p-6 shadow-sm border-2 border-yellow-200">
-                            <div className="flex items-center mb-4">
-                              <Shield className="h-6 w-6 text-yellow-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Configurações Avançadas
-                              </h3>
-                            </div>
-                            <p className="text-gray-600 mb-6">
-                              Configurações protegidas por palavra-passe para
-                              administradores
-                            </p>
-
-                            {!showSettingsPage ? (
-                              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                                <form
-                                  onSubmit={handleSettingsPasswordSubmit}
-                                  className="space-y-4"
-                                >
-                                  <div>
-                                    <label className="block text-sm font-medium text-yellow-900 mb-2">
-                                      Palavra-passe de Administrador
-                                    </label>
-                                    <input
-                                      type="password"
-                                      value={settingsPassword}
-                                      onChange={(e) =>
-                                        setSettingsPassword(e.target.value)
-                                      }
-                                      className="w-full px-3 py-2 border border-yellow-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                                      placeholder="Introduza a palavra-passe..."
-                                    />
-                                  </div>
-                                  {settingsPasswordError && (
-                                    <p className="text-red-600 text-sm">
-                                      {settingsPasswordError}
-                                    </p>
-                                  )}
-                                  <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
-                                  >
-                                    Aceder às Configurações
-                                  </button>
-                                </form>
-                              </div>
-                            ) : (
-                              <div className="space-y-4">
-                                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                                  <h4 className="font-medium text-purple-900 mb-3">
-                                    Configurações Avançadas
-                                  </h4>
-                                  <p className="text-purple-700 text-sm mb-3">
-                                    Acesso às configurações avançadas do sistema
-                                  </p>
-                                  <button
-                                    onClick={() =>
-                                      setShowAdvancedSettings(true)
-                                    }
-                                    className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
-                                  >
-                                    Configurações Avançadas
-                                  </button>
-                                  <button
-                                    onClick={closeSettings}
-                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
-                                  >
-                                    Fechar
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Data Management Section - Only for Super Admin */}
-                          {currentUser?.role === "super_admin" && (
-                            <div className="bg-white rounded-lg p-6 shadow-sm">
-                              <div className="flex items-center mb-4">
-                                <Trash2 className="h-6 w-6 text-red-600 mr-3" />
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                  Gestão de Dados
-                                </h3>
-                              </div>
-                              <p className="text-gray-600 mb-6">
-                                Elimine todos os dados de obras, manutencoes e
-                                piscinas para comecar com uma aplicacao limpa.
-                                Os utilizadores sao mantidos.
-                              </p>
-
-                              <div className="space-y-4">
-                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                  <div className="flex items-start space-x-3">
-                                    <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
-                                    <div className="flex-1">
-                                      <h4 className="font-medium text-red-900 mb-2">
-                                        Limpar Dados do Sistema
-                                      </h4>
-                                      <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminará permanentemente:
-                                      </p>
-                                      <ul className="text-red-700 text-sm space-y-1 mb-4">
-                                        <li>
-                                          📞 Todas as obras ({works.length}{" "}
-                                          registos)
-                                        </li>
-                                        <li>
-                                          • Todas as manutenções (
-                                          {maintenance.length} registos)
-                                        </li>
-                                        <li>
-                                          • Todas as piscinas ({pools.length}{" "}
-                                          registos)
-                                        </li>
-                                        <li>
-                                          🔥 Dados do Firebase e armazenamento
-                                          local
-                                        </li>
-                                      </ul>
-                                      <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠️ ATENÇÃO: Esta operação é
-                                        irreversível!
-                                      </p>
-                                      <button
-                                        onClick={handleDataCleanup}
-                                        disabled={cleanupLoading}
-                                        className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                        <span>
-                                          {cleanupLoading
-                                            ? "A Eliminar..."
-                                            : "Eliminar Todos os Dados"}
-                                        </span>
-                                      </button>
-                                      {cleanupError && (
-                                        <p className="text-red-600 text-sm mt-2">
-                                          {cleanupError}
-                                        </p>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Notifications and Settings content continues... */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações
-                              </h3>
-                            </div>
-                            <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
-                                </span>
-                                <button
-                                  onClick={() =>
-                                    setAutoSyncEnabled(!autoSyncEnabled)
-                                  }
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    autoSyncEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      autoSyncEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
-                          {currentUser?.role === "super_admin" && (
-                            <div className="bg-gray-50 rounded-lg p-6">
-                              <h3 className="text-lg font-semibold mb-4">
-                                Sistema
-                              </h3>
-                              <div className="space-y-4">
-                                <button
-                                  onClick={() => setShowDataCleanup(true)}
-                                  className="w-full text-left p-3 bg-yellow-50 border border-yellow-200 rounded-lg hover:bg-yellow-100 transition-colors"
-                                >
-                                  <div className="flex items-center space-x-3">
-                                    <Database className="h-5 w-5 text-yellow-600" />
-                                    <div>
-                                      <p className="font-medium text-yellow-800">
-                                        Limpeza de Dados
-                                      </p>
-                                      <p className="text-sm text-yellow-600">
-                                        Eliminar dados de teste
-                                      </p>
-                                    </div>
-                                  </div>
-                                </button>
-
-                                <button
-                                  onClick={() => setShowAdvancedSettings(true)}
-                                  className="w-full text-left p-3 bg-gray-100 border border-gray-200 rounded-lg hover:bg-gray-200 transition-colors"
-                                >
-                                  <div className="flex items-center space-x-3">
-                                    <Settings className="h-5 w-5 text-gray-600" />
-                                    <div>
-                                      <p className="font-medium text-gray-800">
-                                        Configurações Avançadas
-                                      </p>
-                                      <p className="text-sm text-gray-600">
-                                        Firebase, APIs e desenvolvimento
-                                      </p>
-                                    </div>
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          )}
-
-                          {/* System Diagnostics Section - Only for Super Admin */}
-                          {currentUser?.role === "super_admin" && (
-                            <div className="bg-white rounded-lg p-6 shadow-sm">
-                              <div className="flex items-center mb-4">
-                                <Settings className="h-6 w-6 text-purple-600 mr-3" />
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                  Diagnósticos do Sistema
-                                </h3>
-                              </div>
-                              <p className="text-gray-600 mb-6">
-                                Ferramentas de diagnóstico e correção para
-                                problemas do sistema.
-                              </p>
-
-                              <div className="space-y-4">
-                                {/* Data Input Status */}
-                                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                                  <DataInputStatusIndicator />
-                                </div>
-
-                                {/* Firebase Fix Button */}
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                  <div className="flex items-center justify-between mb-3">
-                                    <h4 className="font-medium text-blue-900">
-                                      Correção Firebase
-                                    </h4>
-                                    <FirebaseFixButton />
-                                  </div>
-                                  <p className="text-blue-700 text-sm">
-                                    Use este botão se encontrar problemas de
-                                    autenticação ou conexão.
-                                  </p>
-                                </div>
-
-                                {/* Tutorial Access */}
-                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                                  <div className="flex items-center justify-between mb-3">
-                                    <h4 className="font-medium text-green-900">
-                                      Tutorial Interativo
-                                    </h4>
-                                    <DataInputTutorial />
-                                  </div>
-                                  <p className="text-green-700 text-sm">
-                                    Tutorial passo-a-passo para inserção de
-                                    dados.
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Reports Tab */}
-                      {safeActiveConfigTab === "relatorios" && (
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Relatórios do Sistema
-                            </h2>
-                            <p className="text-gray-600 mb-6">
-                              Gere relatórios detalhados em PDF sobre piscinas,
-                              manutenções e obras.
-                            </p>
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {/* Pool Reports */}
-                            <div className="bg-gray-50 rounded-lg p-6">
-                              <div className="flex items-center space-x-3 mb-4">
-                                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                  <Waves className="h-6 w-6 text-blue-600" />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Piscinas
-                                  </h3>
-                                  <p className="text-sm text-gray-600">
-                                    Lista completa de piscinas
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="space-y-3 mb-4">
-                                <p className="text-sm text-gray-600">
-                                  <strong>{pools.length}</strong> piscinas
-                                  registadas
-                                </p>
-                              </div>
-                              <button
-                                onClick={() => generatePoolsPDF()}
-                                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2"
-                              >
-                                <Download className="h-4 w-4" />
-                                <span>Gerar PDF</span>
-                              </button>
-                            </div>
-
-                            {/* Maintenance Reports */}
-                            <div className="bg-gray-50 rounded-lg p-6">
-                              <div className="flex items-center space-x-3 mb-4">
-                                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                  <Wrench className="h-6 w-6 text-green-600" />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Manutenções
-                                  </h3>
-                                  <p className="text-sm text-gray-600">
-                                    Histórico de intervenções
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="space-y-3 mb-4">
-                                <p className="text-sm text-gray-600">
-                                  <strong>{maintenance.length}</strong>{" "}
-                                  manutenções registadas
-                                </p>
-                              </div>
-                              <button
-                                onClick={() => generateMaintenancePDF()}
-                                className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
-                              >
-                                <Download className="h-4 w-4" />
-                                <span>Gerar PDF</span>
-                              </button>
-                            </div>
-
-                            {/* Works Reports */}
-                            <div className="bg-gray-50 rounded-lg p-6">
-                              <div className="flex items-center space-x-3 mb-4">
-                                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                                  <Building2 className="h-6 w-6 text-orange-600" />
-                                </div>
-                                <div>
-                                  <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Obras
-                                  </h3>
-                                  <p className="text-sm text-gray-600">
-                                    Lista de projetos
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="space-y-3 mb-4">
-                                <p className="text-sm text-gray-600">
-                                  <strong>{works.length}</strong> obras
-                                  registadas
-                                </p>
-                              </div>
-                              <button
-                                onClick={() => generateWorksPDF()}
-                                className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors flex items-center justify-center space-x-2"
-                              >
-                                <Download className="h-4 w-4" />
-                                <span>Gerar PDF</span>
-                              </button>
-                            </div>
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <Check className="h-5 w-5 text-green-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-green-900 mb-2">
+                            Notificações de Sistema
+                          </h4>
+                          <p className="text-green-700 text-sm mb-3">
+                            Receba alertas sobre atualizações do sistema e
+                            manutenções programadas.
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-green-800 text-sm font-medium">
+                              Status: Ativo
+                            </span>
                           </div>
                         </div>
-                      )}
+                      </div>
+                    </div>
 
-                      {/* Users Tab */}
-                      {safeActiveConfigTab === "utilizadores" && (
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gestão de Utilizadores
-                            </h2>
-                            <p className="text-gray-600 mb-6">
-                              Criar, editar e gerir utilizadores do sistema.
-                            </p>
-                          </div>
-
-                          <UserPermissionsManager />
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Instruções
+                          </h4>
+                          <ul className="text-gray-700 text-sm space-y-1">
+                            <li>
+                              • As notificações funcionam apenas com HTTPS
+                            </li>
+                            <li>
+                              • Certifique-se de que permite notificações no seu
+                              navegador
+                            </li>
+                            <li>
+                              • Em dispositivos móveis, adicione a app ao ecrã
+                              inicial
+                            </li>
+                          </ul>
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
-                ) : (
-                  /* Simple configuration for non-admin users */
-                  <div className="space-y-6">
-                    {/* System Information */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações do Sistema
-                      </h3>
-                      <div className="grid gap-3">
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Versão</span>
-                          <span className="font-medium">1.0.0</span>
+                </div>
+
+                {/* Mobile Interaction Settings */}
+                <div className="bg-white rounded-lg p-6 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    <Settings className="h-6 w-6 text-blue-600 mr-3" />
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Interação Mobile
+                    </h3>
+                  </div>
+                  <p className="text-gray-600 mb-6">
+                    Configure o comportamento de cliques em contactos e moradas
+                  </p>
+
+                  <div className="space-y-4">
+                    {/* Phone Dialer Setting */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          📞
                         </div>
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">
-                            Utilizador Ativo
-                          </span>
-                          <span className="font-medium">
-                            {currentUser?.name}
-                          </span>
-                        </div>
-                        <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Perfil</span>
-                          <span className="font-medium capitalize">
-                            {currentUser?.role?.replace("_", " ")}
-                          </span>
-                        </div>
-                        <div className="flex justify-between py-2">
-                          <span className="text-gray-600">Modo de Dados</span>
-                          <span className="font-medium">
-                            Armazenamento Local
-                          </span>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-blue-900">
+                              Marcação Automática
+                            </h4>
+                            <button
+                              onClick={() =>
+                                togglePhoneDialer(!enablePhoneDialer)
+                              }
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                enablePhoneDialer
+                                  ? "bg-blue-600"
+                                  : "bg-gray-300"
+                              }`}
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  enablePhoneDialer
+                                    ? "translate-x-6"
+                                    : "translate-x-1"
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-blue-700 text-sm mb-3">
+                            Quando ativado, clicar num número de telefone abrirá
+                            diretamente o marcador do telefone.
+                          </p>
+                          <p className="text-blue-600 text-xs">
+                            Estado:{" "}
+                            {enablePhoneDialer ? "✅ Ativo" : "⭕ Inativo"}
+                          </p>
                         </div>
                       </div>
                     </div>
 
-                    {/* Basic Notifications for all users */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <div className="flex items-center mb-4">
-                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Notificações
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">
-                            Notificações Push
-                          </span>
-                          <button
-                            onClick={requestNotificationPermission}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                              notificationsEnabled
-                                ? "bg-blue-600"
-                                : "bg-gray-200"
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                notificationsEnabled
-                                  ? "translate-x-5"
-                                  : "translate-x-0"
+                    {/* Maps Redirect Setting */}
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          🗺️
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium text-green-900">
+                              Navega���ão Maps
+                            </h4>
+                            <button
+                              onClick={() =>
+                                toggleMapsRedirect(!enableMapsRedirect)
+                              }
+                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                enableMapsRedirect
+                                  ? "bg-green-600"
+                                  : "bg-gray-300"
                               }`}
-                            />
-                          </button>
+                            >
+                              <span
+                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                  enableMapsRedirect
+                                    ? "translate-x-6"
+                                    : "translate-x-1"
+                                }`}
+                              />
+                            </button>
+                          </div>
+                          <p className="text-green-700 text-sm mb-3">
+                            Quando ativado, clicar numa morada abrirá o Google
+                            Maps para navegação.
+                          </p>
+                          <p className="text-green-600 text-xs">
+                            Estado:{" "}
+                            {enableMapsRedirect ? "✅ Ativo" : "⭕ Inativo"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Instructions */}
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-start space-x-3">
+                        <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-medium text-gray-900 mb-2">
+                            Instruções
+                          </h4>
+                          <ul className="text-gray-700 text-sm space-y-1">
+                            <li>
+                              • As defini��ões são guardadas localmente no
+                              dispositivo
+                            </li>
+                            <li>
+                              • A marcação automática funciona melhor em
+                              dispositivos móveis
+                            </li>
+                            <li>• O Google Maps abre numa nova janela/tab</li>
+                            <li>
+                              • Pode ativar ou desativar cada funcionalidade
+                              independentemente
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Data Management Section - Only for Super Admin */}
+                {currentUser.role === "super_admin" && (
+                  <div className="bg-white rounded-lg p-6 shadow-sm">
+                    <div className="flex items-center mb-4">
+                      <Trash2 className="h-6 w-6 text-red-600 mr-3" />
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Gestão de Dados
+                      </h3>
+                    </div>
+                    <p className="text-gray-600 mb-6">
+                      Elimine todos os dados de obras, manutenções e piscinas
+                      para começar com uma aplicação limpa. Os utilizadores são
+                      mantidos.
+                    </p>
+
+                    <div className="space-y-4">
+                      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                        <div className="flex items-start space-x-3">
+                          <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                          <div className="flex-1">
+                            <h4 className="font-medium text-red-900 mb-2">
+                              Limpar Dados do Sistema
+                            </h4>
+                            <p className="text-red-700 text-sm mb-3">
+                              Esta ação eliminará permanentemente:
+                            </p>
+                            <ul className="text-red-700 text-sm space-y-1 mb-4">
+                              <li>
+                                • Todas as obras ({works.length} registos)
+                              </li>
+                              <li>
+                                • Todas as manutenções ({maintenance.length}{" "}
+                                registos)
+                              </li>
+                              <li>
+                                • Todas as piscinas ({pools.length} registos)
+                              </li>
+                              <li>
+                                ��� Dados do Firebase e armazenamento local
+                              </li>
+                            </ul>
+                            <p className="text-red-700 text-sm font-medium mb-3">
+                              ��️ ATENÇÃO: Esta operação é irreversível!
+                            </p>
+                            <button
+                              onClick={handleDataCleanup}
+                              disabled={cleanupLoading}
+                              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-2 disabled:opacity-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              <span>
+                                {cleanupLoading
+                                  ? "A Eliminar..."
+                                  : "Eliminar Todos os Dados"}
+                              </span>
+                            </button>
+                            {cleanupError && (
+                              <p className="text-red-600 text-sm mt-2">
+                                {cleanupError}
+                              </p>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -7822,7 +5382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>🔍 Estado e localização</li>
+                        <li>�� Estado e localização</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
@@ -7854,14 +5414,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€
+                        <strong>{maintenance.length}</strong> manutenções
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>📞 Trabalhos realizados</li>
-                        <li>📞 Técnicos responsáveis</li>
+                        <li>• Trabalhos realizados</li>
+                        <li>• Técnicos respons��veis</li>
                         <li>• Datas e durações</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observaç��es</li>
                       </ul>
                     </div>
                     <button
@@ -7881,7 +5441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat📞rio de Obras
+                          Relatório de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
                           Projetos e construções
@@ -7895,8 +5455,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>📞 Equipas responsáveis</li>
-                        <li>€ Estados de progresso</li>
+                        <li>• Equipas responsáveis</li>
+                        <li>• Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -7929,8 +5489,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>📞 Piscinas associadas</li>
-                        <li>📞 Histórico de serviços</li>
+                        <li>• Piscinas associadas</li>
+                        <li>• Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -7963,9 +5523,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Resumo executivo</li>
+                        <li>��� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>📊 Dados consolidados</li>
+                        <li>• Dados consolidados</li>
                         <li>• Análise de performance</li>
                       </ul>
                     </div>
@@ -7995,7 +5555,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat📞rios com filtros específicos
+                        Crie relatórios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -8012,7 +5572,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç€es</span>
+                          <span className="text-xs">Manutenções</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8037,7 +5597,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Quick Stats */}
                 <div className="bg-white rounded-lg shadow-sm p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                    Estat📞sticas Rápidas
+                    Estatísticas Rápidas
                   </h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
@@ -8097,7 +5657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest€o da base de dados de clientes
+                          Gestão da base de dados de clientes
                         </p>
                       </div>
                     </div>
@@ -8259,22 +5819,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <p className="font-medium">Morada:</p>
                                 <button
-                                  onClick={() => {
-                                    if (client?.address) {
-                                      handleAddressClick(client.address);
-                                    }
-                                  }}
+                                  onClick={() =>
+                                    handleAddressClick(client.address)
+                                  }
                                   className={`text-left ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
                                       : "text-gray-600"
                                   }`}
-                                  disabled={
-                                    !enableMapsRedirect || !client?.address
-                                  }
+                                  disabled={!enableMapsRedirect}
                                 >
-                                  📞{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  📍 {client.address}
                                 </button>
                               </div>
                               <div>
@@ -8376,7 +5931,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P📞blica</option>
+                            <option value="publico">Entidade Pública</option>
                           </select>
                         </div>
                       </div>
@@ -8495,7 +6050,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic€el)
+                            Pessoa de Contacto (se aplicável)
                           </label>
                           <input
                             type="text"
@@ -8559,7 +6114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Obras ({works.length})
+                          Obras
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gestão de obras e projetos
@@ -8600,13 +6155,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Pendentes (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "pendente" || w.status === "pending",
-                        ).length
-                      }
-                      )
+                      {works.filter((w) => w.status === "pending").length})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("in_progress")}
@@ -8617,14 +6166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Em Progresso (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "em_progresso" ||
-                            w.status === "in_progress",
-                        ).length
-                      }
-                      )
+                      {works.filter((w) => w.status === "in_progress").length})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("completed")}
@@ -8635,14 +6177,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }`}
                     >
                       Concluídas (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "concluida" ||
-                            w.status === "completed",
-                        ).length
-                      }
-                      )
+                      {works.filter((w) => w.status === "completed").length})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("no_sheet")}
@@ -8655,10 +6190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Sem Folha de Obra (
                       {
                         works.filter(
-                          (w) =>
-                            !w.folhaGerada &&
-                            w.status !== "completed" &&
-                            w.status !== "concluida",
+                          (w) => !w.folhaGerada && w.status !== "completed",
                         ).length
                       }
                       )
@@ -8672,26 +6204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     .filter((work) => {
                       if (activeWorkFilter === "all") return true;
                       if (activeWorkFilter === "no_sheet")
-                        return (
-                          !work.folhaGerada &&
-                          work.status !== "completed" &&
-                          work.status !== "concluida"
-                        );
-                      if (activeWorkFilter === "pending")
-                        return (
-                          work.status === "pendente" ||
-                          work.status === "pending"
-                        );
-                      if (activeWorkFilter === "in_progress")
-                        return (
-                          work.status === "em_progresso" ||
-                          work.status === "in_progress"
-                        );
-                      if (activeWorkFilter === "completed")
-                        return (
-                          work.status === "concluida" ||
-                          work.status === "completed"
-                        );
+                        return !work.folhaGerada && work.status !== "completed";
                       return work.status === activeWorkFilter;
                     })
                     .map((work) => (
@@ -8703,29 +6216,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="flex-1">
                             {/* Enhanced Header with Work ID */}
                             <div className="flex items-center space-x-3 mb-3">
-                              <div className="flex items-center space-x-2"></div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                                  {work.id?.toUpperCase() ||
+                                    "ID-" + Date.now().toString().slice(-6)}
+                                </span>
+                                <h3 className="text-lg font-bold text-gray-900">
+                                  {work.title}
+                                </h3>
+                              </div>
                               <span
                                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                                  work.status === "pendente" ||
                                   work.status === "pending"
                                     ? "bg-red-100 text-red-700 border border-red-200"
-                                    : work.status === "em_progresso" ||
-                                        work.status === "in_progress"
+                                    : work.status === "in_progress"
                                       ? "bg-orange-100 text-orange-700 border border-orange-200"
-                                      : work.status === "concluida" ||
-                                          work.status === "completed"
+                                      : work.status === "completed"
                                         ? "bg-green-100 text-green-700 border border-green-200"
                                         : "bg-gray-100 text-gray-700 border border-gray-200"
                                 }`}
                               >
-                                {work.status === "pendente" ||
-                                work.status === "pending"
+                                {work.status === "pending"
                                   ? "Pendente"
-                                  : work.status === "em_progresso" ||
-                                      work.status === "in_progress"
+                                  : work.status === "in_progress"
                                     ? "Em Progresso"
-                                    : work.status === "concluida" ||
-                                        work.status === "completed"
+                                    : work.status === "completed"
                                       ? "Concluída"
                                       : work.status}
                               </span>
@@ -8747,10 +6262,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Client Info */}
                                 <div className="bg-gray-50 p-3 rounded-md">
                                   <span className="font-semibold text-gray-700 block mb-1">
-                                    📞 Cliente:
+                                    👤 Cliente:
                                   </span>
                                   <span className="text-gray-900 font-medium">
-                                    {work.clientName || work.client}
+                                    {work.client}
                                   </span>
                                   {work.contact && (
                                     <div className="mt-1">
@@ -8774,13 +6289,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div>
                                 <span className="font-medium">Local:</span>{" "}
                                 <button
-                                  onClick={() => {
-                                    if (work?.address || work?.location) {
-                                      handleAddressClick(
-                                        work.address || work.location,
-                                      );
-                                    }
-                                  }}
+                                  onClick={() =>
+                                    handleAddressClick(work.location)
+                                  }
                                   className={`text-xs ${
                                     enableMapsRedirect
                                       ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
@@ -8788,19 +6299,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  € {work.address || work.location}
+                                  📍 {work.location}
                                 </button>
                               </div>
                               <div>
                                 <span className="font-medium">Início:</span>{" "}
-                                {new Date(
-                                  work.entryTime ||
-                                    work.startDate ||
-                                    work.createdAt,
-                                ).toLocaleDateString("pt-PT")}
+                                {new Date(work.startDate).toLocaleDateString(
+                                  "pt-PT",
+                                )}
                               </div>
                               <div>
-                                <span className="font-medium">Atribu€:</span>{" "}
+                                <span className="font-medium">
+                                  Atribuída a:
+                                </span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
                                   ? work.assignedUsers
@@ -8813,7 +6324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <span className="font-medium">
                                     Orçamento:
                                   </span>{" "}
-                                  €{work.budget}
+                                  ����{work.budget}
                                 </div>
                               )}
                             </div>
@@ -8869,25 +6380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   {works.filter((work) => {
                     if (activeWorkFilter === "all") return true;
                     if (activeWorkFilter === "no_sheet")
-                      return (
-                        !work.folhaGerada &&
-                        work.status !== "completed" &&
-                        work.status !== "concluida"
-                      );
-                    if (activeWorkFilter === "pending")
-                      return (
-                        work.status === "pendente" || work.status === "pending"
-                      );
-                    if (activeWorkFilter === "in_progress")
-                      return (
-                        work.status === "em_progresso" ||
-                        work.status === "in_progress"
-                      );
-                    if (activeWorkFilter === "completed")
-                      return (
-                        work.status === "concluida" ||
-                        work.status === "completed"
-                      );
+                      return !work.folhaGerada && work.status !== "completed";
                     return work.status === activeWorkFilter;
                   }).length === 0 && (
                     <div className="bg-white rounded-lg p-8 shadow-sm text-center">
@@ -8904,7 +6397,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu📞das"
+                                    ? "Concluídas"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -8948,456 +6441,287 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Edit Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
-                  <form className="space-y-8">
-                    {/* Informações Básicas */}
-                    <div>
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <Building2 className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
-                        </h3>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Folha de Obra *
-                          </label>
-                          <input
-                            type="text"
-                            defaultValue={
-                              editingWork?.workSheetNumber || editingWork?.title
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="LS-2025-163"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tipo de Trabalho *
-                          </label>
-                          <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            defaultValue={editingWork?.type || ""}
-                          >
-                            <option value="">Selecionar tipo</option>
-                            <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalação</option>
-                            <option value="reparacao">Reparação</option>
-                            <option value="limpeza">Limpeza</option>
-                            <option value="furo">Furo de Água</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome do Cliente *
-                          </label>
-                          <input
-                            type="text"
-                            defaultValue={editingWork?.client}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: João Silva"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Contacto *
-                          </label>
-                          <input
-                            type="tel"
-                            defaultValue={editingWork?.contact}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: 244 123 456"
-                            required
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Morada *
-                          </label>
-                          <input
-                            type="text"
-                            defaultValue={editingWork?.location}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Rua das Flores, 123, Leiria"
-                            required
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Entrada *
-                            </label>
-                            <input
-                              type="datetime-local"
-                              defaultValue={editingWork?.startTime}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              required
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Saída
-                            </label>
-                            <input
-                              type="datetime-local"
-                              defaultValue={editingWork?.endTime}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda não terminou"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda n€o terminou
-                            </p>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Estado da Obra *
-                          </label>
-                          <select
-                            name="status"
-                            defaultValue={editingWork?.status}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          >
-                            <option value="pending">Pendente</option>
-                            <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
-                            <option value="cancelled">Cancelada</option>
-                          </select>
-                        </div>
-
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="folha-preenchida-edit"
-                            defaultChecked={editingWork?.workSheetCompleted}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                          />
-                          <label
-                            htmlFor="folha-preenchida-edit"
-                            className="ml-2 text-sm text-gray-700"
-                          >
-                            Folha de obra preenchida/feita
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Técnicos Atribuídos */}
-                    <div>
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <Users className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Técnicos Atribuídos
-                        </h3>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <p className="text-sm text-gray-600 mb-2">
-                            Selecione os usuarios responsaveis por esta obra (
-                            {users.length} utilizadores disponiveis).
-                            Utilizadores inativos sao marcados como "(Inativo)".
-                          </p>
-                          {users.length === 0 && (
-                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                              <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuição de
-                                Obras" para corrigir este problema.
-                              </p>
-                            </div>
-                          )}
-                          <div className="flex space-x-2">
-                            <select
-                              value={currentEditAssignedUser}
-                              onChange={(e) =>
-                                setCurrentEditAssignedUser(e.target.value)
-                              }
-                              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                              <option value="">
-                                {users.length > 0
-                                  ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
-                              </option>
-                              {users
-                                .filter((user) => {
-                                  return !editAssignedUsers.some(
-                                    (assigned) =>
-                                      assigned.id === String(user.id),
-                                  );
-                                })
-                                .map((user) => (
-                                  <option key={user.id} value={user.id}>
-                                    {user.name}{" "}
-                                    {user.active === false ? "(Inativo)" : ""}
-                                  </option>
-                                ))}
-                            </select>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (currentEditAssignedUser) {
-                                  const selectedUser = users.find(
-                                    (u) =>
-                                      String(u.id) === currentEditAssignedUser,
-                                  );
-                                  if (selectedUser) {
-                                    const userIdStr = String(selectedUser.id);
-                                    const isAlreadyAssigned =
-                                      editAssignedUsers.some(
-                                        (assigned) => assigned.id === userIdStr,
-                                      );
-
-                                    if (!isAlreadyAssigned) {
-                                      setEditAssignedUsers([
-                                        ...editAssignedUsers,
-                                        {
-                                          id: userIdStr,
-                                          name: selectedUser.name,
-                                        },
-                                      ]);
-                                      setCurrentEditAssignedUser("");
-                                    }
-                                  }
-                                }
-                              }}
-                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                            >
-                              Atribuir
-                            </button>
-                          </div>
-                          {editAssignedUsers.length > 0 && (
-                            <div className="mt-2 space-y-1">
-                              {editAssignedUsers.map((assignedUser, index) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
-                                >
-                                  <span className="text-sm text-blue-700 font-medium">
-                                    €{assignedUser.name}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setEditAssignedUsers(
-                                        editAssignedUsers.filter(
-                                          (_, i) => i !== index,
-                                        ),
-                                      )
-                                    }
-                                    className="text-red-600 hover:text-red-800"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Observações */}
-                    <div>
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                          <FileText className="h-4 w-4 text-blue-600" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
-                        </h3>
-                      </div>
-
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Trabalho Realizado
-                          </label>
-                          <textarea
-                            defaultValue={editingWork?.workPerformed}
-                            rows={4}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações sobre a obra
-                          </label>
-                          <textarea
-                            defaultValue={editingWork?.observations}
-                            rows={4}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Detalhes do Furo de Água */}
-                    <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
-                      <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        €etalhes do Furo de Água
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Profundidade do Furo (m)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.1"
-                            defaultValue={editingWork?.boreDepth}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Ex: 120.5"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nível da Água (m)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.1"
-                            defaultValue={editingWork?.waterLevel}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Ex: 15.2"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Caudal do Furo (m³/h)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.1"
-                            defaultValue={editingWork?.flowRate}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Ex: 5.5"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Profundidade da Bomba (m)
-                          </label>
-                          <input
-                            type="number"
-                            step="0.1"
-                            defaultValue={editingWork?.pumpDepth}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Ex: 80.0"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Tipo de Coluna
-                          </label>
-                          <select
-                            defaultValue={editingWork?.columnType}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          >
-                            <option value="">Selecionar tipo</option>
-                            <option value="PEAD">PEAD</option>
-                            <option value="HIDROROSCADO">HIDROROSCADO</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Diâmetro da Coluna
-                          </label>
-                          <select
-                            defaultValue={editingWork?.columnDiameter}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          >
-                            <option value="">Selecionar diâmetro</option>
-                            <option value="1">1 polegada</option>
-                            <option value="1.25">1¼ polegadas</option>
-                            <option value="1.5">1½ polegadas</option>
-                            <option value="2">2 polegadas</option>
-                            <option value="2.5">2½ polegadas</option>
-                            <option value="3">3 polegadas</option>
-                            <option value="4">4 polegadas</option>
-                            <option value="5">5 polegadas</option>
-                            <option value="6">6 polegadas</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Modelo da Bomba
-                          </label>
-                          <input
-                            type="text"
-                            defaultValue={editingWork?.pumpModel}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            placeholder="Ex: Grundfos SQ3-105"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Potência do Motor (HP)
-                          </label>
-                          <select
-                            defaultValue={editingWork?.motorPower}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          >
-                            <option value="">Selecionar potência</option>
-                            <option value="0.5">0.5 HP</option>
-                            <option value="0.75">0.75 HP</option>
-                            <option value="1">1 HP</option>
-                            <option value="1.5">1.5 HP</option>
-                            <option value="2">2 HP</option>
-                            <option value="3">3 HP</option>
-                            <option value="5">5 HP</option>
-                            <option value="7.5">7.5 HP</option>
-                            <option value="10">10 HP</option>
-                            <option value="15">15 HP</option>
-                            <option value="20">20 HP</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Voltagem da Bomba
-                          </label>
-                          <select
-                            defaultValue={editingWork?.pumpVoltage}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          >
-                            <option value="">Selecionar voltagem</option>
-                            <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif📞sico)</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div className="mt-4">
+                  <form className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec📞ficas do Furo
+                          T��tulo da Obra *
                         </label>
-                        <textarea
-                          rows={3}
-                          defaultValue={editingWork?.boreObservations}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.title}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Ex: Instalação de Piscina"
+                          required
                         />
                       </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Cliente *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.client}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Nome do cliente"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Local *
+                        </label>
+                        <input
+                          type="text"
+                          defaultValue={editingWork?.location}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Morada da obra"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Estado
+                        </label>
+                        <select
+                          defaultValue={editingWork?.status}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="pending">Pendente</option>
+                          <option value="in_progress">Em Progresso</option>
+                          <option value="completed">Concluída</option>
+                          <option value="cancelled">Cancelada</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Início
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={editingWork?.startDate?.split("T")[0]}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Data de Conclusão Prevista
+                        </label>
+                        <input
+                          type="date"
+                          defaultValue={
+                            editingWork?.expectedEndDate?.split("T")[0]
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Usuários Atribuídos ({users.length} utilizadores
+                          disponíveis)
+                        </label>
+                        <div className="flex space-x-2">
+                          <select
+                            value={currentEditAssignedUser}
+                            onChange={(e) =>
+                              setCurrentEditAssignedUser(e.target.value)
+                            }
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="">
+                              {users.length > 0
+                                ? "Selecionar usu��rio..."
+                                : "Nenhum utilizador disponível"}
+                            </option>
+                            {users
+                              .filter((user) => {
+                                console.log(
+                                  "User:",
+                                  user.name,
+                                  "Role:",
+                                  user.role,
+                                  "Active:",
+                                  user.active,
+                                );
+                                return (
+                                  user.role !== "viewer" &&
+                                  user.active !== false &&
+                                  !editAssignedUsers.some(
+                                    (assigned) =>
+                                      assigned.id === String(user.id),
+                                  )
+                                );
+                              })
+                              .map((user) => (
+                                <option key={user.id} value={user.id}>
+                                  {user.name}
+                                </option>
+                              ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (currentEditAssignedUser) {
+                                const selectedUser = users.find(
+                                  (u) =>
+                                    String(u.id) === currentEditAssignedUser,
+                                );
+                                if (selectedUser) {
+                                  const userIdStr = String(selectedUser.id);
+                                  const isAlreadyAssigned =
+                                    editAssignedUsers.some(
+                                      (assigned) => assigned.id === userIdStr,
+                                    );
+
+                                  console.log(
+                                    "Attempting to assign user:",
+                                    selectedUser.name,
+                                    "ID:",
+                                    userIdStr,
+                                    "Already assigned:",
+                                    isAlreadyAssigned,
+                                  );
+
+                                  if (!isAlreadyAssigned) {
+                                    setEditAssignedUsers([
+                                      ...editAssignedUsers,
+                                      {
+                                        id: userIdStr,
+                                        name: selectedUser.name,
+                                      },
+                                    ]);
+                                    setCurrentEditAssignedUser("");
+                                    console.log("User assigned successfully!");
+                                  } else {
+                                    console.log(
+                                      "User already assigned, skipping",
+                                    );
+                                  }
+                                }
+                              }
+                            }}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                          >
+                            Atribuir
+                          </button>
+                        </div>
+                        {editAssignedUsers.length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {editAssignedUsers.map((assignedUser, index) => (
+                              <div
+                                key={index}
+                                className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
+                              >
+                                <span className="text-sm text-blue-700 font-medium">
+                                  👤 {assignedUser.name}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setEditAssignedUsers(
+                                      editAssignedUsers.filter(
+                                        (_, i) => i !== index,
+                                      ),
+                                    )
+                                  }
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Valor Orçamentado (€)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          defaultValue={editingWork?.budgetValue}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="0.00"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Telefone do Cliente
+                        </label>
+                        <input
+                          type="tel"
+                          defaultValue={editingWork?.clientPhone}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="+351 912 345 678"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email do Cliente
+                        </label>
+                        <input
+                          type="email"
+                          defaultValue={editingWork?.clientEmail}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="cliente@email.com"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Prioridade
+                        </label>
+                        <select
+                          defaultValue={editingWork?.priority || "medium"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="low">Baixa</option>
+                          <option value="medium">Média</option>
+                          <option value="high">Alta</option>
+                          <option value="urgent">Urgente</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Tipo de Obra
+                        </label>
+                        <select
+                          defaultValue={editingWork?.workType || "installation"}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="installation">Instalação</option>
+                          <option value="maintenance">Manutenção</option>
+                          <option value="repair">Reparação</option>
+                          <option value="renovation">Renovação</option>
+                          <option value="inspection">Inspeção</option>
+                        </select>
+                      </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="flex space-x-4 pt-6 border-t border-gray-200">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                      </label>
+                      <textarea
+                        defaultValue={editingWork?.description}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                        placeholder="Descrição detalhada da obra"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações T��cnicas
+                      </label>
+                      <textarea
+                        defaultValue={editingWork?.technicalNotes}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={3}
+                        placeholder="Observações técnicas, materiais necessários, etc."
+                      />
+                    </div>
+
+                    <div className="flex space-x-4">
                       <button
                         type="button"
                         onClick={() => {
@@ -9406,15 +6730,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
-                        className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                        className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
                       >
                         Cancelar
                       </button>
                       <button
-                        type="submit"
+                        type="button"
                         onClick={(e) => {
-                          e.preventDefault();
-
                           const form = (e.target as HTMLElement).closest(
                             "form",
                           );
@@ -9422,50 +6744,32 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const workSheetNumber = (
-                            inputs[0] as HTMLInputElement
-                          ).value; // Folha de Obra
-                          const workType = (inputs[1] as HTMLSelectElement)
-                            .value; // Tipo de Trabalho
-                          const client = (inputs[2] as HTMLInputElement).value; // Cliente
-                          const contact = (inputs[3] as HTMLInputElement).value; // Contacto
-                          const location = (inputs[4] as HTMLInputElement)
-                            .value; // Morada
-                          const startTime = (inputs[5] as HTMLInputElement)
-                            .value; // Hora de Entrada
-                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
-                          const status = (inputs[7] as HTMLSelectElement).value; // Estado
-                          const workSheetCompleted = (
-                            inputs[8] as HTMLInputElement
-                          ).checked; // Folha preenchida
-                          const workPerformed = (
-                            inputs[9] as HTMLTextAreaElement
-                          ).value; // Trabalho Realizado
-                          const observations = (
-                            inputs[10] as HTMLTextAreaElement
-                          ).value; // Observações
+                          const title = inputs[0].value; // Título da Obra
+                          const client = inputs[1].value; // Cliente
+                          const location = inputs[2].value; // Local
+                          const status = inputs[3].value; // Estado
+                          const startDate = inputs[4].value; // Data de Início
+                          const expectedEndDate = inputs[5].value; // Data de Conclusão Prevista
+                          // assignedTo now comes from editAssignedUsers state
+                          const budgetValue = inputs[6].value; // Valor Orçamentado
+                          const clientPhone = inputs[7].value; // Telefone do Cliente
+                          const clientEmail = inputs[8].value; // Email do Cliente
+                          const priority = inputs[9].value; // Prioridade
+                          const workType = inputs[10].value; // Tipo de Obra
+                          const description = inputs[12].value; // Descri��ão
+                          const technicalNotes = inputs[12].value; // Observações Técnicas
 
-                          // Prepare update data
-                          let updateData: any = {
-                            workSheetNumber,
-                            title: workSheetNumber,
-                            type: workType,
+                          dataSync.updateWork(editingWork.id, {
+                            title,
                             client,
-                            contact,
                             location,
-                            startTime,
-                            endTime,
-                            // Only update status if it's actually different from current status
-                            ...(status !== editingWork?.status && {
-                              status: status as
-                                | "pending"
-                                | "in_progress"
-                                | "completed"
-                                | "cancelled",
-                            }),
-                            workSheetCompleted,
-                            workPerformed,
-                            observations,
+                            status,
+                            startDate: startDate
+                              ? new Date(startDate).toISOString()
+                              : undefined,
+                            expectedEndDate: expectedEndDate
+                              ? new Date(expectedEndDate).toISOString()
+                              : undefined,
                             assignedTo:
                               editAssignedUsers.length > 0
                                 ? editAssignedUsers
@@ -9474,59 +6778,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : "",
                             assignedUsers: editAssignedUsers,
                             assignedUserIds: editAssignedUsers.map((u) => u.id),
-                          };
-
-                          // Always capture bore data from the cyan section
-                          const boreSection =
-                            form.querySelector(".border-cyan-200");
-                          if (boreSection) {
-                            const boreInputs = boreSection.querySelectorAll(
-                              "input, select, textarea",
-                            );
-                            console.log(
-                              "🔧 DEBUG boreInputs found:",
-                              boreInputs.length,
-                            );
-                            updateData = {
-                              ...updateData,
-                              boreDepth:
-                                (boreInputs[0] as HTMLInputElement)?.value ||
-                                "",
-                              waterLevel:
-                                (boreInputs[1] as HTMLInputElement)?.value ||
-                                "",
-                              flowRate:
-                                (boreInputs[2] as HTMLInputElement)?.value ||
-                                "",
-                              pumpDepth:
-                                (boreInputs[3] as HTMLInputElement)?.value ||
-                                "",
-                              columnType:
-                                (boreInputs[4] as HTMLInputElement)?.value ||
-                                "",
-                              columnDiameter:
-                                (boreInputs[5] as HTMLInputElement)?.value ||
-                                "",
-                              pumpModel:
-                                (boreInputs[6] as HTMLInputElement)?.value ||
-                                "",
-                              motorPower:
-                                (boreInputs[7] as HTMLInputElement)?.value ||
-                                "",
-                              pumpVoltage:
-                                (boreInputs[8] as HTMLInputElement)?.value ||
-                                "",
-                              boreObservations:
-                                (boreInputs[9] as HTMLInputElement)?.value ||
-                                "",
-                            };
-                            console.log(
-                              "🔍 DEBUG updateData with bore:",
-                              updateData,
-                            );
-                          }
-
-                          dataSync.updateWork(editingWork.id, updateData);
+                            budgetValue: budgetValue
+                              ? parseFloat(budgetValue)
+                              : undefined,
+                            clientPhone,
+                            clientEmail,
+                            priority,
+                            workType,
+                            description,
+                            technicalNotes,
+                          });
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -9534,10 +6795,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setCurrentEditAssignedUser("");
                           setActiveSection("obras");
                         }}
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        <Building2 className="h-4 w-4" />
-                        <span>Guardar Alterações</span>
+                        Guardar Alterações
                       </button>
                     </div>
                   </form>
@@ -9603,7 +6863,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç€da piscina"
+                          placeholder="Localização da piscina"
                           required
                         />
                       </div>
@@ -9737,28 +6997,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const name = (inputs[0] as HTMLInputElement).value; // Nome da Piscina
-                          const client = (inputs[1] as HTMLInputElement).value; // Cliente
-                          const location = (inputs[2] as HTMLInputElement)
-                            .value; // Local
-                          const status = (inputs[3] as HTMLInputElement).value; // Estado
-                          const poolType = (inputs[4] as HTMLInputElement)
-                            .value; // Tipo de Piscina
-                          const dimensions = (inputs[5] as HTMLInputElement)
-                            .value; // Dimensões
-                          const volume = (inputs[6] as HTMLInputElement).value; // Volume
-                          const filtrationSystem = (
-                            inputs[7] as HTMLInputElement
-                          ).value; // Sistema de Filtração
-                          const installationDate = (
-                            inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
-                          const clientPhone = (inputs[9] as HTMLInputElement)
-                            .value; // Telefone do Cliente
-                          const clientEmail = (inputs[10] as HTMLInputElement)
-                            .value; // Email do Cliente
-                          const observations = (inputs[11] as HTMLInputElement)
-                            .value; // Observações
+                          const name = inputs[0].value; // Nome da Piscina
+                          const client = inputs[1].value; // Cliente
+                          const location = inputs[2].value; // Local
+                          const status = inputs[3].value; // Estado
+                          const poolType = inputs[4].value; // Tipo de Piscina
+                          const dimensions = inputs[5].value; // Dimensões
+                          const volume = inputs[6].value; // Volume
+                          const filtrationSystem = inputs[7].value; // Sistema de Filtração
+                          const installationDate = inputs[8].value; // Data de Instalação
+                          const clientPhone = inputs[9].value; // Telefone do Cliente
+                          const clientEmail = inputs[10].value; // Email do Cliente
+                          const observations = inputs[11].value; // Observações
 
                           dataSync.updatePool(editingPool.id, {
                             name,
@@ -9767,7 +7017,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             status,
                             poolType,
                             dimensions,
-                            volume: volume || undefined,
+                            volume: volume ? parseInt(volume) : undefined,
                             filtrationSystem,
                             installationDate: installationDate
                               ? new Date(installationDate).toISOString()
@@ -9833,7 +7083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico *
+                          T��cnico *
                         </label>
                         <input
                           type="text"
@@ -9853,8 +7103,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç€">Reparação</option>
+                          <option value="Manutenção">Manutenção</option>
+                          <option value="Reparação">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -9925,7 +7175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Data de Conclusão
+                          Data de Conclus��o
                         </label>
                         <input
                           type="date"
@@ -9981,26 +7231,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             "input, select, textarea",
                           );
 
-                          const scheduledDate = (inputs[0] as HTMLInputElement)
-                            .value; // Data
-                          const technician = (inputs[1] as HTMLInputElement)
-                            .value; // Técnico
-                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
-                          const status = (inputs[3] as HTMLInputElement).value; // Estado
-                          const estimatedDuration = (
-                            inputs[4] as HTMLInputElement
-                          ).value; // Duração Estimada
-                          const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Duração Real
-                          const cost = (inputs[6] as HTMLInputElement).value; // Custo
-                          const priority = (inputs[7] as HTMLInputElement)
-                            .value; // Prioridade
-                          const completedDate = (inputs[8] as HTMLInputElement)
-                            .value; // Data de Conclusão
-                          const materialsUsed = (inputs[9] as HTMLInputElement)
-                            .value; // Materiais Utilizados
-                          const observations = (inputs[10] as HTMLInputElement)
-                            .value; // Observaç€s
+                          const scheduledDate = inputs[0].value; // Data
+                          const technician = inputs[1].value; // Técnico
+                          const type = inputs[2].value; // Tipo de Manutenção
+                          const status = inputs[3].value; // Estado
+                          const estimatedDuration = inputs[4].value; // Duração Estimada
+                          const actualDuration = inputs[5].value; // Duração Real
+                          const cost = inputs[6].value; // Custo
+                          const priority = inputs[7].value; // Prioridade
+                          const completedDate = inputs[8].value; // Data de Conclusão
+                          const materialsUsed = inputs[9].value; // Materiais Utilizados
+                          const observations = inputs[10].value; // Observações
 
                           dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
@@ -10008,15 +7249,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               : undefined,
                             technician,
                             type,
-                            status: status as
-                              | "pending"
-                              | "in_progress"
-                              | "completed"
-                              | "cancelled"
-                              | "scheduled",
-                            estimatedDuration: estimatedDuration || undefined,
-                            actualDuration: actualDuration || undefined,
-                            cost: cost || undefined,
+                            status,
+                            estimatedDuration: estimatedDuration
+                              ? parseFloat(estimatedDuration)
+                              : undefined,
+                            actualDuration: actualDuration
+                              ? parseFloat(actualDuration)
+                              : undefined,
+                            cost: cost ? parseFloat(cost) : undefined,
                             priority,
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
@@ -10071,63 +7311,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    ← Voltar aos Utilizadores
+                    �� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
                       navigateToSection("utilizadores");
                     }}
-                    onCancel={() => {
+                    onBackToLogin={() => {
                       navigateToSection("utilizadores");
                     }}
                   />
                 </div>
-              </div>
-            </div>
-          );
-
-        case "localizacoes":
-          // SECURITY: Only super_admin and admin can access location features
-          if (
-            currentUser?.role !== "super_admin" &&
-            currentUser?.role !== "admin"
-          ) {
-            return (
-              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                  <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-                  <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                    Acesso Restrito
-                  </h1>
-                  <p className="text-gray-600 mb-4">
-                    Apenas administradores podem aceder às funcionalidades de
-                    localização.
-                  </p>
-                  <button
-                    onClick={() => navigateToSection("dashboard")}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                  >
-                    Voltar ao Dashboard
-                  </button>
-                </div>
-              </div>
-            );
-          }
-          return (
-            <div className="min-h-screen bg-gray-50">
-              <div className="px-4 py-4">
-                <LocationPage
-                  currentUser={
-                    currentUser
-                      ? {
-                          id: currentUser.uid || "unknown",
-                          name: currentUser.name || "Utilizador",
-                          email: currentUser.email || "",
-                        }
-                      : undefined
-                  }
-                  allUsers={users}
-                />
               </div>
             </div>
           );
@@ -10140,7 +7334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Página não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç€ solicitada não foi encontrada.
+                  A seção solicitada não foi encontrada.
                 </p>
               </div>
             </div>
@@ -10155,7 +7349,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte€o. Por favor, tente novamente.
+              Ocorreu um erro ao carregar o conteúdo. Por favor, tente
+              novamente.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -10217,7 +7412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">
-                Partilhar Relat📞rio
+                Partilhar Relatório
               </h2>
               <button
                 onClick={() => {
@@ -10306,11 +7501,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>€</span>
+                  <span>✓</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>💧</span>
+                  <span>✓</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10318,7 +7513,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>📞</span>
+                  <span>✓</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10327,7 +7522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç€s e próxima manutenção</span>
+                  <span>Observações e próxima manutenção</span>
                 </div>
               </div>
             </div>
@@ -10357,33 +7552,33 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // SECURITY: Register form removed - only super admin can create users
 
-  // TEMPORARY: Bypass authentication for testing - COMMENTED OUT TO ALLOW LOGOUT
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     const testUser = {
-  //       id: 1,
-  //       name: "Gonçalo Fonseca",
-  //       email: "gongonsilva@gmail.com",
-  //       role: "super_admin",
-  //       permissions: {
-  //         obras: { view: true, create: true, edit: true, delete: true },
-  //         manutencoes: { view: true, create: true, edit: true, delete: true },
-  //         piscinas: { view: true, create: true, edit: true, delete: true },
-  //         relatorios: { view: true, create: true, edit: true, delete: true },
-  //         utilizadores: { view: true, create: true, edit: true, delete: true },
-  //         admin: { view: true, create: true, edit: true, delete: true },
-  //         dashboard: { view: true },
-  //       },
-  //     };
-  //     setCurrentUser(testUser);
-  //     setIsAuthenticated(true);
-  //     localStorage.setItem("currentUser", JSON.stringify(testUser));
-  //     localStorage.setItem("isAuthenticated", "true");
-  //   }
-  // }, []);
+  // TEMPORARY: Bypass authentication for testing
+  useEffect(() => {
+    if (!currentUser) {
+      const testUser = {
+        id: 1,
+        name: "Gonçalo Fonseca",
+        email: "gongonsilva@gmail.com",
+        role: "super_admin",
+        permissions: {
+          obras: { view: true, create: true, edit: true, delete: true },
+          manutencoes: { view: true, create: true, edit: true, delete: true },
+          piscinas: { view: true, create: true, edit: true, delete: true },
+          relatorios: { view: true, create: true, edit: true, delete: true },
+          utilizadores: { view: true, create: true, edit: true, delete: true },
+          admin: { view: true, create: true, edit: true, delete: true },
+          dashboard: { view: true },
+        },
+      };
+      setCurrentUser(testUser);
+      setIsAuthenticated(true);
+      localStorage.setItem("currentUser", JSON.stringify(testUser));
+      localStorage.setItem("isAuthenticated", "true");
+    }
+  }, []);
 
-  // Show login form if not authenticated
-  if (!isAuthenticated) {
+  // Always allow access for testing - bypass authentication
+  if (false) {
     console.log(
       "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
@@ -10399,7 +7594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <AdvancedSettings
             onBack={handleAdvancedSettingsBack}
             onNavigateToSection={(section) => {
-              console.log(`€avegando para seção: ${section}`);
+              console.log(`🔄 Navegando para seção: ${section}`);
 
               // Navigation to user management section only allowed if authenticated
               if (
@@ -10407,10 +7602,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (!isAuthenticated || !currentUser)
               ) {
                 console.log(
-                  "€Access denied: User management requires authentication",
+                  "❌ Access denied: User management requires authentication",
                 );
                 setLoginError(
-                  "Por favor, faça login primeiro para aceder 📞 gestão de utilizadores",
+                  "Por favor, faça login primeiro para aceder à gestão de utilizadores",
                 );
                 setShowAdvancedSettings(false);
                 setIsAdvancedUnlocked(false);
@@ -10453,7 +7648,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura📞ções avançadas
+                Insira a palavra-passe para aceder às configurações avançadas
               </p>
             </div>
 
@@ -10500,107 +7695,582 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     return (
-      <div>
-        <LoginPage
-          onLogin={async (
-            email: string,
-            password: string,
-            rememberMe: boolean = false,
-          ) => {
-            // console.log("🔐 Login attempt for:", email);
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                alt="Leirisonda Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
 
-            // Clear any previous errors
-            setLoginError("");
-
-            // Basic validation
-            if (!email?.trim() || !password?.trim()) {
-              setLoginError("Por favor, preencha todos os campos");
-              return;
-            }
-
-            try {
-              // Auto-check Firebase before login attempt
-              await firebaseAutoFix.checkOnUserAction();
-
-              const result = await authService.login(
-                email.trim(),
-                password,
-                rememberMe,
-              );
-
-              // console.log("🔐 Auth result:", result);
-
-              if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
-
-                // Update state
-                setCurrentUser(result.user);
-                setIsAuthenticated(true);
-                localStorage.setItem(
-                  "currentUser",
-                  JSON.stringify(result.user),
-                );
-                localStorage.setItem("isAuthenticated", "true");
-
-                // Clear login form
-                setLoginForm({ email: "", password: "" });
-
-                // Navigate to dashboard or requested section with validation
-                const hash = window.location.hash.substring(1);
-                if (hash && hash !== "login") {
-                  // Validate that the section exists and user has access
-                  const validSections = [
-                    "dashboard",
-                    "obras",
-                    "piscinas",
-                    "manutencoes",
-                    "futuras-manutencoes",
-                    "nova-obra",
-                    "nova-piscina",
-                    "nova-manutencao",
-                    "clientes",
-                    "novo-cliente",
-                    "configuracoes",
-                    "relatorios",
-                    "utilizadores",
-                    "localizacoes",
-                    "register",
-                    "editar-obra",
-                    "editar-piscina",
-                    "editar-manutencao",
-                  ];
-
-                  if (validSections.includes(hash)) {
-                    // Use setTimeout to ensure state is properly set before navigation
-                    setTimeout(() => {
-                      setActiveSection(hash);
-                    }, 100);
-                  } else {
-                    // Invalid hash, redirect to dashboard
-                    window.location.hash = "";
-                    navigateToSection("dashboard");
-                  }
-                } else {
-                  navigateToSection("dashboard");
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email
+              </label>
+              <input
+                type="email"
+                value={loginForm.email}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, email: e.target.value })
                 }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                required
+              />
+            </div>
 
-                // console.log("✅ Login state updated successfully");
-              } else {
-                console.warn("❌ Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
-              }
-            } catch (error: any) {
-              console.error("❌ Login error:", error);
-              setLoginError(
-                "Erro de conexão. Verifique sua internet e tente novamente.",
-              );
-            }
-          }}
-          loginError={loginError}
-          isLoading={false}
-        />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Palavra-passe
+              </label>
+              <input
+                type="password"
+                value={loginForm.password}
+                onChange={(e) =>
+                  setLoginForm({ ...loginForm, password: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
+                required
+              />
+            </div>
 
-        {/* Admin Login Modal - tamb€m funciona na página de login */}
+            {loginError && (
+              <div className="text-red-600 text-sm">{loginError}</div>
+            )}
+
+            <div className="space-y-2">
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Entrar
+              </button>
+            </div>
+          </form>
+
+          {/* SECURITY: Only super admin can create new accounts - removed public registration */}
+        </div>
+
+        {/* Floating Advanced Settings Button */}
+        <button
+          onClick={() => setShowAdvancedSettings(true)}
+          className="fixed bottom-4 right-4 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-gray-700 hover:shadow-xl transition-all duration-200"
+        >
+          <Settings className="h-5 w-5" />
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <AutoSyncProvider
+      enabled={false}
+      syncInterval={15000}
+      collections={["users", "pools", "maintenance", "works", "clients"]}
+      showNotifications={false}
+    >
+      <div className="min-h-screen bg-gray-50">
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Logo Header */}
+            <div className="px-6 py-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F459ad019cfee4b38a90f9f0b3ad0daeb?format=webp&width=800"
+                      alt="Leirisonda Logo"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm text-gray-500">Gestão de Serviços</p>
+                  </div>
+                </div>
+                {/* Sync Status Indicator */}
+                <SyncStatusIcon className="ml-2" />
+                {/* Close button for mobile */}
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="lg:hidden p-1 rounded-md hover:bg-gray-100"
+                >
+                  <X className="h-5 w-5 text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            {/* Navigation */}
+            <nav className="flex-1 px-4 py-6 space-y-2">
+              <button
+                onClick={() => {
+                  navigateToSection("dashboard");
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  activeSection === "dashboard"
+                    ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                    : "text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <Home className="h-5 w-5" />
+                <span>Dashboard</span>
+              </button>
+
+              {hasPermission("obras", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("obras");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "obras"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Building2 className="h-5 w-5" />
+                  <span>Obras</span>
+                </button>
+              )}
+
+              {hasPermission("obras", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-obra");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-obra"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Obra</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("manutencoes");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "manutencoes"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Wrench className="h-5 w-5" />
+                  <span>Manutenções</span>
+                </button>
+              )}
+
+              {hasPermission("manutencoes", "create") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("nova-manutencao");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "nova-manutencao"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Plus className="h-5 w-5" />
+                  <span>Nova Manutenção</span>
+                </button>
+              )}
+
+              {hasPermission("piscinas", "view") && (
+                <button
+                  onClick={() => {
+                    navigateToSection("piscinas");
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                    activeSection === "piscinas"
+                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  <Waves className="h-5 w-5" />
+                  <span>Piscinas</span>
+                </button>
+              )}
+            </nav>
+
+            {/* User Section */}
+            <div className="px-4 py-6 border-t border-gray-200">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                  <UserCheck className="h-5 w-5 text-red-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {currentUser.name}
+                  </p>
+                  <p className="text-sm text-gray-500">{currentUser.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Terminar Sessão</span>
+              </button>
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden fixed top-20 left-4 z-60 flex flex-col space-y-2">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <Menu className="h-6 w-6 text-gray-600" />
+          </button>
+          <button
+            onClick={handleGoBack}
+            className="bg-white p-2 rounded-md shadow-md"
+          >
+            <ArrowLeft className="h-6 w-6 text-gray-600" />
+          </button>
+        </div>
+
+        {/* Mobile Overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Enhanced Work View Modal */}
+        {viewingWork && selectedWork && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+              <div className="p-6">
+                {/* Enhanced Header */}
+                <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Building2 className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Detalhes Completos da Obra
+                      </h2>
+                      <p className="text-gray-600 text-sm">
+                        {selectedWork.id?.toUpperCase() ||
+                          "ID-" + Date.now().toString().slice(-6)}{" "}
+                        → {selectedWork.title}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                    }}
+                    className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    <X className="h-6 w-6" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Número da Folha de Obra
+                      </label>
+                      <p className="text-gray-900 font-mono">
+                        {selectedWork.workSheetNumber || selectedWork.title}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Tipo de Obra
+                      </label>
+                      <p className="text-gray-900 capitalize">
+                        {selectedWork.type || "Não especificado"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Título
+                      </label>
+                      <p className="text-gray-900">{selectedWork.title}</p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Cliente
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.client || "Não especificado"}
+                      </p>
+                      {selectedWork.contact && (
+                        <button
+                          onClick={() => handlePhoneClick(selectedWork.contact)}
+                          className={`text-sm mt-1 ${
+                            enablePhoneDialer
+                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                              : "text-gray-500"
+                          }`}
+                          disabled={!enablePhoneDialer}
+                        >
+                          �� {selectedWork.contact}
+                        </button>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Local
+                      </label>
+                      <button
+                        onClick={() =>
+                          handleAddressClick(selectedWork.location)
+                        }
+                        className={`text-left ${
+                          enableMapsRedirect
+                            ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                            : "text-gray-900"
+                        }`}
+                        disabled={!enableMapsRedirect}
+                      >
+                        📍 {selectedWork.location}
+                      </button>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Estado
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.status === "pending"
+                            ? "bg-red-100 text-red-700"
+                            : selectedWork.status === "in_progress"
+                              ? "bg-orange-100 text-orange-700"
+                              : selectedWork.status === "completed"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
+                        }`}
+                      >
+                        {selectedWork.status === "pending"
+                          ? "Pendente"
+                          : selectedWork.status === "in_progress"
+                            ? "Em Progresso"
+                            : selectedWork.status === "completed"
+                              ? "Concluída"
+                              : selectedWork.status}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Início
+                      </label>
+                      <p className="text-gray-900">
+                        {new Date(selectedWork.startDate).toLocaleDateString(
+                          "pt-PT",
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Horário
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.startTime && selectedWork.endTime
+                          ? `${selectedWork.startTime} - ${selectedWork.endTime}`
+                          : selectedWork.startTime
+                            ? `Das ${selectedWork.startTime}`
+                            : "Não definido"}
+                      </p>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Atribuída a
+                      </label>
+                      <p className="text-gray-900">
+                        {selectedWork.assignedUsers &&
+                        selectedWork.assignedUsers.length > 0
+                          ? selectedWork.assignedUsers
+                              .map((u) => u.name)
+                              .join(", ")
+                          : selectedWork.assignedTo || "Não atribuída"}
+                      </p>
+                    </div>
+                    {selectedWork.technicians &&
+                      selectedWork.technicians.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Técnicos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.technicians.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.vehicles &&
+                      selectedWork.vehicles.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Veículos
+                          </label>
+                          <p className="text-gray-900">
+                            {selectedWork.vehicles.join(", ")}
+                          </p>
+                        </div>
+                      )}
+                    {selectedWork.photos && selectedWork.photos.length > 0 && (
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Fotografias ({selectedWork.photos.length})
+                        </label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
+                          {selectedWork.photos.map((photo, index) => (
+                            <div key={photo.id || index} className="relative">
+                              <img
+                                src={photo.data || photo.url}
+                                alt={photo.name || `Foto ${index + 1}`}
+                                className="w-full h-20 object-cover rounded-lg border border-gray-200"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedWork.description && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Descrição
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.budget && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Orçamento
+                      </label>
+                      <p className="text-gray-900">€{selectedWork.budget}</p>
+                    </div>
+                  )}
+
+                  {selectedWork.workPerformed && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Trabalho Realizado
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.workPerformed}
+                      </p>
+                    </div>
+                  )}
+
+                  {selectedWork.observations && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Observações
+                      </label>
+                      <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
+                        {selectedWork.observations}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Folha de Obra Concluída
+                      </label>
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedWork.workSheetCompleted
+                            ? "bg-green-100 text-green-700"
+                            : "bg-yellow-100 text-yellow-700"
+                        }`}
+                      >
+                        {selectedWork.workSheetCompleted
+                          ? "Concluída"
+                          : "Pendente"}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Data de Criação
+                      </label>
+                      <p className="text-gray-900 text-sm">
+                        {new Date(
+                          selectedWork.createdAt || selectedWork.startDate,
+                        ).toLocaleString("pt-PT")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setViewingWork(false);
+                      setSelectedWork(null);
+                    }}
+                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                  >
+                    Fechar
+                  </button>
+                  {hasPermission("obras", "edit") && (
+                    <button
+                      onClick={() => {
+                        setEditingWork(selectedWork);
+                        // Initialize edit assigned users
+                        setEditAssignedUsers(selectedWork.assignedUsers || []);
+                        setViewingWork(false);
+                        setSelectedWork(null);
+                        setActiveSection("editar-obra");
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    >
+                      Editar
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <main className="lg:ml-80 min-h-screen">
+          <div className="p-4 lg:p-6">{renderContent()}</div>
+        </main>
+
+        {/* Install Prompt for Mobile */}
+        <InstallPrompt />
+
+        {/* Admin Login Modal */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -10615,11 +8285,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p📞gina de login */}
+        {/* Admin Page */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
-              currentUser={currentUser}
               onLogout={() => {
                 setIsAdminAuthenticated(false);
                 setShowAdminLogin(false);
@@ -10628,1179 +8297,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
       </div>
-    );
-  }
-
-  // Use sync manager to determine if sync should be enabled
-  const quotaStatus = syncManager.getSyncStatus();
-  const syncInterval = syncManager.getSafeInterval();
-
-  return (
-    <AutoSyncProviderSafe
-      enabled={true}
-      syncInterval={60000}
-      collections={["users", "pools", "maintenance", "works", "clients"]}
-      showNotifications={false}
-    >
-      <InstantSyncManagerSafe>
-        <div className="min-h-screen bg-gray-50">
-          {/* Firebase works automatically in background - no UI elements */}
-          {/* Sidebar */}
-          <div
-            className={`fixed inset-y-0 left-0 z-50 w-80 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
-              sidebarOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-          >
-            <div className="flex flex-col h-full">
-              {/* Logo Header */}
-              <div className="px-6 py-6 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
-                      <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
-                        alt="Leirisonda Logo"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm text-gray-500">
-                        Gestão de Serviços
-                      </p>
-                    </div>
-                  </div>
-                  {/* Close button for mobile */}
-                  <button
-                    onClick={() => setSidebarOpen(false)}
-                    className="lg:hidden p-1 rounded-md hover:bg-gray-100"
-                  >
-                    <X className="h-5 w-5 text-gray-500" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <nav className="flex-1 px-4 py-6 space-y-2">
-                <button
-                  onClick={() => {
-                    navigateToSection("dashboard");
-                    setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeSection === "dashboard"
-                      ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <Home className="h-5 w-5" />
-                  <span>Dashboard</span>
-                </button>
-
-                {hasPermission("obras", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("obras");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "obras"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Building2 className="h-5 w-5" />
-                    <span>Obras</span>
-                  </button>
-                )}
-
-                {hasPermission("obras", "create") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("nova-obra");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "nova-obra"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Plus className="h-5 w-5" />
-                    <span>Nova Obra</span>
-                  </button>
-                )}
-
-                {hasPermission("manutencoes", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("manutencoes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "manutencoes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Wrench className="h-5 w-5" />
-                    <span>Manutencoes</span>
-                  </button>
-                )}
-
-                {hasPermission("manutencoes", "create") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("nova-manutencao");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "nova-manutencao"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Plus className="h-5 w-5" />
-                    <span>Nova Manutencao</span>
-                  </button>
-                )}
-
-                {hasPermission("piscinas", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("piscinas");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "piscinas"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Waves className="h-5 w-5" />
-                    <span>Piscinas</span>
-                  </button>
-                )}
-
-                {/* Localizações - Para super_admin e admin */}
-                {/* Clientes */}
-                {hasPermission("clientes", "view") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("clientes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "clientes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <Users className="h-5 w-5" />
-                    <span>Clientes</span>
-                  </button>
-                )}
-
-                {/* Localizações - Para super_admin e admin */}
-                {(currentUser?.role === "super_admin" ||
-                  currentUser?.role === "admin") && (
-                  <button
-                    onClick={() => {
-                      navigateToSection("localizacoes");
-                      setSidebarOpen(false);
-                    }}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                      activeSection === "localizacoes"
-                        ? "bg-red-50 text-red-700 border-l-4 border-red-500"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    <MapPin className="h-5 w-5" />
-                    <span>Localizações</span>
-                  </button>
-                )}
-              </nav>
-
-              {/* User Section */}
-              <div className="px-4 py-6 border-t border-gray-200">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                    <UserCheck className="h-5 w-5 text-red-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {currentUser?.name}
-                    </p>
-                    <p className="text-sm text-gray-500">{currentUser?.role}</p>
-                  </div>
-                </div>
-
-                {/* Settings and Logout buttons */}
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => {
-                      const password = prompt(
-                        "Digite a palavra-passe para aceder às configurações:",
-                      );
-                      if (password === "19867") {
-                        navigateToSection("configuracoes");
-                        setSidebarOpen(false);
-                      } else if (password !== null) {
-                        alert("Palavra-passe incorreta!");
-                      }
-                    }}
-                    className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configurações"
-                  >
-                    <Settings className="h-5 w-5" />
-                  </button>
-
-                  <button
-                    onClick={handleLogout}
-                    className="flex-1 flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                  >
-                    <LogOut className="h-5 w-5" />
-                    <span>Terminar Sessao</span>
-                  </button>
-                </div>
-                <div className="mt-4 text-center">
-                  <p className="text-xs text-gray-400">© 2025 Leirisonda</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden fixed top-20 left-4 z-[70] flex flex-col space-y-2">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="bg-white p-2 rounded-md shadow-md"
-            >
-              <Menu className="h-6 w-6 text-gray-600" />
-            </button>
-            {activeSection !== "dashboard" && (
-              <button
-                onClick={handleGoBack}
-                className="bg-white p-2 rounded-md shadow-md"
-              >
-                <ArrowLeft className="h-6 w-6 text-gray-600" />
-              </button>
-            )}
-          </div>
-
-          {/* Sync Status Indicator - Top Right */}
-          <div className="fixed top-4 right-4 z-[60]">
-            <SyncStatusIndicator />
-          </div>
-
-          {/* Mobile Overlay */}
-          {sidebarOpen && (
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            />
-          )}
-
-          {/* Enhanced Work View Modal */}
-          {viewingWork && selectedWork && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-                <div className="p-6">
-                  {/* Enhanced Header */}
-                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Building2 className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          Detalhes Completos da Obra
-                        </h2>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setViewingWork(false);
-                        setSelectedWork(null);
-                      }}
-                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                      <X className="h-6 w-6" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Tipo de Obra
-                        </label>
-                        <p className="text-gray-900 capitalize">
-                          {selectedWork.type || "Não especificado"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          T📞tulo
-                        </label>
-                        <p className="text-gray-900">{selectedWork.title}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Cliente
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.client || "Não especificado"}
-                        </p>
-                        {selectedWork.contact && (
-                          <button
-                            onClick={() =>
-                              handlePhoneClick(selectedWork.contact)
-                            }
-                            className={`text-sm mt-1 ${
-                              enablePhoneDialer
-                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                : "text-gray-500"
-                            }`}
-                            disabled={!enablePhoneDialer}
-                          >
-                            📞 {selectedWork.contact}
-                          </button>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Local
-                        </label>
-                        <button
-                          onClick={() => {
-                            if (selectedWork?.location) {
-                              handleAddressClick(selectedWork.location);
-                            }
-                          }}
-                          className={`text-left ${
-                            enableMapsRedirect
-                              ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                              : "text-gray-900"
-                          }`}
-                          disabled={!enableMapsRedirect}
-                        >
-                          📞 {selectedWork.location}
-                        </button>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Contacto
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.contact || "Não especificado"}
-                        </p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Hora de Entrada
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.startTime
-                            ? new Date(selectedWork.startTime).toLocaleString(
-                                "pt-PT",
-                              )
-                            : "Não especificado"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Hora de Saída
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.endTime
-                            ? new Date(selectedWork.endTime).toLocaleString(
-                                "pt-PT",
-                              )
-                            : "Não especificado"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Estado
-                        </label>
-                        <span
-                          className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                            selectedWork.status === "pending"
-                              ? "bg-red-100 text-red-700"
-                              : selectedWork.status === "in_progress"
-                                ? "bg-orange-100 text-orange-700"
-                                : selectedWork.status === "completed"
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {selectedWork.status === "pending"
-                            ? "Pendente"
-                            : selectedWork.status === "in_progress"
-                              ? "Em Progresso"
-                              : selectedWork.status === "completed"
-                                ? "Concluída"
-                                : selectedWork.status}
-                        </span>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Data de In€io
-                        </label>
-                        <p className="text-gray-900">
-                          {new Date(selectedWork.startDate).toLocaleDateString(
-                            "pt-PT",
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Horário
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.startTime && selectedWork.endTime
-                            ? `${selectedWork.startTime} - ${selectedWork.endTime}`
-                            : selectedWork.startTime
-                              ? `Das ${selectedWork.startTime}`
-                              : "Não definido"}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Atribuída a
-                        </label>
-                        <p className="text-gray-900">
-                          {selectedWork.assignedUsers &&
-                          selectedWork.assignedUsers.length > 0
-                            ? selectedWork.assignedUsers
-                                .map((u) => u.name)
-                                .join(", ")
-                            : selectedWork.assignedTo || "Não atribuída"}
-                        </p>
-                      </div>
-                      {selectedWork.technicians &&
-                        selectedWork.technicians.length > 0 && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Técnicos
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.technicians.join(", ")}
-                            </p>
-                          </div>
-                        )}
-                      {selectedWork.vehicles &&
-                        selectedWork.vehicles.length > 0 && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Ve€culos
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.vehicles.join(", ")}
-                            </p>
-                          </div>
-                        )}
-                      {selectedWork.photos &&
-                        selectedWork.photos.length > 0 && (
-                          <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700">
-                              Fotografias ({selectedWork.photos.length})
-                            </label>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-2">
-                              {selectedWork.photos.map((photo, index) => (
-                                <div
-                                  key={photo.id || index}
-                                  className="relative"
-                                >
-                                  <img
-                                    src={photo.data || photo.url}
-                                    alt={photo.name || `Foto ${index + 1}`}
-                                    className="w-full h-20 object-cover rounded-lg border border-gray-200"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                    </div>
-
-                    {/* Detalhes Completos - Seções Expandidas */}
-                    <div className="mt-6 space-y-6">
-                      {/* Informações Adicionais */}
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç€s Detalhadas
-                        </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Orçamento
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.budget
-                                ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Custo Real
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.actualCost
-                                ? `€${selectedWork.actualCost.toLocaleString("pt-PT")}`
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Data de Conclusão Prevista
-                            </label>
-                            <p className="text-gray-900">
-                              {selectedWork.expectedEndDate
-                                ? new Date(
-                                    selectedWork.expectedEndDate,
-                                  ).toLocaleDateString("pt-PT")
-                                : "Não especificado"}
-                            </p>
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                              Folha de Obra
-                            </label>
-                            <span
-                              className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                                selectedWork.folhaGerada
-                                  ? "bg-green-100 text-green-700"
-                                  : "bg-red-100 text-red-700"
-                              }`}
-                            >
-                              {selectedWork.folhaGerada
-                                ? "✓ Gerada"
-                                : "✗ Não gerada"}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Detalhes do Furo de Água - Se aplicável */}
-                      {selectedWork.type === "furo" && (
-                        <div className="border-l-4 border-cyan-500 pl-4">
-                          <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            🚰 Detalhes do Furo de Água
-                          </h3>
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Profundidade do Furo
-                              </label>
-                              <p className="text-gray-900 font-mono">
-                                {selectedWork.boreDepth
-                                  ? `${selectedWork.boreDepth} m`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Nível da Água
-                              </label>
-                              <p className="text-gray-900 font-mono">
-                                {selectedWork.waterLevel
-                                  ? `${selectedWork.waterLevel} m`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Caudal do Furo
-                              </label>
-                              <p className="text-gray-900 font-mono">
-                                {selectedWork.flowRate
-                                  ? `${selectedWork.flowRate} m³/h`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Profundidade da Bomba
-                              </label>
-                              <p className="text-gray-900 font-mono">
-                                {selectedWork.pumpDepth
-                                  ? `${selectedWork.pumpDepth} m`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Tipo de Coluna
-                              </label>
-                              <p className="text-gray-900">
-                                {selectedWork.columnType || "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Di📞metro da Coluna
-                              </label>
-                              <p className="text-gray-900">
-                                {selectedWork.columnDiameter
-                                  ? `${selectedWork.columnDiameter}"`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Modelo da Bomba
-                              </label>
-                              <p className="text-gray-900">
-                                {selectedWork.pumpModel || "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Potência do Motor
-                              </label>
-                              <p className="text-gray-900">
-                                {selectedWork.motorPower
-                                  ? `${selectedWork.motorPower} HP`
-                                  : "Não especificado"}
-                              </p>
-                            </div>
-                            <div>
-                              <label className="block text-sm font-medium text-gray-700">
-                                Voltagem da Bomba
-                              </label>
-                              <p className="text-gray-900">
-                                {selectedWork.pumpVoltage || "Não especificado"}
-                              </p>
-                            </div>
-                          </div>
-                          {selectedWork.boreObservations && (
-                            <div className="mt-4">
-                              <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observações Específicas do Furo
-                              </label>
-                              <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
-                                <p className="text-gray-900">
-                                  {selectedWork.boreObservations}
-                                </p>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    {selectedWork.description && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Descrição
-                        </label>
-                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                          {selectedWork.description}
-                        </p>
-                      </div>
-                    )}
-
-                    {selectedWork.budget && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Orçamento
-                        </label>
-                        <p className="text-gray-900">📞{selectedWork.budget}</p>
-                      </div>
-                    )}
-
-                    {selectedWork.workPerformed && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Trabalho Realizado
-                        </label>
-                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                          {selectedWork.workPerformed}
-                        </p>
-                      </div>
-                    )}
-
-                    {selectedWork.observations && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações
-                        </label>
-                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                          {selectedWork.observations}
-                        </p>
-                      </div>
-                    )}
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Data de Criação
-                        </label>
-                        <p className="text-gray-900 text-sm">
-                          {new Date(
-                            selectedWork.createdAt || selectedWork.startDate,
-                          ).toLocaleString("pt-PT")}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex justify-end space-x-3">
-                    <button
-                      onClick={() => {
-                        setViewingWork(false);
-                        setSelectedWork(null);
-                      }}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                    >
-                      Fechar
-                    </button>
-                    {hasPermission("obras", "edit") && (
-                      <button
-                        onClick={() => {
-                          setEditingWork(selectedWork);
-                          // Initialize edit assigned users
-                          setEditAssignedUsers(
-                            selectedWork.assignedUsers || [],
-                          );
-                          setViewingWork(false);
-                          setSelectedWork(null);
-                          setActiveSection("editar-obra");
-                        }}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                      >
-                        Editar
-                      </button>
-                    )}
-                    {hasPermission("obras", "delete") && (
-                      <button
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
-                            )
-                          ) {
-                            dataSync.deleteWork(selectedWork.id);
-                            showNotification(
-                              "Obra Eliminada",
-                              `A obra "${selectedWork.title || selectedWork.client}" foi eliminada com sucesso`,
-                              "success",
-                            );
-                            setViewingWork(false);
-                            setSelectedWork(null);
-                          }
-                        }}
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Apagar
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Pool View Modal */}
-          {viewingPool && selectedPool && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-              <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-                <div className="p-6">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6 border-b border-gray-200 pb-4">
-                    <div className="flex items-center space-x-4">
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <Waves className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div>
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          Detalhes Completos da Piscina
-                        </h2>
-                        <p className="text-gray-600">{selectedPool.name}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setViewingPool(false);
-                        setSelectedPool(null);
-                      }}
-                      className="text-gray-400 hover:text-gray-600 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                    >
-                      <X className="h-6 w-6" />
-                    </button>
-                  </div>
-
-                  <div className="space-y-6">
-                    {/* Informações Básicas */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações Básicas
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Nome da Piscina
-                          </label>
-                          <p className="text-gray-900">{selectedPool.name}</p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Tipo
-                          </label>
-                          <p className="text-gray-900 capitalize">
-                            {selectedPool.type}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Estado
-                          </label>
-                          <span
-                            className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
-                              selectedPool.status === "Ativa"
-                                ? "bg-green-100 text-green-700"
-                                : selectedPool.status === "Inativa"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-yellow-100 text-yellow-700"
-                            }`}
-                          >
-                            {selectedPool.status}
-                          </span>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Localização
-                          </label>
-                          <button
-                            onClick={() => {
-                              if (selectedPool?.location) {
-                                handleAddressClick(selectedPool.location);
-                              }
-                            }}
-                            className={`text-left ${
-                              enableMapsRedirect
-                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                : "text-gray-900"
-                            }`}
-                            disabled={!enableMapsRedirect}
-                          >
-                            📍 {selectedPool.location}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Informações do Cliente */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações do Cliente
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Nome do Cliente
-                          </label>
-                          <p className="text-gray-900">{selectedPool.client}</p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Email
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.clientEmail || "Não especificado"}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Telefone
-                          </label>
-                          <button
-                            onClick={() => {
-                              if (selectedPool?.clientPhone) {
-                                handlePhoneClick(selectedPool.clientPhone);
-                              }
-                            }}
-                            className={`${
-                              enablePhoneDialer && selectedPool.clientPhone
-                                ? "text-blue-600 hover:text-blue-800 underline cursor-pointer"
-                                : "text-gray-900"
-                            }`}
-                            disabled={
-                              !enablePhoneDialer || !selectedPool.clientPhone
-                            }
-                          >
-                            📞 {selectedPool.clientPhone || "Não especificado"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Especificações Técnicas */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Especificações Técnicas
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Volume de Água
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.waterVolume
-                              ? `${selectedPool.waterVolume} L`
-                              : "Não especificado"}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Dimensões
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.dimensions || "Não especificado"}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Profundidade
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.depth
-                              ? `${selectedPool.depth} m`
-                              : "Não especificado"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Manutenções */}
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenções
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Última Manutenção
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.lastMaintenance
-                              ? new Date(
-                                  selectedPool.lastMaintenance,
-                                ).toLocaleDateString("pt-PT")
-                              : "Não especificado"}
-                          </p>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manutenção
-                          </label>
-                          <p className="text-gray-900">
-                            {selectedPool.nextMaintenance
-                              ? new Date(
-                                  selectedPool.nextMaintenance,
-                                ).toLocaleDateString("pt-PT")
-                              : "Não especificado"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Observações */}
-                    {selectedPool.observations && (
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Observações
-                        </h3>
-                        <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
-                          {selectedPool.observations}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Data de Criação */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Data de Registo
-                      </label>
-                      <p className="text-gray-900">
-                        {new Date(
-                          selectedPool.createdAt || new Date(),
-                        ).toLocaleString("pt-PT")}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex justify-end space-x-3">
-                    <button
-                      onClick={() => {
-                        setViewingPool(false);
-                        setSelectedPool(null);
-                      }}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-                    >
-                      Fechar
-                    </button>
-                    {hasPermission("piscinas", "edit") && (
-                      <button
-                        onClick={() => {
-                          setEditingPool(selectedPool);
-                          setViewingPool(false);
-                          setSelectedPool(null);
-                          setActiveSection("editar-piscina");
-                        }}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                      >
-                        Editar
-                      </button>
-                    )}
-                    {hasPermission("piscinas", "delete") && (
-                      <button
-                        onClick={() => {
-                          if (
-                            window.confirm(
-                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
-                            )
-                          ) {
-                            dataSync.deletePool(selectedPool.id);
-                            showNotification(
-                              "Piscina Eliminada",
-                              `A piscina "${selectedPool.name}" foi eliminada com sucesso`,
-                              "success",
-                            );
-                            setViewingPool(false);
-                            setSelectedPool(null);
-                          }
-                        }}
-                        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Apagar
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Main Content */}
-          <main className="lg:ml-80 min-h-screen">
-            <div className="p-4 lg:p-6">
-              {(() => {
-                try {
-                  return renderContent();
-                } catch (error) {
-                  console.error("Error rendering content:", error);
-                  return (
-                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                      <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
-                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <AlertCircle className="h-8 w-8 text-red-600" />
-                        </div>
-                        <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderização
-                        </h1>
-                        <p className="text-gray-600 mb-4">
-                          Ocorreu um erro ao carregar a página. Por favor, tente
-                          novamente.
-                        </p>
-                        <div className="space-y-2">
-                          <button
-                            onClick={() => window.location.reload()}
-                            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-                          >
-                            Recarregar Página
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActiveSection("dashboard");
-                              setActiveAdminTab("relatorios");
-                            }}
-                            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300"
-                          >
-                            Voltar ao Dashboard
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-              })()}
-            </div>
-          </main>
-
-          {/* Install Prompt for Mobile */}
-          <InstallPromptSimple />
-
-          {/* Data Sharing Fix Manager */}
-
-          {/* Admin Login Modal */}
-          {showAdminLogin && !isAdminAuthenticated && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg max-w-md w-full mx-4">
-                <AdminLogin
-                  onLogin={() => {
-                    setIsAdminAuthenticated(true);
-                    setShowAdminLogin(false);
-                  }}
-                  onBack={() => setShowAdminLogin(false)}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Admin Page */}
-          {isAdminAuthenticated && (
-            <div className="fixed inset-0 bg-white z-50">
-              <AdminPage
-                currentUser={currentUser}
-                onLogout={() => {
-                  setIsAdminAuthenticated(false);
-                  setShowAdminLogin(false);
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Realtime Notifications - REMOVIDAS */}
-        {/* <RealtimeNotifications /> */}
-
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
-
-        {/* User Restore Notification */}
-        <UserRestoreNotificationSimple />
-
-        {/* Firebase Auto-Monitor - Discrete indicator */}
-        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
-
-        {/* User Migration Indicator - Shows migration status */}
-        <UserMigrationIndicator migrationStatus={userMigration} />
-
-        {/* Data Persistence Diagnostic - Modal for persistence issues */}
-        {showDataDiagnostic && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="max-w-4xl w-full max-h-screen overflow-y-auto">
-              <DataPersistenceDiagnostic
-                autoCheck={true}
-                onClose={() => setShowDataDiagnostic(false)}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Data Persistence Alert - Smart automatic alert */}
-        <DataPersistenceAlert
-          onOpenDiagnostic={() => setShowDataDiagnostic(true)}
-        />
-
-        {/* Data Persistence Status Indicator */}
-        <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
-      </InstantSyncManagerSafe>
-    </AutoSyncProviderSafe>
+    </AutoSyncProvider>
   );
 }
 

@@ -14,33 +14,29 @@ function initializeFirebaseAuth(): Auth | null {
       console.log(
         "⚠️ Firebase App não disponível, mantendo autenticação local",
       );
-      firebaseAuth = null;
       return null;
     }
 
-    // Sempre criar nova instância para evitar problemas com instâncias destruídas
-    try {
+    if (!firebaseAuth) {
       firebaseAuth = getAuth(app);
       console.log("✅ Firebase Auth: Inicializado com sucesso");
-      return firebaseAuth;
-    } catch (authError) {
-      console.warn("⚠️ Erro ao criar instância Auth:", authError);
-      firebaseAuth = null;
-      return null;
     }
+
+    return firebaseAuth;
   } catch (error) {
     console.warn(
       "⚠️ Firebase Auth: Problema na inicialização, mantendo modo local",
     );
-    firebaseAuth = null;
     return null;
   }
 }
 
 // Função para obter o Firebase Auth
 export function getFirebaseAuth(): Auth | null {
-  // Sempre tentar reinicializar para garantir instância válida
-  return initializeFirebaseAuth();
+  if (!firebaseAuth) {
+    return initializeFirebaseAuth();
+  }
+  return firebaseAuth;
 }
 
 // Função para verificar se Firebase Auth está pronto

@@ -91,21 +91,6 @@ export function isFirebaseAvailable(): boolean {
   return !!(firebaseApp && auth);
 }
 
-// Função para obter status detalhado do Firebase
-export function getFirebaseStatus() {
-  return {
-    ready: !!(firebaseApp && auth && firestore),
-    app: !!firebaseApp,
-    auth: !!auth,
-    db: !!firestore,
-    firestore: !!firestore,
-    isInitialized: !!firebaseApp,
-    authReady: !!auth,
-    firestoreReady: !!firestore,
-    quotaExceeded: false, // TODO: Implementar verificação de quota se necessário
-  };
-}
-
 // Legacy compatibility exports
 export const getAuthService = () => Promise.resolve(getFirebaseAuth());
 export const attemptFirestoreInit = () =>

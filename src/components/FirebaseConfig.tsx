@@ -57,13 +57,13 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
       // If no stored config, use the provided default config
       const defaultConfig = {
-        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-        authDomain: "leiria-1cfc9.firebaseapp.com",
-        projectId: "leiria-1cfc9",
-        storageBucket: "leiria-1cfc9.firebasestorage.app",
-        messagingSenderId: "632599887141",
-        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-        measurementId: "G-Q2QWQVH60L",
+        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        authDomain: "leirisonda-16f8b.firebaseapp.com",
+        projectId: "leirisonda-16f8b",
+        storageBucket: "leirisonda-16f8b.firebasestorage.app",
+        messagingSenderId: "540456875574",
+        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+        measurementId: "G-R9W43EHH2C",
       };
 
       setConfig(defaultConfig);
@@ -120,13 +120,13 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
   const handleReset = () => {
     const defaultConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "540456875574",
+      appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+      measurementId: "G-R9W43EHH2C",
     };
 
     setConfig(defaultConfig);

@@ -5,9 +5,8 @@
 
 export class FirebaseErrorFix {
   private static retryAttempts = 0;
-  private static maxRetries = 2;
-  private static retryDelay = 2000;
-  private static lastResetTime = 0;
+  private static maxRetries = 3;
+  private static retryDelay = 1000;
 
   /**
    * Detectar e corrigir erro de ReadableStream
@@ -129,17 +128,8 @@ export class FirebaseErrorFix {
    * Reinicializar Firebase com proteção contra erros
    */
   static async safeFirebaseReinitialization(): Promise<boolean> {
-    // Reset counter if enough time has passed (5 minutes)
-    const now = Date.now();
-    if (now - this.lastResetTime > 5 * 60 * 1000) {
-      this.retryAttempts = 0;
-      this.lastResetTime = now;
-      console.log("🔄 Counter de reinicialização resetado após timeout");
-    }
-
     if (this.retryAttempts >= this.maxRetries) {
       console.error("❌ Máximo de tentativas de reinicialização atingido");
-      console.log("⏰ Aguarde 5 minutos para novo reset automático");
       return false;
     }
 

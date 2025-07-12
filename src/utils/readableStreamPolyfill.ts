@@ -8,9 +8,11 @@ export function installReadableStreamPolyfill() {
     return;
   }
 
-  // Always install our polyfill for Firebase compatibility
-  // Even if ReadableStream exists, it might not work properly with Firebase
-  const needsPolyfill = true;
+  // Check if we need the polyfill
+  const needsPolyfill =
+    !globalThis.ReadableStream ||
+    !globalThis.ReadableStream.prototype?.getReader ||
+    typeof globalThis.ReadableStream.prototype.getReader !== "function";
 
   if (!needsPolyfill) {
     return;
@@ -60,33 +62,23 @@ export function installReadableStreamPolyfill() {
 
       this._reader = {
         read: () => {
-          try {
-            if (this._cancelled) {
-              return Promise.resolve({ done: true, value: undefined });
-            }
-
-            // If source has a pull method, try to use it
-            if (this._source && typeof this._source.pull === "function") {
-              try {
-                const result = this._source.pull(this._controller);
-                return Promise.resolve(result)
-                  .then(() => ({ done: false, value: null }))
-                  .catch((error) => {
-                    console.warn("ReadableStream pull error:", error);
-                    return { done: true, value: undefined };
-                  });
-              } catch (error) {
-                console.warn("ReadableStream pull sync error:", error);
-                return Promise.resolve({ done: true, value: undefined });
-              }
-            }
-
-            // Default behavior - return done
-            return Promise.resolve({ done: true, value: undefined });
-          } catch (error) {
-            console.warn("ReadableStream read error:", error);
+          if (this._cancelled) {
             return Promise.resolve({ done: true, value: undefined });
           }
+
+          // If source has a pull method, try to use it
+          if (this._source && typeof this._source.pull === "function") {
+            try {
+              return Promise.resolve(this._source.pull(this._controller))
+                .then(() => ({ done: false, value: null }))
+                .catch(() => ({ done: true, value: undefined }));
+            } catch (error) {
+              return Promise.resolve({ done: true, value: undefined });
+            }
+          }
+
+          // Default behavior - return done
+          return Promise.resolve({ done: true, value: undefined });
         },
 
         cancel: (reason?: any) => {
