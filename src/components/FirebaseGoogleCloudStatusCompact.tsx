@@ -9,56 +9,49 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const checkStatus = async () => {
     setIsChecking(true);
     try {
-      // Check Firebase status
-      const { isFirebaseReady, getDB, getAuthService } = await import(
-        "../firebase/config"
-      );
-      const { UltimateSimpleFirebase } = await import(
-        "../firebase/ultimateSimpleFirebase"
-      );
+      // Check Firestore status
+      const { getDB } = await import("../firebase/config");
 
-      const firebaseReady = isFirebaseReady();
-      const ultStatus = UltimateSimpleFirebase.getStatus();
-
-      let authService = null;
       let dbService = null;
-
-      try {
-        authService = await getAuthService();
-      } catch (error) {
-        console.log("Auth service not available:", error);
-      }
+      let rulesTest = null;
 
       try {
         dbService = await getDB();
       } catch (error) {
-        console.log("DB service not available:", error);
+        console.log("Firestore not available:", error);
       }
 
-      // Check Google Cloud Project info
-      const googleCloudProject = {
-        projectId: "leiria-1cfc9",
-        region: "us-central1",
-        status:
-          firebaseReady && authService && dbService ? "active" : "degraded",
-      };
+      // Test Firestore rules if database is available
+      if (dbService) {
+        try {
+          const { FirestoreRulesFix } = await import(
+            "../firebase/firestoreRulesFix"
+          );
+          rulesTest = await FirestoreRulesFix.testFirestoreAccess();
+        } catch (error) {
+          console.log("Rules test failed:", error);
+          rulesTest = {
+            canRead: false,
+            canWrite: false,
+            error: "Rules test failed",
+          };
+        }
+      }
 
       // Check quota and performance
       const quotaStatus = {
         exceeded: localStorage.getItem("firebase-quota-exceeded") === "true",
-        lastCheck: localStorage.getItem("firebase-quota-check-time"),
         emergencyShutdown:
           localStorage.getItem("firebase-emergency-shutdown") === "true",
       };
 
       setStatus({
-        firebase: {
-          ready: firebaseReady,
-          auth: !!authService,
-          database: !!dbService,
-          ultStatus,
+        firestore: {
+          available: !!dbService,
+          canRead: rulesTest?.canRead || false,
+          canWrite: rulesTest?.canWrite || false,
+          rulesError: rulesTest?.error || null,
         },
-        googleCloud: googleCloudProject,
         quota: quotaStatus,
         timestamp: new Date().toISOString(),
       });
