@@ -97,8 +97,8 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
 
   useEffect(() => {
     checkStatus();
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(checkStatus, 30000);
+    // Auto-refresh every 60 seconds to reduce load
+    const interval = setInterval(checkStatus, 60000);
     return () => clearInterval(interval);
   }, []);
 
