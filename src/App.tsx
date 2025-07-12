@@ -1551,7 +1551,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "���� Firebase Messaging Service Worker registered successfully:",
+              "����� Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1934,7 +1934,7 @@ function App() {
           }
         }, 100);
       } else {
-        console.warn("❌ Login failed:", result.error);
+        console.warn("❌ Login failed:", (result as any)?.error);
         setLoginError(result.error || "Credenciais inválidas");
       }
     } catch (error) {
@@ -2952,7 +2952,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("❌ Login failed:", (result as any)?.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
@@ -10943,7 +10943,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon��alo Fonseca",
+  //       name: "Gon����alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11160,7 +11160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("❌ Login failed:", result.error);
+                console.warn("❌ Login failed:", (result as any)?.error);
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
