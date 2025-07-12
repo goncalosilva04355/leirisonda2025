@@ -3,9 +3,7 @@
 
 // Configuração principal do projeto (Leiria)
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey:
-    import.meta.env.VITE_FIREBASE_API_KEY ||
-    "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
   authDomain:
     import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
   databaseURL:
@@ -15,19 +13,14 @@ export const LEIRIA_FIREBASE_CONFIG = {
   storageBucket:
     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
     "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId:
-    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "632599887141",
-  appId:
-    import.meta.env.VITE_FIREBASE_APP_ID ||
-    "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
 };
 
 // Configuração legacy do projeto (Leirisonda)
 export const LEIRISONDA_FIREBASE_CONFIG = {
-  apiKey:
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY ||
-    "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+  apiKey: import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY || "",
   authDomain:
     import.meta.env.VITE_LEIRISONDA_FIREBASE_AUTH_DOMAIN ||
     "leirisonda-16f8b.firebaseapp.com",
@@ -40,11 +33,8 @@ export const LEIRISONDA_FIREBASE_CONFIG = {
     import.meta.env.VITE_LEIRISONDA_FIREBASE_STORAGE_BUCKET ||
     "leirisonda-16f8b.firebasestorage.app",
   messagingSenderId:
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_MESSAGING_SENDER_ID ||
-    "1067024677476",
-  appId:
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_APP_ID ||
-    "1:1067024677476:web:a5e5e30ed4b5a64b123456",
+    import.meta.env.VITE_LEIRISONDA_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_LEIRISONDA_FIREBASE_APP_ID || "",
 };
 
 // Função para obter a configuração padrão
