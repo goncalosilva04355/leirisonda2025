@@ -188,7 +188,7 @@ export interface UserProfile {
   name: string;
   role: "super_admin" | "admin" | "manager" | "technician";
   permissions: UserPermissions;
-  createdAt: Date | string;
+  createdAt: string;
   active?: boolean;
   password?: string;
 }
