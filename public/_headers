@@ -1,6 +1,2 @@
 /*
   X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-
-/api/*
-  Access-Control-Allow-Origin: *
