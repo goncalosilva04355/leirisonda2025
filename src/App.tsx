@@ -1230,7 +1230,7 @@ function App() {
 
               if (result.success && result.user) {
                 console.log(
-                  "��� Auto-login bem-sucedido para:",
+                  "✅ Auto-login bem-sucedido para:",
                   result.user.email,
                 );
                 setCurrentUser(result.user);
@@ -1383,7 +1383,7 @@ function App() {
     syncAllData();
   }, []);
 
-  // Inicializar sincronizaç��o automática em tempo real
+  // Inicializar sincronização automática em tempo real
   useEffect(() => {
     const initAutoSync = async () => {
       // Aguardar Firestore estar pronto
@@ -5307,9 +5307,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <option value="230V">
                                     230V (monof📞sico)
                                   </option>
-                                  <option value="400V">
-                                    400V (trif��sico)
-                                  </option>
+                                  <option value="400V">400V (trifásico)</option>
                                 </select>
                               </div>
                             </div>
@@ -8423,7 +8421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat����rios com filtros específicos
+                        Crie relat📞rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -11106,7 +11104,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
-                setCurrentUser(result.user);
+                setCurrentUser((result as any).user);
                 setIsAuthenticated(true);
                 safeLocalStorage.setItem(
                   "currentUser",
