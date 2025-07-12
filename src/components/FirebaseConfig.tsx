@@ -122,6 +122,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     const defaultConfig = {
       apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
       authDomain: "leiria-1cfc9.firebaseapp.com",
+      databaseURL:
+        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "leiria-1cfc9",
       storageBucket: "leiria-1cfc9.firebasestorage.app",
       messagingSenderId: "632599887141",
@@ -130,9 +132,57 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
     };
 
     setConfig(defaultConfig);
-    // Default config applied automatically
+    // Salvar a nova configuração no localStorage
+    localStorage.setItem("firebase-config", JSON.stringify(defaultConfig));
     setSuccess(true);
     setError("");
+    console.log("🔧 FirebaseConfig: Configuração atualizada e salva");
+  };
+
+  const handleClearAll = () => {
+    if (
+      window.confirm(
+        "⚠️ ATENÇÃO: Isto vai apagar TODA a configuração Firebase guardada. Esta ação não pode ser desfeita. Confirma?",
+      )
+    ) {
+      // Limpar toda a configuração do localStorage
+      localStorage.removeItem("firebase-config");
+
+      // Limpar também outras chaves relacionadas com Firebase
+      const firebaseKeys = [
+        "firebase-auth-state",
+        "firebase-user",
+        "firebase-token",
+        "firestore-cache",
+        "firebase-persistence",
+        "firebase-initialized",
+      ];
+
+      firebaseKeys.forEach((key) => {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+      });
+
+      // Reset do estado do componente
+      setConfig({
+        apiKey: "",
+        authDomain: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+        measurementId: "",
+      });
+
+      setSuccess(false);
+      setIsConfigLoaded(false);
+      setError("");
+
+      console.log("🧹 FirebaseConfig: Toda a configuração Firebase foi limpa");
+      alert(
+        "✅ Configuração Firebase completamente limpa! Pode agora inserir uma nova configuração.",
+      );
+    }
   };
 
   const handleFieldChange = (field: keyof FirebaseSettings, value: string) => {
