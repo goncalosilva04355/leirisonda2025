@@ -14,7 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 
-// Import dos componentes de teste e configuraç����o
+// Import dos componentes de teste e configuraç��o
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
 import { FirebaseStatus } from "../components/FirebaseStatus";
@@ -304,7 +304,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "firebase-status":
         return <FirebaseStatus isConnected={true} />;
       case "user-debugger":
-        return <UserDebugger />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">UserDebugger não encontrado.</p>
+          </div>
+        );
       case "data-cleanup":
         return <DataCleanupManager />;
       case "data-management":
