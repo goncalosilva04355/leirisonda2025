@@ -1306,7 +1306,7 @@ function App() {
         const firestoreResult = await testFirestore();
 
         if (firestoreResult) {
-          console.log("✅ Passo 3: Firestore ativo e funcional!");
+          console.log("��� Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
           const db = getFirebaseFirestore();
@@ -8363,7 +8363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>📞 Piscinas associadas</li>
                         <li>��� Histórico de serviços</li>
-                        <li>• Informações contratuais</li>
+                        <li>• Informa��ões contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8706,7 +8706,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   ���{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endereço n��o disponível"}
                                 </button>
                               </div>
                               <div>
@@ -10351,7 +10352,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type: poolType,
                             // dimensions, // Property not in Pool interface
                             // volume: volume || undefined, // Property not in Pool interface
-                            filtrationSystem,
+                            // filtrationSystem, // Property not in Pool interface
                             installationDate: installationDate
                               ? new Date(installationDate).toISOString()
                               : undefined,
