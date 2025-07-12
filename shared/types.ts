@@ -180,3 +180,46 @@ export interface CreateWorkData {
   workPerformed: string;
   workSheetCompleted: boolean;
 }
+
+// Add missing interfaces that are used in the app
+export interface UserProfile {
+  id: string;
+  email: string;
+  name: string;
+  role: "super_admin" | "admin" | "manager" | "technician";
+  permissions: UserPermissions;
+  createdAt: Date | string;
+  active?: boolean;
+  password?: string;
+}
+
+export interface Pool {
+  id: string;
+  name: string;
+  location: string;
+  clientName: string;
+  clientPhone: string;
+  clientEmail: string;
+  poolType?: string;
+  waterCubicage: string;
+  status: "active" | "inactive" | "seasonal";
+  photos: PoolPhoto[];
+  observations: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Maintenance {
+  id: string;
+  poolId: string;
+  date: string;
+  timeStart: string;
+  timeEnd: string;
+  technician?: string;
+  technicians: string[];
+  vehicles: string[];
+  workPerformed: string;
+  observations: string;
+  createdAt: string;
+  updatedAt: string;
+}
