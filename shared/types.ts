@@ -222,4 +222,7 @@ export interface Maintenance {
   observations: string;
   createdAt: string;
   updatedAt: string;
+  scheduledDate?: string;
+  type?: string;
+  status?: "pending" | "in_progress" | "completed";
 }
