@@ -17,6 +17,7 @@ import {
 // Import dos componentes de teste e configuraç��o
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
+import { FirebaseStatus } from "../components/FirebaseStatus";
 import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
