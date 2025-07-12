@@ -10,7 +10,7 @@ import {
 import {
   isFirebaseReady,
   getFirebaseStatus,
-  reinitializeFirebase,
+  // reinitializeFirebase, // Function not exported
 } from "../firebase/config";
 // import { authService } from "../services/authService"; // Removed - no longer exists
 
