@@ -5751,7 +5751,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
                             console.log(
-                              "🔍 Select cliente onChange:",
+                              "��� Select cliente onChange:",
                               e.target.value,
                             );
                             if (e.target.value === "novo") {
@@ -10329,14 +10329,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             status,
                             type: poolType,
-                            volume: volume || undefined,
-                            filtrationSystem,
-                            installationDate: installationDate
-                              ? new Date(installationDate).toISOString()
-                              : undefined,
-                            clientPhone,
-                            clientEmail,
-                            observations,
                           });
 
                           alert("Piscina atualizada com sucesso!");
