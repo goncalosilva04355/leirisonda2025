@@ -5,5 +5,5 @@
 /manifest.json    /manifest.json    200
 /sw.js           /sw.js            200
 
-# API proxy rules (if any future API endpoints are added)
-/api/*           /api/:splat       200
+# API function rules for Netlify
+/api/*           /.netlify/functions/:splat       200
