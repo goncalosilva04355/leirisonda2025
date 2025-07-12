@@ -2896,7 +2896,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               // console.log("🔐 Auth result:", result);
 
-              const finalResult = result as {
+              const finalResult = result as unknown as {
                 success?: boolean;
                 user?: any;
                 error?: string;
@@ -4465,7 +4465,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenç��o agendada
+                        Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -4956,7 +4956,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   } else {
                                     const defaultUser = {
                                       id: 1,
-                                      name: "Gonçalo Fonseca",
+                                      name: "Gon��alo Fonseca",
                                       email: "gongonsilva@gmail.com",
                                       active: true,
                                       role: "super_admin",
@@ -11755,7 +11755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de ��gua - Se aplicável */}
+                      {/* Detalhes do Furo de Água - Se aplicável */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
