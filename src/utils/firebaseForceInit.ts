@@ -5,17 +5,10 @@
 import { initializeApp, getApps, deleteApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getLegacyFirebaseConfig } from "../config/firebaseEnv";
 
-// Configuração Firebase VERIFICADA E FUNCIONAL
-const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-  authDomain: "leirisonda-16f8b.firebaseapp.com",
-  projectId: "leirisonda-16f8b",
-  storageBucket: "leirisonda-16f8b.firebasestorage.app",
-  messagingSenderId: "540456875574",
-  appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-  measurementId: "G-R9W43EHH2C",
-};
+// Configuração Firebase usando environment variables
+const FIREBASE_CONFIG = getLegacyFirebaseConfig();
 
 // Variables globais para Firebase
 let globalApp: any = null;
