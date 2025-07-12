@@ -1,9 +1,16 @@
-# SPA redirect rule for client-side routing
-/*    /index.html   200
-
-# PWA manifest and service worker
+# PWA manifest and service worker - explicit paths first
 /manifest.json    /manifest.json    200
 /sw.js           /sw.js            200
+/firebase-messaging-sw.js    /firebase-messaging-sw.js    200
+
+# Static assets
+/icon.svg        /icon.svg         200
+/robots.txt      /robots.txt       200
+/debug-chrome.js /debug-chrome.js  200
+/emergency-recovery.js /emergency-recovery.js 200
 
 # API proxy rules (if any future API endpoints are added)
 /api/*           /api/:splat       200
+
+# SPA redirect rule for client-side routing (must be last)
+/*    /index.html   200
