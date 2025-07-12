@@ -1390,7 +1390,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("��Iniciando sincroniza📞ão automática em tempo real...");
+        console.log("€Iniciando sincroniza📞ão autom��tica em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -6260,7 +6260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criação da piscina",
+                                  "Manutenn��ão programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -10321,7 +10321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const clientEmail = (inputs[10] as HTMLInputElement)
                             .value; // Email do Cliente
                           const observations = (inputs[11] as HTMLInputElement)
-                            .value; // Observaç��es
+                            .value; // Observações
 
                           dataSync.updatePool(editingPool.id, {
                             name,
@@ -10329,7 +10329,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             location,
                             status,
                             type: poolType,
-                            dimensions,
                             volume: volume || undefined,
                             filtrationSystem,
                             installationDate: installationDate
