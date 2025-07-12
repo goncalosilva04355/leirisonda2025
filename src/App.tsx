@@ -85,8 +85,8 @@ import("./firebase/ultimateSimpleFirebase");
 
 // Sistema de diagnóstico de persistência - TEMPORARIAMENTE DESATIVADO
 // import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-// import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
-// import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
+import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceManagerMock";
 import { testFirestore } from "./utils/testFirestoreMock";
 // import "./utils/testDataPersistence";
@@ -4941,7 +4941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar diâmetro</option>
                                   <option value="1">1 polegada</option>
-                                  <option value="1.25">1¼ polegadas</option>
+                                  <option value="1.25">1�� polegadas</option>
                                   <option value="1.5">1½ polegadas</option>
                                   <option value="2">2 polegadas</option>
                                   <option value="2.5">2½ polegadas</option>
@@ -6917,7 +6917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center mb-4">
                       <Bell className="h-6 w-6 text-blue-600 mr-3" />
                       <h3 className="text-lg font-semibold text-gray-900">
-                        Notifica��ões
+                        Notificações
                       </h3>
                     </div>
                     <div className="space-y-4">
@@ -9455,7 +9455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar voltagem</option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif����sico)</option>
+                            <option value="400V">400V (trif📞sico)</option>
                           </select>
                         </div>
                       </div>
