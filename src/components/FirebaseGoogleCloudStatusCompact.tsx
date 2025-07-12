@@ -49,6 +49,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
             canRead: false,
             canWrite: false,
             error: "Rules test failed with Safari compatibility",
+            suggestion: "Check Firestore rules and Safari compatibility",
           },
         );
       }
