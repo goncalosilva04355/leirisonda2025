@@ -299,7 +299,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "sync-manager":
         return <FullSyncManager />;
       case "firebase-status":
-        return <FirebaseStatus />;
+        return <FirebaseStatus isConnected={true} />;
       case "user-debugger":
         return <UserDebugger />;
       case "data-cleanup":
