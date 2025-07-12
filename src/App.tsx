@@ -201,7 +201,7 @@ function App() {
     // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
-    // Monitoriza���ão automática de persistência de dados
+    // Monitoriza�����o automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
         // Aguardar um pouco antes de iniciar verificação
@@ -7506,7 +7506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             "granted"
                                           ) {
                                             new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
+                                              body: "Notificaç��es já estão ativadas!",
                                               icon: "/icon.svg",
                                             });
                                           } else {
@@ -10352,8 +10352,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             type: poolType,
                             // dimensions, // Property not in Pool interface
                             // volume: volume || undefined, // Property not in Pool interface
-                            // filtrationSystem, // Property not in Pool interface
-                            installationDate: installationDate
+                                                        // filtrationSystem, // Property not in Pool interface
+                            // installationDate: installationDate // Property not in Pool interface
                               ? new Date(installationDate).toISOString()
                               : undefined,
                             clientPhone,
@@ -11885,7 +11885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.budget && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Orçamento
+                          Or��amento
                         </label>
                         <p className="text-gray-900">📞{selectedWork.budget}</p>
                       </div>
