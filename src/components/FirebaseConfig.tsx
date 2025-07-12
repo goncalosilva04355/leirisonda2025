@@ -61,6 +61,8 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
       const defaultConfig = {
         apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
         authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "leiria-1cfc9",
         storageBucket: "leiria-1cfc9.firebasestorage.app",
         messagingSenderId: "632599887141",
