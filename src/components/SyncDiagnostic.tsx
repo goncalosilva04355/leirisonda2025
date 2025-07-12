@@ -59,7 +59,10 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
       if (firebaseStatus.isReady) {
         try {
           const syncData = await realFirebaseService.syncAllData();
-          firebaseData = syncData || { works: [], users: [] };
+          firebaseData = (syncData as { works: any[]; users: any[] }) || {
+            works: [],
+            users: [],
+          };
         } catch (error) {
           console.warn("Failed to get Firebase data:", error);
         }
