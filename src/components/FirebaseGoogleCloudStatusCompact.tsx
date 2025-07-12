@@ -147,6 +147,36 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
     }
   };
 
+  // Error state
+  if (hasError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="text-lg">🔴</span>
+            <span className="text-sm font-medium text-red-700">
+              Erro no Status Firestore
+            </span>
+          </div>
+          <button
+            onClick={() => {
+              setHasError(false);
+              checkStatus();
+            }}
+            className="px-2 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+        <div className="mt-2 text-xs text-red-600">
+          Erro ao carregar status. Clique "Tentar Novamente" ou atualize a
+          página.
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state
   if (!status) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
