@@ -2896,13 +2896,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               // console.log("🔐 Auth result:", result);
 
-              if (
-                result &&
-                typeof result === "object" &&
-                (result as any)?.success &&
-                (result as any)?.user
-              ) {
-                // console.log("���� Login successful for:", result.user.email);
+              const finalResult = result as {
+                success?: boolean;
+                user?: any;
+                error?: string;
+              } | null;
+              if (finalResult && finalResult.success && finalResult.user) {
+                // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -5173,7 +5173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N€vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
