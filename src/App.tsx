@@ -2874,7 +2874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               );
 
               // Fallback para authService se necessário
-              const resultObj = result as {
+              const resultObj = result as unknown as {
                 success?: boolean;
                 user?: any;
                 error?: string;
@@ -4465,7 +4465,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <BarChart3 className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção agendada
+                        Nenhuma manutenç��o agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
                         As futuras manutenções aparecerão aqui quando forem
@@ -6265,7 +6265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten����o Programada",
+                                type: "Manuten��ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -11755,7 +11755,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {/* Detalhes do Furo de ��gua - Se aplicável */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
