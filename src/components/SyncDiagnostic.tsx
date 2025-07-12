@@ -19,7 +19,7 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
     client: "Cliente Teste",
     location: "Local Teste",
     type: "Manutenção",
-    status: "pending",
+    status: "pending" as "pending" | "in_progress" | "completed" | "cancelled",
     startDate: new Date().toISOString().split("T")[0],
     assignedTo: "Sistema",
     budget: 100,
