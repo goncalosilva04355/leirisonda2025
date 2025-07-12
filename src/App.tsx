@@ -1887,7 +1887,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("🔐 Password length:", loginForm.password?.length || 0);
+      console.log("���� Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -5242,7 +5242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar diâmetro</option>
+                                  <option value="">Selecionar di��metro</option>
                                   <option value="1">1 polegada</option>
                                   <option value="1.25">1¼ polegadas</option>
                                   <option value="1.5">1½ polegadas</option>
@@ -11105,7 +11105,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
-                setCurrentUser(finalResult.user);
+                setCurrentUser((result as any).user);
                 setIsAuthenticated(true);
                 safeLocalStorage.setItem(
                   "currentUser",
