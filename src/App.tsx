@@ -490,7 +490,7 @@ function App() {
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
         console.log(
-          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
+          "⚠️ Nenhum utilizador atribuído, não enviando notificaç��es",
         );
         return;
       }
@@ -6987,7 +6987,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
-                                <li>• Histórico de manutenções</li>
+                                <li>• Histórico de manuten��ões</li>
                                 <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
@@ -10598,7 +10598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "completed"
                               | "cancelled"
                               | "scheduled",
-                            estimatedDuration: estimatedDuration || undefined,
+                            // estimatedDuration: estimatedDuration || undefined, // Property not in Maintenance interface
                             actualDuration: actualDuration || undefined,
                             cost: cost || undefined,
                             priority,
