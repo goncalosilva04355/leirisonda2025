@@ -29,7 +29,7 @@
 ### **Firebase:**
 
 - **Project ID:** leirisonda-16f8b
-- **API Key:** AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE
+- **API Key:** [REDACTED - CHECK ENVIRONMENT VARIABLES]
 - **Status:** ✅ Ativo
 
 ### **GitHub:**
