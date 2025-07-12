@@ -13,6 +13,9 @@ export default defineConfig({
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
+      input: {
+        main: "index.html",
+      },
       output: {
         manualChunks: (id) => {
           // Handle dynamic imports properly
