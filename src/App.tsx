@@ -2842,7 +2842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "localizacoes",
       icon: MapPin,
-      label: "Localizações",
+      label: "Localizaç��es",
       path: "/localizacoes",
     },
   ];
@@ -5745,7 +5745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Cliente Proprietário *
+                          Cliente Propriet��rio *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -6576,7 +6576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Químicos Utilizados
+                        Produtos Qu��micos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -10447,7 +10447,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duraç��o Real (horas)
+                          Duraç����o Real (horas)
                         </label>
                         <input
                           type="number"
@@ -10575,7 +10575,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "completed"
                               | "cancelled"
                               | "scheduled",
-                            estimatedDuration: estimatedDuration || undefined,
+
                             actualDuration: actualDuration || undefined,
                             cost: cost || undefined,
                             priority,
