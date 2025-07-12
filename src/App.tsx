@@ -5596,7 +5596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condi��ões do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6311,7 +6311,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar interven��ão de manutenção
@@ -7513,7 +7513,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                               </div>
 
-                              {/* Configurações de Localização Individual - Apenas para super_admin */}
+                              {/* Configurações de Localiza��ão Individual - Apenas para super_admin */}
                               {currentUser?.role === "super_admin" && (
                                 <PersonalLocationSettings />
                               )}
@@ -8188,12 +8188,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 )}
               </div>
             </div>
-                    );
+          );
 
-        // case "relatorios": // DUPLICATED CASE - COMMENTED OUT
-        //   return (
-        //     <div className="min-h-screen bg-gray-50">
-        //       <div className="px-4 py-4 space-y-6">
+        case "relatorios-old":
+          // This case was duplicated, renamed to avoid conflicts
+          return null;
+
+        case "relatorios-alternative":
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <div className="px-4 py-4 space-y-6">
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center justify-between">
@@ -10083,7 +10087,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 "",
                             };
                             console.log(
-                              "🔍 DEBUG updateData with bore:",
+                              "���� DEBUG updateData with bore:",
                               updateData,
                             );
                           }
