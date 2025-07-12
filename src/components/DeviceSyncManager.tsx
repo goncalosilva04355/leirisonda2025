@@ -13,7 +13,7 @@ import {
 import {
   isFirebaseReady,
   getFirebaseStatus,
-  reinitializeFirebase,
+  // reinitializeFirebase, // Function not exported
 } from "../firebase/config";
 import { UserSyncManager } from "../utils/userSyncManager";
 import { fullSyncService } from "../services/fullSyncService";
