@@ -88,12 +88,12 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
     try {
       // Firebase is always configured with fixed settings
       const config = {
-        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-        authDomain: "leirisonda-16f8b.firebaseapp.com",
-        projectId: "leirisonda-16f8b",
-        storageBucket: "leirisonda-16f8b.firebasestorage.app",
-        messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
       };
       const tests = [];
 
@@ -1195,7 +1195,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                       }}
                       className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center space-x-2"
                     >
-                      <span>⚙️ Aceder às Configurações</span>
+                      <span>���️ Aceder às Configurações</span>
                     </button>
                   </div>
                 )}
