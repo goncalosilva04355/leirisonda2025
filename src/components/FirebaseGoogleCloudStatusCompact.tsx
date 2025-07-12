@@ -73,9 +73,21 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
         timestamp: new Date().toISOString(),
       });
     } catch (error: any) {
+      console.error("❌ Erro ao verificar status Firestore:", error);
+      setHasError(true);
       setStatus({
-        error: error.message,
+        error: error.message || "Erro desconhecido",
         timestamp: new Date().toISOString(),
+        firestore: {
+          available: false,
+          canRead: false,
+          canWrite: false,
+          rulesError: "Erro ao testar conexão",
+        },
+        quota: {
+          exceeded: false,
+          emergencyShutdown: false,
+        },
       });
     } finally {
       setIsChecking(false);
