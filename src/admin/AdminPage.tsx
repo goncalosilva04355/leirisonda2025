@@ -17,6 +17,7 @@ import {
 // Import dos componentes de teste e configuraç��o
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
+import { FirebaseStatus } from "../components/FirebaseStatus";
 import { DataCleanupManager } from "../components/DataCleanupManager";
 import { DataManagementPanel } from "../components/DataManagementPanel";
 import { FirebaseConfig } from "../components/FirebaseConfig";
@@ -151,7 +152,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
     },
     {
       id: "auth-diagnostic" as AdminSection,
-      title: "Diagnóstico de Autentica��ão",
+      title: "Diagnóstico de Autenticação",
       description: "Teste e debug do sistema de autenticação",
       icon: Shield,
       color: "bg-blue-500",
@@ -294,14 +295,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "sync-manager":
         return <FullSyncManager />;
       case "firebase-status":
-        return (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <h3 className="text-lg font-semibold text-green-800 mb-2">
-              Estado do Firebase
-            </h3>
-            <p className="text-green-700">Firebase está ativo e funcionando.</p>
-          </div>
-        );
+        return <FirebaseStatus />;
       case "user-debugger":
         return <UserDebugger />;
       case "data-cleanup":
