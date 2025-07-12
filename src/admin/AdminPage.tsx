@@ -285,7 +285,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "data-migration":
         return <MigrationTester />;
       case "work-assignment-fix":
-        return <WorkAssignmentFix />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">WorkAssignmentFix não encontrado.</p>
+          </div>
+        );
       case "works-data-diagnostic":
         return <WorksDataDiagnostic />;
       case "login-fix":
@@ -295,9 +302,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "sync-manager":
         return <FullSyncManager />;
       case "firebase-status":
-        return <FirebaseStatus />;
+        return <FirebaseStatus isConnected={true} />;
       case "user-debugger":
-        return <UserDebugger />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">UserDebugger não encontrado.</p>
+          </div>
+        );
       case "data-cleanup":
         return <DataCleanupManager />;
       case "data-management":
@@ -319,13 +333,29 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "phone-settings":
         return <PhoneSettings />;
       case "mobile-settings":
-        return <MobileSettings />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">MobileSettings não encontrado.</p>
+          </div>
+        );
       case "data-recovery":
         return <DataRecovery />;
       case "data-backup":
         return <DataBackupManager />;
       case "firebase-quota":
-        return <FirebaseQuotaManager />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">
+              FirebaseQuotaManager não encontrado.
+            </p>
+          </div>
+        );
       case "user-deletion":
         return <DangerousUserDeletion />;
       case "notification-demo":
