@@ -1,10 +1,10 @@
 # API routes
 /api/* /.netlify/functions/:splat 200
 
-# Static assets (let them pass through)
+# Static assets
 /assets/* /assets/:splat 200
 /manifest.json /manifest.json 200
 /sw.js /sw.js 200
 
-# SPA fallback - must be last
+# SPA fallback
 /* /index.html 200
