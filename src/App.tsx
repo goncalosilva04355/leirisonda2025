@@ -6265,7 +6265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten��ão Programada",
+                                type: "Manuten����o Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -11105,7 +11105,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
-                setCurrentUser((result as any).user);
+                setCurrentUser(finalResult.user);
                 setIsAuthenticated(true);
                 safeLocalStorage.setItem(
                   "currentUser",
