@@ -77,12 +77,13 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
     if (status.quota.exceeded || status.quota.emergencyShutdown)
       return "warning";
     if (
-      status.firebase.ready &&
-      status.firebase.auth &&
-      status.firebase.database
+      status.firestore.available &&
+      status.firestore.canRead &&
+      status.firestore.canWrite
     )
       return "good";
-    return "degraded";
+    if (status.firestore.available) return "degraded";
+    return "error";
   };
 
   const getStatusColor = () => {
