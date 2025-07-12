@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Cloud, Save, AlertCircle, CheckCircle, RefreshCw } from "lucide-react";
+import { getFirebaseConfig } from "../config/firebaseEnv";
 
 interface FirebaseConfigProps {
   onConfigured: () => void;
