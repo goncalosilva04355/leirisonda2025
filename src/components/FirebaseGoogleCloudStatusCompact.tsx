@@ -109,6 +109,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
         },
       });
     } finally {
+      clearTimeout(timeoutId);
       setIsChecking(false);
     }
   };
@@ -323,7 +324,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
                     <div>• Sistema em modo de emergência</div>
                   )}
                   {!status.firestore.available && (
-                    <div>• Firestore não está dispon��vel</div>
+                    <div>• Firestore não está disponível</div>
                   )}
                   {!status.firestore.canRead && (
                     <div>• Sem permissão de leitura</div>
