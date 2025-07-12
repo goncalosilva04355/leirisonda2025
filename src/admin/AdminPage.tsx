@@ -333,7 +333,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "phone-settings":
         return <PhoneSettings />;
       case "mobile-settings":
-        return <MobileSettings />;
+        return (
+          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <h3 className="text-yellow-800 font-medium">
+              Componente não disponível
+            </h3>
+            <p className="text-yellow-700">MobileSettings não encontrado.</p>
+          </div>
+        );
       case "data-recovery":
         return <DataRecovery />;
       case "data-backup":
