@@ -370,22 +370,33 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                onClick={handleReset}
+                disabled={loading}
+                className="bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <RefreshCw className="w-5 h-5" />
+                <span>Restaurar</span>
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={loading}
+                className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              >
+                <Save className="w-5 h-5" />
+                <span>{loading ? "A guardar..." : "Guardar"}</span>
+              </button>
+            </div>
+
             <button
-              onClick={handleReset}
+              onClick={handleClearAll}
               disabled={loading}
-              className="bg-gray-600 text-white py-3 px-4 rounded-md hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+              className="w-full bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
             >
-              <RefreshCw className="w-5 h-5" />
-              <span>Restaurar</span>
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            >
-              <Save className="w-5 h-5" />
-              <span>{loading ? "A guardar..." : "Guardar"}</span>
+              <AlertCircle className="w-5 h-5" />
+              <span>🧹 LIMPAR TODA A CONFIGURAÇÃO</span>
             </button>
           </div>
         </div>
