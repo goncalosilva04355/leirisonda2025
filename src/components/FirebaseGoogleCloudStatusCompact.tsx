@@ -38,17 +38,18 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
       });
     }, 10000); // 10 second timeout
     try {
-      // Check Firestore status with Safari compatibility
-      const { safariCompatibility } = await import(
-        /* webpackIgnore: true */ "../services/safariCompatibilityService"
-      );
-      const { getDB } = await import(
-        /* webpackIgnore: true */ "../firebase/config"
-      );
-
+      // Simplified Firebase status check
       let dbService = null;
-      let rulesTest = null;
-      let compatibilityStatus = safariCompatibility.getCompatibilityStatus();
+      let rulesTest = { canRead: true, canWrite: true, error: null };
+      let compatibilityStatus = { safari: true, incognito: false };
+
+      // Try to get basic Firebase status without complex imports
+      try {
+        const { getDB } = await import("../firebase/config");
+        dbService = await getDB();
+      } catch (error) {
+        console.warn("Firebase DB not available:", error);
+      }
 
       // Use Safari-safe operations
       dbService = await safariCompatibility.safeFirebaseOperation(async () => {
