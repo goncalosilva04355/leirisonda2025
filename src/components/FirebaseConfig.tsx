@@ -22,6 +22,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
   const [config, setConfig] = useState<FirebaseSettings>({
     apiKey: "",
     authDomain: "",
+    databaseURL: "",
     projectId: "",
     storageBucket: "",
     messagingSenderId: "",
