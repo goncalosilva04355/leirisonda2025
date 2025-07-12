@@ -1,4 +1,4 @@
-// Configuração Firebase ultra-simples para diagnóstico
+// Firebase Config - Backup 110725leirisonda1033
 console.log("🔥 Carregando Firebase...");
 
 let app: any = null;
@@ -48,27 +48,43 @@ export const getDB = () => {
 export const getFirebaseAuth = () => {
   if (!auth) {
     try {
-      console.log("🔥 Inicializando Auth...");
+      console.log("🔥 Inicializando Firebase Auth...");
       const { getAuth } = require("firebase/auth");
       auth = getAuth(getFirebaseApp());
-      console.log("✅ Auth inicializado");
+      console.log("✅ Firebase Auth inicializado");
     } catch (error) {
-      console.error("❌ Erro ao inicializar Auth:", error);
+      console.error("❌ Erro ao inicializar Firebase Auth:", error);
       auth = {}; // Mock para evitar crashes
     }
   }
   return auth;
 };
 
-// Compatibilidade com código existente
-export const getFirebaseFirestore = getDB;
-export const getAuthService = getFirebaseAuth;
-export const isFirebaseReady = () => !!app;
-export const isFirestoreReady = () => !!firestore;
-export const isFirebaseAuthReady = () => !!auth;
+// Verificações de estado
+export const isFirebaseReady = () => {
+  try {
+    return app !== null && typeof app === "object";
+  } catch (error) {
+    return false;
+  }
+};
 
-// Exports diretos para compatibilidade
+export const isFirestoreReady = () => {
+  try {
+    return firestore !== null && typeof firestore === "object";
+  } catch (error) {
+    return false;
+  }
+};
+
+export const isFirebaseAuthReady = () => {
+  try {
+    return auth !== null && typeof auth === "object";
+  } catch (error) {
+    return false;
+  }
+};
+
+// Exports adicionais para compatibilidade
 export { app, firestore as db, auth };
-
-console.log("🔥 Firebase module carregado");
-export default app;
+export default getFirebaseApp;
