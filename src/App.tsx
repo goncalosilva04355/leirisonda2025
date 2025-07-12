@@ -358,7 +358,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "����� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -10590,7 +10590,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             scheduledDate: scheduledDate
                               ? new Date(scheduledDate).toISOString()
                               : undefined,
-                            technician,
+                            // technician, // Property not in Maintenance interface
                             type,
                             status: status as
                               | "pending"
