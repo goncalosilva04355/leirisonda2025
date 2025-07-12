@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Cloud,
-  Database,
-  Shield,
-  RefreshCw,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { Database, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
 
 export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const [status, setStatus] = useState<any>(null);
@@ -123,7 +116,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
       case "warning":
         return "🟡";
       case "degraded":
-        return "��";
+        return "🟠";
       case "error":
         return "🔴";
       default:
