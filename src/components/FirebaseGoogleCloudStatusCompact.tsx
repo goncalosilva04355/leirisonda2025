@@ -290,9 +290,33 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
               {/* Helper de regras Firestore */}
               {showRulesHelper && (
                 <div className="mt-3">
-                  {React.createElement(
-                    React.lazy(() => import("./FirestoreRulesHelper")),
-                  )}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                    <div className="text-sm font-medium text-blue-900 mb-2">
+                      🔧 Configuração de Regras Firestore
+                    </div>
+                    <div className="text-xs text-blue-800 space-y-1">
+                      <div>
+                        1. Abre:
+                        console.firebase.google.com/project/leiria-1cfc9/firestore/rules
+                      </div>
+                      <div>
+                        2. Substitui as regras por: allow read, write: if true;
+                      </div>
+                      <div>3. Clica "Publish"</div>
+                      <div>4. Volta aqui e clica refresh</div>
+                    </div>
+                    <button
+                      onClick={() =>
+                        window.open(
+                          "https://console.firebase.google.com/project/leiria-1cfc9/firestore/rules",
+                          "_blank",
+                        )
+                      }
+                      className="mt-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
+                    >
+                      Abrir Firebase Console
+                    </button>
+                  </div>
                 </div>
               )}
             </>
