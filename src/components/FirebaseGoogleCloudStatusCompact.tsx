@@ -65,6 +65,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
           rulesError: rulesTest?.error || null,
         },
         quota: quotaStatus,
+        compatibility: compatibilityStatus,
         timestamp: new Date().toISOString(),
       });
     } catch (error: any) {
@@ -215,7 +216,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
                   </div>
                   <div>
                     Permissão escrita:{" "}
-                    {status.firestore.canWrite ? "✅ Sim" : "��� Não"}
+                    {status.firestore.canWrite ? "✅ Sim" : "❌ Não"}
                   </div>
                   {status.firestore.rulesError && (
                     <div className="text-red-600">
