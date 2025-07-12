@@ -96,6 +96,12 @@ if (typeof window !== "undefined") {
   });
 }
 
+// Clear loading message
+const loadingElement = document.getElementById("loading");
+if (loadingElement) {
+  loadingElement.remove();
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ImprovedErrorBoundary>
     <App />
