@@ -38,6 +38,10 @@ import { DangerousUserDeletion } from "../components/DangerousUserDeletion";
 import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
 import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
+import { WorkAssignmentFix } from "../components/WorkAssignmentFix";
+import { UserDebugger } from "../components/UserDebugger";
+import { MobileSettings } from "../components/MobileSettings";
+import { FirebaseQuotaManager } from "../components/FirebaseQuotaManager";
 import { DataPersistenceDiagnostic } from "../components/DataPersistenceDiagnostic";
 
 interface AdminPageProps {
