@@ -141,10 +141,8 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
         <div className="flex items-center space-x-2">
           <span className="text-lg">{getStatusIcon()}</span>
           <div className="flex items-center space-x-1">
-            <Cloud className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">
-              Firebase & Google Cloud
-            </span>
+            <Database className="h-4 w-4 text-blue-600" />
+            <span className="text-sm font-medium text-gray-700">Firestore</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
