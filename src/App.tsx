@@ -1053,7 +1053,7 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
-            "✅ Users reloaded after update:",
+            "��� Users reloaded after update:",
             parsedUsers.length,
             parsedUsers,
           );
@@ -1885,7 +1885,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("�� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -9387,7 +9387,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         "works",
                                         JSON.stringify(existingWorks),
                                       );
-                                      setWorks(existingWorks);
                                     }
 
                                     // Atualizar via dataSync se disponível
