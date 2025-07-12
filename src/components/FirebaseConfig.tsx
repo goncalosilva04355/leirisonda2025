@@ -225,6 +225,13 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
               <RefreshCw className="w-4 h-4" />
               Restaurar Padrão
             </button>
+            <button
+              onClick={handleClearAll}
+              className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+            >
+              <AlertCircle className="w-4 h-4" />
+              🧹 LIMPAR TUDO
+            </button>
           </div>
         </div>
       </div>
