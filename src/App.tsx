@@ -5016,7 +5016,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                🔄 Recarregar Utilizadores
+                                ���� Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -10599,12 +10599,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
                             // estimatedDuration: estimatedDuration || undefined, // Property not in Maintenance interface
-                                                        // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
-                                                        // cost: cost || undefined, // Property not in Maintenance interface
-                                                        // priority, // Property not in Maintenance interface
-                                                        // completedDate: completedDate // Property not in Maintenance interface
-                              ? new Date(completedDate).toISOString()
-                              : undefined,
+                            // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
+                            // cost: cost || undefined, // Property not in Maintenance interface
+                            // priority, // Property not in Maintenance interface
+                            // completedDate: completedDate // Property not in Maintenance interface
+                            // ? new Date(completedDate).toISOString()
+                            // : undefined,
                             materialsUsed,
                             observations,
                           });
