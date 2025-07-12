@@ -229,7 +229,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitorizaç��o de persistência:", error);
       }
     };
 
@@ -2891,7 +2891,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               // console.log("🔐 Auth result:", result);
 
-              if (result?.success && result?.user) {
+              if (
+                result &&
+                typeof result === "object" &&
+                result.success &&
+                result.user
+              ) {
                 // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
@@ -11898,7 +11903,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de Criação
+                          Data de Criaç��o
                         </label>
                         <p className="text-gray-900 text-sm">
                           {new Date(
