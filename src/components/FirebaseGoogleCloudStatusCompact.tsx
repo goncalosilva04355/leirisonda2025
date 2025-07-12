@@ -13,6 +13,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isChecking, setIsChecking] = useState(false);
   const [showRulesHelper, setShowRulesHelper] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const checkStatus = async () => {
     setIsChecking(true);
