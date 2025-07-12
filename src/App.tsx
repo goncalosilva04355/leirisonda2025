@@ -5946,7 +5946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
 
                                 console.log(
-                                  "✅ Permiss��o validada, criando cliente...",
+                                  "✅ Permissão validada, criando cliente...",
                                 );
                                 // Add client to the system
                                 const newClient = {
@@ -10599,10 +10599,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
                             // estimatedDuration: estimatedDuration || undefined, // Property not in Maintenance interface
-                            // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
-                            // cost: cost || undefined, // Property not in Maintenance interface
-                            // priority, // Property not in Maintenance interface
-                            completedDate: completedDate
+                                                        // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
+                                                        // cost: cost || undefined, // Property not in Maintenance interface
+                                                        // priority, // Property not in Maintenance interface
+                                                        // completedDate: completedDate // Property not in Maintenance interface
                               ? new Date(completedDate).toISOString()
                               : undefined,
                             materialsUsed,
