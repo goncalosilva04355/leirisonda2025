@@ -9,12 +9,6 @@ export default defineConfig({
     // Add global ReadableStream check
     global: "globalThis",
   },
-  server: {
-    fs: {
-      // Only allow serving files from the project root and node_modules
-      allow: [".."],
-    },
-  },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
@@ -65,6 +59,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    fs: {
+      // Only allow serving files from the project root and node_modules
+      allow: [".."],
+    },
   },
   css: {
     postcss: "./postcss.config.cjs",
