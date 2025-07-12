@@ -3,7 +3,7 @@ import "./polyfills";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import TestApp from "../TestApp";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 import { isPrivateBrowsing } from "./utils/storageUtils";
 import "./index.css";
