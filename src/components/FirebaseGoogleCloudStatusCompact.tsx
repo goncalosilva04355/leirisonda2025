@@ -16,6 +16,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
   const [hasError, setHasError] = useState(false);
 
   const checkStatus = async () => {
+    if (isChecking) return; // Prevent concurrent checks
     setIsChecking(true);
     setHasError(false);
     try {
