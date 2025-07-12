@@ -2874,11 +2874,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               );
 
               // Fallback para authService se necessário
-              if (
-                !result ||
-                typeof result !== "object" ||
-                !(result as any)?.success
-              ) {
+              const resultObj = result as {
+                success?: boolean;
+                user?: any;
+                error?: string;
+              } | null;
+              if (!resultObj || !resultObj.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
                   email.trim(),
@@ -2901,7 +2902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 (result as any)?.success &&
                 (result as any)?.user
               ) {
-                // console.log("�� Login successful for:", result.user.email);
+                // console.log("���� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -5172,7 +5173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N€vel da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
