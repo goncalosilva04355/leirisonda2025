@@ -133,12 +133,12 @@ export const DangerousUserDeletion: React.FC = () => {
         console.error("❌ Nuclear cleanup failed:", result.message);
       }
     } catch (error: any) {
-      console.error("💥 Critical error during nuclear cleanup:", error);
+      console.error("���� Critical error during nuclear cleanup:", error);
       setNuclearCleanupResult({
         success: false,
         message: `❌ Erro crítico na limpeza nuclear: ${error.message}`,
         details: {
-          localStorageKeysCleared: [],
+          localStorageKeysCleared: [] as string[],
           sessionStorageCleared: false,
           superAdminRecreated: false,
           errors: [error.message],
