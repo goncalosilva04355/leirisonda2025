@@ -13,6 +13,12 @@ const CRITICAL_KEYS = [
 
 // Wrapper para localStorage que faz backup automático
 export class ProtectedLocalStorage {
+  // Store original methods to avoid recursion
+  static originalSetItem = localStorage.setItem.bind(localStorage);
+  static originalGetItem = localStorage.getItem.bind(localStorage);
+  static originalRemoveItem = localStorage.removeItem.bind(localStorage);
+  static originalClear = localStorage.clear.bind(localStorage);
+
   static setItem(key: string, value: string): void {
     // Se é uma chave crítica, fazer backup antes
     if (CRITICAL_KEYS.includes(key)) {
@@ -20,8 +26,8 @@ export class ProtectedLocalStorage {
       DataProtectionService.autoBackupBeforeOperation(`save_${key}`);
     }
 
-    // Guardar no localStorage normal
-    localStorage.setItem(key, value);
+    // Guardar no localStorage normal using original method
+    this.originalSetItem(key, value);
 
     console.log(`✅ Dados guardados: ${key} (${value.length} chars)`);
   }
