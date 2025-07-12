@@ -1,132 +1,193 @@
-# 🔄 Guia de Sincronização Firebase - Leirisonda
+# 🔥 Guia de Sincronização Firebase
 
-## ✨ O que foi implementado
+## Como deixar a app de desenvolvimento igual à app publicada
 
-A aplicação Leirisonda agora suporta **sincronização em tempo real** entre múltiplos dispositivos usando Firebase Firestore. Isso significa que:
+### 📊 **Status Atual**
 
-- ✅ **Dados sincronizados**: Todas as alterações aparecem instantaneamente em todos os dispositivos
-- ✅ **Múltiplos utilizadores**: Vários utilizadores podem trabalhar simultaneamente
-- ✅ **Backup automático**: Dados seguros na nuvem Google
-- ✅ **Modo offline**: Funciona sem internet, sincroniza quando reconecta
+- **App Development**: ❌ Firestore não funcional (leitura/escrita bloqueada)
+- **App Publicada**: ✅ Totalmente funcional
+- **Projeto Firebase**: `leiria-1cfc9` (correto)
 
-## 🚀 Como Ativar a Sincronização
+---
 
-### 1. Configurar Firebase
+## 🔍 **Diagnóstico do Problema**
 
-1. **Acesse o console Firebase**: [console.firebase.google.com](https://console.firebase.google.com)
-2. **Crie um novo projeto** ou selecione o existente "leirisonda"
-3. **Ative Firestore Database**:
-   - Vá para "Firestore Database"
-   - Clique "Create database"
-   - Escolha "Start in test mode" (por agora)
+A app de desenvolvimento está configurada corretamente, mas há **3 problemas principais**:
 
-### 2. Obter Credenciais
+### 1. **Regras Firestore Restritivas** 🚨
 
-1. **Configurações do projeto**:
+- O Firestore está configurado com regras de produção que bloqueiam acesso
+- A app publicada provavelmente tem regras diferentes ou foi configurada antes
 
-   - No console Firebase, clique no ⚙️ ao lado de "Project Overview"
-   - Selecione "Project settings"
+### 2. **Conflitos de Configuração** ⚠️
 
-2. **Configurar Web App**:
-   - Vá para a aba "General"
-   - Na seção "Your apps", clique no ícone "</>"
-   - Registe a app com nome "Leirisonda"
-   - **Copie as credenciais que aparecem**
+- Existem referências a dois projetos Firebase:
+  - `leiria-1cfc9` (atual e correto)
+  - `leirisonda-16f8b` (antigo, deve ser removido)
 
-### 3. Configurar na Aplicação
+### 3. **Problemas de Compatibilidade iOS/Safari** 🍎
 
-1. **Abra a aplicação Leirisonda**
-2. **Vá para Configurações** (ícone ⚙️ na barra lateral)
-3. **Clique "Configurar Firebase"**
-4. **Cole as credenciais** obtidas no passo anterior
-5. **Clique "Guardar Configuração"**
+- Firebase tem limitações conhecidas no Safari
+- Necessário error handling específico
 
-## 📱 Como Funciona
+---
 
-### Estados de Sincronização
+## ✅ **Soluções Implementadas**
 
-- 🟢 **Conectado**: Ícone WiFi verde com ponto pulsante
-- 🔴 **Desconectado**: Ícone WiFi cortado cinzento
+### 1. **Configuração Unificada**
 
-### Dados Sincronizados
+```typescript
+// src/firebase/configValidator.ts
+export const OFFICIAL_FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+};
+```
 
-- **👥 Utilizadores**: Gestão de utilizadores e permissões
-- **🏊 Piscinas**: Todas as piscinas e seus dados
-- **🔧 Manutenções**: Histórico e futuras manutenções
-- **🏗️ Obras**: Projetos e trabalhos realizados
+### 2. **Compatibilidade Safari**
 
-### Funcionalidades Temps Real
+- Serviço dedicado para iOS/Safari: `SafariCompatibilityService`
+- Error handling robusto para operações Firebase
+- Fallbacks automáticos quando necessário
 
-1. **Adicionar dados**: Aparecem imediatamente noutros dispositivos
-2. **Editar registos**: Alterações sincronizam automaticamente
-3. **Eliminar items**: Remoções aplicam-se a todos os dispositivos
-4. **Notificações visuais**: Indicadores mostram estado da conexão
+---
 
-## 🔧 Resolução de Problemas
+## 🛠️ **AÇÕES NECESSÁRIAS**
 
-### Problema: "Erro ao sincronizar dados"
+### **Passo 1: Configurar Regras Firestore** ⭐ **PRIORITÁRIO**
 
-- ✅ Verifique conexão à internet
-- ✅ Confirme credenciais Firebase
-- ✅ Clique "Reconectar" nas configurações
+1. **Abrir Firebase Console**:
 
-### Problema: Dados não aparecem
+   ```
+   https://console.firebase.google.com/project/leiria-1cfc9/firestore/rules
+   ```
 
-- ✅ Aguarde alguns segundos (pode haver latência)
-- ✅ Recarregue a página
-- ✅ Verifique se todos os dispositivos usam as mesmas credenciais
+2. **Substituir regras atuais por estas** (temporário para desenvolvimento):
 
-### Problema: Permissões negadas
+   ```javascript
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       // REGRAS DE DESENVOLVIMENTO - Permitir tudo
+       match /{document=**} {
+         allow read, write: if true;
+       }
+     }
+   }
+   ```
 
-- ✅ Configure regras Firestore (ver secção abaixo)
+3. **Clicar "Publish"** para aplicar
 
-## 🔐 Configurar Segurança Firestore
+### **Passo 2: Verificar Status**
 
-No console Firebase, vá para "Firestore Database" → "Rules" e substitua por:
+1. Voltar à app de desenvolvimento
+2. No componente de status Firestore (acima do logo), clicar "Verificar"
+3. Deve mostrar ✅ para Disponível, Leitura e Escrita
+
+### **Passo 3: Testar Funcionalidade**
+
+1. Tentar fazer login
+2. Criar dados (obras, manutenções, etc.)
+3. Verificar sincronização entre dispositivos
+
+---
+
+## 🔄 **Sincronização Contínua**
+
+### **Variáveis de Ambiente** (Opcional)
+
+Para ambientes diferentes, pode criar:
+
+**.env.development**:
+
+```
+VITE_FIREBASE_PROJECT_ID=leiria-1cfc9
+VITE_FIREBASE_API_KEY=AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw
+VITE_ENVIRONMENT=development
+```
+
+**.env.production**:
+
+```
+VITE_FIREBASE_PROJECT_ID=leiria-1cfc9
+VITE_FIREBASE_API_KEY=AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw
+VITE_ENVIRONMENT=production
+```
+
+### **Deploy Automático**
+
+O projeto já está configurado para Netlify:
+
+```toml
+[build]
+command = "npm run build"
+publish = "dist"
+
+[build.environment]
+NODE_VERSION = "20"
+```
+
+---
+
+## 🚨 **Segurança para Produção**
+
+**Antes de ir para produção**, alterar regras Firestore para:
 
 ```javascript
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Permitir leitura/escrita autenticada
-    match /{document=**} {
-      allow read, write: if true; // TEMPORÁRIO - configurar autenticação depois
+    // Requer autenticação para todas as operações
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /{collection}/{document} {
+      allow read, write: if request.auth != null;
     }
   }
 }
 ```
 
-⚠️ **Importante**: Estas regras são para teste. Configure autenticação adequada para produção.
+---
 
-## 🌟 Vantagens da Sincronização
+## 📱 **Notas Específicas iOS/Safari**
 
-### Para Equipas
+### **Limitações Conhecidas**:
 
-- **Colaboração real**: Múltiplos técnicos podem trabalhar simultaneamente
-- **Atualizações instantâneas**: Sem necessidade de "refresh"
-- **Dados consistentes**: Todos veem a mesma informação
+- **Storage**: Dados podem ser limpos após 7 dias de inatividade (ITP)
+- **Private Browsing**: localStorage/sessionStorage limitados
+- **IndexedDB**: Inconsistências no Safari
 
-### Para Gestão
+### **Soluções Implementadas**:
 
-- **Visibilidade total**: Acompanhe trabalho em tempo real
-- **Relatórios atualizados**: Dados sempre atuais
-- **Backup automático**: Nunca perca informação
-
-### Para Clientes
-
-- **Transparência**: Acompanhe progresso das obras
-- **Relatórios atuais**: Informação sempre atualizada
-- **Histórico completo**: Acesso a todo o histórico
-
-## 📞 Suporte
-
-Se tiver problemas:
-
-1. **Configurações**: Verifique estado na secção "Configurações"
-2. **Reconectar**: Use botão "Reconectar" se necessário
-3. **Logs**: Abra Console do Browser (F12) para ver erros
-4. **Contacto**: gongonsilva@gmail.com para suporte técnico
+- Detecção automática de Safari/iOS
+- Retry automático com backoff exponencial
+- Fallbacks para modo local quando necessário
 
 ---
 
-**🎉 Parabéns!** A sua aplicação Leirisonda agora sincroniza em tempo real entre todos os dispositivos da equipa!
+## ✅ **Checklist Final**
+
+- [ ] **Regras Firestore configuradas** (Passo 1)
+- [ ] **Status mostra ✅ para tudo**
+- [ ] **Login funciona**
+- [ ] **Dados sincronizam**
+- [ ] **App comporta-se igual em dev e prod**
+
+---
+
+## 🆘 **Se ainda não funcionar**
+
+1. **Limpar cache do browser** (Ctrl+F5)
+2. **Testar em modo incógnito**
+3. **Verificar console browser** para erros específicos
+4. **Usar o botão "Corrigir Regras"** no componente de status
+
+---
+
+**📧 Contacto**: Se precisar de ajuda adicional, o componente de status Firestore tem links diretos para o Firebase Console e instruções específicas.
