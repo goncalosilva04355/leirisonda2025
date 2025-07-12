@@ -1548,7 +1548,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Firebase Messaging Service Worker registered successfully:",
+              "���� Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -8948,7 +8948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           e.preventDefault();
 
                           // Obter dados do formulário
-                          const form = e.target.closest("form");
+                          const form = (e.target as Element).closest("form");
                           const formData = new FormData(form);
 
                           // Validação básica
