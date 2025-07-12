@@ -5,7 +5,6 @@ import {
   ChevronDown,
   ChevronUp,
   Settings,
-  Sync,
 } from "lucide-react";
 
 export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
