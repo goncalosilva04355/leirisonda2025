@@ -10539,7 +10539,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
                             .value; // T��cnico
-                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
+                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenç��o
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
@@ -10568,10 +10568,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               | "cancelled"
                               | "scheduled",
 
-                            completedDate: completedDate
-                              ? new Date(completedDate).toISOString()
-                              : undefined,
-                            materialsUsed,
                             observations,
                           });
 
@@ -10877,7 +10873,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✓</span>
-                  <span>Observaç€s e próxima manutenção</span>
+                  <span>Observaç€s e próxima manutenç��o</span>
                 </div>
               </div>
             </div>
@@ -12030,7 +12026,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ����� {selectedPool.location}
+                            ���� {selectedPool.location}
                           </button>
                         </div>
                       </div>
@@ -12112,7 +12108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <p className="text-gray-900">
                             {selectedPool.depth
                               ? `${selectedPool.depth} m`
-                              : "N��o especificado"}
+                              : "Não especificado"}
                           </p>
                         </div>
                       </div>
