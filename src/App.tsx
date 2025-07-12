@@ -4427,7 +4427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenç€es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5563,7 +5563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               waterLevel:
                                 (
                                   form.querySelector(
-                                    'input[placeholder*="Nível da ��gua"]',
+                                    'input[placeholder*="Nível da Água"]',
                                   ) as HTMLInputElement
                                 )?.value || "",
                               pumpDepth:
@@ -5946,7 +5946,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
 
                                 console.log(
-                                  "✅ Permissão validada, criando cliente...",
+                                  "✅ Permiss��o validada, criando cliente...",
                                 );
                                 // Add client to the system
                                 const newClient = {
@@ -7984,7 +7984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica����ão ou conexão.
+                                    autentica��ão ou conexão.
                                   </p>
                                 </div>
 
@@ -10601,7 +10601,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             // estimatedDuration: estimatedDuration || undefined, // Property not in Maintenance interface
                             // actualDuration: actualDuration || undefined, // Property not in Maintenance interface
                             // cost: cost || undefined, // Property not in Maintenance interface
-                            priority,
+                            // priority, // Property not in Maintenance interface
                             completedDate: completedDate
                               ? new Date(completedDate).toISOString()
                               : undefined,
@@ -11885,7 +11885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.budget && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Or���amento
+                          Or��amento
                         </label>
                         <p className="text-gray-900">📞{selectedWork.budget}</p>
                       </div>
