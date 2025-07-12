@@ -8,11 +8,9 @@ export function installReadableStreamPolyfill() {
     return;
   }
 
-  // Check if we need the polyfill
-  const needsPolyfill =
-    !globalThis.ReadableStream ||
-    !globalThis.ReadableStream.prototype?.getReader ||
-    typeof globalThis.ReadableStream.prototype.getReader !== "function";
+  // Always install our polyfill for Firebase compatibility
+  // Even if ReadableStream exists, it might not work properly with Firebase
+  const needsPolyfill = true;
 
   if (!needsPolyfill) {
     return;
