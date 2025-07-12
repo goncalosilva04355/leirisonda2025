@@ -18,6 +18,7 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
 
   const checkStatus = async () => {
     setIsChecking(true);
+    setHasError(false);
     try {
       // Check Firestore status with Safari compatibility
       const { safariCompatibility } = await import(
