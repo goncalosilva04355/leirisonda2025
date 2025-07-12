@@ -184,49 +184,39 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
             </div>
           ) : (
             <>
-              {/* Firebase Details */}
+              {/* Firestore Details */}
               <div className="space-y-1">
                 <div className="flex items-center space-x-1">
                   <Database className="h-3 w-3 text-blue-500" />
                   <span className="text-xs font-medium text-gray-700">
-                    Firebase
+                    Firestore Database
                   </span>
                 </div>
                 <div className="ml-4 text-xs text-gray-600 space-y-1">
                   <div>
-                    Status: {status.firebase.ultStatus?.status || "unknown"}
+                    Disponível:{" "}
+                    {status.firestore.available ? "✅ Sim" : "❌ Não"}
                   </div>
                   <div>
-                    App: {status.firebase.ultStatus?.hasApp ? "✅" : "❌"}
+                    Permissão leitura:{" "}
+                    {status.firestore.canRead ? "✅ Sim" : "❌ Não"}
                   </div>
                   <div>
-                    Ready: {status.firebase.ultStatus?.ready ? "✅" : "❌"}
+                    Permissão escrita:{" "}
+                    {status.firestore.canWrite ? "✅ Sim" : "❌ Não"}
                   </div>
-                </div>
-              </div>
-
-              {/* Google Cloud Details */}
-              <div className="space-y-1">
-                <div className="flex items-center space-x-1">
-                  <Cloud className="h-3 w-3 text-blue-500" />
-                  <span className="text-xs font-medium text-gray-700">
-                    Google Cloud
-                  </span>
-                </div>
-                <div className="ml-4 text-xs text-gray-600 space-y-1">
-                  <div>Projeto: {status.googleCloud.projectId}</div>
-                  <div>Região: {status.googleCloud.region}</div>
-                  <div>Estado: {status.googleCloud.status}</div>
+                  {status.firestore.rulesError && (
+                    <div className="text-red-600">
+                      Erro: {status.firestore.rulesError}
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Quota Status */}
               <div className="space-y-1">
-                <div className="flex items-center space-x-1">
-                  <Shield className="h-3 w-3 text-purple-500" />
-                  <span className="text-xs font-medium text-gray-700">
-                    Quotas & Limites
-                  </span>
+                <div className="text-xs font-medium text-gray-700">
+                  Estado do Sistema
                 </div>
                 <div className="ml-4 text-xs text-gray-600 space-y-1">
                   <div>
@@ -243,17 +233,25 @@ export const FirebaseGoogleCloudStatusCompact: React.FC = () => {
               {/* Warnings */}
               {(status.quota.exceeded ||
                 status.quota.emergencyShutdown ||
-                !status.firebase.ready) && (
+                !status.firestore.available ||
+                !status.firestore.canRead ||
+                !status.firestore.canWrite) && (
                 <div className="bg-yellow-100 border border-yellow-300 rounded p-2 text-xs">
                   <strong>⚠️ Avisos:</strong>
                   {status.quota.exceeded && (
-                    <div>• Quota do Firebase excedida</div>
+                    <div>• Quota do Firestore excedida</div>
                   )}
                   {status.quota.emergencyShutdown && (
                     <div>• Sistema em modo de emergência</div>
                   )}
-                  {!status.firebase.ready && (
-                    <div>• Firebase não está completamente funcional</div>
+                  {!status.firestore.available && (
+                    <div>• Firestore não está disponível</div>
+                  )}
+                  {!status.firestore.canRead && (
+                    <div>• Sem permissão de leitura</div>
+                  )}
+                  {!status.firestore.canWrite && (
+                    <div>• Sem permissão de escrita</div>
                   )}
                 </div>
               )}
