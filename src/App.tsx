@@ -1551,7 +1551,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "����� Firebase Messaging Service Worker registered successfully:",
+              "���� Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -1935,7 +1935,7 @@ function App() {
         }, 100);
       } else {
         console.warn("❌ Login failed:", (result as any)?.error);
-        setLoginError(result.error || "Credenciais inválidas");
+        setLoginError((result as any)?.error || "Credenciais inválidas");
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -2953,7 +2953,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", (result as any)?.error);
-                setLoginError(result.error || "Credenciais inválidas");
+                setLoginError(
+                  (result as any)?.error || "Credenciais inválidas",
+                );
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
@@ -4262,7 +4264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manutenç��o registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
@@ -10943,7 +10945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon����alo Fonseca",
+  //       name: "Gon��alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11161,7 +11163,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", (result as any)?.error);
-                setLoginError(result.error || "Credenciais inválidas");
+                setLoginError(
+                  (result as any)?.error || "Credenciais inválidas",
+                );
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
