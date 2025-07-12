@@ -65,12 +65,12 @@ export default defineConfig({
       "firebase/app",
       "firebase/firestore",
       "firebase/auth",
+      "@firebase/firestore",
       // Pre-optimize dynamically imported services
       "src/services/autoSyncService",
       "src/services/robustLoginService",
       "src/services/userRestoreService",
       "src/utils/syncManager",
     ],
-    exclude: ["@firebase/firestore"],
   },
 });
