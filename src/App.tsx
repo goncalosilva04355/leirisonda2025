@@ -7289,7 +7289,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Relatórios Movidos
                 </h1>
                 <p className="text-gray-600 mb-4">
-                  Os relatórios agora estão na página de Configura������es.
+                  Os relatórios agora estão na página de Configurações.
                 </p>
                 <button
                   onClick={() => {
