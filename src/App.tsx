@@ -226,7 +226,7 @@ function App() {
             console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
-              "⚠�� Não foi possível reparar a persistência automaticamente",
+              "⚠️ Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -480,10 +480,10 @@ function App() {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
-      // Tentar Firestore primeiro
-      const firestoreId = await devFirestoreService.createPool(data);
+      // Usar serviço offline-first
+      const firestoreId = await offlineFirstService.createPool(data);
       if (firestoreId) {
-        console.log("✅ Piscina criada no Firestore:", firestoreId);
+        console.log("✅ Piscina criada:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -9411,7 +9411,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       );
                                     }
 
-                                    // Atualizar via dataSync se dispon��vel
+                                    // Atualizar via dataSync se disponível
                                     if (dataSync && dataSync.updateWork) {
                                       dataSync.updateWork(work.id, {
                                         status: "in_progress",
@@ -9802,7 +9802,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observa��ões */}
+                    {/* Observações */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -11614,7 +11614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "Não especificado"}
+                            : "N��o especificado"}
                         </p>
                       </div>
                       <div>
