@@ -2980,7 +2980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
+                          src="/icon.svg"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -8887,7 +8887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa responsável"
+                            placeholder="Nome da pessoa respons��vel"
                           />
                         </div>
                         <div>
@@ -11188,7 +11188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center space-x-3">
                     <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
+                        src="/icon.svg"
                         alt="Leirisonda Logo"
                         className="w-full h-full object-contain"
                       />
