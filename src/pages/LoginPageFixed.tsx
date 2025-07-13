@@ -27,17 +27,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     password: "",
   }));
   const [rememberMe, setRememberMe] = useState(() => false);
-  const [showEmergencyFix, setShowEmergencyFix] = useState(() => {
-    // Detectar se é dispositivo móvel e há conflitos
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const hasQuotaIssues =
-      localStorage.getItem("firebase-quota-exceeded") === "true";
-    const hasEmergencyShutdown =
-      localStorage.getItem("firebase-emergency-shutdown") === "true";
-    const hasConflicts =
-      document.querySelectorAll('iframe[src*="firebaseapp.com"]').length > 1;
-    return isMobile && (hasQuotaIssues || hasEmergencyShutdown || hasConflicts);
-  });
   const [firestoreStatus, setFirestoreStatus] = useState<
     "checking" | "ready" | "error"
   >("checking");
