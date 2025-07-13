@@ -3019,6 +3019,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
                     backgroundColor: "#0891b2",
+                    backgroundImage:
+                      "url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F7d1ac6645d4249ecbd385606606de4a6?format=webp&width=800')",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -8945,7 +8947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç����es
+                            Notas e Observaç�����es
                           </label>
                           <textarea
                             rows={4}
@@ -12137,7 +12139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ������ {selectedPool.location}
+                            ������� {selectedPool.location}
                           </button>
                         </div>
                       </div>
