@@ -80,6 +80,7 @@ import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
+import { saveFormToFirestore } from "./services/firestoreDataService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -4268,7 +4269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manutenç��es
                     </button>
                   </div>
                 </div>
@@ -8297,7 +8298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
-                        <li>📞 Técnicos responsáveis</li>
+                        <li>📞 Técnicos respons��veis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
