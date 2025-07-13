@@ -101,11 +101,11 @@ function initializeFirebaseBasicSync(): FirebaseApp | null {
   return firebaseApp;
 }
 
-// Função robusta para obter a app Firebase
+// Função robusta para obter a app Firebase (síncrona)
 export function getFirebaseApp(): FirebaseApp | null {
-  // Se não temos app, tentar inicializar
+  // Se não temos app, tentar inicializar de forma síncrona
   if (!firebaseApp) {
-    return initializeFirebaseBasic();
+    return initializeFirebaseBasicSync();
   }
 
   // Verificar se a app ainda é válida
@@ -117,12 +117,17 @@ export function getFirebaseApp(): FirebaseApp | null {
       // App não está mais na lista, limpar referência e reinicializar
       console.warn("⚠️ Firebase: App não encontrada na lista, reinicializando");
       firebaseApp = null;
-      return initializeFirebaseBasic();
+      return initializeFirebaseBasicSync();
     }
   } catch (error) {
     console.warn("⚠️ Firebase: Erro ao verificar apps:", error);
     return firebaseApp; // Retornar a app mesmo com erro de verificação
   }
+}
+
+// Função assíncrona para obter a app Firebase
+export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
+  return await initializeFirebaseBasic();
 }
 
 // Função para verificar se Firebase está pronto
