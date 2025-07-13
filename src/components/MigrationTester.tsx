@@ -10,7 +10,7 @@ import {
   TestTube,
 } from "lucide-react";
 import { dataMigrationService } from "../services/dataMigrationService";
-import { firestoreDataService } from "../services/firestoreDataService";
+import { firestoreService } from "../services/firestoreDataService";
 
 const MigrationTester: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -23,7 +23,12 @@ const MigrationTester: React.FC = () => {
   useEffect(() => {
     // Verificar status do Firestore
     const checkFirestore = () => {
-      setFirestoreStatus(firestoreDataService.isFirestoreAvailable());
+      // Check if firestoreService is available
+      try {
+        setFirestoreStatus(!!firestoreService);
+      } catch (error) {
+        setFirestoreStatus(false);
+      }
     };
 
     checkFirestore();

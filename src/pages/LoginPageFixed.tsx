@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings, AlertTriangle } from "lucide-react";
+import { Settings, AlertTriangle, Database } from "lucide-react";
 import { QuickMobileFix } from "../components/QuickMobileFix";
+import {
+  saveLoginAttempt,
+  testFirestoreConnection,
+} from "../services/firestoreDataService";
 
 interface LoginPageProps {
   onLogin: (
@@ -34,6 +38,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
       document.querySelectorAll('iframe[src*="firebaseapp.com"]').length > 1;
     return isMobile && (hasQuotaIssues || hasEmergencyShutdown || hasConflicts);
   });
+  const [firestoreStatus, setFirestoreStatus] = useState<
+    "checking" | "ready" | "error"
+  >("checking");
+  const [lastSaveId, setLastSaveId] = useState<string | null>(null);
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
@@ -90,6 +98,30 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     }
   }, [onLogin]);
 
+  // Check Firestore connection status
+  useEffect(() => {
+    const checkFirestore = async () => {
+      console.log("🔄 Verificando conexão com Firestore...");
+      try {
+        const isConnected = await testFirestoreConnection();
+        if (isConnected) {
+          setFirestoreStatus("ready");
+          console.log("✅ Firestore pronto para gravação de dados");
+        } else {
+          setFirestoreStatus("error");
+          console.warn(
+            "⚠️ Firestore não disponível - dados serão salvos localmente",
+          );
+        }
+      } catch (error) {
+        console.error("❌ Erro ao verificar Firestore:", error);
+        setFirestoreStatus("error");
+      }
+    };
+
+    checkFirestore();
+  }, []);
+
   const handleLogin = useCallback(
     async (e: React.FormEvent) => {
       try {
@@ -103,6 +135,28 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         if (!loginForm.email.trim() || !loginForm.password.trim()) {
           console.warn("❌ LoginPage: Empty fields detected");
           return; // Let HTML5 validation handle this
+        }
+
+        // Gravar dados no Firestore antes do login
+        console.log("💾 Salvando dados de login no Firestore...");
+        try {
+          const saveId = await saveLoginAttempt({
+            email: loginForm.email.trim(),
+            rememberMe: rememberMe,
+            // Não gravar a password por segurança
+          });
+
+          if (saveId) {
+            setLastSaveId(saveId);
+            console.log(`✅ Dados gravados no Firestore com ID: ${saveId}`);
+          } else {
+            console.warn(
+              "⚠️ Falha ao gravar no Firestore - continuando com login",
+            );
+          }
+        } catch (firestoreError) {
+          console.error("❌ Erro ao gravar no Firestore:", firestoreError);
+          // Continuar com o login mesmo se a gravação falhar
         }
 
         // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
@@ -177,8 +231,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         <div className="text-center mb-8">
           <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
             <img
-              src="/leirisonda-logo.svg"
-              alt="Leirisonda - Gestão de Piscinas & Obras Aquáticas"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+              alt="Leirisonda - Furos e Captações de Água, Lda"
               className="w-full h-auto object-contain"
               style={{ maxHeight: "80px" }}
             />
@@ -268,6 +322,33 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             >
               Lembrar-me (auto-login)
             </label>
+          </div>
+
+          {/* Firestore Status Indicator */}
+          <div className="text-xs text-center">
+            {firestoreStatus === "checking" && (
+              <div className="text-blue-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3 animate-pulse" />
+                <span>Verificando Firestore...</span>
+              </div>
+            )}
+            {firestoreStatus === "ready" && (
+              <div className="text-green-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3" />
+                <span>✅ Firestore conectado</span>
+                {lastSaveId && (
+                  <span className="text-gray-500">
+                    | ID: {lastSaveId.slice(-6)}
+                  </span>
+                )}
+              </div>
+            )}
+            {firestoreStatus === "error" && (
+              <div className="text-yellow-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3" />
+                <span>⚠️ Firestore indisponível (modo local)</span>
+              </div>
+            )}
           </div>
 
           {/* Error Message */}

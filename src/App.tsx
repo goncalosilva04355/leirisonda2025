@@ -81,7 +81,7 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+// import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
 // SECURITY: RegisterForm for super admin only
@@ -498,7 +498,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
+      console.log("📱 Enviando notifica��ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -510,7 +510,7 @@ function App() {
 
       // Preparar dados da notifica��ão
       const notificationData = {
-        title: "🔔 Nova Obra Atribuída",
+        title: "🔔 Nova Obra Atribu��da",
         body: `${workData.title} - ${workData.client}`,
         icon: "/icon.svg",
         badge: "/icon.svg",
@@ -697,6 +697,8 @@ function App() {
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
+
+        // Backup automático desativado temporariamente
 
         // Sincronizar com sistema universal também
         try {
@@ -1124,7 +1126,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+    console.log("📞 Configuraç��o Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1292,7 +1294,7 @@ function App() {
         safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
-        console.log("🗑️ Mock and test data cleared");
+        console.log("🗑��� Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -1313,7 +1315,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        const firestoreResult = await testFirestore();
+        // const firestoreResult = await testFirestore(); // Comentado temporariamente
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -2012,7 +2014,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully - redirected to login");
+      console.log("�� Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -2110,7 +2112,7 @@ function App() {
       // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
     } else {
-      // Se já estiver no dashboard, tenta usar o history do browser
+      // Se j�� estiver no dashboard, tenta usar o history do browser
       if (window.history.length > 1) {
         window.history.back();
       }
@@ -2167,7 +2169,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -3017,6 +3019,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
                     backgroundColor: "#0891b2",
+                    backgroundImage:
+                      "url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F7d1ac6645d4249ecbd385606606de4a6?format=webp&width=800')",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -3029,10 +3033,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="relative z-10">
                     {/* Logo and Time Row */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
+                      <div className="w-32 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="/icon.svg"
-                          alt="Leirisonda Logo"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                          alt="Leirisonda - Furos e Captações de Água, Lda"
                           className="w-full h-full object-contain"
                         />
                       </div>
@@ -5959,7 +5963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 "€DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
-                              console.log("🔍 User Role:", currentUser?.role);
+                              console.log("��� User Role:", currentUser?.role);
                               console.log(
                                 "🔍 User Permissions:",
                                 currentUser?.permissions,
@@ -7485,7 +7489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-blue-900 mb-2">
-                                      Notificações de Obras
+                                      Notifica��ões de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Receba notificações quando uma nova obra
@@ -8943,7 +8947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç����es
+                            Notas e Observaç�����es
                           </label>
                           <textarea
                             rows={4}
@@ -9269,7 +9273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Concluída"
+                                      ? "Conclu��da"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
@@ -10797,7 +10801,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte€o. Por favor, tente novamente.
+              Ocorreu um erro ao carregar o conte���o. Por favor, tente
+              novamente.
             </p>
             <button
               onClick={() => window.location.reload()}
@@ -10952,7 +10957,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>💧</span>
+                  <span>��</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11291,16 +11296,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="px-6 py-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                    <div className="w-20 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="/icon.svg"
-                        alt="Leirisonda Logo"
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                        alt="Leirisonda - Furos e Captações de Água, Lda"
                         className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Gestão de Serviços
+                        Furos e Captações de Água
                       </p>
                     </div>
                   </div>
@@ -11954,7 +11959,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">📞{selectedWork.budget}</p>
+                        <p className="text-gray-900">
+                          ����{selectedWork.budget}
+                        </p>
                       </div>
                     )}
 
@@ -12133,7 +12140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ���� {selectedPool.location}
+                            ������� {selectedPool.location}
                           </button>
                         </div>
                       </div>
