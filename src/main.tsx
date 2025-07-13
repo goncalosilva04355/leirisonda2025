@@ -99,6 +99,6 @@ if (typeof window !== "undefined") {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <ImprovedErrorBoundary>
-    <App />
+    <AppTest />
   </ImprovedErrorBoundary>,
 );
