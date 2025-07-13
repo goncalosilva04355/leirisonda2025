@@ -40,6 +40,7 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
+import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -2996,7 +2997,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -3589,7 +3590,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">📊</div>
+                            <div className="text-gray-400 mb-2">��</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
