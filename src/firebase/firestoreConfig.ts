@@ -30,7 +30,7 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
         return null;
       }
 
-            // Aguardar a app estar completamente pronta
+      // Aguardar a app estar completamente pronta
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       // Verificar se a app não foi deletada com validação mais robusta
@@ -39,7 +39,9 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
         const authDomain = app.options?.authDomain;
 
         if (!projectId || !authDomain) {
-          console.warn("⚠️ Firebase App inválida (faltam configurações essenciais)");
+          console.warn(
+            "⚠️ Firebase App inválida (faltam configurações essenciais)",
+          );
           return null;
         }
 
@@ -50,7 +52,6 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
           console.warn("⚠️ Firebase App não está na lista de apps válidas");
           return null;
         }
-
       } catch (appError) {
         console.warn("⚠️ Firebase App não é válida:", appError);
         return null;
@@ -68,30 +69,47 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
           return firestoreInstance;
         } catch (firestoreError: any) {
           retryCount++;
-          console.warn(`⚠️ Firestore: Tentativa ${retryCount}/${maxRetries} falhou:`, firestoreError.code || firestoreError.message);
+          console.warn(
+            `⚠️ Firestore: Tentativa ${retryCount}/${maxRetries} falhou:`,
+            firestoreError.code || firestoreError.message,
+          );
 
           // Se for erro específico de getImmediate, aguardar mais tempo
-          if (firestoreError.message?.includes('getImmediate')) {
-            console.log("🔄 Erro getImmediate detectado, aguardando app estar pronta...");
-            await new Promise(resolve => setTimeout(resolve, 3000 * retryCount));
+          if (firestoreError.message?.includes("getImmediate")) {
+            console.log(
+              "🔄 Erro getImmediate detectado, aguardando app estar pronta...",
+            );
+            await new Promise((resolve) =>
+              setTimeout(resolve, 3000 * retryCount),
+            );
           } else if (retryCount < maxRetries) {
             // Para outros erros, aguardar menos tempo
-            await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+            await new Promise((resolve) =>
+              setTimeout(resolve, 1000 * retryCount),
+            );
           }
 
+          // Se foi a última tentativa
           if (retryCount === maxRetries) {
-            console.error("❌ Firestore: Erro específico na inicialização após todas as tentativas:", firestoreError);
+            console.error(
+              "❌ Firestore: Erro específico na inicialização após todas as tentativas:",
+              firestoreError,
+            );
 
-        // Se for erro de app deletada, limpar referência
-        if (firestoreError.code === "app/app-deleted") {
-          console.log("🧹 Firestore: App foi deletada, limpando referência");
-          firestoreInstance = null;
+            // Se for erro de app deletada, limpar referência
+            if (firestoreError.code === "app/app-deleted") {
+              console.log(
+                "🧹 Firestore: App foi deletada, limpando referência",
+              );
+              firestoreInstance = null;
+            }
+
+            return null;
+          }
         }
-
-                return null;
       }
 
-      // Se chegou aqui, todas as tentativas falharam
+      // Se chegou aqui, todas as tentativas falharam (não deve acontecer)
       return null;
     } catch (error: any) {
       console.error(
