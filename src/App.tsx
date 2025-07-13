@@ -699,6 +699,21 @@ function App() {
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
 
+        // 🔥 GRAVAÇÃO AUTOMÁTICA ADICIONAL NO FIRESTORE (backup)
+        try {
+          const backupId = await saveFormToFirestore("obras_backup", {
+            ...data,
+            originalFirestoreId: firestoreId,
+            type: "obra",
+            source: "addWork_auto_backup",
+          });
+          if (backupId) {
+            console.log(`✅ Backup da obra gravado: ${backupId}`);
+          }
+        } catch (backupError) {
+          console.warn("⚠️ Erro no backup automático:", backupError);
+        }
+
         // Sincronizar com sistema universal também
         try {
           await addObra(data);
@@ -4269,7 +4284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenç��es
+                      Futuras Manutenções
                     </button>
                   </div>
                 </div>
@@ -8298,7 +8313,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
-                        <li>📞 Técnicos respons��veis</li>
+                        <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -9270,7 +9285,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Concluída"
+                                      ? "Conclu��da"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
