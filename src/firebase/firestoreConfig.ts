@@ -1,41 +1,115 @@
-// Configuração Firestore temporariamente em modo local para evitar erros getImmediate
-// Esta versão evita completamente os problemas de inicialização
+// Configuração Firestore ativa
+import {
+  Firestore,
+  getFirestore,
+  connectFirestoreEmulator,
+} from "firebase/firestore";
+import { getFirebaseApp } from "./basicConfig";
 
-import { Firestore } from "firebase/firestore";
+// Estado atual: Firestore ativo
+const LOCAL_MODE = false;
 
-// Estado atual: sempre em modo local para evitar erros
-const LOCAL_MODE = true;
-
-// Variável para armazenar a instância do Firestore (sempre null em modo local)
+// Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
-// Função principal para obter Firestore (sempre retorna null em modo local)
+// Inicializar Firestore automaticamente
+if (!LOCAL_MODE) {
+  try {
+    const app = getFirebaseApp();
+    if (app) {
+      firestoreInstance = getFirestore(app);
+      console.log("✅ Firestore inicializado com sucesso");
+    } else {
+      console.warn("⚠️ Firebase App não disponível para inicializar Firestore");
+    }
+  } catch (error: any) {
+    console.error("❌ Erro ao inicializar Firestore:", error.message);
+  }
+}
+
+// Função principal para obter Firestore
 export function getFirebaseFirestore(): Firestore | null {
   if (LOCAL_MODE) {
     console.log("📱 Firestore em modo local - dados guardados no localStorage");
     return null;
   }
+
+  // Tentar inicializar se ainda não foi feito
+  if (!firestoreInstance) {
+    try {
+      const app = getFirebaseApp();
+      if (app) {
+        firestoreInstance = getFirestore(app);
+        console.log("✅ Firestore inicializado tardiamente");
+      }
+    } catch (error: any) {
+      console.error(
+        "❌ Erro na inicialização tardia do Firestore:",
+        error.message,
+      );
+    }
+  }
+
   return firestoreInstance;
 }
 
-// Função assíncrona para obter Firestore (sempre retorna null em modo local)
+// Função assíncrona para obter Firestore
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
   if (LOCAL_MODE) {
     console.log("📱 Firestore em modo local - dados guardados no localStorage");
     return null;
   }
+
+  // Tentar inicializar se ainda não foi feito
+  if (!firestoreInstance) {
+    try {
+      const app = getFirebaseApp();
+      if (app) {
+        firestoreInstance = getFirestore(app);
+        console.log("✅ Firestore inicializado assincronamente");
+      }
+    } catch (error: any) {
+      console.error(
+        "❌ Erro na inicialização assíncrona do Firestore:",
+        error.message,
+      );
+    }
+  }
+
   return firestoreInstance;
 }
 
-// Função para verificar se Firestore está pronto (sempre false em modo local)
+// Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  return false;
+  if (LOCAL_MODE) return false;
+  return firestoreInstance !== null;
 }
 
-// Função de teste simples para Firestore (sempre retorna false em modo local)
+// Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  console.log("📱 Firestore teste: modo local ativo");
-  return false;
+  if (LOCAL_MODE) {
+    console.log("📱 Firestore teste: modo local ativo");
+    return false;
+  }
+
+  try {
+    const db = getFirebaseFirestore();
+    if (!db) {
+      console.error("❌ Firestore não disponível para teste");
+      return false;
+    }
+
+    // Teste simples de conectividade
+    const { doc, getDoc } = require("firebase/firestore");
+    const testDoc = doc(db, "test", "connection");
+    await getDoc(testDoc);
+
+    console.log("✅ Teste Firestore: conectividade OK");
+    return true;
+  } catch (error: any) {
+    console.error("❌ Teste Firestore falhou:", error.message);
+    return false;
+  }
 }
 
 // Função para forçar inicialização (não faz nada em modo local)
