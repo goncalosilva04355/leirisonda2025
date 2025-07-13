@@ -20,6 +20,7 @@ interface FirebaseStatusDisplayProps {
 
 export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
   compact = false,
+  expandable = false,
 }) => {
   const [firebaseReady, setFirebaseReady] = useState(false);
   const [firestoreReady, setFirestoreReady] = useState(false);
