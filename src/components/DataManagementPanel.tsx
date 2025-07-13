@@ -80,6 +80,32 @@ export function DataManagementPanel() {
     };
 
     try {
+      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
+      try {
+        const firestoreDataService = await import(
+          "../services/firestoreDataService"
+        );
+        const saveId = await firestoreDataService.saveFormToFirestore(
+          "utilizadores",
+          {
+            ...userData,
+            type: "utilizador",
+            source: "DataManagementPanel_addUser",
+            userAgent: navigator.userAgent,
+          },
+        );
+        if (saveId) {
+          console.log(
+            `✅ Utilizador gravado automaticamente no Firestore: ${saveId}`,
+          );
+        }
+      } catch (firestoreError) {
+        console.warn(
+          "⚠️ Erro na gravação automática Firestore:",
+          firestoreError,
+        );
+      }
+
       await addUser(userData);
       setNewUserData({ name: "", email: "", role: "technician" });
 
