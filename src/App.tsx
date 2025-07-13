@@ -1296,7 +1296,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑️ Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicialização:", error);
+        console.error("�� Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -1315,7 +1315,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
-        const firestoreResult = await testFirestore();
+        // const firestoreResult = await testFirestore(); // Comentado temporariamente
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -4682,7 +4682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: Jo��o Silva"
+                            placeholder="Ex: João Silva"
                             required
                           />
                         </div>
@@ -7675,7 +7675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "����� Ativo"
+                                        ? "���� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7722,7 +7722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configuraç���es protegidas por palavra-passe para
+                              Configuraç��es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -7818,7 +7818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta aç��o eliminará permanentemente:
+                                        Esta ação eliminará permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
