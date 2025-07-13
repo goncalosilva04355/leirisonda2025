@@ -9,16 +9,13 @@ const firebaseConfig = getFirebaseConfig();
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
 
-// Função simples para inicializar Firebase
+// Função determinística para inicializar Firebase sempre
 function initializeFirebaseBasic(): FirebaseApp | null {
   try {
     // Verificar se estamos em modo privado
     if (isPrivateBrowsing()) {
       console.warn(
-        "🔒 Modo privado detectado - Firebase pode ter funcionalidades limitadas",
-      );
-      console.log(
-        "💡 Sistema funcionará em modo local com funcionalidades reduzidas",
+        "🔒 Modo privado detectado - tentando inicializar Firebase mesmo assim",
       );
     }
 
@@ -33,14 +30,21 @@ function initializeFirebaseBasic(): FirebaseApp | null {
       console.log("✅ Firebase: App inicializada com sucesso");
     }
 
+    // Verificar se a inicialização foi bem-sucedida
+    if (!firebaseApp) {
+      throw new Error("Firebase app não foi inicializada");
+    }
+
+    console.log("🔥 Firebase está sempre ativo - sincronização garantida");
     return firebaseApp;
   } catch (error) {
-    console.warn(
-      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+    console.error(
+      "❌ Firebase: ERRO CRÍTICO na inicialização. Sincronização não disponível:",
+      error,
     );
-    console.log("💡 Sistema continua funcional com autenticação local");
     firebaseApp = null;
-    return null;
+    // Não retornar null silenciosamente - mostrar erro claro
+    throw new Error(`Firebase não conseguiu inicializar: ${error}`);
   }
 }
 
