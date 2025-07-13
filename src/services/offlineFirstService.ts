@@ -143,10 +143,18 @@ class OfflineFirstService {
   // Método para tentar salvar no Firebase (não crítico)
   private async tryFirebaseSave(collection: string, data: any) {
     try {
-      // Implementação Firebase opcional
-      console.log(
-        `📱 Firebase sync para ${collection} será implementado depois`,
+      const { getFirebaseFirestore } = await import("../firebase/leiriaConfig");
+      const { collection: fbCollection, addDoc } = await import(
+        "firebase/firestore"
       );
+
+      const db = getFirebaseFirestore();
+      if (db) {
+        await addDoc(fbCollection(db, collection), data);
+        console.log(`✅ ${collection} salvo no Firebase Leiria`);
+      } else {
+        console.log(`📱 Firebase Leiria não disponível para ${collection}`);
+      }
     } catch (error) {
       console.warn(`⚠️ Firebase sync falhou para ${collection}:`, error);
       // Não é crítico - dados já estão no localStorage
