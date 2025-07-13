@@ -32,9 +32,24 @@ interface AutoSyncIndicatorProps {
 export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
   className,
 }) => {
+  // Safe state initialization
   const [isAutoSyncActive, setIsAutoSyncActive] = useState(false);
-  const [isFirestoreReady, setIsFirestoreReady] = useState(false);
+  const [isFirestoreReadyState, setIsFirestoreReadyState] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
+  const [hasError, setHasError] = useState(false);
+
+  // Error boundary for the component
+  if (hasError) {
+    return (
+      <div className={`flex items-center space-x-2 text-gray-500 ${className}`}>
+        <ZapOff className="h-4 w-4" />
+        <div className="text-sm">
+          <div className="font-medium">Sync Status</div>
+          <div className="text-xs opacity-75">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const checkStatus = () => {
