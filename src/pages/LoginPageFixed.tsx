@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings, AlertTriangle } from "lucide-react";
+import { Settings, AlertTriangle, Database } from "lucide-react";
 import { QuickMobileFix } from "../components/QuickMobileFix";
+import {
+  saveLoginAttempt,
+  testFirestoreConnection,
+} from "../services/firestoreDataService";
 
 interface LoginPageProps {
   onLogin: (
