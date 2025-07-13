@@ -683,8 +683,8 @@ function App() {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // Usar o novo FirestoreService
-      const firestoreId = await firestoreService.createObra(data);
+      // Usar o novo FirestoreService (modo desenvolvimento)
+      const firestoreId = await devFirestoreService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -1377,7 +1377,7 @@ function App() {
 
         try {
           await firestoreService.syncAll();
-          console.log("€ Sincronizaç��o inicial completa!");
+          console.log("€ Sincronização inicial completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização inicial:", error);
         }
@@ -6184,7 +6184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações e Características Especiais
+                        Observaç��es e Características Especiais
                       </label>
                       <textarea
                         rows={3}
@@ -7622,7 +7622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    ���
+                                    ��
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -7936,7 +7936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Settings className="h-5 w-5 text-gray-600" />
                                     <div>
                                       <p className="font-medium text-gray-800">
-                                        Configurações Avan��adas
+                                        Configurações Avançadas
                                       </p>
                                       <p className="text-sm text-gray-600">
                                         Firebase, APIs e desenvolvimento
@@ -9374,7 +9374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <Edit2 className="h-5 w-5" />
                               </button>
                             )}
-                            {/* Botão Iniciar Obra (s�� se pendente) */}
+                            {/* Botão Iniciar Obra (só se pendente) */}
                             {(work.status === "pending" ||
                               work.status === "pendente") &&
                               hasPermission("obras", "edit") && (
