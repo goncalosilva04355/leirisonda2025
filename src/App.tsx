@@ -226,7 +226,7 @@ function App() {
             console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
+              "⚠�� Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -772,7 +772,7 @@ function App() {
     try {
       console.log("��� addClient iniciado com Firestore ativo");
 
-      const firestoreId = await devFirestoreService.createClient(data);
+      const firestoreId = await offlineFirstService.createClient(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -8257,7 +8257,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>��� Histórico de manutenções</li>
+                        <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -9411,7 +9411,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       );
                                     }
 
-                                    // Atualizar via dataSync se disponível
+                                    // Atualizar via dataSync se dispon��vel
                                     if (dataSync && dataSync.updateWork) {
                                       dataSync.updateWork(work.id, {
                                         status: "in_progress",
@@ -9802,7 +9802,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observações */}
+                    {/* Observa��ões */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10966,7 +10966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon�����alo Fonseca",
+  //       name: "Gon����alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
