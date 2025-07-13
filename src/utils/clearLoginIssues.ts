@@ -36,16 +36,13 @@ export function clearLoginIssues(): void {
     }
 
     console.log("✅ Problemas de login limpos - pode fazer login normalmente");
-
-    // Reload page to reset all auth state
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
   } catch (error) {
     console.error("❌ Erro ao limpar problemas de login:", error);
   }
 }
 
-// Auto-run to clear issues on import
-console.log("🔧 Auto-limpeza de problemas de login ativada");
-clearLoginIssues();
+// Manual function - only run when explicitly called
+export function runLoginCleanup(): void {
+  console.log("🔧 Executando limpeza manual de problemas de login");
+  clearLoginIssues();
+}
