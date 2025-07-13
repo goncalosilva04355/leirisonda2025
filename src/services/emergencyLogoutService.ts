@@ -19,9 +19,12 @@ export interface EmergencyLogoutResult {
 }
 
 class EmergencyLogoutService {
-  private readonly SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";
-  private readonly SUPER_ADMIN_NAME = "Gonçalo Fonseca";
-  private readonly SUPER_ADMIN_PASSWORD = "19867gsf";
+  private readonly SUPER_ADMIN_EMAIL =
+    process.env.VITE_ADMIN_EMAIL || "admin@example.com";
+  private readonly SUPER_ADMIN_NAME =
+    process.env.VITE_ADMIN_NAME || "Administrator";
+  private readonly SUPER_ADMIN_PASSWORD =
+    process.env.VITE_ADMIN_PASSWORD || "defaultpass";
 
   /**
    * Force logout ALL users and revoke ALL sessions
