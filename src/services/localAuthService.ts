@@ -44,7 +44,7 @@ class LocalAuthService {
     try {
       localStorage.setItem("currentUser", JSON.stringify(user));
       localStorage.setItem("isAuthenticated", "true");
-      console.log("✅ User saved to localStorage");
+      console.log("�� User saved to localStorage");
     } catch (error) {
       console.warn("⚠️ Error saving user to localStorage:", error);
     }
@@ -113,7 +113,7 @@ class LocalAuthService {
       if (!isPasswordValid) {
         return {
           success: false,
-          error: `Password incorreta. Use "123" ou consulte o administrador.`,
+          error: `Password incorreta. Use "123456" ou "19867gsf" para super admin.`,
         };
       }
 
