@@ -81,7 +81,7 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
+// import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 
 // SECURITY: RegisterForm for super admin only
@@ -1294,9 +1294,9 @@ function App() {
         safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
-        console.log("🗑️ Mock and test data cleared");
+        console.log("🗑��� Mock and test data cleared");
       } catch (error) {
-        console.error("�� Erro na inicialização:", error);
+        console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -2112,7 +2112,7 @@ function App() {
       // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
     } else {
-      // Se já estiver no dashboard, tenta usar o history do browser
+      // Se j�� estiver no dashboard, tenta usar o history do browser
       if (window.history.length > 1) {
         window.history.back();
       }
@@ -11956,7 +11956,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">📞{selectedWork.budget}</p>
+                        <p className="text-gray-900">
+                          ����{selectedWork.budget}
+                        </p>
                       </div>
                     )}
 
@@ -12135,7 +12137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ���� {selectedPool.location}
+                            ������ {selectedPool.location}
                           </button>
                         </div>
                       </div>
