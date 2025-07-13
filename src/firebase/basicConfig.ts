@@ -80,10 +80,16 @@ export function isFirebaseReady(): boolean {
   return firebaseApp !== null;
 }
 
-// Função para obter db seguro (sempre retorna null em modo local)
+// Função para obter db seguro
 export function getDB() {
-  console.log("💾 Banco de dados: modo local ativo");
-  return null;
+  if (LOCAL_MODE) {
+    console.log("💾 Banco de dados: modo local ativo");
+    return null;
+  }
+
+  // Importar Firestore dinamicamente para evitar dependência circular
+  const { getFirebaseFirestore } = require("./firestoreConfig");
+  return getFirebaseFirestore();
 }
 
 // Função para verificar se Firestore está disponível (sempre retorna fallback)
@@ -98,10 +104,20 @@ export function withFirestore<T>(
 // Export db como instância (sempre null)
 export const db = null;
 
-// Função para obter auth seguro (sempre retorna null em modo local)
+// Função para obter auth seguro
 export function getAuth() {
-  console.log("🔐 Auth: modo local ativo");
-  return null;
+  if (LOCAL_MODE) {
+    console.log("🔐 Auth: modo local ativo");
+    return null;
+  }
+
+  try {
+    const { getAuth: getFirebaseAuth } = require("firebase/auth");
+    return getFirebaseAuth(firebaseApp || undefined);
+  } catch (error: any) {
+    console.error("🔐 Erro ao obter Auth:", error.message);
+    return null;
+  }
 }
 
 // Export auth como função (sempre null)
@@ -116,14 +132,35 @@ import {
 
 // Status Firebase sempre em modo local
 
-// Funções de compatibilidade (sempre retornam valores seguros)
-export const getDBAsync = () => Promise.resolve(null);
-export const getAuthService = () => Promise.resolve(null);
-export const attemptFirestoreInit = () => Promise.resolve(null);
-export const waitForFirebaseInit = () => Promise.resolve(true);
-export const isFirebaseAuthAvailable = () => false;
-export const isFirebaseFirestoreAvailable = () => false;
-export const testFirebaseFirestore = () => Promise.resolve(false);
+// Funções de compatibilidade
+export const getDBAsync = async () => {
+  if (LOCAL_MODE) return null;
+  const { getFirebaseFirestoreAsync } = require("./firestoreConfig");
+  return await getFirebaseFirestoreAsync();
+};
+
+export const getAuthService = async () => {
+  if (LOCAL_MODE) return null;
+  return getAuth();
+};
+
+export const attemptFirestoreInit = async () => {
+  if (LOCAL_MODE) return null;
+  const { getFirebaseFirestoreAsync } = require("./firestoreConfig");
+  return await getFirebaseFirestoreAsync();
+};
+
+export const waitForFirebaseInit = () =>
+  Promise.resolve(!LOCAL_MODE && firebaseApp !== null);
+export const isFirebaseAuthAvailable = () =>
+  !LOCAL_MODE && firebaseApp !== null;
+export const isFirebaseFirestoreAvailable = () =>
+  !LOCAL_MODE && firebaseApp !== null;
+export const testFirebaseFirestore = async () => {
+  if (LOCAL_MODE) return false;
+  const { testFirestore } = require("./firestoreConfig");
+  return await testFirestore();
+};
 
 // Exportações principais
 export { getFirebaseFirestore, isFirestoreReady };
