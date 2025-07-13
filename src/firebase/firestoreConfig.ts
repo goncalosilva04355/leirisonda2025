@@ -5,46 +5,57 @@ import { getFirebaseApp } from "./basicConfig";
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
-// Função determinística para inicializar Firestore sempre
+// Função robusta para inicializar Firestore com verificações de estado
 function initializeFirestore(): Firestore | null {
   try {
+    // Verificar se já temos uma instância válida
+    if (firestoreInstance) {
+      console.log("✅ Firestore: Instância existente válida");
+      return firestoreInstance;
+    }
+
     const app = getFirebaseApp();
 
     if (!app) {
-      throw new Error("Firebase App não está disponível para Firestore");
+      console.warn("⚠️ Firebase App não disponível ainda para Firestore");
+      return null;
     }
 
-    if (!firestoreInstance) {
+    // Verificar se a app não foi deletada
+    try {
+      // Teste simples para verificar se a app é válida
+      const projectId = app.options.projectId;
+      if (!projectId) {
+        console.warn("⚠️ Firebase App inválida (sem projectId)");
+        return null;
+      }
+    } catch (appError) {
+      console.warn("⚠️ Firebase App não é válida:", appError);
+      return null;
+    }
+
+    // Inicializar Firestore apenas se a app for válida
+    try {
       firestoreInstance = getFirestore(app);
       console.log("✅ Firestore: Inicializado com sucesso");
-    }
+      console.log("🔥 Firestore sempre ativo - dados sincronizados");
+      return firestoreInstance;
+    } catch (firestoreError: any) {
+      console.error(
+        "❌ Firestore: Erro específico na inicialização:",
+        firestoreError,
+      );
 
-    console.log("🔥 Firestore está sempre ativo - dados sempre sincronizados");
-    return firestoreInstance;
-  } catch (error) {
-    console.error(
-      "❌ Firestore: ERRO CRÍTICO na inicialização. Base de dados não disponível:",
-      error,
-    );
-    // Tentar uma segunda vez ap��s um delay
-    setTimeout(() => {
-      console.log("🔄 Tentando reinicializar Firestore...");
-      try {
-        const app = getFirebaseApp();
-        if (app) {
-          firestoreInstance = getFirestore(app);
-          console.log(
-            "✅ Firestore: Reinicializado com sucesso na segunda tentativa",
-          );
-        }
-      } catch (retryError) {
-        console.error(
-          "❌ Firestore: Falhou também na segunda tentativa:",
-          retryError,
-        );
+      // Se for erro de app deletada, limpar referência
+      if (firestoreError.code === "app/app-deleted") {
+        console.log("🧹 Firestore: App foi deletada, limpando referência");
+        firestoreInstance = null;
       }
-    }, 2000);
 
+      return null;
+    }
+  } catch (error: any) {
+    console.error("❌ Firestore: Erro geral na inicialização:", error);
     return null;
   }
 }
