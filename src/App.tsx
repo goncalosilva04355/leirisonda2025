@@ -364,7 +364,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "����� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -485,7 +485,7 @@ function App() {
       // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
       try {
         const firestoreDataService = await import(
-          "../services/firestoreDataService"
+          "./services/firestoreDataService"
         );
         const saveId = await firestoreDataService.saveFormToFirestore(
           "piscinas",
@@ -721,7 +721,7 @@ function App() {
       // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
       try {
         const firestoreDataService = await import(
-          "../services/firestoreDataService"
+          "./services/firestoreDataService"
         );
         const saveId = await firestoreDataService.saveFormToFirestore("obras", {
           ...data,
@@ -801,7 +801,7 @@ function App() {
       // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
       try {
         const firestoreDataService = await import(
-          "../services/firestoreDataService"
+          "./services/firestoreDataService"
         );
         const saveId = await firestoreDataService.saveFormToFirestore(
           "manutencoes",
