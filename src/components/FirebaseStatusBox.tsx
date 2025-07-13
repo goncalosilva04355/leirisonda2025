@@ -234,11 +234,12 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
       case "connection":
         return value === "connected" ? "Conectado" : "Desconectado";
       case "config":
-        return value === "valid"
-          ? "Válida"
-          : value === "invalid"
-            ? "Inválida"
-            : "Ausente";
+        if (value === "valid") {
+          // Verificar se é config do localStorage ou hardcoded
+          const storedConfig = localStorage.getItem("firebase-config");
+          return storedConfig ? "Válida (Local)" : "Válida (Padrão)";
+        }
+        return value === "invalid" ? "Inválida" : "Ausente";
       case "auth":
         return value === "active"
           ? "Ativo"
