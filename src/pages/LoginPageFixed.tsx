@@ -38,6 +38,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
       document.querySelectorAll('iframe[src*="firebaseapp.com"]').length > 1;
     return isMobile && (hasQuotaIssues || hasEmergencyShutdown || hasConflicts);
   });
+  const [firestoreStatus, setFirestoreStatus] = useState<
+    "checking" | "ready" | "error"
+  >("checking");
+  const [lastSaveId, setLastSaveId] = useState<string | null>(null);
 
   // Load saved credentials from sessionStorage for "remember me" functionality
   useEffect(() => {
