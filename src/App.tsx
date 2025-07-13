@@ -96,7 +96,7 @@ import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { hybridAuthService as authService } from "./services/hybridAuthService";
+import { simpleAuthService as authService } from "./services/simpleAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -392,7 +392,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR��TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -788,7 +788,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("€️ Erro na sincronização universal:", syncError);
+          console.warn("€�� Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
@@ -1946,7 +1946,7 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("€ Auth result:", result);
+      console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
         console.log("✅ Login successful for:", result.user.email);
