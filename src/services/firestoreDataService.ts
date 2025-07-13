@@ -1,187 +1,355 @@
-// Passo 3: Serviço de dados com Firestore
+// Serviço para gravação de dados no Firebase Firestore
 import {
   collection,
   addDoc,
-  getDocs,
   doc,
+  setDoc,
   updateDoc,
+  getDoc,
+  getDocs,
   deleteDoc,
-  onSnapshot,
-  query,
-  orderBy,
-  where,
   Timestamp,
+  serverTimestamp,
 } from "firebase/firestore";
-import {
-  getFirebaseFirestore,
-  isFirebaseFirestoreAvailable,
-} from "../firebase/basicConfig";
+import { getFirebaseFirestore } from "../firebase/firestoreConfig";
 
-// Interface para dados básicos
-interface BaseData {
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+// Interface para os dados do formulário de login
+interface LoginFormData {
+  email: string;
+  password?: string; // Opcional por segurança - não gravar senhas
+  rememberMe?: boolean;
+  timestamp?: Timestamp;
   userId?: string;
 }
 
-class FirestoreDataService {
+// Interface genérica para dados do formulário
+interface FormData {
+  [key: string]: any;
+  timestamp?: Timestamp;
+}
+
+// Classe principal do serviço
+export class FirestoreDataService {
+  private static instance: FirestoreDataService;
   private db: any = null;
-  private isAvailable = false;
 
-  constructor() {
-    // Verificar disponibilidade do Firestore
-    setTimeout(() => {
+  private constructor() {
+    this.initializeDb();
+  }
+
+  // Singleton para garantir uma única instância
+  public static getInstance(): FirestoreDataService {
+    if (!FirestoreDataService.instance) {
+      FirestoreDataService.instance = new FirestoreDataService();
+    }
+    return FirestoreDataService.instance;
+  }
+
+  // Inicializar conexão com Firestore
+  private initializeDb() {
+    try {
       this.db = getFirebaseFirestore();
-      this.isAvailable = isFirebaseFirestoreAvailable();
-
-      if (this.isAvailable) {
-        console.log("🔥 FirestoreDataService: Ativo");
+      if (this.db) {
+        console.log("✅ FirestoreDataService: Conexão estabelecida");
       } else {
-        console.log("📱 FirestoreDataService: Modo local ativo");
+        console.warn("⚠️ FirestoreDataService: Firestore não disponível");
       }
-    }, 1000);
+    } catch (error) {
+      console.error("❌ FirestoreDataService: Erro na inicialização:", error);
+    }
   }
 
   // Verificar se Firestore está disponível
-  private checkAvailable(): boolean {
-    if (!this.isAvailable || !this.db) {
-      console.log("📱 Firestore não disponível - operação em modo local");
-      return false;
-    }
-    return true;
+  private isAvailable(): boolean {
+    return this.db !== null;
   }
 
-  // Adicionar documento
-  async addDocument(
-    collectionName: string,
-    data: BaseData,
-  ): Promise<string | null> {
-    if (!this.checkAvailable()) return null;
+  // Gravar dados de login (sem senha por segurança)
+  async saveLoginData(formData: LoginFormData): Promise<string | null> {
+    if (!this.isAvailable()) {
+      console.warn("⚠️ Firestore não disponível - dados não gravados");
+      return null;
+    }
 
     try {
-      const docData = {
-        ...data,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        timestamp: Timestamp.now(),
+      // Preparar dados seguros (sem senha)
+      const safeData = {
+        email: formData.email,
+        rememberMe: formData.rememberMe || false,
+        timestamp: serverTimestamp(),
+        loginAttempt: true,
+        userAgent: navigator.userAgent,
+        ip: "unknown", // Pode ser obtido via API externa se necessário
       };
 
-      const docRef = await addDoc(collection(this.db, collectionName), docData);
-      console.log(`✅ Documento adicionado ao Firestore: ${docRef.id}`);
+      // Gravar na coleção "login_attempts"
+      const docRef = await addDoc(
+        collection(this.db, "login_attempts"),
+        safeData,
+      );
+
+      console.log("✅ Dados de login gravados com ID:", docRef.id);
       return docRef.id;
     } catch (error) {
-      console.error(`❌ Erro ao adicionar documento:`, error);
+      console.error("❌ Erro ao gravar dados de login:", error);
       return null;
     }
   }
 
-  // Obter todos os documentos
-  async getDocuments(collectionName: string): Promise<any[]> {
-    if (!this.checkAvailable()) return [];
+  // Gravar dados genéricos de formulário
+  async saveFormData(
+    collectionName: string,
+    formData: FormData,
+    documentId?: string,
+  ): Promise<string | null> {
+    if (!this.isAvailable()) {
+      console.warn("⚠️ Firestore não disponível - dados não gravados");
+      return null;
+    }
 
     try {
-      const q = query(
-        collection(this.db, collectionName),
-        orderBy("timestamp", "desc"),
-      );
+      // Adicionar timestamp automático
+      const dataWithTimestamp = {
+        ...formData,
+        timestamp: serverTimestamp(),
+        createdAt: serverTimestamp(),
+      };
 
-      const querySnapshot = await getDocs(q);
-      const documents = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      let docRef: any;
 
-      console.log(`✅ ${documents.length} documentos obtidos do Firestore`);
-      return documents;
+      if (documentId) {
+        // Usar ID específico
+        await setDoc(
+          doc(this.db, collectionName, documentId),
+          dataWithTimestamp,
+        );
+        docRef = { id: documentId };
+        console.log(
+          `✅ Dados gravados na coleção "${collectionName}" com ID: ${documentId}`,
+        );
+      } else {
+        // Gerar ID automático
+        docRef = await addDoc(
+          collection(this.db, collectionName),
+          dataWithTimestamp,
+        );
+        console.log(
+          `✅ Dados gravados na coleção "${collectionName}" com ID: ${docRef.id}`,
+        );
+      }
+
+      return docRef.id;
     } catch (error) {
-      console.error(`❌ Erro ao obter documentos:`, error);
-      return [];
+      console.error(
+        `❌ Erro ao gravar dados na coleção "${collectionName}":`,
+        error,
+      );
+      return null;
     }
   }
 
-  // Atualizar documento
-  async updateDocument(
+  // Atualizar documento existente
+  async updateFormData(
     collectionName: string,
-    docId: string,
-    data: Partial<BaseData>,
+    documentId: string,
+    updates: FormData,
   ): Promise<boolean> {
-    if (!this.checkAvailable()) return false;
+    if (!this.isAvailable()) {
+      console.warn("⚠️ Firestore não disponível - dados não atualizados");
+      return false;
+    }
 
     try {
-      const docRef = doc(this.db, collectionName, docId);
-      await updateDoc(docRef, {
-        ...data,
-        updatedAt: new Date().toISOString(),
-        timestamp: Timestamp.now(),
-      });
+      const updateData = {
+        ...updates,
+        updatedAt: serverTimestamp(),
+      };
 
-      console.log(`✅ Documento atualizado no Firestore: ${docId}`);
+      await updateDoc(doc(this.db, collectionName, documentId), updateData);
+      console.log(
+        `✅ Documento ${documentId} atualizado na coleção "${collectionName}"`,
+      );
       return true;
     } catch (error) {
-      console.error(`❌ Erro ao atualizar documento:`, error);
+      console.error(
+        `❌ Erro ao atualizar documento na coleção "${collectionName}":`,
+        error,
+      );
       return false;
+    }
+  }
+
+  // Ler documento específico
+  async getDocument(
+    collectionName: string,
+    documentId: string,
+  ): Promise<any | null> {
+    if (!this.isAvailable()) {
+      console.warn(
+        "⚠️ Firestore não disponível - não foi possível ler documento",
+      );
+      return null;
+    }
+
+    try {
+      const docSnap = await getDoc(doc(this.db, collectionName, documentId));
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        console.log(
+          `✅ Documento ${documentId} lido da coleção "${collectionName}"`,
+        );
+        return { id: docSnap.id, ...data };
+      } else {
+        console.log(
+          `📭 Documento ${documentId} não encontrado na coleção "${collectionName}"`,
+        );
+        return null;
+      }
+    } catch (error) {
+      console.error(
+        `❌ Erro ao ler documento da coleção "${collectionName}":`,
+        error,
+      );
+      return null;
+    }
+  }
+
+  // Ler todos os documentos de uma coleção
+  async getCollection(collectionName: string): Promise<any[]> {
+    if (!this.isAvailable()) {
+      console.warn(
+        "⚠️ Firestore não disponível - não foi possível ler coleção",
+      );
+      return [];
+    }
+
+    try {
+      const querySnapshot = await getDocs(collection(this.db, collectionName));
+      const documents: any[] = [];
+
+      querySnapshot.forEach((doc) => {
+        documents.push({ id: doc.id, ...doc.data() });
+      });
+
+      console.log(
+        `✅ ${documents.length} documentos lidos da coleção "${collectionName}"`,
+      );
+      return documents;
+    } catch (error) {
+      console.error(`❌ Erro ao ler coleção "${collectionName}":`, error);
+      return [];
     }
   }
 
   // Eliminar documento
   async deleteDocument(
     collectionName: string,
-    docId: string,
+    documentId: string,
   ): Promise<boolean> {
-    if (!this.checkAvailable()) return false;
+    if (!this.isAvailable()) {
+      console.warn("⚠️ Firestore não disponível - documento não eliminado");
+      return false;
+    }
 
     try {
-      await deleteDoc(doc(this.db, collectionName, docId));
-      console.log(`✅ Documento eliminado do Firestore: ${docId}`);
+      await deleteDoc(doc(this.db, collectionName, documentId));
+      console.log(
+        `✅ Documento ${documentId} eliminado da coleção "${collectionName}"`,
+      );
       return true;
     } catch (error) {
-      console.error(`❌ Erro ao eliminar documento:`, error);
+      console.error(
+        `❌ Erro ao eliminar documento da coleção "${collectionName}":`,
+        error,
+      );
       return false;
     }
   }
 
-  // Listener em tempo real
-  onDocumentsChange(
-    collectionName: string,
-    callback: (docs: any[]) => void,
-  ): () => void {
-    if (!this.checkAvailable()) {
-      // Retornar função vazia se Firestore não disponível
-      return () => {};
+  // Método de teste para verificar conectividade
+  async testConnection(): Promise<boolean> {
+    if (!this.isAvailable()) {
+      console.warn("⚠️ Firestore não disponível para teste");
+      return false;
     }
 
     try {
-      const q = query(
-        collection(this.db, collectionName),
-        orderBy("timestamp", "desc"),
+      // Tentar gravar e ler um documento de teste
+      const testData = {
+        test: true,
+        timestamp: serverTimestamp(),
+        message: "Teste de conectividade Firestore",
+      };
+
+      const docRef = await addDoc(
+        collection(this.db, "test_connection"),
+        testData,
       );
+      console.log("✅ Teste de escrita bem-sucedido, ID:", docRef.id);
 
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const documents = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+      // Ler o documento criado
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log("✅ Teste de leitura bem-sucedido");
 
-        console.log(
-          `🔄 ${documents.length} documentos atualizados em tempo real`,
-        );
-        callback(documents);
-      });
+        // Limpar documento de teste
+        await deleteDoc(docRef);
+        console.log("✅ Documento de teste eliminado");
 
-      return unsubscribe;
+        return true;
+      }
+
+      return false;
     } catch (error) {
-      console.error(`❌ Erro no listener:`, error);
-      return () => {};
+      console.error("❌ Teste de conectividade falhou:", error);
+      return false;
     }
-  }
-
-  // Verificar se está disponível
-  isFirestoreAvailable(): boolean {
-    return this.isAvailable && this.db !== null;
   }
 }
 
-// Exportar instância singleton
-export const firestoreDataService = new FirestoreDataService();
-export default firestoreDataService;
+// Export da instância singleton
+export const firestoreService = FirestoreDataService.getInstance();
+
+// Funções auxiliares para facilitar o uso
+export const saveLoginAttempt = (formData: LoginFormData) => {
+  return firestoreService.saveLoginData(formData);
+};
+
+export const saveFormToFirestore = (
+  collectionName: string,
+  formData: FormData,
+  documentId?: string,
+) => {
+  return firestoreService.saveFormData(collectionName, formData, documentId);
+};
+
+export const updateFirestoreDocument = (
+  collectionName: string,
+  documentId: string,
+  updates: FormData,
+) => {
+  return firestoreService.updateFormData(collectionName, documentId, updates);
+};
+
+export const getFirestoreDocument = (
+  collectionName: string,
+  documentId: string,
+) => {
+  return firestoreService.getDocument(collectionName, documentId);
+};
+
+export const getFirestoreCollection = (collectionName: string) => {
+  return firestoreService.getCollection(collectionName);
+};
+
+export const deleteFirestoreDocument = (
+  collectionName: string,
+  documentId: string,
+) => {
+  return firestoreService.deleteDocument(collectionName, documentId);
+};
+
+export const testFirestoreConnection = () => {
+  return firestoreService.testConnection();
+};
