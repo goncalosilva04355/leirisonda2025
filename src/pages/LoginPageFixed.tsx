@@ -5,6 +5,7 @@ import {
   testFirestoreConnection,
 } from "../services/firestoreDataService";
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
+import { LoginHints } from "../components/LoginHints";
 
 interface LoginPageProps {
   onLogin: (
@@ -293,6 +294,9 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               )}
             </div>
           )}
+
+          {/* Login Hints */}
+          <LoginHints />
 
           {/* Login Button */}
           <div className="space-y-2 pt-2">

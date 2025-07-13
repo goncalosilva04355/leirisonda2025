@@ -37,11 +37,14 @@ export async function initializeFirebaseComplete(): Promise<InitializationStatus
       const firebaseApp = await getFirebaseAppAsync();
 
       if (!firebaseApp) {
-        console.error("❌ Firebase App não conseguiu ser inicializada");
+        console.log(
+          "📱 Firebase App em modo local - aplicação funciona normalmente",
+        );
         initializationStatus = {
           firebase: false,
           firestore: false,
-          error: "Firebase App falhou na inicialização",
+          error: "Modo local ativo - dados guardados no localStorage",
+          localMode: true,
         };
         return initializationStatus;
       }

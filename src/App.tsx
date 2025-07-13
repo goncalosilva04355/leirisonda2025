@@ -96,7 +96,7 @@ import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { simpleAuthService as authService } from "./services/simpleAuthService";
+import { directAuthService as authService } from "./services/directAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -141,6 +141,13 @@ import "./utils/emergencyUserInit";
 import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
+
+// Teste de login
+import "./utils/testLogin";
+// Força atualização de utilizadores
+import "./utils/forceUserUpdate";
+// Teste direto de autenticação
+import "./utils/testDirectAuth";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1811,7 +1818,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPr��xima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -1936,7 +1943,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("���� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -2921,13 +2928,14 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              const result = await handleLoginWithRememberMe(
+              console.log("🔐 Using robust auth service for login...");
+              const result = await authService.login(
                 email.trim(),
                 password,
                 rememberMe,
               );
 
-              // Fallback para authService se necessário
+              // Auth service usado diretamente
               if (!result?.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
@@ -3098,7 +3106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Automática Ativa"
+                            ? "Sincronização Autom��tica Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -6176,7 +6184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G��s</option>
+                          <option value="gas">Aquecimento a G���s</option>
                         </select>
                       </div>
                     </div>
@@ -6314,7 +6322,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten��ão Programada",
+                                type: "Manuten����ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -7845,7 +7853,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠️ ATENÇÃO: Esta operação é
+                                        ⚠�� ATENÇÃO: Esta operação é
                                         irreversível!
                                       </p>
                                       <button
@@ -8137,7 +8145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest��o de Utilizadores
+                              Gest���o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8719,7 +8727,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  📞{" "}
+                                  ���{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
@@ -10267,7 +10275,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtração
+                          Sistema de Filtra��ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -10316,7 +10324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -10601,7 +10609,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // T��cnico
+                            .value; // T����cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
@@ -11955,7 +11963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.description && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Descrição
+                          Descri��ão
                         </label>
                         <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                           {selectedWork.description}
