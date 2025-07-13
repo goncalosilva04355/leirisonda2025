@@ -324,6 +324,33 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             </label>
           </div>
 
+          {/* Firestore Status Indicator */}
+          <div className="text-xs text-center">
+            {firestoreStatus === "checking" && (
+              <div className="text-blue-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3 animate-pulse" />
+                <span>Verificando Firestore...</span>
+              </div>
+            )}
+            {firestoreStatus === "ready" && (
+              <div className="text-green-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3" />
+                <span>✅ Firestore conectado</span>
+                {lastSaveId && (
+                  <span className="text-gray-500">
+                    | ID: {lastSaveId.slice(-6)}
+                  </span>
+                )}
+              </div>
+            )}
+            {firestoreStatus === "error" && (
+              <div className="text-yellow-600 flex items-center justify-center space-x-2">
+                <Database className="h-3 w-3" />
+                <span>⚠️ Firestore indisponível (modo local)</span>
+              </div>
+            )}
+          </div>
+
           {/* Error Message */}
           {loginError && (
             <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded border border-red-200">
