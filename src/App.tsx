@@ -852,7 +852,7 @@ function App() {
       // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
       try {
         const firestoreDataService = await import(
-          "../services/firestoreDataService"
+          "./services/firestoreDataService"
         );
         const saveId = await firestoreDataService.saveFormToFirestore(
           "clientes",
@@ -2256,7 +2256,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenç��es: ${futureMaintenance.length}
+- Futuras Manutenç����es: ${futureMaintenance.length}
 
 MANUTENÇ��ES REALIZADAS:
 ${maintenance
