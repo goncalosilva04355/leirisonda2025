@@ -765,7 +765,7 @@ function App() {
     try {
       console.log("��� addClient iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createCliente(data);
+      const firestoreId = await devFirestoreService.createClient(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -7822,7 +7822,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
                                         ⚠️ ATENÇÃO: Esta operação é
-                                        irreversível!
+                                        irrevers��vel!
                                       </p>
                                       <button
                                         onClick={handleDataCleanup}
@@ -7978,7 +7978,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica����ão ou conexão.
+                                    autentica�����ão ou conexão.
                                   </p>
                                 </div>
 
