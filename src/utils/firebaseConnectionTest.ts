@@ -59,31 +59,37 @@ export async function testFirebaseConnection(): Promise<{
       // Não retornar false aqui - continuar o teste para diagnóstico completo
     }
 
-    // 3. Testar leitura de dados
-    try {
-      const testCollection = collection(db, "connection-test");
-      const snapshot = await getDocs(testCollection);
-      results.push(`✅ Leitura Firestore OK (${snapshot.size} documentos)`);
-    } catch (readError: any) {
-      errors.push(`⚠️ Erro na leitura: ${readError.message}`);
-    }
-
-    // 4. Testar escrita de dados
-    try {
-      const testCollection = collection(db, "connection-test");
-      const docRef = await addDoc(testCollection, {
-        test: "Firebase connection test",
-        timestamp: serverTimestamp(),
-        userAgent: navigator.userAgent,
-        origin: window.location.origin,
-      });
-      results.push(`✅ Escrita Firestore OK (ID: ${docRef.id})`);
-    } catch (writeError: any) {
-      errors.push(`⚠️ Erro na escrita: ${writeError.message}`);
-      // Verificar se é erro de permissões
-      if (writeError.code === "permission-denied") {
-        errors.push("🔒 Verifique as regras de segurança do Firestore");
+    // 3. Testar leitura de dados (apenas se Firestore disponível)
+    if (db) {
+      try {
+        const testCollection = collection(db, "connection-test");
+        const snapshot = await getDocs(testCollection);
+        results.push(`✅ Leitura Firestore OK (${snapshot.size} documentos)`);
+      } catch (readError: any) {
+        errors.push(`⚠️ Erro na leitura: ${readError.message}`);
       }
+
+      // 4. Testar escrita de dados
+      try {
+        const testCollection = collection(db, "connection-test");
+        const docRef = await addDoc(testCollection, {
+          test: "Firebase connection test",
+          timestamp: serverTimestamp(),
+          userAgent: navigator.userAgent,
+          origin: window.location.origin,
+        });
+        results.push(`✅ Escrita Firestore OK (ID: ${docRef.id})`);
+      } catch (writeError: any) {
+        errors.push(`⚠️ Erro na escrita: ${writeError.message}`);
+        // Verificar se é erro de permissões
+        if (writeError.code === "permission-denied") {
+          errors.push("🔒 Verifique as regras de segurança do Firestore");
+        }
+      }
+    } else {
+      results.push(
+        "⚠️ Firestore não disponível - pulando testes de leitura/escrita",
+      );
     }
 
     // 5. Verificar variáveis de ambiente
