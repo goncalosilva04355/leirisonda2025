@@ -9471,6 +9471,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
+                {/* Firestore Status During Edit */}
+                <EditModeFirestoreStatus
+                  isEditing={true}
+                  entityType="obra"
+                  entityId={editingWork?.id}
+                />
+
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
