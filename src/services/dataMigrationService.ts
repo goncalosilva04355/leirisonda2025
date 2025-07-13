@@ -1,5 +1,5 @@
 // Sistema de migração de dados localStorage → Firestore
-import { firestoreDataService } from "./firestoreDataService";
+import { firestoreService } from "./firestoreDataService";
 
 interface MigrationResult {
   success: boolean;
