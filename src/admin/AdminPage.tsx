@@ -39,6 +39,7 @@ import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
 import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 import { DataPersistenceDiagnostic } from "../components/DataPersistenceDiagnostic";
+import FirebaseWriteDiagnosticComponent from "../components/FirebaseWriteDiagnostic";
 
 interface AdminPageProps {
   onLogout: () => void;
@@ -72,7 +73,8 @@ type AdminSection =
   | "notification-demo"
   | "nuclear-cleanup"
   | "data-sharing-status"
-  | "data-persistence-diagnostic";
+  | "data-persistence-diagnostic"
+  | "firebase-write-diagnostic";
 
 export const AdminPage: React.FC<AdminPageProps> = ({
   onLogout,
@@ -97,6 +99,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         "CRÍTICO: Verificar e reparar problemas com guardado de dados - especial para app publicada",
       icon: Database,
       color: "bg-gradient-to-r from-red-600 to-orange-600",
+    },
+    {
+      id: "firebase-write-diagnostic" as AdminSection,
+      title: "🔍 Diagnóstico Escrita Firebase",
+      description:
+        "RESOLVER: Firebase operacional mas não grava dados - diagnóstico completo",
+      icon: Database,
+      color: "bg-gradient-to-r from-orange-600 to-red-600",
     },
     {
       id: "user-diagnostic" as AdminSection,
@@ -278,6 +288,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         return <CompleteDeviceActivation />;
       case "data-persistence-diagnostic":
         return <DataPersistenceDiagnostic autoCheck={true} />;
+      case "firebase-write-diagnostic":
+        return <FirebaseWriteDiagnosticComponent />;
       case "user-diagnostic":
         return <UserDiagnostic />;
       case "user-management":

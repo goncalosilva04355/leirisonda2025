@@ -88,6 +88,7 @@ import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
+import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
@@ -3386,7 +3387,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  €abalho:
+                                  ���abalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
@@ -8280,7 +8281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10723,6 +10724,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
+        case "administracao":
+          // SECURITY: Only super admin can access administration
+          if (currentUser?.role !== "super_admin") {
+            return (
+              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                  <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                    Acesso Restrito
+                  </h2>
+                  <p className="text-gray-500">
+                    Apenas super administradores podem aceder à área de
+                    administração.
+                  </p>
+                  <button
+                    onClick={() => navigateToSection("dashboard")}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Voltar ao Dashboard
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <AdminPage
+                currentUser={currentUser}
+                onLogout={() => navigateToSection("dashboard")}
+              />
+            </div>
+          );
+
         default:
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -11401,6 +11435,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <MapPin className="h-5 w-5" />
                     <span>Localizações</span>
                   </button>
+                )}
+
+                {/* Administração - Para super_admin apenas */}
+                {currentUser?.role === "super_admin" && (
+                  <>
+                    <div className="border-t border-gray-200 my-4"></div>
+                    <AdminSidebar
+                      currentUser={currentUser}
+                      onClose={() => setSidebarOpen(false)}
+                    />
+                  </>
                 )}
               </nav>
 
