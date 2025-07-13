@@ -16,22 +16,70 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
 
   useEffect(() => {
     const checkStatus = () => {
-      const autoSyncActive = autoSyncService.isAutoSyncActive();
-      const firestoreReady = isFirestoreReady();
+      try {
+        // Verificar se os serviços estão disponíveis antes de usar
+        let autoSyncActive = false;
+        let firestoreReady = false;
 
-      setIsAutoSyncActive(autoSyncActive);
-      setIsFirestoreReady(firestoreReady);
+        // Verificar autoSyncService com proteção
+        try {
+          if (
+            autoSyncService &&
+            typeof autoSyncService.isAutoSyncActive === "function"
+          ) {
+            autoSyncActive = autoSyncService.isAutoSyncActive();
+          }
+        } catch (autoSyncError) {
+          console.warn(
+            "⚠️ AutoSyncIndicator: Erro ao verificar autoSyncService:",
+            autoSyncError,
+          );
+        }
 
-      if (autoSyncActive) {
-        setLastSyncTime(new Date());
+        // Verificar isFirestoreReady com proteção
+        try {
+          if (typeof isFirestoreReady === "function") {
+            firestoreReady = isFirestoreReady();
+          }
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ AutoSyncIndicator: Erro ao verificar isFirestoreReady:",
+            firestoreError,
+          );
+        }
+
+        setIsAutoSyncActive(autoSyncActive);
+        setIsFirestoreReady(firestoreReady);
+
+        if (autoSyncActive) {
+          setLastSyncTime(new Date());
+        }
+      } catch (error) {
+        console.error("❌ AutoSyncIndicator: Erro em checkStatus:", error);
+        // Set safe defaults
+        setIsAutoSyncActive(false);
+        setIsFirestoreReady(false);
       }
     };
 
-    // Verificar status inicial
-    checkStatus();
+    // Verificar status inicial com proteção
+    try {
+      checkStatus();
+    } catch (error) {
+      console.error(
+        "❌ AutoSyncIndicator: Erro na verificação inicial:",
+        error,
+      );
+    }
 
-    // Atualizar a cada 5 segundos
-    const interval = setInterval(checkStatus, 5000);
+    // Atualizar a cada 5 segundos com proteção
+    const interval = setInterval(() => {
+      try {
+        checkStatus();
+      } catch (error) {
+        console.error("❌ AutoSyncIndicator: Erro no interval:", error);
+      }
+    }, 5000);
 
     // Escutar eventos de sync
     const handleAutoSyncStarted = () => {
