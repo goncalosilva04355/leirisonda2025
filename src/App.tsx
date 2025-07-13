@@ -70,12 +70,13 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/config";
 import {
+  isFirebaseReady,
   isFirestoreReady,
   testFirestore,
   getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
+  initializeFirebaseRobust,
+} from "./firebase/robustFirebase";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 import { devFirestoreService } from "./utils/devFirestoreService"; // Serviço de desenvolvimento
@@ -10418,7 +10419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
