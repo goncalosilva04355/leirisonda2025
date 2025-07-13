@@ -698,20 +698,7 @@ function App() {
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
 
-        // 🔥 GRAVAÇÃO AUTOMÁTICA ADICIONAL NO FIRESTORE (backup)
-        try {
-          const backupId = await saveFormToFirestore("obras_backup", {
-            ...data,
-            originalFirestoreId: firestoreId,
-            type: "obra",
-            source: "addWork_auto_backup",
-          });
-          if (backupId) {
-            console.log(`✅ Backup da obra gravado: ${backupId}`);
-          }
-        } catch (backupError) {
-          console.warn("⚠️ Erro no backup automático:", backupError);
-        }
+        // Backup automático desativado temporariamente
 
         // Sincronizar com sistema universal também
         try {
@@ -4695,7 +4682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Ex: João Silva"
+                            placeholder="Ex: Jo��o Silva"
                             required
                           />
                         </div>
@@ -7688,7 +7675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "���� Ativo"
+                                        ? "����� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7735,7 +7722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configuraç��es protegidas por palavra-passe para
+                              Configuraç���es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -7831,7 +7818,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminará permanentemente:
+                                        Esta aç��o eliminará permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
