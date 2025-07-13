@@ -204,7 +204,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
+    // Restaurar utilizadores automaticamente se necess��rio
     userRestoreService.autoRestore();
 
     // Monitoriza���ão automática de persistência de dados
@@ -543,7 +543,7 @@ function App() {
 
           console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
 
-          // 1. Enviar notificação FCM (notifica��ão push real)
+          // 1. Enviar notificação FCM (notificação push real)
           const fcmSuccess = await fcmService.sendNotificationToUser(
             assignedUser.id,
             {
@@ -771,6 +771,32 @@ function App() {
   const addMaintenance = async (data: any) => {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
+
+      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
+      try {
+        const firestoreDataService = await import(
+          "../services/firestoreDataService"
+        );
+        const saveId = await firestoreDataService.saveFormToFirestore(
+          "manutencoes",
+          {
+            ...data,
+            type: "manutencao",
+            source: "addMaintenance_function",
+            userAgent: navigator.userAgent,
+          },
+        );
+        if (saveId) {
+          console.log(
+            `✅ Manutenção gravada automaticamente no Firestore: ${saveId}`,
+          );
+        }
+      } catch (firestoreError) {
+        console.warn(
+          "⚠️ Erro na gravação automática Firestore:",
+          firestoreError,
+        );
+      }
 
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
@@ -5091,7 +5117,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador disponível"}
+                                  : "Nenhum utilizador dispon��vel"}
                               </option>
                               {users
                                 .filter((user) => {
@@ -8017,7 +8043,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica����ão ou conexão.
+                                    autentica������ão ou conexão.
                                   </p>
                                 </div>
 
@@ -9870,7 +9896,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��etalhes do Furo de Água
+                        €etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
