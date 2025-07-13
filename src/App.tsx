@@ -91,6 +91,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -4477,7 +4478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç€</span>
+                      <span>Agendar Manutenç���</span>
                     </button>
                   </div>
                 </div>
@@ -6066,7 +6067,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="residencial">Residencial</option>
                           <option value="comercial">Comercial</option>
                           <option value="hotel">Hotel/Resort</option>
-                          <option value="condominio">Condomínio</option>
+                          <option value="condominio">Condom��nio</option>
                           <option value="spa">SPA/Wellness</option>
                         </select>
                       </div>
