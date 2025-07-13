@@ -71,10 +71,33 @@ async function initializeFirebaseBasic(): Promise<FirebaseApp | null> {
         console.log("✅ Firebase: Nova app inicializada");
       }
 
-      // Aguardar um pouco para app estar completamente pronta
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // Aguardar mais tempo para app estar completamente pronta e estável
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      console.log("🔥 Firebase sempre ativo - sincronização garantida");
+      // Fazer teste adicional para garantir que a app está funcional
+      try {
+        const appOptions = firebaseApp.options;
+        if (!appOptions.projectId || !appOptions.authDomain) {
+          throw new Error("App não tem configurações essenciais");
+        }
+
+        // Verificar se a app está realmente registrada no Firebase
+        const apps = getApps();
+        if (!apps.includes(firebaseApp)) {
+          throw new Error("App não está registrada");
+        }
+
+        console.log("🔥 Firebase sempre ativo - sincronização garantida");
+        console.log("✅ Firebase App completamente inicializada e validada");
+      } catch (validationError) {
+        console.error(
+          "❌ Firebase App falhou na validação final:",
+          validationError,
+        );
+        firebaseApp = null;
+        return null;
+      }
+
       return firebaseApp;
     } catch (error: any) {
       console.error("❌ Firebase: Erro na inicialização:", error);
