@@ -85,7 +85,7 @@ export const isFirebaseFirestoreAvailable = () => false;
 export const testFirebaseFirestore = () => Promise.resolve(false);
 
 // Exportações principais
-export { getFirebaseFirestore, isFirestoreReady, getFirebaseStatus };
+export { getFirebaseFirestore, isFirestoreReady };
 
 // Export app como instância (sempre null)
 export const app = null;
