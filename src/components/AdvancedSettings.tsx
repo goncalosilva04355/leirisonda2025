@@ -37,7 +37,7 @@ interface AdvancedSettingsProps {
     maintenance: any[];
     works: any[];
     clients: any[];
-    lastSync: Date | null;
+    lastSync: string | null;
     syncWithFirebase: () => Promise<void>;
     enableSync: (enabled: boolean) => void;
   };
