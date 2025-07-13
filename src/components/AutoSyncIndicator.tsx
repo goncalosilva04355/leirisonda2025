@@ -1,7 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { Zap, ZapOff, RotateCcw, CheckCircle } from "lucide-react";
-import { autoSyncService } from "../services/autoSyncService";
-import { isFirestoreReady } from "../firebase/firestoreConfig";
+
+// Safe imports with fallbacks
+let autoSyncService: any = null;
+let isFirestoreReady: any = null;
+
+try {
+  const autoSyncModule = require("../services/autoSyncService");
+  autoSyncService = autoSyncModule.autoSyncService;
+} catch (error) {
+  console.warn(
+    "⚠️ AutoSyncIndicator: Could not import autoSyncService:",
+    error,
+  );
+}
+
+try {
+  const firestoreModule = require("../firebase/firestoreConfig");
+  isFirestoreReady = firestoreModule.isFirestoreReady;
+} catch (error) {
+  console.warn(
+    "⚠️ AutoSyncIndicator: Could not import isFirestoreReady:",
+    error,
+  );
+}
 
 interface AutoSyncIndicatorProps {
   className?: string;
@@ -43,7 +65,7 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
           }
         } catch (firestoreError) {
           console.warn(
-            "���️ AutoSyncIndicator: Erro ao verificar isFirestoreReady:",
+            "⚠️ AutoSyncIndicator: Erro ao verificar isFirestoreReady:",
             firestoreError,
           );
         }
