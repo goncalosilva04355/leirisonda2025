@@ -5,6 +5,7 @@ import {
   testFirestoreConnection,
 } from "../services/firestoreDataService";
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
+import { LoginHints } from "../components/LoginHints";
 
 interface LoginPageProps {
   onLogin: (
