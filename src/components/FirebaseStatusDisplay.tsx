@@ -5,6 +5,8 @@ import {
   Activity,
   AlertCircle,
   CheckCircle,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { isFirebaseReady } from "../firebase/config";
 import { isFirestoreReady } from "../firebase/firestoreConfig";
@@ -13,6 +15,7 @@ import { getFirebaseConfig } from "../config/firebaseEnv";
 
 interface FirebaseStatusDisplayProps {
   compact?: boolean;
+  expandable?: boolean;
 }
 
 export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
