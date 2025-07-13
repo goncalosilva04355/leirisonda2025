@@ -81,7 +81,7 @@ class DataMigrationService {
       // Migrar obras
       for (const work of localData.works) {
         try {
-          const docId = await firestoreService.addDocument("works", work);
+          const docId = await firestoreService.saveFormData("works", work);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Obra migrada: ${work.title}`);
@@ -94,7 +94,7 @@ class DataMigrationService {
       // Migrar manutenções
       for (const maint of localData.maintenance) {
         try {
-          const docId = await firestoreService.addDocument(
+          const docId = await firestoreService.saveFormData(
             "maintenance",
             maint,
           );
@@ -112,7 +112,7 @@ class DataMigrationService {
       // Migrar clientes
       for (const client of localData.clients) {
         try {
-          const docId = await firestoreService.addDocument("clients", client);
+          const docId = await firestoreService.saveFormData("clients", client);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Cliente migrado: ${client.name}`);
@@ -181,7 +181,7 @@ class DataMigrationService {
       console.log("🧪 Criando dados de teste...");
 
       // Cliente teste
-      await firestoreService.addDocument("clients", {
+      await firestoreService.saveFormData("clients", {
         name: "Cliente Teste",
         email: "teste@cliente.com",
         phone: "123456789",
@@ -190,7 +190,7 @@ class DataMigrationService {
       });
 
       // Piscina teste
-      await firestoreService.addDocument("pools", {
+      await firestoreService.saveFormData("pools", {
         name: "Piscina Teste",
         location: "Localização Teste",
         client: "Cliente Teste",
@@ -200,7 +200,7 @@ class DataMigrationService {
       });
 
       // Obra teste
-      await firestoreService.addDocument("works", {
+      await firestoreService.saveFormData("works", {
         title: "Obra Teste",
         description: "Descrição da obra teste",
         client: "Cliente Teste",
@@ -213,7 +213,7 @@ class DataMigrationService {
       });
 
       // Manutenção teste
-      await firestoreService.addDocument("maintenance", {
+      await firestoreService.saveFormData("maintenance", {
         type: "Limpeza",
         poolName: "Piscina Teste",
         client: "Cliente Teste",
