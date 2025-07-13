@@ -31,21 +31,13 @@ export class AggressiveFirebaseFix {
     try {
       console.log("🔧 Fix Method 1: Clean initialization");
 
-      // Delete all existing apps first
-      const { getApps, deleteApp } = await import("firebase/app");
+      // Check existing apps but don't delete them
+      const { getApps } = await import("firebase/app");
       const existingApps = getApps();
 
-      for (const app of existingApps) {
-        try {
-          await deleteApp(app);
-          console.log("🗑️ Deleted existing Firebase app");
-        } catch (error) {
-          console.warn("⚠️ Could not delete app:", error);
-        }
+      if (existingApps.length > 0) {
+        console.log("✅ Found existing Firebase apps, will work with them");
       }
-
-      // Wait for cleanup
-      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Fresh initialization
       const { initializeApp } = await import("firebase/app");
