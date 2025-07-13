@@ -127,17 +127,35 @@ export function getFirebaseApp(): FirebaseApp | null {
 
   // Verificar se a app ainda é válida
   try {
+    // Teste mais robusto para verificar se a app é válida
+    const projectId = firebaseApp.options?.projectId;
+    if (!projectId) {
+      console.warn("⚠️ Firebase: App sem projectId, considerada inválida");
+      firebaseApp = null;
+      return initializeFirebaseBasicSync();
+    }
+
+    // Verificar se a app está na lista de apps
     const apps = getApps();
-    if (apps.find((app) => app === firebaseApp)) {
-      return firebaseApp;
-    } else {
-      // App não está mais na lista, limpar referência e reinicializar
+    if (!apps.find((app) => app === firebaseApp)) {
       console.warn("⚠️ Firebase: App não encontrada na lista, reinicializando");
       firebaseApp = null;
       return initializeFirebaseBasicSync();
     }
-  } catch (error) {
-    console.warn("⚠️ Firebase: Erro ao verificar apps:", error);
+
+    return firebaseApp;
+  } catch (error: any) {
+    // Se for erro de app deletada, limpar referência
+    if (error.code === "app/app-deleted") {
+      console.warn("⚠️ Firebase: App foi deletada, limpando referência");
+      firebaseApp = null;
+      return initializeFirebaseBasicSync();
+    }
+
+    console.warn(
+      "⚠️ Firebase: Erro ao verificar app, mas retornando existente:",
+      error,
+    );
     return firebaseApp; // Retornar a app mesmo com erro de verificação
   }
 }
