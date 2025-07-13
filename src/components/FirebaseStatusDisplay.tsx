@@ -60,13 +60,29 @@ export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
 
   const getOverallStatus = () => {
     if (firebaseReady && firestoreReady && connectionStatus === "online") {
-      return { status: "excellent", color: "green", text: "Tudo Operacional" };
+      return {
+        status: "excellent",
+        colorClass: "bg-green-500",
+        text: "Tudo Operacional",
+      };
     } else if (firebaseReady && connectionStatus === "online") {
-      return { status: "good", color: "blue", text: "Parcialmente Ativo" };
+      return {
+        status: "good",
+        colorClass: "bg-blue-500",
+        text: "Parcialmente Ativo",
+      };
     } else if (connectionStatus === "offline") {
-      return { status: "offline", color: "orange", text: "Sem Conexão" };
+      return {
+        status: "offline",
+        colorClass: "bg-orange-500",
+        text: "Sem Conexão",
+      };
     } else {
-      return { status: "error", color: "red", text: "Problemas Detectados" };
+      return {
+        status: "error",
+        colorClass: "bg-red-500",
+        text: "Problemas Detectados",
+      };
     }
   };
 
