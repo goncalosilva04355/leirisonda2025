@@ -11,9 +11,6 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
-// Execute cleanup of AIza Escritorio data
-import "./utils/executeCleanup";
-
 // Firebase Service Worker registration (skip in private browsing)
 if ("serviceWorker" in navigator && !isPrivateBrowsing()) {
   navigator.serviceWorker
