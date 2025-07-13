@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings, AlertTriangle, Database } from "lucide-react";
-import { QuickMobileFix } from "../components/QuickMobileFix";
+import { Database } from "lucide-react";
 import {
   saveLoginAttempt,
   testFirestoreConnection,
