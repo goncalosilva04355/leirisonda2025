@@ -10299,16 +10299,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           dataSync.updatePool(editingPool.id, {
                             name,
-                            client,
+                            clientName: client,
                             location,
                             status,
                             poolType,
-                            dimensions,
-                            volume: volume || undefined,
-                            filtrationSystem,
-                            installationDate: installationDate
-                              ? new Date(installationDate).toISOString()
-                              : undefined,
+                            waterCubicage: volume || "",
                             clientPhone,
                             clientEmail,
                             observations,
