@@ -28,6 +28,7 @@ export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
   const [connectionStatus, setConnectionStatus] = useState<
     "online" | "offline"
   >("offline");
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const checkStatus = () => {
