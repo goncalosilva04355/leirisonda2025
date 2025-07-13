@@ -64,16 +64,7 @@ import {
   testFirestore,
 } from "./firestoreConfig";
 
-// Função para obter status Firebase (sempre "local")
-export function getFirebaseStatus() {
-  return {
-    app: false,
-    auth: false,
-    firestore: false,
-    mode: "local",
-    ready: true, // Sempre pronto em modo local
-  };
-}
+// Status Firebase sempre em modo local
 
 // Funções de compatibilidade (sempre retornam valores seguros)
 export const getDBAsync = () => Promise.resolve(null);
