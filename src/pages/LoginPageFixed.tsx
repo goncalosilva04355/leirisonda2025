@@ -171,7 +171,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen bg-blue-600 flex items-center justify-center">
+    <div className="min-h-screen bg-blue-300 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
