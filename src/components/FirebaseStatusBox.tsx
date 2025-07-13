@@ -104,14 +104,26 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
     "connected" | "disconnected" | "checking"
   > => {
     try {
-      // Verificar se existe app Firebase inicializada
-      if (typeof window !== "undefined" && (window as any).firebase) {
-        return "connected";
-      }
+      // Verificar se Firebase está inicializado
+      if (typeof window !== "undefined") {
+        // Verificar se Firebase app existe
+        const firebaseInitialized = localStorage.getItem(
+          "firebase-initialized",
+        );
+        if (firebaseInitialized === "true") {
+          return "connected";
+        }
 
-      // Verificar conectividade básica
-      if (navigator.onLine) {
-        return "connected";
+        // Verificar se há erro de quota
+        const quotaExceeded = localStorage.getItem("firebase-quota-exceeded");
+        if (quotaExceeded === "true") {
+          return "disconnected";
+        }
+
+        // Verificar conectividade online
+        if (navigator.onLine) {
+          return "connected";
+        }
       }
 
       return "disconnected";
