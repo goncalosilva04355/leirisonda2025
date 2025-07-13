@@ -40,6 +40,8 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
+import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -88,7 +90,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
-import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
+import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
@@ -671,7 +673,7 @@ function App() {
 
       console.log("✅ Processo de notificações concluído");
     } catch (error) {
-      console.error("❌ Erro no sistema de notificações:", error);
+      console.error("❌ Erro no sistema de notifica��ões:", error);
     }
   };
 
@@ -1390,18 +1392,46 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("€Iniciando sincroniza📞ão automática em tempo real...");
+        console.log("🔄 Iniciando sincronização automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
+          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
+
+          // Force enable real-time sync for editing
+          console.log("🔥 FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
           console.error("❌ Erro ao iniciar sincronização automática:", error);
+          // Try again if it fails
+          setTimeout(async () => {
+            try {
+              await autoSyncService.startAutoSync();
+              setAutoSyncActive(true);
+              console.log("✅ AutoSync ativado na segunda tentativa!");
+            } catch (retryError) {
+              console.error("❌ Erro na segunda tentativa:", retryError);
+            }
+          }, 5000);
         }
+      } else {
+        console.log(
+          "⚠️ Firestore não disponível, tentando novamente em 10 segundos...",
+        );
+        setTimeout(async () => {
+          if (isFirestoreReady()) {
+            try {
+              await autoSyncService.startAutoSync();
+              setAutoSyncActive(true);
+              console.log("✅ AutoSync ativado após aguardar Firestore!");
+            } catch (error) {
+              console.error("❌ Erro ao ativar AutoSync:", error);
+            }
+          }
+        }, 10000);
       }
     };
 
@@ -2961,6 +2991,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
+                {/* Firebase Status Display */}
+                <FirebaseStatusDisplay compact={true} expandable={true} />
+
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -3235,7 +3268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -3449,7 +3482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç€endada
+                          Nenhuma manutenç��endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -5922,7 +5955,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -6877,7 +6910,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configurações
+                        Configura��ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7592,7 +7625,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-green-900">
-                                        Navegação Maps
+                                        Navega��ão Maps
                                       </h4>
                                       <button
                                         onClick={() =>
@@ -9466,6 +9499,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
+                {/* Firestore Status During Edit */}
+                <EditModeFirestoreStatus
+                  isEditing={true}
+                  entityType="obra"
+                  entityId={editingWork?.id}
+                />
+
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
@@ -10087,6 +10127,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
+                {/* Firestore Status During Edit */}
+                <EditModeFirestoreStatus
+                  isEditing={true}
+                  entityType="piscina"
+                  entityId={editingPool?.id}
+                />
+
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
@@ -10333,6 +10380,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
+                {/* Firestore Status During Edit */}
+                <EditModeFirestoreStatus
+                  isEditing={true}
+                  entityType="manutencao"
+                  entityId={editingMaintenance?.id}
+                />
+
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
