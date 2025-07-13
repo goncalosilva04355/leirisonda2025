@@ -5,6 +5,7 @@ import {
   saveLoginAttempt,
   testFirestoreConnection,
 } from "../services/firestoreDataService";
+import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 
 interface LoginPageProps {
   onLogin: (
