@@ -567,7 +567,7 @@ function App() {
           if (fcmSuccess) {
             console.log(`✅ Notificação FCM enviada para ${assignedUser.name}`);
           } else {
-            console.warn(`⚠️ Falha no envio FCM para ${assignedUser.name}`);
+            console.warn(`���️ Falha no envio FCM para ${assignedUser.name}`);
           }
 
           // 2. Salvar notificação local para o utilizador
@@ -716,7 +716,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não disponível, usando sistema atual");
+        console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
         // Enviar notifica��ões mesmo no fallback
@@ -763,7 +763,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -1224,51 +1224,17 @@ function App() {
           "savedLoginCredentials",
         );
 
-        if (
-          autoLoginEnabled === "true" &&
-          rememberMe === "true" &&
-          savedCredentials
-        ) {
-          console.log("🔄 Auto-login detectado, tentando restaurar sessão...");
+        // Auto-login temporariamente desabilitado para evitar loops
+        console.log("ℹ️ Auto-login desabilitado - login manual necessário");
 
-          try {
-            const credentials = JSON.parse(savedCredentials);
-            if (
-              credentials.email &&
-              credentials.password &&
-              credentials.rememberMe
-            ) {
-              console.log("📧 Tentando auto-login para:", credentials.email);
-
-              const result = await authService.login(
-                credentials.email,
-                credentials.password,
-                true,
-              );
-
-              if (result.success && result.user) {
-                console.log(
-                  "✅ Auto-login bem-sucedido para:",
-                  result.user.email,
-                );
-                setCurrentUser(result.user);
-                setIsAuthenticated(true);
-                return; // Não fazer logout se auto-login funcionou
-              } else {
-                console.warn("�� Auto-login falhou:", result.error);
-                // Limpar credenciais inválidas
-                safeSessionStorage.removeItem("savedLoginCredentials");
-                safeLocalStorage.removeItem("autoLoginEnabled");
-                safeLocalStorage.removeItem("rememberMe");
-              }
-            }
-          } catch (autoLoginError) {
-            console.error("❌ Erro no auto-login:", autoLoginError);
-            // Limpar credenciais corrompidas
-            safeSessionStorage.removeItem("savedLoginCredentials");
-            safeLocalStorage.removeItem("autoLoginEnabled");
-            safeLocalStorage.removeItem("rememberMe");
-          }
+        // Limpar credenciais de auto-login para evitar tentativas futuras
+        if (autoLoginEnabled === "true" || rememberMe === "true") {
+          console.log(
+            "🧹 Limpando credenciais de auto-login para evitar loops",
+          );
+          safeSessionStorage.removeItem("savedLoginCredentials");
+          safeLocalStorage.removeItem("autoLoginEnabled");
+          safeLocalStorage.removeItem("rememberMe");
         }
 
         // Se chegou aqui, fazer logout normal (sem auto-login ou auto-login falhou)
@@ -8987,7 +8953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç�����es
+                            Notas e Observaç�������es
                           </label>
                           <textarea
                             rows={4}
@@ -9387,7 +9353,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
-                                <span className="font-medium">Atribu€:</span>{" "}
+                                <span className="font-medium">Atribu��:</span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
                                   ? work.assignedUsers
