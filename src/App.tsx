@@ -391,7 +391,7 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionar📞 normalmente sem verificaç��es constantes
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
@@ -2353,7 +2353,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (notificationsEnabled && Notification.permission === "granted") {
         console.log("📞 All conditions met, sending notification...");
         showNotification(
-          "Nova Obra Atribu��da",
+          "Nova Obra Atribuída",
           `A obra "${workTitle}" foi-lhe atribuída`,
           "work-assignment",
         );
@@ -2962,6 +2962,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
+                {/* Firebase Status Box */}
+                <FirebaseStatusBox />
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -8242,7 +8244,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten���
+                        <strong>{maintenance.length}</strong> manuten€
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -8750,7 +8752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome completo ou raz��o social"
+                            placeholder="Nome completo ou razão social"
                             required
                           />
                         </div>
@@ -10900,7 +10902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon����alo Fonseca",
+  //       name: "Gon������alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11614,7 +11616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         selectedWork.technicians.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              T��cnicos
+                              Técnicos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.technicians.join(", ")}
