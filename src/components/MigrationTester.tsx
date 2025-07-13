@@ -23,7 +23,12 @@ const MigrationTester: React.FC = () => {
   useEffect(() => {
     // Verificar status do Firestore
     const checkFirestore = () => {
-      setFirestoreStatus(true); // Simplified for now
+      // Check if firestoreService is available
+      try {
+        setFirestoreStatus(!!firestoreService);
+      } catch (error) {
+        setFirestoreStatus(false);
+      }
     };
 
     checkFirestore();
@@ -53,7 +58,7 @@ const MigrationTester: React.FC = () => {
         return;
       }
 
-      addResult("✅ Firestore dispon��vel e conectado");
+      addResult("✅ Firestore disponível e conectado");
 
       // Verificar dados locais
       addResult("📊 Verificando dados no localStorage...");
