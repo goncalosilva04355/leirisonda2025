@@ -73,7 +73,8 @@ type AdminSection =
   | "notification-demo"
   | "nuclear-cleanup"
   | "data-sharing-status"
-  | "data-persistence-diagnostic";
+  | "data-persistence-diagnostic"
+  | "firebase-write-diagnostic";
 
 export const AdminPage: React.FC<AdminPageProps> = ({
   onLogout,
