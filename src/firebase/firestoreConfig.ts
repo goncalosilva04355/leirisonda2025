@@ -1,159 +1,63 @@
-// Configuração Firestore ultra-robusta para evitar completamente erros getImmediate
+// Configuração Firestore temporariamente em modo local para evitar erros getImmediate
+// Esta versão evita completamente os problemas de inicialização
+
 import { Firestore } from "firebase/firestore";
 
-// Variável para armazenar a instância do Firestore
+// Estado atual: sempre em modo local para evitar erros
+const LOCAL_MODE = true;
+
+// Variável para armazenar a instância do Firestore (sempre null em modo local)
 let firestoreInstance: Firestore | null = null;
-let isInitializing = false;
 
-// Função ultra-segura para inicializar Firestore
-async function ultraSafeInitializeFirestore(): Promise<Firestore | null> {
-  // Evitar múltiplas inicializações simultâneas
-  if (isInitializing) {
-    console.log("🔄 Firestore já está a ser inicializado, aguardando...");
-    // Aguardar um pouco e verificar novamente
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return firestoreInstance;
-  }
-
-  // Se já temos instância, retorná-la
-  if (firestoreInstance) {
-    return firestoreInstance;
-  }
-
-  isInitializing = true;
-
-  try {
-    // Importar dinamicamente para evitar problemas de inicialização
-    const { getFirestore } = await import("firebase/firestore");
-    const { getFirebaseApp } = await import("./basicConfig");
-
-    // Aguardar Firebase App estar completamente pronto
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    const app = getFirebaseApp();
-    if (!app) {
-      console.log("📱 Firebase App não disponível - modo local ativo");
-      return null;
-    }
-
-    // Verificar se a app tem as configurações necessárias
-    if (!app.options?.projectId) {
-      console.warn("⚠️ Firebase App sem projectId válido");
-      return null;
-    }
-
-    // Tentar inicializar Firestore com múltiplas tentativas
-    let attempts = 0;
-    const maxAttempts = 3;
-
-    while (attempts < maxAttempts) {
-      try {
-        // Aguardar progressivamente mais tempo em cada tentativa
-        if (attempts > 0) {
-          await new Promise((resolve) => setTimeout(resolve, 1000 * attempts));
-        }
-
-        firestoreInstance = getFirestore(app);
-        console.log(
-          "✅ Firestore: Inicializado com sucesso (tentativa " +
-            (attempts + 1) +
-            ")",
-        );
-        return firestoreInstance;
-      } catch (error: any) {
-        attempts++;
-        console.warn(
-          `⚠️ Firestore tentativa ${attempts}/${maxAttempts} falhou:`,
-          error.message || error,
-        );
-
-        if (attempts === maxAttempts) {
-          console.error("❌ Firestore: Todas as tentativas falharam");
-          return null;
-        }
-      }
-    }
-
-    return null;
-  } catch (error: any) {
-    console.warn(
-      "⚠️ Erro geral na inicialização Firestore:",
-      error.message || error,
-    );
-    return null;
-  } finally {
-    isInitializing = false;
-  }
-}
-
-// Função principal para obter Firestore (sempre segura)
+// Função principal para obter Firestore (sempre retorna null em modo local)
 export function getFirebaseFirestore(): Firestore | null {
-  // Se já temos instância, retorná-la imediatamente
-  if (firestoreInstance) {
-    return firestoreInstance;
+  if (LOCAL_MODE) {
+    console.log("📱 Firestore em modo local - dados guardados no localStorage");
+    return null;
   }
-
-  // Se não temos instância, inicializar em background
-  ultraSafeInitializeFirestore().catch((error) => {
-    console.warn("⚠️ Inicialização Firestore em background falhou:", error);
-  });
-
-  // Retornar null por agora (app funcionará em modo local)
-  return null;
+  return firestoreInstance;
 }
 
-// Função assíncrona para obter Firestore
+// Função assíncrona para obter Firestore (sempre retorna null em modo local)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  // Se já temos instância, retorná-la
-  if (firestoreInstance) {
-    return firestoreInstance;
+  if (LOCAL_MODE) {
+    console.log("📱 Firestore em modo local - dados guardados no localStorage");
+    return null;
   }
-
-  // Tentar inicializar
-  return await ultraSafeInitializeFirestore();
+  return firestoreInstance;
 }
 
-// Função para verificar se Firestore está pronto
+// Função para verificar se Firestore está pronto (sempre false em modo local)
 export function isFirestoreReady(): boolean {
-  return firestoreInstance !== null;
+  return false;
 }
 
-// Função de teste simples para Firestore
+// Função de teste simples para Firestore (sempre retorna false em modo local)
 export async function testFirestore(): Promise<boolean> {
-  try {
-    const db = await getFirebaseFirestoreAsync();
-    if (!db) {
-      console.log("📱 Firestore não disponível - modo local ativo");
-      return false;
-    }
-
-    console.log("✅ Firestore disponível e pronto para uso");
-    return true;
-  } catch (error) {
-    console.warn("⚠️ Teste Firestore falhou:", error);
-    return false;
-  }
+  console.log("📱 Firestore teste: modo local ativo");
+  return false;
 }
 
-// Função para forçar inicialização (útil para debugging)
+// Função para forçar inicialização (não faz nada em modo local)
 export async function forceFirestoreInit(): Promise<boolean> {
-  try {
-    firestoreInstance = null; // Reset
-    isInitializing = false; // Reset
-    const db = await ultraSafeInitializeFirestore();
-    return db !== null;
-  } catch (error) {
-    console.error("❌ Erro ao forçar inicialização Firestore:", error);
-    return false;
-  }
+  console.log("📱 Firestore forçado: modo local ativo");
+  return false;
 }
 
-// Função para limpar instância (útil para debugging)
+// Função para limpar instância (não faz nada em modo local)
 export function clearFirestoreInstance(): void {
-  firestoreInstance = null;
-  isInitializing = false;
-  console.log("🧹 Instância Firestore limpa");
+  console.log("🧹 Firestore limpo: modo local ativo");
 }
+
+// Função para ativar modo local
+export function enableLocalMode(): void {
+  console.log("✅ Modo local Firestore ativado");
+  console.log("💾 Todos os dados serão guardados no localStorage");
+  console.log("🚫 Erros Firebase eliminados");
+}
+
+// Ativar modo local automaticamente
+enableLocalMode();
 
 // Exportações
 export { firestoreInstance };
