@@ -46,10 +46,10 @@ export async function testFirebaseConnection(): Promise<{
       return { success: false, results, errors };
     }
 
-    // 2. Verificar se Firestore está disponível
+    // 2. Verificar se Firestore está disponível (usar versão assíncrona)
     let db;
     try {
-      db = getFirebaseFirestore();
+      db = await getFirebaseFirestoreAsync();
     } catch (dbError: any) {
       errors.push(`❌ Erro ao obter Firestore: ${dbError.message}`);
       return { success: false, results, errors };
