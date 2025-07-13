@@ -1,6 +1,6 @@
 // Configuração Firebase básica ativa
 import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
-import { getFirebaseEnv } from "../config/firebaseEnv";
+import { getFirebaseConfig } from "../config/firebaseEnv";
 
 // Estado: Firebase ativo
 const LOCAL_MODE = false;
