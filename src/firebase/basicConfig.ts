@@ -8,43 +8,71 @@ const firebaseConfig = getFirebaseConfig();
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
+let isInitializing = false;
 
-// Função determinística para inicializar Firebase sempre
+// Função robusta para inicializar Firebase apenas uma vez
 function initializeFirebaseBasic(): FirebaseApp | null {
+  // Evitar múltiplas inicializações simultâneas
+  if (isInitializing) {
+    console.log("⏳ Firebase: Inicialização já em progresso, aguardando...");
+    return firebaseApp;
+  }
+
+  // Se já temos uma app válida, retorná-la
+  if (firebaseApp) {
+    try {
+      // Verificar se a app ainda é válida
+      const apps = getApps();
+      if (apps.find((app) => app === firebaseApp)) {
+        console.log("✅ Firebase: App existente e válida");
+        return firebaseApp;
+      }
+    } catch (error) {
+      console.warn("⚠️ Firebase: App existente inválida, reinicializando");
+      firebaseApp = null;
+    }
+  }
+
   try {
+    isInitializing = true;
+
     // Verificar se estamos em modo privado
     if (isPrivateBrowsing()) {
-      console.warn(
-        "🔒 Modo privado detectado - tentando inicializar Firebase mesmo assim",
-      );
+      console.warn("🔒 Modo privado detectado - Firebase pode ter limitações");
     }
 
-    // Verificar se já existe uma app
+    // Verificar se já existe uma app válida
     const existingApps = getApps();
 
     if (existingApps.length > 0) {
+      // Usar a primeira app existente se for válida
       firebaseApp = existingApps[0];
-      console.log("✅ Firebase: Usando app existente");
+      console.log("✅ Firebase: Reutilizando app existente");
     } else {
+      // Criar nova app apenas se não existir nenhuma
       firebaseApp = initializeApp(firebaseConfig);
-      console.log("✅ Firebase: App inicializada com sucesso");
+      console.log("✅ Firebase: Nova app inicializada");
     }
 
-    // Verificar se a inicialização foi bem-sucedida
-    if (!firebaseApp) {
-      throw new Error("Firebase app não foi inicializada");
-    }
-
-    console.log("🔥 Firebase está sempre ativo - sincronização garantida");
+    console.log("🔥 Firebase sempre ativo - sincronização garantida");
     return firebaseApp;
-  } catch (error) {
-    console.error(
-      "❌ Firebase: ERRO CRÍTICO na inicialização. Sincronização não disponível:",
-      error,
-    );
+  } catch (error: any) {
+    console.error("❌ Firebase: Erro na inicialização:", error);
     firebaseApp = null;
-    // Não retornar null silenciosamente - mostrar erro claro
-    throw new Error(`Firebase não conseguiu inicializar: ${error}`);
+
+    // Se for erro de app já existir, tentar usar a existente
+    if (error.code === "app/duplicate-app") {
+      const apps = getApps();
+      if (apps.length > 0) {
+        firebaseApp = apps[0];
+        console.log("✅ Firebase: App duplicada resolvida, usando existente");
+        return firebaseApp;
+      }
+    }
+
+    return null;
+  } finally {
+    isInitializing = false;
   }
 }
 
@@ -109,7 +137,7 @@ export function getAuth() {
       return authInstance;
     }
   } catch (error) {
-    console.warn("⚠️ Firebase Auth não disponível:", error);
+    console.warn("��️ Firebase Auth não disponível:", error);
   }
   return null;
 }
