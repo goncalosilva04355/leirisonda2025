@@ -20,11 +20,24 @@ export async function testFirebaseConnection(): Promise<{
     results.push("🔄 Iniciando teste de conexão Firebase...");
 
     // 1. Verificar se Firebase App está inicializada
-    const app = getFirebaseApp();
+    let app;
+    try {
+      app = getFirebaseApp();
+    } catch (appError: any) {
+      errors.push(`❌ Erro ao obter Firebase App: ${appError.message}`);
+      return { success: false, results, errors };
+    }
+
     if (app) {
-      results.push("✅ Firebase App inicializada com sucesso");
-      results.push(`📱 App Name: ${app.name}`);
-      results.push(`🔧 Project ID: ${app.options.projectId}`);
+      try {
+        results.push("✅ Firebase App inicializada com sucesso");
+        results.push(`📱 App Name: ${app.name}`);
+        results.push(`🔧 Project ID: ${app.options.projectId}`);
+      } catch (appDetailsError: any) {
+        errors.push(
+          `⚠️ App existe mas com detalhes inacessíveis: ${appDetailsError.message}`,
+        );
+      }
     } else {
       errors.push("❌ Firebase App não foi inicializada");
       return { success: false, results, errors };
