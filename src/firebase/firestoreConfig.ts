@@ -112,26 +112,45 @@ export async function testFirestore(): Promise<boolean> {
   }
 }
 
-// Função para forçar inicialização (não faz nada em modo local)
+// Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  console.log("📱 Firestore forçado: modo local ativo");
-  return false;
+  if (LOCAL_MODE) {
+    console.log("📱 Firestore forçado: modo local ativo");
+    return false;
+  }
+
+  try {
+    const app = getFirebaseApp();
+    if (!app) {
+      console.error("❌ Firebase App não disponível para forçar Firestore");
+      return false;
+    }
+
+    firestoreInstance = getFirestore(app);
+    console.log("✅ Firestore inicialização forçada com sucesso");
+    return true;
+  } catch (error: any) {
+    console.error("❌ Erro ao forçar inicialização Firestore:", error.message);
+    return false;
+  }
 }
 
-// Função para limpar instância (não faz nada em modo local)
+// Função para limpar instância
 export function clearFirestoreInstance(): void {
-  console.log("🧹 Firestore limpo: modo local ativo");
+  if (LOCAL_MODE) {
+    console.log("🧹 Firestore limpo: modo local ativo");
+    return;
+  }
+
+  firestoreInstance = null;
+  console.log("🧹 Instância Firestore limpa");
 }
 
-// Função para ativar modo local
+// Função para ativar modo local (desativada)
 export function enableLocalMode(): void {
-  console.log("✅ Modo local Firestore ativado");
-  console.log("💾 Todos os dados serão guardados no localStorage");
-  console.log("🚫 Erros Firebase eliminados");
+  console.log("⚠️ Modo local desativado - usando Firebase ativo");
+  console.log("🔥 Firebase/Firestore totalmente funcionais");
 }
-
-// Ativar modo local automaticamente
-enableLocalMode();
 
 // Exportações
 export { firestoreInstance };
