@@ -100,7 +100,8 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
-// Firebase testes removidos para evitar conflitos
+// Teste simples Firebase Leiria
+import("./utils/testeLeiria");
 // Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
@@ -11614,7 +11615,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "N��o especificado"}
+                            : "Não especificado"}
                         </p>
                       </div>
                       <div>
