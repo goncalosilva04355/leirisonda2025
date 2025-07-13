@@ -44,12 +44,19 @@ export async function testFirebaseConnection(): Promise<{
     }
 
     // 2. Verificar se Firestore está disponível
-    const db = getFirebaseFirestore();
+    let db;
+    try {
+      db = getFirebaseFirestore();
+    } catch (dbError: any) {
+      errors.push(`❌ Erro ao obter Firestore: ${dbError.message}`);
+      return { success: false, results, errors };
+    }
+
     if (db) {
       results.push("✅ Firestore conectado com sucesso");
     } else {
       errors.push("❌ Firestore não está disponível");
-      return { success: false, results, errors };
+      // Não retornar false aqui - continuar o teste para diagnóstico completo
     }
 
     // 3. Testar leitura de dados
