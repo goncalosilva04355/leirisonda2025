@@ -22,10 +22,10 @@ export async function testFirebaseConnection(): Promise<{
   try {
     results.push("🔄 Iniciando teste de conexão Firebase...");
 
-    // 1. Verificar se Firebase App está inicializada
+    // 1. Verificar se Firebase App está inicializada (usar versão assíncrona)
     let app;
     try {
-      app = getFirebaseApp();
+      app = await getFirebaseAppAsync();
     } catch (appError: any) {
       errors.push(`❌ Erro ao obter Firebase App: ${appError.message}`);
       return { success: false, results, errors };
