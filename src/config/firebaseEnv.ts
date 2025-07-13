@@ -1,17 +1,17 @@
-// Configuração Firebase única - projeto Leiria apenas
-// Todas as referências a Leirisonda foram removidas para evitar conflitos
+// Configuração Firebase única - projeto Leiria com credenciais reais
+// Configuração para sincronização sempre ativa
 
-// Configuração única do projeto Leiria
+// Configuração real do projeto Leiria
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
   authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leiria-1cfc9",
   storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "947851234567",
-  appId: "1:947851234567:web:abcd1234567890abcd1234",
-  measurementId: "G-ABCD123456",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
 // Função única para obter configuração
