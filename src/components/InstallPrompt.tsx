@@ -73,7 +73,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ onClose }) => {
     <div className="fixed bottom-4 left-4 right-4 z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 mx-auto max-w-sm">
       <div className="flex items-start space-x-3">
         <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center flex-shrink-0">
-          <img src="/icon.svg" alt="Leirisonda" className="w-8 h-8" />
+          <img src="/icon.svg" alt="App" className="w-8 h-8" />
         </div>
 
         <div className="flex-1">
@@ -83,7 +83,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ onClose }) => {
           <p className="text-gray-600 text-xs mt-1">
             {isIOS
               ? 'Toque em "Partilhar" e depois "Adicionar ao Ecrã Principal"'
-              : "Instale a app para acesso rápido e notificações"}
+              : "Instale a app para acesso rápido e notifica��ões"}
           </p>
 
           {isIOS ? (
