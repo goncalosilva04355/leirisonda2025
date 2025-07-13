@@ -54,7 +54,8 @@ class DataMigrationService {
 
     try {
       // Verificar se Firestore está disponível
-      if (!firestoreService.isFirestoreAvailable()) {
+      const isAvailable = await firestoreService.testConnection();
+      if (!isAvailable) {
         result.errors.push("Firestore não está disponível");
         return result;
       }
