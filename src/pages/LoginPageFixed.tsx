@@ -59,8 +59,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             // AUTO-LOGIN: Executar login automático quando rememberMe está ativo
             console.log("🔄 Auto-login ativo - fazendo login automático...");
 
-            // Executar auto-login com credenciais salvas
-            const performAutoLogin = async () => {
+            // Executar auto-login com credenciais salvas após delay
+            setTimeout(async () => {
               try {
                 await onLogin(email, password, true);
                 console.log("✅ Auto-login bem-sucedido");
@@ -69,9 +69,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
                 // Em caso de erro, limpar credenciais salvas
                 sessionStorage.removeItem("savedLoginCredentials");
               }
-            };
-
-            performAutoLogin();
+            }, 500);
           } else {
             console.log("⚠️ Incomplete saved credentials, skipping auto-login");
           }
