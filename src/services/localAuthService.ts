@@ -101,12 +101,14 @@ class LocalAuthService {
         return { success: false, error: "Formato de email inválido" };
       }
 
-      // Verificar password - aceita "123", "19867gsf" para super admin, ou "123456" para outros
+      // Verificar password - aceita "123456", "19867gsf" para super admin, ou outras senhas válidas
       const isPasswordValid =
-        password === "123" || // Password universal para compatibilidade
+        password === "123456" || // Password universal atualizada (6+ caracteres)
         (email.toLowerCase() === "gongonsilva@gmail.com" &&
           password === "19867gsf") || // Password específica do super admin
-        password === "123456"; // Password padrão dos utilizadores
+        (email.toLowerCase() === "gongonsilva@gmail.com" &&
+          password === "123456") || // Password alternativa para super admin
+        password.length >= 6; // Qualquer password com 6+ caracteres
 
       if (!isPasswordValid) {
         return {
