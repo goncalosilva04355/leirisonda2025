@@ -88,6 +88,7 @@ import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
+import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
@@ -671,7 +672,7 @@ function App() {
         }
       }
 
-      console.log("✅ Processo de notifica��ões concluído");
+      console.log("✅ Processo de notificações concluído");
     } catch (error) {
       console.error("❌ Erro no sistema de notifica��ões:", error);
     }
@@ -1578,7 +1579,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "�� Firebase Messaging Service Worker registered successfully:",
+              "📞 Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -2665,7 +2666,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
+          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -3386,7 +3387,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  €abalho:
+                                  ���abalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
