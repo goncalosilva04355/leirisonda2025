@@ -115,7 +115,7 @@ function initializeFirestore(): Firestore | null {
 
     // Tentar inicializar Firestore
     firestoreInstance = getFirestore(app);
-    console.log("✅ Firestore: Inicializado com sucesso (síncrono)");
+    console.log("�� Firestore: Inicializado com sucesso (síncrono)");
     return firestoreInstance;
   } catch (firestoreError: any) {
     console.warn(
@@ -135,12 +135,17 @@ function initializeFirestore(): Firestore | null {
   }
 }
 
-// Função para obter o Firestore
+// Função para obter o Firestore (síncrona)
 export function getFirebaseFirestore(): Firestore | null {
   if (!firestoreInstance) {
     return initializeFirestore();
   }
   return firestoreInstance;
+}
+
+// Função assíncrona para obter o Firestore
+export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
+  return await initializeFirestoreAsync();
 }
 
 // Função para verificar se Firestore está pronto
