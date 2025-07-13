@@ -73,10 +73,8 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import {
   isFirebaseReady,
   isFirestoreReady,
-  testFirestore,
   getFirebaseFirestore,
-  initializeFirebaseRobust,
-} from "./firebase/robustFirebase";
+} from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
@@ -2141,7 +2139,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Próxima Manutenç��o: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -5979,7 +5977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "���� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -7262,7 +7260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
                                 >
                                   <Shield className="h-4 w-4" />
-                                  <span>Ir para Administração</span>
+                                  <span>Ir para Administra��ão</span>
                                 </button>
                               </div>
                             </div>
