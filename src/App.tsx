@@ -482,10 +482,36 @@ function App() {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
+      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
+      try {
+        const firestoreDataService = await import(
+          "../services/firestoreDataService"
+        );
+        const saveId = await firestoreDataService.saveFormToFirestore(
+          "piscinas",
+          {
+            ...data,
+            type: "piscina",
+            source: "addPool_function",
+            userAgent: navigator.userAgent,
+          },
+        );
+        if (saveId) {
+          console.log(
+            `✅ Piscina gravada automaticamente no Firestore: ${saveId}`,
+          );
+        }
+      } catch (firestoreError) {
+        console.warn(
+          "⚠️ Erro na gravação automática Firestore:",
+          firestoreError,
+        );
+      }
+
       // Usar serviço offline-first
       const firestoreId = await offlineFirstService.createPool(data);
       if (firestoreId) {
-        console.log("✅ Piscina criada:", firestoreId);
+        console.log("��� Piscina criada:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -1993,7 +2019,7 @@ function App() {
       console.log("€ Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("✅ Login successful for:", result.user.email);
+        // console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -11284,7 +11310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb€m funciona na página de login */}
+        {/* Admin Login Modal - tamb€m funciona na p��gina de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
