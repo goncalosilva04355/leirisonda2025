@@ -105,14 +105,10 @@ export class PermanentMockCleanup {
 console.log("🧹 Executando limpeza automática de dados mock...");
 PermanentMockCleanup.cleanAllMockData();
 
-// Verificação automática desabilitada para evitar refresh constante do Builder.io
-// setInterval(() => {
-//   if (PermanentMockCleanup.hasMockData()) {
-//     console.log("⚠️ Dados mock detectados, limpando automaticamente...");
-//     PermanentMockCleanup.cleanAllMockData();
-//   }
-// }, 30000);
-
-console.log(
-  "🔒 Mock cleanup: Verificação automática desabilitada para estabilidade",
-);
+// Verificação automática a cada 30 segundos
+setInterval(() => {
+  if (PermanentMockCleanup.hasMockData()) {
+    console.log("⚠️ Dados mock detectados, limpando automaticamente...");
+    PermanentMockCleanup.cleanAllMockData();
+  }
+}, 30000);
