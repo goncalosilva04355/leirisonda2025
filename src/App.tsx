@@ -2928,7 +2928,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              // Fallback para authService se necessário
+              // Auth service usado diretamente
               if (!result?.success) {
                 console.log("🔄 Tentando authService como fallback...");
                 const fallbackResult = await authService.login(
@@ -6177,7 +6177,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G��s</option>
+                          <option value="gas">Aquecimento a G���s</option>
                         </select>
                       </div>
                     </div>
@@ -6315,7 +6315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten��ão Programada",
+                                type: "Manuten����ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
