@@ -70,14 +70,14 @@ import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import { isFirebaseReady } from "./firebase/config";
 import {
+  isFirebaseReady,
   isFirestoreReady,
-  testFirestore,
   getFirebaseFirestore,
-} from "./firebase/firestoreConfig";
+} from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
+import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
@@ -101,6 +101,9 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
+// Teste simples Firebase Leiria
+import("./utils/testeLeiria");
+// Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
@@ -282,7 +285,7 @@ function App() {
         hasQuotaIssues ||
         hasEmergencyShutdown
       ) {
-        console.log("🚨 Firebase conflict detected on mobile device");
+        console.log("�� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -477,7 +480,14 @@ function App() {
   // Funções de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
-      console.log("🏊 addPool iniciado com sistema local");
+      console.log("🏊 addPool iniciado com Firestore ativo");
+
+      // Usar serviço offline-first
+      const firestoreId = await offlineFirstService.createPool(data);
+      if (firestoreId) {
+        console.log("✅ Piscina criada:", firestoreId);
+      }
+
       return await addPiscina(data);
     } catch (error) {
       console.error("❌ Erro no sistema de piscinas:", error);
@@ -682,8 +692,8 @@ function App() {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // Usar o novo FirestoreService
-      const firestoreId = await firestoreService.createObra(data);
+      // Usar serviço offline-first com Firebase Leiria
+      const firestoreId = await offlineFirstService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -739,7 +749,7 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createManutencao(data);
+      const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("✅ Manutenção criada no Firestore:", firestoreId);
@@ -764,7 +774,7 @@ function App() {
     try {
       console.log("��� addClient iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createCliente(data);
+      const firestoreId = await offlineFirstService.createClient(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -1312,7 +1322,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar funções do Firestore dinamicamente
+              // Importar funç��es do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -1372,14 +1382,19 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("�� Iniciando sincronização inicial com Firestore...");
+        console.log("🔥 Iniciando sincronização com Firebase Leiria...");
+        console.log("✅ Firebase Leiria pronto para uso");
 
         try {
           await firestoreService.syncAll();
-          console.log("€ Sincronização inicial completa!");
+          console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
+          console.error("❌ Erro na sincronização com Firebase Leiria:", error);
+          console.log("📱 Aplicação continua funcional em modo offline");
         }
+      } else {
+        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
+        console.log("💾 Dados serão salvos apenas no localStorage");
       }
     };
 
@@ -1895,9 +1910,9 @@ function App() {
           }
         }, 100);
 
-        return;
+        return result;
       } else {
-        throw new Error(result.error || "Login failed");
+        return result;
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -1938,6 +1953,8 @@ function App() {
         setCurrentUser(result.user);
         setIsAuthenticated(true);
         // Firebase handles user persistence automatically
+
+        // Firebase Leiria pronto para uso
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
@@ -2138,7 +2155,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manutenç��es: ${futureMaintenance.length}
 
 MANUTENÇ��ES REALIZADAS:
 ${maintenance
@@ -7136,7 +7153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
+                                  Sincronização Autom��tica
                                 </span>
                                 <button
                                   onClick={() =>
@@ -7977,7 +7994,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica��ão ou conexão.
+                                    autentica����ão ou conexão.
                                   </p>
                                 </div>
 
@@ -8433,7 +8450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç€es</span>
+                          <span className="text-xs">Manutenç���es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8926,7 +8943,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��es
+                            Notas e Observaç����es
                           </label>
                           <textarea
                             rows={4}
@@ -9534,7 +9551,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informa��ões Básicas
                         </h3>
                       </div>
 
@@ -12066,7 +12083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações Básicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações Básicas
+                        Informações B��sicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

@@ -6,12 +6,14 @@ export default defineConfig({
   root: ".",
   publicDir: "public",
   define: {
-    // Add global ReadableStream check
     global: "globalThis",
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
   },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -21,7 +23,7 @@ export default defineConfig({
           "firebase-vendor": [
             "firebase/app",
             "firebase/firestore",
-            "firebase/database",
+            "firebase/auth",
           ],
         },
       },

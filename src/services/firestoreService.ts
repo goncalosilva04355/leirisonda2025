@@ -16,7 +16,7 @@ import {
   Timestamp,
   writeBatch,
 } from "firebase/firestore";
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+import { getFirebaseFirestore } from "../firebase/leiriaConfig";
 
 export interface FirestoreEntity {
   id?: string;

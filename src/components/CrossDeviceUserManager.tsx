@@ -9,7 +9,7 @@ import {
   RefreshCw,
   Shield,
 } from "lucide-react";
-import { authService } from "../services/authService";
+import { hybridAuthService as authService } from "../services/hybridAuthService";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
@@ -315,7 +315,7 @@ export const CrossDeviceUserManager: React.FC = () => {
                               ? "Super Admin"
                               : user.role === "manager"
                                 ? "Gestor"
-                                : "Técnico"}
+                                : "T��cnico"}
                           </p>
                         </div>
                       </div>

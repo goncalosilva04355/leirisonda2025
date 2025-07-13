@@ -8,7 +8,7 @@ export interface UserProfile {
   uid: string;
   email: string;
   name: string;
-  role: "super_admin" | "manager" | "technician";
+  role: "super_admin" | "admin" | "manager" | "technician";
   active: boolean;
   createdAt: string;
 }

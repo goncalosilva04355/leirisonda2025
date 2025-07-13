@@ -58,7 +58,9 @@ export const FirebaseStatusChecker: React.FC = () => {
       if (authService && dbService && rulesTest?.canWrite) {
         try {
           // Test if we can create a test user (without actually creating)
-          const { authService: auth } = await import("../services/authService");
+          const { hybridAuthService: auth } = await import(
+            "../services/hybridAuthService"
+          );
           canCreateUsers = true;
         } catch (error) {
           canCreateUsers = false;

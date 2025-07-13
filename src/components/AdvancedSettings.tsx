@@ -24,7 +24,7 @@ interface User {
   uid: string;
   email: string;
   name: string;
-  role: "super_admin" | "manager" | "technician";
+  role: "super_admin" | "admin" | "manager" | "technician";
   active: boolean;
 }
 
@@ -37,7 +37,7 @@ interface AdvancedSettingsProps {
     maintenance: any[];
     works: any[];
     clients: any[];
-    lastSync: Date | null;
+    lastSync: string | null;
     syncWithFirebase: () => Promise<void>;
     enableSync: (enabled: boolean) => void;
   };
