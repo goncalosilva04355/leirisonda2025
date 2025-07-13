@@ -173,7 +173,8 @@ class DataMigrationService {
 
   // Criar dados de teste se não existirem
   async createTestData(): Promise<void> {
-    if (!firestoreService.isFirestoreAvailable()) {
+    const isAvailable = await firestoreService.testConnection();
+    if (!isAvailable) {
       console.log("⚠️ Firestore não disponível para criar dados de teste");
       return;
     }
