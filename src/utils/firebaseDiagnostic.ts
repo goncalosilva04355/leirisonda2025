@@ -11,7 +11,7 @@ import { getAuth } from "firebase/auth";
 import { getDB, getAuthService, waitForFirebaseInit } from "../firebase/config";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+  apiKey: import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY || "",
   authDomain: "leirisonda-16f8b.firebaseapp.com",
   projectId: "leirisonda-16f8b",
   storageBucket: "leirisonda-16f8b.firebasestorage.app",
