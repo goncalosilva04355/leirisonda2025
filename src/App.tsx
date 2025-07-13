@@ -395,7 +395,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom����ticas
+    // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -483,7 +483,7 @@ function App() {
       // Tentar Firestore primeiro
       const firestoreId = await devFirestoreService.createPool(data);
       if (firestoreId) {
-        console.log("✅ Piscina criada no Firestore:", firestoreId);
+        console.log("��� Piscina criada no Firestore:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -690,8 +690,8 @@ function App() {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // Usar o novo FirestoreService (modo desenvolvimento)
-      const firestoreId = await devFirestoreService.createWork(data);
+      // Usar serviço offline-first com Firebase Leiria
+      const firestoreId = await offlineFirstService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -1928,7 +1928,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("🔐 Password length:", loginForm.password?.length || 0);
+      console.log("�� Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -2255,7 +2255,7 @@ ESTAT📞STICAS:
 - Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
-PRÓXIMAS AÇ��ES:
+PRÓXIMAS AÇÕES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -2421,7 +2421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`��� OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -4230,7 +4230,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manuten��ões
+                          Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -11050,7 +11050,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura📞ções avançadas
+                Insira a palavra-passe para aceder às configura📞ções avan��adas
               </p>
             </div>
 
