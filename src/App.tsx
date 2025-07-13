@@ -78,6 +78,7 @@ import {
 } from "./firebase/firestoreConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
+import { devFirestoreService } from "./utils/devFirestoreService"; // Serviço de desenvolvimento
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
@@ -1376,7 +1377,7 @@ function App() {
 
         try {
           await firestoreService.syncAll();
-          console.log("€ Sincronização inicial completa!");
+          console.log("€ Sincronizaç��o inicial completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização inicial:", error);
         }
@@ -7621,7 +7622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    ��
+                                    ���
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -7935,7 +7936,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Settings className="h-5 w-5 text-gray-600" />
                                     <div>
                                       <p className="font-medium text-gray-800">
-                                        Configurações Avançadas
+                                        Configurações Avan��adas
                                       </p>
                                       <p className="text-sm text-gray-600">
                                         Firebase, APIs e desenvolvimento
@@ -9373,7 +9374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <Edit2 className="h-5 w-5" />
                               </button>
                             )}
-                            {/* Botão Iniciar Obra (só se pendente) */}
+                            {/* Botão Iniciar Obra (s�� se pendente) */}
                             {(work.status === "pending" ||
                               work.status === "pendente") &&
                               hasPermission("obras", "edit") && (
