@@ -671,7 +671,7 @@ function App() {
         }
       }
 
-      console.log("✅ Processo de notificações concluído");
+      console.log("✅ Processo de notifica��ões concluído");
     } catch (error) {
       console.error("❌ Erro no sistema de notifica��ões:", error);
     }
@@ -1578,7 +1578,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Firebase Messaging Service Worker registered successfully:",
+              "�� Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -2665,7 +2665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
+          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -4649,7 +4649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalaç€</option>
-                            <option value="reparacao">Repara��ão</option>
+                            <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -7006,7 +7006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Pr���ximas intervenções</li>
+                                <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -8265,7 +8265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Manutenções
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
@@ -10934,7 +10934,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>💧</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11440,20 +11440,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {currentUser?.role === "super_admin" && (
                   <>
                     <div className="border-t border-gray-200 my-4"></div>
-                    <button
-                      onClick={() => {
-                        navigateToSection("administracao");
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                        activeSection === "administracao"
-                          ? "bg-orange-50 text-orange-700 border-l-4 border-orange-500"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      <Shield className="h-5 w-5" />
-                      <span>Administração</span>
-                    </button>
+                    <AdminSidebar
+                      currentUser={currentUser}
+                      onClose={() => setSidebarOpen(false)}
+                    />
                   </>
                 )}
               </nav>
