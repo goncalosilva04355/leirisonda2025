@@ -1,33 +1,83 @@
-// Configuração Firebase básica simplificada para evitar erros
-import { FirebaseApp } from "firebase/app";
+// Configuração Firebase básica ativa
+import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
+import { getFirebaseEnv } from "../config/firebaseEnv";
 
-// Estado: modo local ativo para evitar erros
-const LOCAL_MODE = true;
+// Estado: Firebase ativo
+const LOCAL_MODE = false;
 
-// Variável para armazenar a instância do Firebase (sempre null em modo local)
+// Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
 
-// Função robusta para obter a app Firebase (sempre retorna null em modo local)
+// Inicializar Firebase automaticamente
+if (!LOCAL_MODE) {
+  try {
+    const config = getFirebaseEnv();
+    if (getApps().length === 0) {
+      firebaseApp = initializeApp(config);
+      console.log("✅ Firebase inicializado com sucesso");
+    } else {
+      firebaseApp = getApp();
+      console.log("✅ Firebase já estava inicializado");
+    }
+  } catch (error: any) {
+    console.error("❌ Erro ao inicializar Firebase:", error.message);
+  }
+}
+
+// Função robusta para obter a app Firebase
 export function getFirebaseApp(): FirebaseApp | null {
   if (LOCAL_MODE) {
     console.log("📱 Firebase App em modo local");
     return null;
   }
+
+  // Tentar inicializar se ainda não foi feito
+  if (!firebaseApp) {
+    try {
+      const config = getFirebaseEnv();
+      if (getApps().length === 0) {
+        firebaseApp = initializeApp(config);
+        console.log("✅ Firebase inicializado tardiamente");
+      } else {
+        firebaseApp = getApp();
+      }
+    } catch (error: any) {
+      console.error("❌ Erro na inicialização tardia:", error.message);
+    }
+  }
+
   return firebaseApp;
 }
 
-// Função assíncrona para obter a app Firebase (sempre retorna null em modo local)
+// Função assíncrona para obter a app Firebase
 export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
   if (LOCAL_MODE) {
     console.log("📱 Firebase App em modo local");
     return null;
   }
+
+  // Tentar inicializar se ainda não foi feito
+  if (!firebaseApp) {
+    try {
+      const config = getFirebaseEnv();
+      if (getApps().length === 0) {
+        firebaseApp = initializeApp(config);
+        console.log("✅ Firebase inicializado assincronamente");
+      } else {
+        firebaseApp = getApp();
+      }
+    } catch (error: any) {
+      console.error("❌ Erro na inicialização assíncrona:", error.message);
+    }
+  }
+
   return firebaseApp;
 }
 
-// Função para verificar se Firebase está pronto (sempre false em modo local)
+// Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  return false;
+  if (LOCAL_MODE) return false;
+  return firebaseApp !== null;
 }
 
 // Função para obter db seguro (sempre retorna null em modo local)
