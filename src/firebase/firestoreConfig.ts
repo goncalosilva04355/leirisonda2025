@@ -1,61 +1,136 @@
 // Passo 3: Configuração Firestore - base de dados na nuvem
 import { getFirestore, Firestore } from "firebase/firestore";
-import { getFirebaseApp } from "./basicConfig";
+import { getFirebaseApp, getFirebaseAppAsync } from "./basicConfig";
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
+let firestoreInitPromise: Promise<Firestore | null> | null = null;
 
-// Função robusta para inicializar Firestore com verificações de estado
-function initializeFirestore(): Firestore | null {
-  try {
-    // Verificar se já temos uma instância válida
-    if (firestoreInstance) {
-      console.log("✅ Firestore: Instância existente válida");
-      return firestoreInstance;
-    }
+// Função assíncrona robusta para inicializar Firestore
+async function initializeFirestoreAsync(): Promise<Firestore | null> {
+  // Se já estamos inicializando, retornar a promise existente
+  if (firestoreInitPromise) {
+    return firestoreInitPromise;
+  }
 
-    const app = getFirebaseApp();
+  // Se já temos uma instância válida, retorná-la
+  if (firestoreInstance) {
+    console.log("✅ Firestore: Instância existente válida");
+    return firestoreInstance;
+  }
 
-    if (!app) {
-      console.warn("⚠️ Firebase App não disponível ainda para Firestore");
-      return null;
-    }
-
-    // Verificar se a app não foi deletada
+  // Criar promise de inicialização
+  firestoreInitPromise = (async () => {
     try {
-      // Teste simples para verificar se a app é válida
-      const projectId = app.options.projectId;
-      if (!projectId) {
-        console.warn("⚠️ Firebase App inválida (sem projectId)");
+      // Aguardar Firebase App estar completamente pronta
+      const app = await getFirebaseAppAsync();
+
+      if (!app) {
+        console.warn("⚠️ Firebase App não disponível para Firestore");
         return null;
       }
-    } catch (appError) {
-      console.warn("⚠️ Firebase App não é válida:", appError);
-      return null;
-    }
 
-    // Inicializar Firestore apenas se a app for válida
-    try {
-      firestoreInstance = getFirestore(app);
-      console.log("✅ Firestore: Inicializado com sucesso");
-      console.log("🔥 Firestore sempre ativo - dados sincronizados");
-      return firestoreInstance;
-    } catch (firestoreError: any) {
-      console.error(
-        "❌ Firestore: Erro específico na inicialização:",
-        firestoreError,
-      );
+      // Aguardar um pouco extra para garantir que a app está pronta
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Se for erro de app deletada, limpar referência
-      if (firestoreError.code === "app/app-deleted") {
-        console.log("🧹 Firestore: App foi deletada, limpando referência");
-        firestoreInstance = null;
+      // Verificar se a app não foi deletada
+      try {
+        const projectId = app.options.projectId;
+        if (!projectId) {
+          console.warn("⚠️ Firebase App inválida (sem projectId)");
+          return null;
+        }
+      } catch (appError) {
+        console.warn("⚠️ Firebase App não é válida:", appError);
+        return null;
       }
 
+      // Inicializar Firestore
+      try {
+        firestoreInstance = getFirestore(app);
+        console.log("✅ Firestore: Inicializado com sucesso (assíncrono)");
+        console.log("🔥 Firestore sempre ativo - dados sincronizados");
+        return firestoreInstance;
+      } catch (firestoreError: any) {
+        console.error(
+          "❌ Firestore: Erro específico na inicialização:",
+          firestoreError,
+        );
+
+        // Se for erro de app deletada, limpar referência
+        if (firestoreError.code === "app/app-deleted") {
+          console.log("🧹 Firestore: App foi deletada, limpando referência");
+          firestoreInstance = null;
+        }
+
+        return null;
+      }
+    } catch (error: any) {
+      console.error(
+        "❌ Firestore: Erro geral na inicialização assíncrona:",
+        error,
+      );
+      return null;
+    } finally {
+      // Limpar promise após conclusão
+      firestoreInitPromise = null;
+    }
+  })();
+
+  return firestoreInitPromise;
+}
+
+// Função síncrona para compatibilidade (pode retornar null se não estiver pronta)
+function initializeFirestore(): Firestore | null {
+  // Se já temos instância, retorná-la
+  if (firestoreInstance) {
+    return firestoreInstance;
+  }
+
+  // Tentar inicialização síncrona apenas se Firebase App já existir
+  const app = getFirebaseApp();
+  if (!app) {
+    console.warn(
+      "⚠️ Firebase App não disponível para Firestore (modo síncrono)",
+    );
+
+    // Iniciar inicialização assíncrona em background
+    initializeFirestoreAsync().catch((error) => {
+      console.error(
+        "❌ Firestore: Erro na inicialização assíncrona em background:",
+        error,
+      );
+    });
+
+    return null;
+  }
+
+  try {
+    // Verificar se a app é válida
+    const projectId = app.options.projectId;
+    if (!projectId) {
+      console.warn("⚠️ Firebase App inválida (sem projectId) no modo síncrono");
       return null;
     }
-  } catch (error: any) {
-    console.error("❌ Firestore: Erro geral na inicialização:", error);
+
+    // Tentar inicializar Firestore
+    firestoreInstance = getFirestore(app);
+    console.log("✅ Firestore: Inicializado com sucesso (síncrono)");
+    return firestoreInstance;
+  } catch (firestoreError: any) {
+    console.warn(
+      "⚠️ Firestore: Erro na inicialização síncrona:",
+      firestoreError,
+    );
+
+    // Iniciar inicialização assíncrona em background
+    initializeFirestoreAsync().catch((error) => {
+      console.error(
+        "❌ Firestore: Erro na inicialização assíncrona em background:",
+        error,
+      );
+    });
+
     return null;
   }
 }
