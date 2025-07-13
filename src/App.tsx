@@ -1324,7 +1324,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar funções do Firestore dinamicamente
+              // Importar funç��es do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -1385,6 +1385,10 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log("�� Iniciando sincronização inicial com Firestore...");
+
+        // Executar testes de segurança do Firestore
+        console.log("🔒 Testando regras de segurança...");
+        await testFirestoreSecurityRules();
 
         try {
           await firestoreService.syncAll();
@@ -12034,7 +12038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações Básicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações Básicas
+                        Informações B��sicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
