@@ -2921,7 +2921,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             }
 
             try {
-              const result = await handleLoginWithRememberMe(
+              console.log("🔐 Using robust auth service for login...");
+              const result = await authService.login(
                 email.trim(),
                 password,
                 rememberMe,
@@ -3098,7 +3099,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Automática Ativa"
+                            ? "Sincronização Autom��tica Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -10267,7 +10268,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtração
+                          Sistema de Filtra��ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -10316,7 +10317,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -11955,7 +11956,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.description && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Descrição
+                          Descri��ão
                         </label>
                         <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                           {selectedWork.description}
