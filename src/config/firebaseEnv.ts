@@ -3,7 +3,9 @@
 
 // Configuração principal do projeto (Leiria)
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    "AIzaSyC5Pp6xbF4YJjGkJpfG6xXfJR4jBjJJZ4w",
   authDomain:
     import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
   databaseURL:
@@ -13,9 +15,10 @@ export const LEIRIA_FIREBASE_CONFIG = {
   storageBucket:
     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
     "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:123456789:web:abcdef123456",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-ABCDEFGHIJ",
 };
 
 // Configuração legacy do projeto (Leirisonda)
