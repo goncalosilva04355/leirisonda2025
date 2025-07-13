@@ -45,17 +45,34 @@ async function initializeFirebaseBasic(): Promise<FirebaseApp | null> {
       const existingApps = getApps();
 
       if (existingApps.length > 0) {
-        // Usar a primeira app existente se for válida
-        firebaseApp = existingApps[0];
-        console.log("✅ Firebase: Reutilizando app existente");
+        // Verificar se a app existente é realmente válida
+        const existingApp = existingApps[0];
+        try {
+          // Teste simples para verificar se a app não foi deletada
+          const projectId = existingApp.options?.projectId;
+          if (projectId) {
+            firebaseApp = existingApp;
+            console.log("✅ Firebase: App existente válida reutilizada");
+          } else {
+            throw new Error("App sem projectId");
+          }
+        } catch (validationError) {
+          console.warn(
+            "⚠️ App existente inválida, criando nova:",
+            validationError,
+          );
+          // Criar nova app sem deletar a existente
+          firebaseApp = initializeApp(firebaseConfig);
+          console.log("✅ Firebase: Nova app criada");
+        }
       } else {
         // Criar nova app apenas se não existir nenhuma
         firebaseApp = initializeApp(firebaseConfig);
         console.log("✅ Firebase: Nova app inicializada");
-
-        // Aguardar um pouco para app estar completamente pronta
-        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
+
+      // Aguardar um pouco para app estar completamente pronta
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       console.log("🔥 Firebase sempre ativo - sincronização garantida");
       return firebaseApp;
