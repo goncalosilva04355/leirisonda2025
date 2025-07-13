@@ -12,25 +12,20 @@ class OfflineFirstService {
 
   private async checkFirebaseAvailability() {
     try {
-      // Tentar importar Firebase de forma segura
-      const { initializeApp } = await import("firebase/app");
+      // Usar configuração Leiria
+      const { getFirebaseFirestore, isFirestoreReady } = await import(
+        "../firebase/leiriaConfig"
+      );
 
-      // Configuração mínima para teste
-      const testConfig = {
-        apiKey: "test-key",
-        authDomain: "test.firebaseapp.com",
-        projectId: "test-project",
-        storageBucket: "test.appspot.com",
-        messagingSenderId: "123456789",
-        appId: "1:123456789:web:test",
-      };
-
-      // Tentar inicializar (mas não falhar se não conseguir)
-      const app = initializeApp(testConfig, "test-app-" + Date.now());
-
-      // Se chegou aqui, Firebase está disponível
-      this.firebaseAvailable = true;
-      console.log("✅ Firebase disponível (modo opcional)");
+      // Verificar se Firestore está disponível
+      const db = getFirebaseFirestore();
+      if (db && isFirestoreReady()) {
+        this.firebaseAvailable = true;
+        console.log("✅ Firebase Leiria disponível");
+      } else {
+        this.firebaseAvailable = false;
+        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
+      }
     } catch (error) {
       this.firebaseAvailable = false;
       console.log("📱 Firebase não disponível - modo offline ativo");
