@@ -39,6 +39,7 @@ import { NotificationDemo } from "../components/NotificationDemo";
 import NuclearUserCleanup from "../components/NuclearUserCleanup";
 import CompleteDeviceActivation from "../components/CompleteDeviceActivation";
 import { DataPersistenceDiagnostic } from "../components/DataPersistenceDiagnostic";
+import FirebaseWriteDiagnosticComponent from "../components/FirebaseWriteDiagnostic";
 
 interface AdminPageProps {
   onLogout: () => void;
