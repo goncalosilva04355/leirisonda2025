@@ -1,0 +1,3 @@
+Linha 1867: Trocar "return;" por "return result;"
+
+A função handleLoginWithRememberMe deve retornar o resultado do login em vez de void.
