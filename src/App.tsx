@@ -87,6 +87,7 @@ import { RegisterForm } from "./components/RegisterForm";
 import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import { FirebaseStatusBox } from "./components/FirebaseStatusBox";
 
 import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -2352,7 +2353,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (notificationsEnabled && Notification.permission === "granted") {
         console.log("📞 All conditions met, sending notification...");
         showNotification(
-          "Nova Obra Atribuída",
+          "Nova Obra Atribu��da",
           `A obra "${workTitle}" foi-lhe atribuída`,
           "work-assignment",
         );
@@ -8241,7 +8242,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€
+                        <strong>{maintenance.length}</strong> manuten���
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -8749,7 +8750,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome completo ou razão social"
+                            placeholder="Nome completo ou raz��o social"
                             required
                           />
                         </div>
@@ -11613,7 +11614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         selectedWork.technicians.length > 0 && (
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Técnicos
+                              T��cnicos
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.technicians.join(", ")}
