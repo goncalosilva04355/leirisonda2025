@@ -85,6 +85,7 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
 import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
+import "./utils/clearLoginIssues"; // Limpar problemas de login e credenciais problemáticas
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -2196,7 +2197,7 @@ LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
-- Total de Manutenções: ${maintenance.length}
+- Total de Manutenç��es: ${maintenance.length}
 - Futuras Manutenç��es: ${futureMaintenance.length}
 
 MANUTENÇ��ES REALIZADAS:
@@ -5578,7 +5579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const client =
                             (
                               form.querySelector(
-                                'input[placeholder*="João Silva"]',
+                                'input[placeholder*="Jo��o Silva"]',
                               ) as HTMLInputElement
                             )?.value || "";
                           const contact =
