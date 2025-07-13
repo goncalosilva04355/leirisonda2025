@@ -6,7 +6,27 @@ import {
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 export class DevFirestoreService {
-  private db = getFirebaseFirestore();
+  private db: any = null;
+
+  constructor() {
+    this.initializeFirestore();
+  }
+
+  private initializeFirestore() {
+    console.log("🔧 DevFirestoreService: Inicializando Firebase...");
+
+    // Forçar inicialização
+    initializeFirebaseRobust();
+
+    // Tentar obter Firestore
+    this.db = getFirebaseFirestore();
+
+    if (this.db) {
+      console.log("✅ DevFirestoreService: Firestore pronto");
+    } else {
+      console.warn("⚠️ DevFirestoreService: Firestore não disponível");
+    }
+  }
 
   async createWork(workData: any): Promise<string | null> {
     if (!this.db) {
