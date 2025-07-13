@@ -166,8 +166,33 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
 
   const checkFirestore = (): "active" | "inactive" | "error" => {
     try {
+      // Verificar múltiplas fontes de estado do Firestore
       const firestoreCache = localStorage.getItem("firestore-cache");
-      if (firestoreCache) return "active";
+      const firebaseInitialized = localStorage.getItem("firebase-initialized");
+      const syncStatus = localStorage.getItem("sync-status");
+      const lastSync = localStorage.getItem("last-sync");
+
+      // Verificar dados que indicam Firestore ativo
+      const users = localStorage.getItem("users");
+      const works = localStorage.getItem("works");
+      const pools = localStorage.getItem("pools");
+      const maintenance = localStorage.getItem("maintenance");
+
+      // Se há cache ou dados Firestore, consideramos ativo
+      if (firestoreCache || users || works || pools || maintenance) {
+        return "active";
+      }
+
+      // Se Firebase está inicializado mas sem dados, ainda é ativo
+      if (firebaseInitialized === "true") {
+        return "active";
+      }
+
+      // Verificar se há sincronização recente
+      if (syncStatus === "completed" || lastSync) {
+        return "active";
+      }
+
       return "inactive";
     } catch {
       return "error";
