@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { LocalUserMigration } from "../utils/localUserMigration";
 
 interface MigrationStatus {
   isRunning: boolean;
