@@ -483,7 +483,7 @@ function App() {
       // Tentar Firestore primeiro
       const firestoreId = await devFirestoreService.createPool(data);
       if (firestoreId) {
-        console.log("��� Piscina criada no Firestore:", firestoreId);
+        console.log("✅ Piscina criada no Firestore:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -747,7 +747,7 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await devFirestoreService.createMaintenance(data);
+      const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("✅ Manutenção criada no Firestore:", firestoreId);
@@ -1928,7 +1928,7 @@ function App() {
     try {
       console.log("🔐 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
-      console.log("�� Password length:", loginForm.password?.length || 0);
+      console.log("🔐 Password length:", loginForm.password?.length || 0);
 
       const result = await authService.login(
         loginForm.email,
@@ -2421,7 +2421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`��� OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -8257,7 +8257,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>• Informações de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>��� Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -10966,7 +10966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon����alo Fonseca",
+  //       name: "Gon�����alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11050,7 +11050,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura📞ções avan��adas
+                Insira a palavra-passe para aceder às configura📞ções avançadas
               </p>
             </div>
 
