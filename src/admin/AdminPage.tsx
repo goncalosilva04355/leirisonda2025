@@ -14,7 +14,7 @@ import {
   Zap,
 } from "lucide-react";
 
-// Import dos componentes de teste e configuraç��o
+// Import dos componentes de teste e configuração
 import { AuthSyncDiagnostic } from "../components/AuthSyncDiagnostic";
 import { FullSyncManager } from "../components/FullSyncManager";
 import { FirebaseStatus } from "../components/FirebaseStatus";
@@ -28,7 +28,6 @@ import { PhoneSettings } from "../components/PhoneSettings";
 import { DataRecovery } from "../components/DataRecovery";
 import UserManager from "../components/UserManager";
 import MigrationTester from "../components/MigrationTester";
-import { UserDiagnostic } from "../components/UserDiagnostic";
 
 import { WorksDataDiagnostic } from "../components/WorksDataDiagnostic";
 import { LoginFixer } from "../components/LoginFixer";
@@ -48,7 +47,6 @@ interface AdminPageProps {
 type AdminSection =
   | "overview"
   | "complete-activation"
-  | "user-diagnostic"
   | "user-management"
   | "data-migration"
   | "work-assignment-fix"
@@ -97,14 +95,6 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         "CRÍTICO: Verificar e reparar problemas com guardado de dados - especial para app publicada",
       icon: Database,
       color: "bg-gradient-to-r from-red-600 to-orange-600",
-    },
-    {
-      id: "user-diagnostic" as AdminSection,
-      title: "🔍 Diagnóstico de Utilizadores",
-      description:
-        "URGENTE: Verificar porque utilizadores guardados não aparecem",
-      icon: Users,
-      color: "bg-red-600",
     },
     {
       id: "user-management" as AdminSection,
@@ -278,21 +268,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         return <CompleteDeviceActivation />;
       case "data-persistence-diagnostic":
         return <DataPersistenceDiagnostic autoCheck={true} />;
-      case "user-diagnostic":
-        return <UserDiagnostic />;
       case "user-management":
         return <UserManager currentUser={currentUser} />;
       case "data-migration":
         return <MigrationTester />;
       case "work-assignment-fix":
-        return (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="text-yellow-800 font-medium">
-              Componente não disponível
-            </h3>
-            <p className="text-yellow-700">WorkAssignmentFix não encontrado.</p>
-          </div>
-        );
+        return <WorkAssignmentFix />;
       case "works-data-diagnostic":
         return <WorksDataDiagnostic />;
       case "login-fix":
@@ -302,16 +283,9 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "sync-manager":
         return <FullSyncManager />;
       case "firebase-status":
-        return <FirebaseStatus isConnected={true} />;
+        return <FirebaseStatus />;
       case "user-debugger":
-        return (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="text-yellow-800 font-medium">
-              Componente não disponível
-            </h3>
-            <p className="text-yellow-700">UserDebugger não encontrado.</p>
-          </div>
-        );
+        return <UserDebugger />;
       case "data-cleanup":
         return <DataCleanupManager />;
       case "data-management":
@@ -333,29 +307,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       case "phone-settings":
         return <PhoneSettings />;
       case "mobile-settings":
-        return (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="text-yellow-800 font-medium">
-              Componente não disponível
-            </h3>
-            <p className="text-yellow-700">MobileSettings não encontrado.</p>
-          </div>
-        );
+        return <MobileSettings />;
       case "data-recovery":
         return <DataRecovery />;
       case "data-backup":
         return <DataBackupManager />;
       case "firebase-quota":
-        return (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <h3 className="text-yellow-800 font-medium">
-              Componente não disponível
-            </h3>
-            <p className="text-yellow-700">
-              FirebaseQuotaManager não encontrado.
-            </p>
-          </div>
-        );
+        return <FirebaseQuotaManager />;
       case "user-deletion":
         return <DangerousUserDeletion />;
       case "notification-demo":

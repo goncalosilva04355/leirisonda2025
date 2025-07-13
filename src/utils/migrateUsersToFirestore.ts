@@ -391,10 +391,14 @@ export class MigrateUsersToFirestore {
           const { initializeApp, getApps } = await import("firebase/app");
           const { getFirestore } = await import("firebase/firestore");
 
-          const { getLegacyFirebaseConfig } = await import(
-            "../config/firebaseEnv"
-          );
-          const config = getLegacyFirebaseConfig();
+          const config = {
+            apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+            authDomain: "leirisonda-16f8b.firebaseapp.com",
+            projectId: "leirisonda-16f8b",
+            storageBucket: "leirisonda-16f8b.firebasestorage.app",
+            messagingSenderId: "540456875574",
+            appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
+          };
 
           let app;
           const existingApps = getApps();

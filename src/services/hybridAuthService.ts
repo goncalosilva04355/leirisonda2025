@@ -65,13 +65,6 @@ class HybridAuthService {
             createdAt: new Date().toISOString(),
           };
 
-          // Persistir sessão se rememberMe for true
-          if (rememberMe) {
-            localStorage.setItem("rememberMe", "true");
-            localStorage.setItem("autoLoginEnabled", "true");
-            console.log("💾 Sessão persistida - auto-login ativo");
-          }
-
           console.log("✅ Login Firebase bem-sucedido");
           return { success: true, user: userProfile };
         }
