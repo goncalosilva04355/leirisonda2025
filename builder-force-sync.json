@@ -1,33 +1,9 @@
 {
   "builderIo": {
-    "apiKey": "cc309d103d0b4ade88d90ee94cb2f741",
-    "spaceId": "cc309d103d0b4ade88d90ee94cb2f741",
-    "lastModified": "2024-12-28T15:40:00Z",
-    "forceSync": true
+    "apiKey": "[MOVED TO ENV VAR BUILDER_IO_API_KEY]",
+    "spaceId": "[MOVED TO ENV VAR BUILDER_IO_API_KEY]",
+    "note": "API keys moved to environment variables for security"
   },
-  "github": {
-    "repository": "goncalosilva04355/Builder-stellar-landing",
-    "branch": "main",
-    "commitsToPush": 5,
-    "lastAttempt": "2024-12-28T16:00:00Z",
-    "status": "force-main-branch"
-  },
-  "application": {
-    "name": "Leirisonda",
-    "version": "1.0.0",
-    "status": "functional",
-    "components": {
-      "login": "src/pages/LoginPage.tsx",
-      "authProvider": "src/App.tsx",
-      "mainApp": "src/main.tsx"
-    }
-  },
-  "syncTrigger": {
-    "timestamp": "2024-12-28T15:52:00Z",
-    "method": "force-retry",
-    "priority": "critical",
-    "retryCount": 1,
-    "forceNewAttempt": true,
-    "bypassCache": true
-  }
+  "lastSync": "2024-01-15T10:30:00Z",
+  "syncEnabled": true
 }
