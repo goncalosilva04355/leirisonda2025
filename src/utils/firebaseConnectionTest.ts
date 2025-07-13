@@ -1,6 +1,9 @@
 // Teste de conexão Firebase em produção
-import { getFirebaseApp } from "../firebase/basicConfig";
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+import { getFirebaseApp, getFirebaseAppAsync } from "../firebase/basicConfig";
+import {
+  getFirebaseFirestore,
+  getFirebaseFirestoreAsync,
+} from "../firebase/firestoreConfig";
 import {
   collection,
   getDocs,
