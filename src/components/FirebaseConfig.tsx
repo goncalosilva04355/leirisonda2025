@@ -57,17 +57,18 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         );
       }
 
-      // If no stored config, use the provided default config
+      // If no stored config, use environment variables
       const defaultConfig = {
-        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
         authDomain: "leiria-1cfc9.firebaseapp.com",
         databaseURL:
           "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
         projectId: "leiria-1cfc9",
         storageBucket: "leiria-1cfc9.firebasestorage.app",
-        messagingSenderId: "632599887141",
-        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-        measurementId: "G-Q2QWQVH60L",
+        messagingSenderId:
+          import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
       };
 
       setConfig(defaultConfig);
@@ -124,15 +125,16 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
   const handleReset = () => {
     const defaultConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
       authDomain: "leiria-1cfc9.firebaseapp.com",
       databaseURL:
         "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "leiria-1cfc9",
       storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
+      messagingSenderId:
+        import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
     };
 
     setConfig(defaultConfig);
