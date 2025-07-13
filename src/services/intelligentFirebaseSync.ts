@@ -31,10 +31,10 @@ class IntelligentFirebaseSyncService {
   private startStabilityTesting(): void {
     console.log("🧠 Iniciando teste de estabilidade Firebase...");
 
-    // Testar estabilidade a cada 60 segundos
+    // Teste de estabilidade reduzido para evitar refresh constante
     this.stabilityTestInterval = setInterval(() => {
       this.testFirebaseStability();
-    }, 60000);
+    }, 300000); // 5 minutos em vez de 1 minuto
 
     // Teste inicial após 3 segundos
     setTimeout(() => this.testFirebaseStability(), 3000);
@@ -105,10 +105,10 @@ class IntelligentFirebaseSyncService {
     console.log("🚀 HABILITANDO sincronização automática!");
     this.state.autoSyncEnabled = true;
 
-    // Iniciar sincronização automática a cada 30 segundos
+    // Sincronização automática reduzida para evitar refresh constante
     this.syncInterval = setInterval(() => {
       this.performIntelligentSync();
-    }, 30000);
+    }, 180000); // 3 minutos em vez de 30 segundos
 
     // Sincronização inicial
     setTimeout(() => this.performIntelligentSync(), 2000);

@@ -32,6 +32,7 @@ const MigrationTester: React.FC = () => {
     };
 
     checkFirestore();
+    // Check every 2 seconds
     const interval = setInterval(checkFirestore, 2000);
     return () => clearInterval(interval);
   }, []);

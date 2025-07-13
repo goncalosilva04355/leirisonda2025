@@ -1,22 +1,64 @@
-// Configuração Firebase única - projeto Leiria apenas
-// Todas as referências a Leirisonda foram removidas para evitar conflitos
+// Configuração Firebase única - projeto Leiria sempre sincronizado
+// Usa variáveis de ambiente do Netlify quando disponíveis
 
-// Configuração única do projeto Leiria
+// Configuração real do projeto Leiria com fallback para variáveis de ambiente
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
   databaseURL:
+    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "947851234567",
-  appId: "1:947851234567:web:abcd1234567890abcd1234",
-  measurementId: "G-ABCD123456",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "leiria-1cfc9",
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "632599887141",
+  appId:
+    import.meta.env.VITE_FIREBASE_APP_ID ||
+    "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
 };
 
-// Função única para obter configuração
+// Função única para obter configuração com validação
 export function getFirebaseConfig() {
-  return LEIRIA_FIREBASE_CONFIG;
+  // Validar configuração antes de retornar
+  const config = LEIRIA_FIREBASE_CONFIG;
+
+  // Verificar se todos os campos essenciais estão presentes
+  const requiredFields = [
+    "apiKey",
+    "authDomain",
+    "projectId",
+    "storageBucket",
+    "messagingSenderId",
+    "appId",
+  ];
+  const missingFields = requiredFields.filter(
+    (field) => !config[field as keyof typeof config],
+  );
+
+  if (missingFields.length > 0) {
+    console.error(
+      "❌ Firebase Config: Campos obrigatórios em falta:",
+      missingFields,
+    );
+    throw new Error(
+      `Firebase config inválida: campos em falta - ${missingFields.join(", ")}`,
+    );
+  }
+
+  // Verificar se projectId é válido
+  if (!config.projectId || config.projectId.length < 3) {
+    console.error("❌ Firebase Config: projectId inválido:", config.projectId);
+    throw new Error("Firebase config inválida: projectId inválido");
+  }
+
+  console.log("✅ Firebase Config validada:", config.projectId);
+  return config;
 }
 
 // Exportação padrão

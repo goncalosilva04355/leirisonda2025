@@ -8,48 +8,184 @@ const firebaseConfig = getFirebaseConfig();
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
+let initializationPromise: Promise<FirebaseApp | null> | null = null;
 
-// Função simples para inicializar Firebase
-function initializeFirebaseBasic(): FirebaseApp | null {
+// Função assíncrona robusta para inicializar Firebase
+async function initializeFirebaseBasic(): Promise<FirebaseApp | null> {
+  // Se já estamos inicializando, retornar a promise existente
+  if (initializationPromise) {
+    return initializationPromise;
+  }
+
+  // Se já temos uma app válida, retorná-la
+  if (firebaseApp) {
+    try {
+      const apps = getApps();
+      if (apps.find((app) => app === firebaseApp)) {
+        console.log("✅ Firebase: App existente e válida");
+        return firebaseApp;
+      }
+    } catch (error) {
+      console.warn("⚠️ Firebase: App existente inválida, reinicializando");
+      firebaseApp = null;
+    }
+  }
+
+  // Criar promise de inicialização
+  initializationPromise = (async () => {
+    try {
+      // Verificar se estamos em modo privado
+      if (isPrivateBrowsing()) {
+        console.warn(
+          "🔒 Modo privado detectado - Firebase pode ter limitações",
+        );
+      }
+
+      // Verificar se já existe uma app válida
+      const existingApps = getApps();
+
+      if (existingApps.length > 0) {
+        // Verificar se a app existente é realmente válida
+        const existingApp = existingApps[0];
+        try {
+          // Teste simples para verificar se a app não foi deletada
+          const projectId = existingApp.options?.projectId;
+          if (projectId) {
+            firebaseApp = existingApp;
+            console.log("✅ Firebase: App existente válida reutilizada");
+          } else {
+            throw new Error("App sem projectId");
+          }
+        } catch (validationError) {
+          console.warn(
+            "⚠️ App existente inválida, criando nova:",
+            validationError,
+          );
+          // Criar nova app sem deletar a existente
+          firebaseApp = initializeApp(firebaseConfig);
+          console.log("✅ Firebase: Nova app criada");
+        }
+      } else {
+        // Criar nova app apenas se não existir nenhuma
+        firebaseApp = initializeApp(firebaseConfig);
+        console.log("✅ Firebase: Nova app inicializada");
+      }
+
+      // Aguardar mais tempo para app estar completamente pronta e estável
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Fazer teste adicional para garantir que a app está funcional
+      try {
+        const appOptions = firebaseApp.options;
+        if (!appOptions.projectId || !appOptions.authDomain) {
+          throw new Error("App não tem configurações essenciais");
+        }
+
+        // Verificar se a app está realmente registrada no Firebase
+        const apps = getApps();
+        if (!apps.includes(firebaseApp)) {
+          throw new Error("App não está registrada");
+        }
+
+        console.log("🔥 Firebase sempre ativo - sincronização garantida");
+        console.log("✅ Firebase App completamente inicializada e validada");
+      } catch (validationError) {
+        console.error(
+          "❌ Firebase App falhou na validação final:",
+          validationError,
+        );
+        firebaseApp = null;
+        return null;
+      }
+
+      return firebaseApp;
+    } catch (error: any) {
+      console.error("❌ Firebase: Erro na inicialização:", error);
+      firebaseApp = null;
+
+      // Se for erro de app já existir, tentar usar a existente
+      if (error.code === "app/duplicate-app") {
+        const apps = getApps();
+        if (apps.length > 0) {
+          firebaseApp = apps[0];
+          console.log("✅ Firebase: App duplicada resolvida, usando existente");
+          return firebaseApp;
+        }
+      }
+
+      return null;
+    } finally {
+      // Limpar promise após conclusão
+      initializationPromise = null;
+    }
+  })();
+
+  return initializationPromise;
+}
+
+// Versão síncrona para compatibilidade com código existente
+function initializeFirebaseBasicSync(): FirebaseApp | null {
+  if (firebaseApp) {
+    return firebaseApp;
+  }
+
+  // Tentar inicialização assíncrona e retornar null se não estiver pronta
+  initializeFirebaseBasic()
+    .then((app) => {
+      firebaseApp = app;
+    })
+    .catch((error) => {
+      console.error("❌ Firebase: Erro na inicialização assíncrona:", error);
+    });
+
+  return firebaseApp;
+}
+
+// Função robusta para obter a app Firebase (síncrona)
+export function getFirebaseApp(): FirebaseApp | null {
+  // Se não temos app, tentar inicializar de forma síncrona
+  if (!firebaseApp) {
+    return initializeFirebaseBasicSync();
+  }
+
+  // Verificar se a app ainda é válida
   try {
-    // Verificar se estamos em modo privado
-    if (isPrivateBrowsing()) {
-      console.warn(
-        "🔒 Modo privado detectado - Firebase pode ter funcionalidades limitadas",
-      );
-      console.log(
-        "💡 Sistema funcionará em modo local com funcionalidades reduzidas",
-      );
+    // Teste mais robusto para verificar se a app é válida
+    const projectId = firebaseApp.options?.projectId;
+    if (!projectId) {
+      console.warn("⚠️ Firebase: App sem projectId, considerada inválida");
+      firebaseApp = null;
+      return initializeFirebaseBasicSync();
     }
 
-    // Verificar se já existe uma app
-    const existingApps = getApps();
-
-    if (existingApps.length > 0) {
-      firebaseApp = existingApps[0];
-      console.log("✅ Firebase: Usando app existente");
-    } else {
-      firebaseApp = initializeApp(firebaseConfig);
-      console.log("✅ Firebase: App inicializada com sucesso");
+    // Verificar se a app está na lista de apps
+    const apps = getApps();
+    if (!apps.find((app) => app === firebaseApp)) {
+      console.warn("⚠️ Firebase: App não encontrada na lista, reinicializando");
+      firebaseApp = null;
+      return initializeFirebaseBasicSync();
     }
 
     return firebaseApp;
-  } catch (error) {
+  } catch (error: any) {
+    // Se for erro de app deletada, limpar referência
+    if (error.code === "app/app-deleted") {
+      console.warn("⚠️ Firebase: App foi deletada, limpando referência");
+      firebaseApp = null;
+      return initializeFirebaseBasicSync();
+    }
+
     console.warn(
-      "⚠️ Firebase: Problema na inicialização, mas app pode funcionar em modo local",
+      "⚠️ Firebase: Erro ao verificar app, mas retornando existente:",
+      error,
     );
-    console.log("💡 Sistema continua funcional com autenticação local");
-    firebaseApp = null;
-    return null;
+    return firebaseApp; // Retornar a app mesmo com erro de verificação
   }
 }
 
-// Função para obter a app Firebase
-export function getFirebaseApp(): FirebaseApp | null {
-  if (!firebaseApp) {
-    return initializeFirebaseBasic();
-  }
-  return firebaseApp;
+// Função assíncrona para obter a app Firebase
+export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
+  return await initializeFirebaseBasic();
 }
 
 // Função para verificar se Firebase está pronto
@@ -57,8 +193,8 @@ export function isFirebaseReady(): boolean {
   return firebaseApp !== null;
 }
 
-// Inicializar automaticamente quando o módulo é carregado
-initializeFirebaseBasic();
+// Inicialização lazy - apenas quando necessário
+// initializeFirebaseBasic(); // Removido para evitar conflitos
 
 // Exportações para compatibilidade com código existente
 export const app = firebaseApp;

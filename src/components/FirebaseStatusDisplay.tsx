@@ -41,8 +41,8 @@ export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
     // Check initial status
     checkStatus();
 
-    // Set up periodic checks
-    const interval = setInterval(checkStatus, 5000);
+    // Reduzido polling para evitar refresh constante no Builder.io
+    const interval = setInterval(checkStatus, 60000); // 1 minuto em vez de 5 segundos
 
     // Listen to online/offline events
     const handleOnline = () => setConnectionStatus("online");

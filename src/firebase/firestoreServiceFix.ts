@@ -129,16 +129,21 @@ export class FirestoreServiceFix {
 
       // Method 3: Force new app with Firestore
       async () => {
-        console.log("🔄 Method 3: Force new app");
-        const { initializeApp, deleteApp, getApps } = await import(
-          "firebase/app"
-        );
+        console.log("🔄 Method 3: Use existing or create new app");
+        const { initializeApp, getApps } = await import("firebase/app");
         const { getFirestore } = await import("firebase/firestore");
 
-        // Delete existing apps
+        // Verificar se já existe uma app válida
         const existingApps = getApps();
-        for (const app of existingApps) {
-          await deleteApp(app);
+        if (existingApps.length > 0) {
+          try {
+            const existingApp = existingApps[0];
+            const db = getFirestore(existingApp);
+            console.log("✅ Using existing app for Firestore");
+            return db;
+          } catch (error) {
+            console.warn("⚠️ Existing app invalid, creating new one:", error);
+          }
         }
 
         const { getLegacyFirebaseConfig } = await import(

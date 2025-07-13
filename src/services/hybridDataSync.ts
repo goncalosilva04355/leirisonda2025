@@ -23,11 +23,11 @@ class HybridDataSyncService {
     this.setupOnlineListener();
   }
 
-  // Iniciar sincronização automática a cada 30 segundos
+  // Sincronização reduzida para evitar refresh constante
   private startAutoSync(): void {
     this.syncInterval = setInterval(() => {
       this.performBackgroundSync();
-    }, 30000);
+    }, 300000); // 5 minutos em vez de 30 segundos
   }
 
   // Monitorar conexão à internet

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Settings, AlertTriangle, Database } from "lucide-react";
-import { QuickMobileFix } from "../components/QuickMobileFix";
+import { Database } from "lucide-react";
 import {
   saveLoginAttempt,
   testFirestoreConnection,
 } from "../services/firestoreDataService";
+import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 
 interface LoginPageProps {
   onLogin: (
@@ -27,17 +27,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     password: "",
   }));
   const [rememberMe, setRememberMe] = useState(() => false);
-  const [showEmergencyFix, setShowEmergencyFix] = useState(() => {
-    // Detectar se é dispositivo móvel e há conflitos
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const hasQuotaIssues =
-      localStorage.getItem("firebase-quota-exceeded") === "true";
-    const hasEmergencyShutdown =
-      localStorage.getItem("firebase-emergency-shutdown") === "true";
-    const hasConflicts =
-      document.querySelectorAll('iframe[src*="firebaseapp.com"]').length > 1;
-    return isMobile && (hasQuotaIssues || hasEmergencyShutdown || hasConflicts);
-  });
   const [firestoreStatus, setFirestoreStatus] = useState<
     "checking" | "ready" | "error"
   >("checking");
@@ -67,22 +56,11 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             setRememberMe(true);
             console.log("📋 Auto-filled login form from saved credentials");
 
-            // AUTO-LOGIN: Executar login automático quando rememberMe está ativo
-            console.log("🔄 Auto-login ativo - fazendo login automático...");
-
-            // Executar auto-login com credenciais salvas
-            const performAutoLogin = async () => {
-              try {
-                await onLogin(email, password, true);
-                console.log("✅ Auto-login bem-sucedido");
-              } catch (autoLoginError) {
-                console.error("❌ Erro no auto-login:", autoLoginError);
-                // Em caso de erro, limpar credenciais salvas
-                sessionStorage.removeItem("savedLoginCredentials");
-              }
-            };
-
-            performAutoLogin();
+            // AUTO-LOGIN: Temporariamente desabilitado para evitar bloqueios
+            console.log(
+              "ℹ️ Auto-login temporariamente desabilitado para evitar bloqueios",
+            );
+            console.log("📋 Credenciais preenchidas - login manual necessário");
           } else {
             console.log("⚠️ Incomplete saved credentials, skipping auto-login");
           }
@@ -94,7 +72,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("❌ Error in LoginPage useEffect:", error);
+      console.error("�� Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
@@ -205,25 +183,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     [],
   );
 
-  const handleEmergencyFix = useCallback(() => {
-    // Limpar todas as proteções Firebase
-    localStorage.removeItem("firebase-quota-exceeded");
-    localStorage.removeItem("firebase-quota-check-time");
-    localStorage.removeItem("firebase-emergency-shutdown");
-    localStorage.removeItem("firebase-circuit-breaker");
-
-    // Remover iframes duplicados
-    const firebaseIframes = document.querySelectorAll(
-      'iframe[src*="firebaseapp.com"]',
-    );
-    for (let i = 1; i < firebaseIframes.length; i++) {
-      firebaseIframes[i].remove();
-    }
-
-    setShowEmergencyFix(false);
-    alert("✅ Fix aplicado! Agora tente fazer login com password '123'");
-  }, []);
-
   return (
     <div className="min-h-screen bg-blue-200 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -238,39 +197,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             />
           </div>
         </div>
-
-        {/* Admin Access Button */}
-        <div className="text-center mb-4 space-y-2">
-          <button
-            type="button"
-            onClick={() => {
-              window.location.hash = "administracao";
-            }}
-            className="text-sm text-gray-600 hover:text-gray-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
-          >
-            <Settings className="h-4 w-4" />
-            <span>Área de Administração</span>
-          </button>
-
-          {/* Emergency Fix Button - Only show on mobile with issues */}
-          {showEmergencyFix && (
-            <button
-              type="button"
-              onClick={handleEmergencyFix}
-              className="text-sm text-red-600 hover:text-red-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 bg-red-25 animate-pulse"
-            >
-              <AlertTriangle className="h-4 w-4" />
-              <span>⚡ Fix Firebase (📱)</span>
-            </button>
-          )}
-        </div>
-
-        {/* Quick Mobile Fix - Show if conflicts detected */}
-        {showEmergencyFix && (
-          <div className="mb-4">
-            <QuickMobileFix onFixApplied={() => setShowEmergencyFix(false)} />
-          </div>
-        )}
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
@@ -343,12 +269,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
                 )}
               </div>
             )}
-            {firestoreStatus === "error" && (
-              <div className="text-yellow-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3" />
-                <span>⚠️ Firestore indisponível (modo local)</span>
-              </div>
-            )}
+            {/* Status Firebase sempre conectado */}
+            <div className="flex items-center justify-center">
+              <FirebaseAlwaysOnStatus />
+            </div>
           </div>
 
           {/* Error Message */}

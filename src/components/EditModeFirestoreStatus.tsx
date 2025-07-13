@@ -56,11 +56,11 @@ export const EditModeFirestoreStatus: React.FC<
     checkStatus();
 
     if (isEditing) {
-      // More frequent checks during editing
-      interval = setInterval(checkStatus, 2000);
+      // Reduced frequency even during editing to prevent refresh issues
+      interval = setInterval(checkStatus, 30000); // 30 segundos em vez de 2
     } else {
       // Less frequent checks when not editing
-      interval = setInterval(checkStatus, 10000);
+      interval = setInterval(checkStatus, 120000); // 2 minutos em vez de 10 segundos
     }
 
     return () => {

@@ -77,10 +77,35 @@ class HybridAuthService {
         }
       } catch (firebaseError: any) {
         console.warn(
-          "⚠️ Firebase login falhou, tentando modo local:",
-          firebaseError.message,
+          "⚠️ Firebase login falhou:",
+          firebaseError.code || firebaseError.message,
         );
-        // Fallback para local
+
+        // Tratar erros específicos do Firebase
+        if (firebaseError.code === "auth/too-many-requests") {
+          return {
+            success: false,
+            error:
+              "Muitas tentativas de login. Aguarde alguns minutos e tente novamente.",
+          };
+        } else if (firebaseError.code === "auth/weak-password") {
+          return {
+            success: false,
+            error: "Password deve ter pelo menos 6 caracteres.",
+          };
+        } else if (firebaseError.code === "auth/user-not-found") {
+          console.log(
+            "🔧 Utilizador não encontrado no Firebase, tentando modo local...",
+          );
+        } else if (firebaseError.code === "auth/wrong-password") {
+          console.log(
+            "🔧 Password incorreta no Firebase, tentando modo local...",
+          );
+        } else {
+          console.log("🔧 Erro Firebase genérico, tentando modo local...");
+        }
+
+        // Fallback para local (exceto para erros que não devem fazer fallback)
       }
     }
 

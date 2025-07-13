@@ -22,6 +22,7 @@ import { UserDiagnostic } from "./UserDiagnostic";
 import UserManager from "./UserManager";
 import { DataPersistenceDiagnostic } from "./DataPersistenceDiagnostic";
 import FirebaseWriteDiagnosticComponent from "./FirebaseWriteDiagnostic";
+import { AutoSyncIndicator } from "./AutoSyncIndicator";
 
 interface AdminSidebarProps {
   currentUser?: any;
@@ -234,6 +235,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <ChevronRight className="w-4 h-4" />
         )}
       </button>
+
+      {/* Indicador de Sincronização Automática */}
+      <div className="px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+        <AutoSyncIndicator className="text-xs" />
+      </div>
 
       {/* Lista de Ferramentas */}
       {isExpanded && (

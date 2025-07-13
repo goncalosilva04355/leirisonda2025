@@ -83,6 +83,8 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
+import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -90,6 +92,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -564,7 +567,7 @@ function App() {
           if (fcmSuccess) {
             console.log(`✅ Notificação FCM enviada para ${assignedUser.name}`);
           } else {
-            console.warn(`⚠️ Falha no envio FCM para ${assignedUser.name}`);
+            console.warn(`���️ Falha no envio FCM para ${assignedUser.name}`);
           }
 
           // 2. Salvar notificação local para o utilizador
@@ -713,7 +716,7 @@ function App() {
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("€ Firestore não disponível, usando sistema atual");
+        console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
         // Enviar notifica��ões mesmo no fallback
@@ -760,7 +763,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -1062,7 +1065,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("🔄 Users updated event received, reloading...");
+      console.log("��� Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -1221,51 +1224,17 @@ function App() {
           "savedLoginCredentials",
         );
 
-        if (
-          autoLoginEnabled === "true" &&
-          rememberMe === "true" &&
-          savedCredentials
-        ) {
-          console.log("🔄 Auto-login detectado, tentando restaurar sessão...");
+        // Auto-login temporariamente desabilitado para evitar loops
+        console.log("ℹ️ Auto-login desabilitado - login manual necessário");
 
-          try {
-            const credentials = JSON.parse(savedCredentials);
-            if (
-              credentials.email &&
-              credentials.password &&
-              credentials.rememberMe
-            ) {
-              console.log("📧 Tentando auto-login para:", credentials.email);
-
-              const result = await authService.login(
-                credentials.email,
-                credentials.password,
-                true,
-              );
-
-              if (result.success && result.user) {
-                console.log(
-                  "✅ Auto-login bem-sucedido para:",
-                  result.user.email,
-                );
-                setCurrentUser(result.user);
-                setIsAuthenticated(true);
-                return; // Não fazer logout se auto-login funcionou
-              } else {
-                console.warn("�� Auto-login falhou:", result.error);
-                // Limpar credenciais inválidas
-                safeSessionStorage.removeItem("savedLoginCredentials");
-                safeLocalStorage.removeItem("autoLoginEnabled");
-                safeLocalStorage.removeItem("rememberMe");
-              }
-            }
-          } catch (autoLoginError) {
-            console.error("❌ Erro no auto-login:", autoLoginError);
-            // Limpar credenciais corrompidas
-            safeSessionStorage.removeItem("savedLoginCredentials");
-            safeLocalStorage.removeItem("autoLoginEnabled");
-            safeLocalStorage.removeItem("rememberMe");
-          }
+        // Limpar credenciais de auto-login para evitar tentativas futuras
+        if (autoLoginEnabled === "true" || rememberMe === "true") {
+          console.log(
+            "🧹 Limpando credenciais de auto-login para evitar loops",
+          );
+          safeSessionStorage.removeItem("savedLoginCredentials");
+          safeLocalStorage.removeItem("autoLoginEnabled");
+          safeLocalStorage.removeItem("rememberMe");
         }
 
         // Se chegou aqui, fazer logout normal (sem auto-login ou auto-login falhou)
@@ -1403,7 +1372,7 @@ function App() {
     syncAllData();
   }, []);
 
-  // Inicializar sincronização automática em tempo real
+  // Inicializar sincronização autom��tica em tempo real
   useEffect(() => {
     const initAutoSync = async () => {
       // Aguardar Firestore estar pronto
@@ -1893,6 +1862,9 @@ function App() {
     try {
       console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
 
+      // Auto-check Firebase before login attempt
+      await firebaseAutoFix.checkOnUserAction();
+
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
@@ -1901,16 +1873,50 @@ function App() {
         // Set user state and authentication
         setCurrentUser(result.user);
         setIsAuthenticated(true);
+        safeLocalStorage.setItem("currentUser", JSON.stringify(result.user));
+        safeLocalStorage.setItem("isAuthenticated", "true");
 
-        // Navigate to dashboard
-        setTimeout(() => {
-          const hash = window.location.hash.substring(1);
-          if (hash && hash !== "login") {
-            setActiveSection(hash);
+        // Clear login form
+        setLoginForm({ email: "", password: "" });
+
+        // Navigate to dashboard or requested section with validation
+        const hash = window.location.hash.substring(1);
+        if (hash && hash !== "login") {
+          // Validate that the section exists and user has access
+          const validSections = [
+            "dashboard",
+            "obras",
+            "piscinas",
+            "manutencoes",
+            "futuras-manutencoes",
+            "nova-obra",
+            "nova-piscina",
+            "nova-manutencao",
+            "clientes",
+            "novo-cliente",
+            "configuracoes",
+            "relatorios",
+            "utilizadores",
+            "localizacoes",
+            "register",
+            "editar-obra",
+            "editar-piscina",
+            "editar-manutencao",
+          ];
+
+          if (validSections.includes(hash)) {
+            // Use setTimeout to ensure state is properly set before navigation
+            setTimeout(() => {
+              setActiveSection(hash);
+            }, 100);
           } else {
+            // Invalid hash, redirect to dashboard
+            window.location.hash = "";
             navigateToSection("dashboard");
           }
-        }, 100);
+        } else {
+          navigateToSection("dashboard");
+        }
 
         return result;
       } else {
@@ -2407,7 +2413,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           "work-assignment",
         );
       } else {
-        console.warn("❌ Notification blocked, using alert fallback:", {
+        console.warn("��� Notification blocked, using alert fallback:", {
           notificationsEnabled,
           permission: Notification.permission,
         });
@@ -2655,7 +2661,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleDeleteUser = (userId) => {
-    // BACKUP AUTOMÁTICO antes de eliminar utilizador
+    // BACKUP AUTOM��TICO antes de eliminar utilizador
     backupBeforeOperation("delete_user");
 
     // Check if it's the main user
@@ -4476,7 +4482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç€</span>
+                      <span>Agendar Manutenç���</span>
                     </button>
                   </div>
                 </div>
@@ -6065,7 +6071,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="residencial">Residencial</option>
                           <option value="comercial">Comercial</option>
                           <option value="hotel">Hotel/Resort</option>
-                          <option value="condominio">Condomínio</option>
+                          <option value="condominio">Condom��nio</option>
                           <option value="spa">SPA/Wellness</option>
                         </select>
                       </div>
@@ -8326,7 +8332,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construções
+                          Projetos e construç��es
                         </p>
                       </div>
                     </div>
@@ -8854,7 +8860,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secundário
+                            Email Secund��rio
                           </label>
                           <input
                             type="email"
@@ -8947,7 +8953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç�����es
+                            Notas e Observaç�������es
                           </label>
                           <textarea
                             rows={4}
@@ -9347,7 +9353,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
-                                <span className="font-medium">Atribu€:</span>{" "}
+                                <span className="font-medium">Atribu��:</span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
                                   ? work.assignedUsers
@@ -9811,7 +9817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observações */}
+                    {/* Observa��ões */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -11321,6 +11327,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
+                {/* Status de Sincronização Automática */}
+                <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
+                  <AutoSyncIndicator />
+                </div>
+
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");

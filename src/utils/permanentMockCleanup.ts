@@ -105,7 +105,7 @@ export class PermanentMockCleanup {
 console.log("🧹 Executando limpeza automática de dados mock...");
 PermanentMockCleanup.cleanAllMockData();
 
-// Verificar a cada 30 segundos se apareceram novos dados mock
+// Verificação automática a cada 30 segundos
 setInterval(() => {
   if (PermanentMockCleanup.hasMockData()) {
     console.log("⚠️ Dados mock detectados, limpando automaticamente...");
