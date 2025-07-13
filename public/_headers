@@ -1,4 +1,4 @@
-/*
+/*  
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -7,26 +7,8 @@
   Content-Type: application/manifest+json
   Cache-Control: public, max-age=86400
 
-/sw.js
-  Content-Type: application/javascript
-  Service-Worker-Allowed: /
-  Cache-Control: public, max-age=0, must-revalidate
-
-/firebase-messaging-sw.js
-  Content-Type: application/javascript
-  Service-Worker-Allowed: /
-  Cache-Control: public, max-age=0, must-revalidate
-
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
 /*.html
-  Cache-Control: public, max-age=0, must-revalidate
-
-/debug-chrome.js
-  Content-Type: application/javascript
-  Cache-Control: public, max-age=0, must-revalidate
-
-/emergency-recovery.js
-  Content-Type: application/javascript
   Cache-Control: public, max-age=0, must-revalidate
