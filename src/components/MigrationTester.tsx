@@ -32,8 +32,8 @@ const MigrationTester: React.FC = () => {
     };
 
     checkFirestore();
-    // Reduzido polling para evitar refresh constante
-    const interval = setInterval(checkFirestore, 60000); // 1 minuto em vez de 2 segundos
+    // Check every 2 seconds
+    const interval = setInterval(checkFirestore, 2000);
     return () => clearInterval(interval);
   }, []);
 
