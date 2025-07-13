@@ -6971,7 +6971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>�� Estado e localização</li>
-                                <li>• Informações de clientes</li>
+                                <li>• Informa��ões de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
                               </ul>
@@ -9653,7 +9653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuiç��o de
+                                Administração → "���� Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -11189,7 +11189,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
                         src="/icon.svg"
-                        alt="Leirisonda Logo"
+                        alt="App Logo"
                         className="w-full h-full object-contain"
                       />
                     </div>
