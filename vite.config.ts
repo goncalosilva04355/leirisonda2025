@@ -12,6 +12,8 @@ export default defineConfig({
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    minify: "terser",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -21,7 +23,7 @@ export default defineConfig({
           "firebase-vendor": [
             "firebase/app",
             "firebase/firestore",
-            "firebase/database",
+            "firebase/auth",
           ],
         },
       },
