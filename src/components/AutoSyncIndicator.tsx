@@ -43,7 +43,7 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
           }
         } catch (firestoreError) {
           console.warn(
-            "⚠️ AutoSyncIndicator: Erro ao verificar isFirestoreReady:",
+            "���️ AutoSyncIndicator: Erro ao verificar isFirestoreReady:",
             firestoreError,
           );
         }
@@ -81,29 +81,58 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
       }
     }, 5000);
 
-    // Escutar eventos de sync
+    // Escutar eventos de sync com proteção
     const handleAutoSyncStarted = () => {
-      setIsAutoSyncActive(true);
-      setLastSyncTime(new Date());
+      try {
+        setIsAutoSyncActive(true);
+        setLastSyncTime(new Date());
+      } catch (error) {
+        console.error(
+          "❌ AutoSyncIndicator: Erro em handleAutoSyncStarted:",
+          error,
+        );
+      }
     };
 
     const handleCollectionUpdated = () => {
-      setLastSyncTime(new Date());
+      try {
+        setLastSyncTime(new Date());
+      } catch (error) {
+        console.error(
+          "❌ AutoSyncIndicator: Erro em handleCollectionUpdated:",
+          error,
+        );
+      }
     };
 
-    window.addEventListener("autoSyncStarted", handleAutoSyncStarted);
-    window.addEventListener("obrasUpdated", handleCollectionUpdated);
-    window.addEventListener("piscinasUpdated", handleCollectionUpdated);
-    window.addEventListener("manutencoesUpdated", handleCollectionUpdated);
-    window.addEventListener("clientesUpdated", handleCollectionUpdated);
+    // Adicionar event listeners com proteção
+    try {
+      window.addEventListener("autoSyncStarted", handleAutoSyncStarted);
+      window.addEventListener("obrasUpdated", handleCollectionUpdated);
+      window.addEventListener("piscinasUpdated", handleCollectionUpdated);
+      window.addEventListener("manutencoesUpdated", handleCollectionUpdated);
+      window.addEventListener("clientesUpdated", handleCollectionUpdated);
+    } catch (error) {
+      console.error(
+        "❌ AutoSyncIndicator: Erro ao adicionar event listeners:",
+        error,
+      );
+    }
 
     return () => {
-      clearInterval(interval);
-      window.removeEventListener("autoSyncStarted", handleAutoSyncStarted);
-      window.removeEventListener("obrasUpdated", handleCollectionUpdated);
-      window.removeEventListener("piscinasUpdated", handleCollectionUpdated);
-      window.removeEventListener("manutencoesUpdated", handleCollectionUpdated);
-      window.removeEventListener("clientesUpdated", handleCollectionUpdated);
+      try {
+        clearInterval(interval);
+        window.removeEventListener("autoSyncStarted", handleAutoSyncStarted);
+        window.removeEventListener("obrasUpdated", handleCollectionUpdated);
+        window.removeEventListener("piscinasUpdated", handleCollectionUpdated);
+        window.removeEventListener(
+          "manutencoesUpdated",
+          handleCollectionUpdated,
+        );
+        window.removeEventListener("clientesUpdated", handleCollectionUpdated);
+      } catch (error) {
+        console.error("❌ AutoSyncIndicator: Erro no cleanup:", error);
+      }
     };
   }, []);
 
