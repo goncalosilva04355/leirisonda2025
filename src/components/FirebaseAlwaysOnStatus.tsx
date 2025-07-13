@@ -44,8 +44,8 @@ export const FirebaseAlwaysOnStatus: React.FC<FirebaseStatusProps> = ({
     // Teste inicial
     runTest();
 
-    // Teste a cada 30 segundos para garantir conectividade contínua
-    const interval = setInterval(runTest, 30000);
+    // Teste reduzido para evitar refresh constante no Builder.io
+    const interval = setInterval(runTest, 120000); // 2 minutos em vez de 30 segundos
 
     return () => clearInterval(interval);
   }, []);
