@@ -94,7 +94,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("❌ Error in LoginPage useEffect:", error);
+      console.error("�� Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
@@ -346,7 +346,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             {firestoreStatus === "error" && (
               <div className="text-yellow-600 flex items-center justify-center space-x-2">
                 <Database className="h-3 w-3" />
-                <span>⚠️ Firestore indisponível (modo local)</span>
+                <span>🔄 Conectando ao Firestore...</span>
               </div>
             )}
           </div>
