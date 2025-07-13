@@ -1,5 +1,2 @@
-# PWA (inclui apenas se os ficheiros existirem no dist/)
-/manifest.json  /manifest.json  200
-
-# SPA fallback (deve ser a última regra)
-/*   /index.html  200
+# SPA fallback - all routes should serve index.html
+/*    /index.html   200
