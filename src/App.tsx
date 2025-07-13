@@ -1568,7 +1568,7 @@ function App() {
               .register("/sw.js", { updateViaCache: "none" })
               .then((fallbackRegistration) => {
                 console.log(
-                  "��� Fallback Service Worker registered:",
+                  "📞 Fallback Service Worker registered:",
                   fallbackRegistration.scope,
                 );
               })
@@ -2963,7 +2963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display */}
-                <FirebaseStatusDisplay compact={true} />
+                <FirebaseStatusDisplay compact={true} expandable={true} />
 
                 {/* Simple Welcome Header */}
                 <div
@@ -5926,7 +5926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "❌ Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -6948,7 +6948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
-                            manutenç��es e obras.
+                            manutenções e obras.
                           </p>
                         </div>
 
