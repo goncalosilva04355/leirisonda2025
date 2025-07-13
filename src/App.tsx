@@ -478,7 +478,14 @@ function App() {
   // Funções de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
-      console.log("🏊 addPool iniciado com sistema local");
+      console.log("🏊 addPool iniciado com Firestore ativo");
+
+      // Tentar Firestore primeiro
+      const firestoreId = await devFirestoreService.createPool(data);
+      if (firestoreId) {
+        console.log("✅ Piscina criada no Firestore:", firestoreId);
+      }
+
       return await addPiscina(data);
     } catch (error) {
       console.error("❌ Erro no sistema de piscinas:", error);
@@ -6732,7 +6739,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendações, próxima manuten��ão..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7548,8 +7555,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localiza��ão abaixo e
-                                        veja o mapa da equipa na página
+                                        • Configure a sua localiza����ão abaixo
+                                        e veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
                                     </ul>
@@ -7822,7 +7829,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
                                         ⚠️ ATENÇÃO: Esta operação é
-                                        irrevers��vel!
+                                        irreversível!
                                       </p>
                                       <button
                                         onClick={handleDataCleanup}
@@ -7978,7 +7985,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica�����ão ou conexão.
+                                    autentica����ão ou conexão.
                                   </p>
                                 </div>
 
@@ -8387,7 +8394,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>📊 Dados consolidados</li>
+                        <li>��� Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
                     </div>
