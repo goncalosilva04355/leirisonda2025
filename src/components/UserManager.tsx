@@ -93,7 +93,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   };
 
   // Adicionar utilizador
-  const handleAddUser = () => {
+  const handleAddUser = async () => {
     const error = validateUser(newUser);
     if (error) {
       setErrors(error);
