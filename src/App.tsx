@@ -5301,7 +5301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof��sico)
+                                    230V (monof📞sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -9665,7 +9665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correç��o de Atribuiç��o de
+                                Administração → "🔧 Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -10352,6 +10352,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
+                {/* Firestore Status During Edit */}
+                <EditModeFirestoreStatus
+                  isEditing={true}
+                  entityType="manutencao"
+                  entityId={editingMaintenance?.id}
+                />
+
                 {/* Header */}
                 <div className="bg-white rounded-lg p-4 shadow-sm">
                   <div className="flex items-center space-x-3">
