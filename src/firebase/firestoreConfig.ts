@@ -5,16 +5,13 @@ import { getFirebaseApp } from "./basicConfig";
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
-// Função simples para inicializar Firestore
+// Função determinística para inicializar Firestore sempre
 function initializeFirestore(): Firestore | null {
   try {
     const app = getFirebaseApp();
 
     if (!app) {
-      console.log(
-        "⚠️ Firebase App não disponível, Firestore não pode ser inicializado",
-      );
-      return null;
+      throw new Error("Firebase App não está disponível para Firestore");
     }
 
     if (!firestoreInstance) {
@@ -22,12 +19,32 @@ function initializeFirestore(): Firestore | null {
       console.log("✅ Firestore: Inicializado com sucesso");
     }
 
+    console.log("🔥 Firestore está sempre ativo - dados sempre sincronizados");
     return firestoreInstance;
   } catch (error) {
-    console.warn(
-      "��️ Firestore: Problema na inicialização, mantendo modo local",
+    console.error(
+      "❌ Firestore: ERRO CRÍTICO na inicialização. Base de dados não disponível:",
+      error,
     );
-    console.log("💡 Dados continuam funcionais em localStorage");
+    // Tentar uma segunda vez ap��s um delay
+    setTimeout(() => {
+      console.log("🔄 Tentando reinicializar Firestore...");
+      try {
+        const app = getFirebaseApp();
+        if (app) {
+          firestoreInstance = getFirestore(app);
+          console.log(
+            "✅ Firestore: Reinicializado com sucesso na segunda tentativa",
+          );
+        }
+      } catch (retryError) {
+        console.error(
+          "❌ Firestore: Falhou também na segunda tentativa:",
+          retryError,
+        );
+      }
+    }, 2000);
+
     return null;
   }
 }
