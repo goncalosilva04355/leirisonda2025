@@ -288,6 +288,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         return <CompleteDeviceActivation />;
       case "data-persistence-diagnostic":
         return <DataPersistenceDiagnostic autoCheck={true} />;
+      case "firebase-write-diagnostic":
+        return <FirebaseWriteDiagnosticComponent />;
       case "user-diagnostic":
         return <UserDiagnostic />;
       case "user-management":
