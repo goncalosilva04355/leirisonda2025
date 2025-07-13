@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = "gongonsilva@gmail.com"
+    @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false
     @State private var showError = true
@@ -24,7 +24,7 @@ struct LoginView: View {
                     VStack(spacing: 0) {
                         // Logo section
                         VStack {
-                            AsyncImage(url: URL(string: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800")) { image in
+                                                        AsyncImage(url: URL(string: "/icon.svg")) { image in
                                 image
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)

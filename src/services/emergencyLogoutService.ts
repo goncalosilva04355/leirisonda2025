@@ -19,9 +19,12 @@ export interface EmergencyLogoutResult {
 }
 
 class EmergencyLogoutService {
-  private readonly SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";
-  private readonly SUPER_ADMIN_NAME = "Gonçalo Fonseca";
-  private readonly SUPER_ADMIN_PASSWORD = "19867gsf";
+  private readonly SUPER_ADMIN_EMAIL =
+    import.meta.env.VITE_ADMIN_EMAIL || "admin@example.com";
+  private readonly SUPER_ADMIN_NAME =
+    import.meta.env.VITE_ADMIN_NAME || "Administrator";
+  private readonly SUPER_ADMIN_PASSWORD =
+    import.meta.env.VITE_ADMIN_PASSWORD || "defaultpass";
 
   /**
    * Force logout ALL users and revoke ALL sessions
@@ -63,7 +66,7 @@ class EmergencyLogoutService {
 
       console.log("🏁 Emergency logout completed successfully");
     } catch (error: any) {
-      console.error("💥 Critical error in emergency logout:", error);
+      console.error("�� Critical error in emergency logout:", error);
       result.success = false;
       result.message = `❌ Emergency logout failed: ${error.message}`;
       result.details.errors.push(`Critical error: ${error.message}`);

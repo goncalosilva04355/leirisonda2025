@@ -73,11 +73,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ onClose }) => {
     <div className="fixed bottom-4 left-4 right-4 z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 mx-auto max-w-sm">
       <div className="flex items-start space-x-3">
         <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg flex items-center justify-center flex-shrink-0">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=48"
-            alt="Leirisonda"
-            className="w-8 h-8"
-          />
+          <img src="/icon.svg" alt="Leirisonda" className="w-8 h-8" />
         </div>
 
         <div className="flex-1">

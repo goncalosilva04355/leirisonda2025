@@ -2,134 +2,68 @@
 <html lang="pt">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Primary Meta Tags -->
+    <title>Leirisonda - Sistema de Gestão de Piscinas</title>
+    <meta name="title" content="Leirisonda - Sistema de Gestão de Piscinas" />
     <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, minimal-ui"
+      name="description"
+      content="Sistema completo para gestão de piscinas, obras e manutenções. Controle total dos seus projetos em uma única plataforma."
     />
 
-    <!-- PWA Meta Tags -->
+    <!-- Author -->
+    <meta name="author" content="Leirisonda" />
+
+    <!-- Keywords -->
+    <meta
+      name="keywords"
+      content="piscinas, gestão, obras, manutenção, construção, projetos"
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+
+    <!-- PWA Theme -->
+    <meta name="theme-color" content="#0891b2" />
+    <meta name="background-color" content="#ffffff" />
+
+    <!-- Mobile Optimizations -->
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Leirisonda" />
-    <meta name="application-name" content="Leirisonda" />
-    <meta name="theme-color" content="#0891b2" />
-    <meta name="msapplication-TileColor" content="#0891b2" />
-    <meta
-      name="description"
-      content="Sistema de gestão de obras e manutenção de piscinas da Leirisonda com notificações push"
-    />
 
-    <!-- PWA Manifest -->
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Icons for different devices -->
-    <link
-      rel="icon"
-      type="image/webp"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=32"
-      sizes="32x32"
-    />
-    <link
-      rel="icon"
-      type="image/webp"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=192"
-      sizes="192x192"
-    />
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
 
-    <!-- Apple Touch Icons -->
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=180"
-      sizes="180x180"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=152"
-      sizes="152x152"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=144"
-      sizes="144x144"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=120"
-      sizes="120x120"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=114"
-      sizes="114x114"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=76"
-      sizes="76x76"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=72"
-      sizes="72x72"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=60"
-      sizes="60x60"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=57"
-      sizes="57x57"
-    />
-
-    <!-- Microsoft Tiles -->
-    <meta
-      name="msapplication-TileImage"
-      content="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=144"
-    />
-    <meta
-      name="msapplication-square70x70logo"
-      content="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=70"
-    />
-    <meta
-      name="msapplication-square150x150logo"
-      content="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=150"
-    />
-    <meta
-      name="msapplication-wide310x150logo"
-      content="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=310"
-    />
-    <meta
-      name="msapplication-square310x310logo"
-      content="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=310"
-    />
-
-    <!-- Mobile Web App Capable -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="format-detection" content="telephone=no" />
-
-    <!-- Chrome-specific PWA fixes -->
-    <meta name="google" content="notranslate" />
-    <meta
-      http-equiv="Cache-Control"
-      content="no-cache, no-store, must-revalidate"
-    />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
-    <!-- Splash Screens for iOS -->
-    <link
-      rel="apple-touch-startup-image"
-      href="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2Fcfe4c99ad2e74d27bb8b01476051f923?format=webp&width=512"
-    />
-
-    <title>Leirisonda - Gestão de Obras</title>
+    <!-- Service Worker Registration -->
+    <script>
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then((registration) => {
+              console.log("SW registered: ", registration);
+            })
+            .catch((registrationError) => {
+              console.log("SW registration failed: ", registrationError);
+            });
+        });
+      }
+    </script>
   </head>
-
   <body>
     <div id="root"></div>
-    <script src="/debug-chrome.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

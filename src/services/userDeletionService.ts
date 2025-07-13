@@ -23,8 +23,10 @@ export interface UserDeletionResult {
 }
 
 class UserDeletionService {
-  private readonly SUPER_ADMIN_EMAIL = "gongonsilva@gmail.com";
-  private readonly SUPER_ADMIN_NAME = "Gonçalo Fonseca";
+  private readonly SUPER_ADMIN_EMAIL =
+    import.meta.env.VITE_ADMIN_EMAIL || "admin@example.com";
+  private readonly SUPER_ADMIN_NAME =
+    import.meta.env.VITE_ADMIN_NAME || "Administrator";
 
   /**
    * Deletes all users except the super admin "goncalo" from all systems
