@@ -8280,7 +8280,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
-                        <li>• Datas e durações</li>
+                        <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -11401,6 +11401,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <MapPin className="h-5 w-5" />
                     <span>Localizações</span>
                   </button>
+                )}
+
+                {/* Administração - Para super_admin apenas */}
+                {currentUser?.role === "super_admin" && (
+                  <>
+                    <div className="border-t border-gray-200 my-4"></div>
+                    <button
+                      onClick={() => {
+                        navigateToSection("administracao");
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                        activeSection === "administracao"
+                          ? "bg-orange-50 text-orange-700 border-l-4 border-orange-500"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                    >
+                      <Shield className="h-5 w-5" />
+                      <span>Administração</span>
+                    </button>
+                  </>
                 )}
               </nav>
 
