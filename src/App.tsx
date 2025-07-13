@@ -84,6 +84,7 @@ import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase bási
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
+import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -1064,7 +1065,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("🔄 Users updated event received, reloading...");
+      console.log("��� Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -8365,7 +8366,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construções
+                          Projetos e construç��es
                         </p>
                       </div>
                     </div>
@@ -8893,7 +8894,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secundário
+                            Email Secund��rio
                           </label>
                           <input
                             type="email"
