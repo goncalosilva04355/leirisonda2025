@@ -284,7 +284,7 @@ function App() {
         hasQuotaIssues ||
         hasEmergencyShutdown
       ) {
-        console.log("🚨 Firebase conflict detected on mobile device");
+        console.log("�� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -1381,15 +1381,15 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("�� Iniciando sincronização inicial com Firestore...");
-
-        console.log("🔥 Firebase Leiria pronto para uso");
+        console.log("🔥 Iniciando sincronização com Firebase Leiria...");
+        console.log("✅ Firebase Leiria pronto para uso");
 
         try {
           await firestoreService.syncAll();
-          console.log("€ Sincronização inicial completa!");
+          console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização inicial:", error);
+          console.error("❌ Erro na sincronização com Firebase Leiria:", error);
+          console.log("📱 Aplicação continua funcional em modo offline");
         }
       }
     };
@@ -7149,7 +7149,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Automática
+                                  Sincronização Autom��tica
                                 </span>
                                 <button
                                   onClick={() =>
