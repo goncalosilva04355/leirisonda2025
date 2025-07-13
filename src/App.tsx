@@ -101,10 +101,7 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 // Firebase testes removidos para evitar conflitos
-import {
-  testFirestoreSecurityRules,
-  testFirestoreWithAuth,
-} from "./utils/testFirestoreRules";
+// Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
@@ -2171,7 +2168,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa�����ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -7765,7 +7762,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <h4 className="font-medium text-purple-900 mb-3">
-                                    Configurações Avançadas
+                                    Configuraç��es Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
                                     Acesso às configurações avançadas do sistema
@@ -9715,7 +9712,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuiç��o de
+                                Administração �� "🔧 Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
