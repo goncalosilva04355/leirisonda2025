@@ -76,12 +76,28 @@ function initializeFirebaseBasic(): FirebaseApp | null {
   }
 }
 
-// Função para obter a app Firebase
+// Função robusta para obter a app Firebase
 export function getFirebaseApp(): FirebaseApp | null {
+  // Se não temos app, tentar inicializar
   if (!firebaseApp) {
     return initializeFirebaseBasic();
   }
-  return firebaseApp;
+
+  // Verificar se a app ainda é válida
+  try {
+    const apps = getApps();
+    if (apps.find((app) => app === firebaseApp)) {
+      return firebaseApp;
+    } else {
+      // App não está mais na lista, limpar referência e reinicializar
+      console.warn("⚠️ Firebase: App não encontrada na lista, reinicializando");
+      firebaseApp = null;
+      return initializeFirebaseBasic();
+    }
+  } catch (error) {
+    console.warn("⚠️ Firebase: Erro ao verificar apps:", error);
+    return firebaseApp; // Retornar a app mesmo com erro de verifica��ão
+  }
 }
 
 // Função para verificar se Firebase está pronto
@@ -137,7 +153,7 @@ export function getAuth() {
       return authInstance;
     }
   } catch (error) {
-    console.warn("��️ Firebase Auth não disponível:", error);
+    console.warn("⚠️ Firebase Auth não disponível:", error);
   }
   return null;
 }
