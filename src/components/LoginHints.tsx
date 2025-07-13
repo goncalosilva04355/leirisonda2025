@@ -9,22 +9,27 @@ export const LoginHints: React.FC<LoginHintsProps> = ({ showHints = true }) => {
   if (!showHints) return null;
 
   return (
-    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md text-sm">
-      <div className="text-blue-800 font-medium mb-2">
-        💡 Credenciais válidas:
+    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md text-sm">
+      <div className="text-green-800 font-medium mb-2">
+        📱 Login rápido - Use qualquer combinação:
       </div>
-      <div className="space-y-1 text-blue-700">
-        <div>
-          <strong>Emails:</strong>
+      <div className="space-y-2 text-green-700">
+        <div className="grid grid-cols-1 gap-2">
+          <div className="bg-white p-2 rounded border">
+            <strong>Email:</strong> goncalosfonseca@gmail.com
+            <br />
+            <strong>Password:</strong> 123
+          </div>
+          <div className="bg-white p-2 rounded border">
+            <strong>Email:</strong> gongonsilva@gmail.com
+            <br />
+            <strong>Password:</strong> 123456
+          </div>
         </div>
-        <div className="ml-2">• gongonsilva@gmail.com</div>
-        <div className="ml-2">• goncalosfonseca@gmail.com</div>
-        <div className="mt-2">
-          <strong>Passwords:</strong>
+        <div className="text-xs text-green-600">
+          ℹ️ Ambos emails funcionam com qualquer password (123, 123456,
+          19867gsf)
         </div>
-        <div className="ml-2">• 123 (rápido)</div>
-        <div className="ml-2">• 123456</div>
-        <div className="ml-2">• 19867gsf (admin)</div>
       </div>
     </div>
   );
