@@ -13,7 +13,7 @@ export default defineConfig({
     outDir: "dist",
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
-    minify: "terser",
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
