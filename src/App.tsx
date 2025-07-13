@@ -102,6 +102,10 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
 import("./utils/quickFirebaseTest"); // Auto-teste Firebase
+import {
+  testFirestoreSecurityRules,
+  testFirestoreWithAuth,
+} from "./utils/testFirestoreRules";
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
@@ -6739,7 +6743,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manuten��ão..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7555,8 +7559,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ao ecrã inicial
                                       </li>
                                       <li>
-                                        • Configure a sua localiza����ão abaixo
-                                        e veja o mapa da equipa na página
+                                        • Configure a sua localiza��ão abaixo e
+                                        veja o mapa da equipa na página
                                         "Localizações"
                                       </li>
                                     </ul>
@@ -8394,7 +8398,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>��� Dados consolidados</li>
+                        <li>📊 Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
                     </div>
@@ -8441,7 +8445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç€es</span>
+                          <span className="text-xs">Manutenç���es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8934,7 +8938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��es
+                            Notas e Observaç����es
                           </label>
                           <textarea
                             rows={4}
@@ -9542,7 +9546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informações Básicas
+                          Informa��ões Básicas
                         </h3>
                       </div>
 
