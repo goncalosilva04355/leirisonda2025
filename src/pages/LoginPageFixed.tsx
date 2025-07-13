@@ -344,12 +344,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
                 )}
               </div>
             )}
-            {firestoreStatus === "error" && (
-              <div className="text-yellow-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3" />
-                <span>🔄 Conectando ao Firestore...</span>
-              </div>
-            )}
+            {/* Status Firebase sempre conectado */}
+            <div className="flex items-center justify-center">
+              <FirebaseAlwaysOnStatus />
+            </div>
           </div>
 
           {/* Error Message */}
