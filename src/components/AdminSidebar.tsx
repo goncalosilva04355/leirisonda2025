@@ -236,6 +236,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
         )}
       </button>
 
+      {/* Indicador de Sincronização Automática */}
+      <div className="px-3 py-2 bg-green-50 border border-green-200 rounded-lg">
+        <AutoSyncIndicator className="text-xs" />
+      </div>
+
       {/* Lista de Ferramentas */}
       {isExpanded && (
         <div className="ml-4 space-y-1">
