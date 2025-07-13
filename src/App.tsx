@@ -144,6 +144,8 @@ import UserRestoreNotificationSimple from "./components/UserRestoreNotificationS
 
 // Teste de login
 import "./utils/testLogin";
+// Força atualização de utilizadores
+import "./utils/forceUserUpdate";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -1293,7 +1295,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar funç��es do Firestore dinamicamente
+              // Importar funç����es do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -1335,7 +1337,7 @@ function App() {
           }
         } else {
           console.log(
-            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+            "⚠️ Passo 3: Firestore não dispon��vel, usando localStorage",
           );
         }
       } catch (error) {
