@@ -175,13 +175,19 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
+          <div className="w-40 h-24 bg-white rounded-lg shadow-lg p-3 mx-auto border border-gray-200">
             <img
               src="/icon.svg"
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
+              onError={(e) => {
+                console.log("Logo failed to load, trying fallback");
+                e.currentTarget.src =
+                  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSIyNCIgZmlsbD0iI2RjMjYyNiIvPgogIDxwYXRoIGQ9Ik00OCA5NkM0OCA3MC44NjI5IDY4Ljg2MjkgNTAgOTQgNTBIOThDMTIzLjEzNyA1MCA0NDQgNzAuODYyOSAxNDQgOTZWMTQySDQ4Vjk2WiIgZmlsbD0id2hpdGUiLz4KICA8Y2lyY2xlIGN4PSI5NiIgY3k9Ijk2IiByPSIyMCIgZmlsbD0iI2RjMjYyNiIvPgogIDxyZWN0IHg9IjcyIiB5PSIxMzAiIHdpZHRoPSI0OCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI2RjMjYyNiIvPgogIDxyZWN0IHg9IjgwIiB5PSIxMzgiIHdpZHRoPSIzMiIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI2RjMjYyNiIvPgo8L3N2Zz4K";
+              }}
             />
           </div>
+          <h1 className="text-xl font-bold text-gray-800 mt-4">Leirisonda</h1>
         </div>
 
         {/* Admin Access Button */}
