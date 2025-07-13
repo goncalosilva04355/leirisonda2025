@@ -510,7 +510,7 @@ function App() {
 
       // Preparar dados da notifica��ão
       const notificationData = {
-        title: "🔔 Nova Obra Atribuída",
+        title: "🔔 Nova Obra Atribu��da",
         body: `${workData.title} - ${workData.client}`,
         icon: "/icon.svg",
         badge: "/icon.svg",
@@ -1126,7 +1126,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+    console.log("📞 Configuraç��o Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -2014,7 +2014,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully - redirected to login");
+      console.log("�� Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -3033,10 +3033,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="relative z-10">
                     {/* Logo and Time Row */}
                     <div className="flex items-center justify-between mb-3">
-                      <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
+                      <div className="w-32 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="/icon.svg"
-                          alt="Leirisonda Logo"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                          alt="Leirisonda - Furos e Captações de Água, Lda"
                           className="w-full h-full object-contain"
                         />
                       </div>
@@ -10801,7 +10801,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte€o. Por favor, tente novamente.
+              Ocorreu um erro ao carregar o conte���o. Por favor, tente
+              novamente.
             </p>
             <button
               onClick={() => window.location.reload()}
