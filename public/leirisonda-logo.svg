@@ -1,0 +1,28 @@
+<svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="50" fill="#0891b2" stroke="#0e7490" stroke-width="2"/>
+  
+  <!-- Pool water waves -->
+  <path d="M20 60 Q30 50, 40 60 T60 60 T80 60 T100 60" stroke="#22d3ee" stroke-width="3" fill="none" opacity="0.8"/>
+  <path d="M25 65 Q35 55, 45 65 T65 65 T85 65 T105 65" stroke="#67e8f9" stroke-width="2" fill="none" opacity="0.6"/>
+  
+  <!-- Pool structure -->
+  <rect x="30" y="70" width="60" height="20" rx="10" fill="#1e40af" opacity="0.7"/>
+  <rect x="35" y="75" width="50" height="10" rx="5" fill="#3b82f6" opacity="0.5"/>
+  
+  <!-- Sonda/probe tool -->
+  <line x1="65" y1="30" x2="65" y2="75" stroke="#dc2626" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="65" cy="28" r="4" fill="#ef4444"/>
+  <rect x="62" y="72" width="6" height="8" rx="1" fill="#991b1b"/>
+  
+  <!-- Company name -->
+  <text x="130" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#0e7490">LEIRISONDA</text>
+  <text x="130" y="55" font-family="Arial, sans-serif" font-size="12" fill="#64748b">Gestão de Piscinas</text>
+  <text x="130" y="70" font-family="Arial, sans-serif" font-size="12" fill="#64748b">& Obras Aquáticas</text>
+  
+  <!-- Decorative elements -->
+  <circle cx="25" cy="25" r="2" fill="#22d3ee" opacity="0.6"/>
+  <circle cx="180" cy="25" r="2" fill="#22d3ee" opacity="0.6"/>
+  <circle cx="25" cy="95" r="2" fill="#22d3ee" opacity="0.6"/>
+  <circle cx="180" cy="95" r="2" fill="#22d3ee" opacity="0.6"/>
+</svg>
