@@ -1864,7 +1864,7 @@ function App() {
           }
         }, 100);
 
-        return;
+        return result;
       } else {
         throw new Error(result.error || "Login failed");
       }
@@ -5760,7 +5760,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "���� hasPermission clientes create:",
+                                "������ hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
