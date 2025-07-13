@@ -90,10 +90,8 @@ export async function testFirestore(): Promise<boolean> {
   }
 }
 
-// Inicializar Firestore automaticamente após um pequeno delay
-setTimeout(() => {
-  initializeFirestore();
-}, 800);
+// Inicialização lazy do Firestore - apenas quando necessário
+// setTimeout(() => { initializeFirestore(); }, 800); // Removido para evitar conflitos
 
 // Exportações
 export { firestoreInstance };
