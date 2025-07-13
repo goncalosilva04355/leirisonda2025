@@ -83,6 +83,7 @@ import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
