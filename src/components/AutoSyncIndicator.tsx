@@ -224,21 +224,34 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
     }
   };
 
-  return (
-    <div
-      className={`flex items-center space-x-2 ${getStatusColor()} ${className}`}
-    >
-      {getIcon()}
-      <div className="text-sm">
-        <div className="font-medium">{getStatus()}</div>
-        {lastSyncTime && (
-          <div className="text-xs opacity-75">
-            Último sync: {lastSyncTime.toLocaleTimeString()}
-          </div>
-        )}
+  try {
+    return (
+      <div
+        className={`flex items-center space-x-2 ${getStatusColor()} ${className}`}
+      >
+        {getIcon()}
+        <div className="text-sm">
+          <div className="font-medium">{getStatus()}</div>
+          {lastSyncTime && (
+            <div className="text-xs opacity-75">
+              Último sync: {lastSyncTime.toLocaleTimeString()}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error("❌ AutoSyncIndicator: Erro no render:", error);
+    return (
+      <div className={`flex items-center space-x-2 text-gray-500 ${className}`}>
+        <ZapOff className="h-4 w-4" />
+        <div className="text-sm">
+          <div className="font-medium">Sync Error</div>
+          <div className="text-xs opacity-75">Reloading...</div>
+        </div>
+      </div>
+    );
+  }
 };
 
 export default AutoSyncIndicator;
