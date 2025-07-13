@@ -93,7 +93,7 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
   };
 
   // Adicionar utilizador
-  const handleAddUser = async () => {
+  const handleAddUser = () => {
     const error = validateUser(newUser);
     if (error) {
       setErrors(error);
@@ -132,34 +132,6 @@ const UserManager: React.FC<UserManagerProps> = ({ currentUser }) => {
         active: true,
         createdAt: new Date().toISOString(),
       };
-
-      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
-      try {
-        const firestoreDataService = await import(
-          "../services/firestoreDataService"
-        );
-        const saveId = await firestoreDataService.saveFormToFirestore(
-          "utilizadores",
-          {
-            ...newMainUser,
-            type: "utilizador",
-            source: "UserManager_handleAddUser",
-            userAgent: navigator.userAgent,
-            // Remover senha por segurança na gravação automática
-            password: undefined,
-          },
-        );
-        if (saveId) {
-          console.log(
-            `✅ Utilizador gravado automaticamente no Firestore: ${saveId}`,
-          );
-        }
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Erro na gravação automática Firestore:",
-          firestoreError,
-        );
-      }
 
       mainUsers.push(newMainUser);
       storageUtils.setJson("app-users", mainUsers);

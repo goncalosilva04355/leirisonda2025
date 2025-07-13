@@ -80,7 +80,6 @@ import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { saveFormToFirestore } from "./services/firestoreDataService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 import "./utils/testFirestore"; // Passo 3: Teste automático Firestore
 import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -205,7 +204,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necess��rio
+    // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
     // Monitoriza���ão automática de persistência de dados
@@ -365,7 +364,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "����� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -483,36 +482,10 @@ function App() {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
-      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
-      try {
-        const firestoreDataService = await import(
-          "./services/firestoreDataService"
-        );
-        const saveId = await firestoreDataService.saveFormToFirestore(
-          "piscinas",
-          {
-            ...data,
-            type: "piscina",
-            source: "addPool_function",
-            userAgent: navigator.userAgent,
-          },
-        );
-        if (saveId) {
-          console.log(
-            `✅ Piscina gravada automaticamente no Firestore: ${saveId}`,
-          );
-        }
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Erro na gravação automática Firestore:",
-          firestoreError,
-        );
-      }
-
       // Usar serviço offline-first
       const firestoreId = await offlineFirstService.createPool(data);
       if (firestoreId) {
-        console.log("��� Piscina criada:", firestoreId);
+        console.log("✅ Piscina criada:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -719,29 +692,6 @@ function App() {
     try {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
-      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
-      try {
-        const firestoreDataService = await import(
-          "./services/firestoreDataService"
-        );
-        const saveId = await firestoreDataService.saveFormToFirestore("obras", {
-          ...data,
-          type: "obra",
-          source: "addWork_function",
-          userAgent: navigator.userAgent,
-        });
-        if (saveId) {
-          console.log(
-            `✅ Obra gravada automaticamente no Firestore: ${saveId}`,
-          );
-        }
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Erro na gravação automática Firestore:",
-          firestoreError,
-        );
-      }
-
       // Usar serviço offline-first com Firebase Leiria
       const firestoreId = await offlineFirstService.createWork(data);
 
@@ -799,32 +749,6 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
-      try {
-        const firestoreDataService = await import(
-          "./services/firestoreDataService"
-        );
-        const saveId = await firestoreDataService.saveFormToFirestore(
-          "manutencoes",
-          {
-            ...data,
-            type: "manutencao",
-            source: "addMaintenance_function",
-            userAgent: navigator.userAgent,
-          },
-        );
-        if (saveId) {
-          console.log(
-            `✅ Manutenção gravada automaticamente no Firestore: ${saveId}`,
-          );
-        }
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Erro na gravação automática Firestore:",
-          firestoreError,
-        );
-      }
-
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
@@ -849,32 +773,6 @@ function App() {
   const addClient = async (data: any) => {
     try {
       console.log("��� addClient iniciado com Firestore ativo");
-
-      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
-      try {
-        const firestoreDataService = await import(
-          "./services/firestoreDataService"
-        );
-        const saveId = await firestoreDataService.saveFormToFirestore(
-          "clientes",
-          {
-            ...data,
-            type: "cliente",
-            source: "addClient_function",
-            userAgent: navigator.userAgent,
-          },
-        );
-        if (saveId) {
-          console.log(
-            `✅ Cliente gravado automaticamente no Firestore: ${saveId}`,
-          );
-        }
-      } catch (firestoreError) {
-        console.warn(
-          "⚠️ Erro na gravação automática Firestore:",
-          firestoreError,
-        );
-      }
 
       const firestoreId = await offlineFirstService.createClient(data);
 
@@ -2046,7 +1944,7 @@ function App() {
       console.log("€ Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("�� Login successful for:", result.user.email);
+        // console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -2257,7 +2155,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenç����es: ${futureMaintenance.length}
+- Futuras Manutenç��es: ${futureMaintenance.length}
 
 MANUTENÇ��ES REALIZADAS:
 ${maintenance
@@ -5170,7 +5068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <option value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
-                                  : "Nenhum utilizador dispon��vel"}
+                                  : "Nenhum utilizador disponível"}
                               </option>
                               {users
                                 .filter((user) => {
@@ -8096,7 +7994,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica������ão ou conexão.
+                                    autentica����ão ou conexão.
                                   </p>
                                 </div>
 
@@ -11106,7 +11004,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon�����alo Fonseca",
+  //       name: "Gon����alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11337,7 +11235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb€m funciona na p��gina de login */}
+        {/* Admin Login Modal - tamb€m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">

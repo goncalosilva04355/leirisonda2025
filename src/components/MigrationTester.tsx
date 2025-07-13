@@ -23,7 +23,7 @@ const MigrationTester: React.FC = () => {
   useEffect(() => {
     // Verificar status do Firestore
     const checkFirestore = () => {
-      setFirestoreStatus(firestoreService.testConnection());
+      setFirestoreStatus(firestoreDataService.isFirestoreAvailable());
     };
 
     checkFirestore();
