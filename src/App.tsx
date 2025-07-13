@@ -1391,6 +1391,9 @@ function App() {
           console.error("❌ Erro na sincronização com Firebase Leiria:", error);
           console.log("📱 Aplicação continua funcional em modo offline");
         }
+      } else {
+        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
+        console.log("💾 Dados serão salvos apenas no localStorage");
       }
     };
 
@@ -2151,7 +2154,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manutenç��es: ${futureMaintenance.length}
 
 MANUTENÇ��ES REALIZADAS:
 ${maintenance
