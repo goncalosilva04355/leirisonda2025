@@ -96,7 +96,7 @@ import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { simpleAuthService as authService } from "./services/simpleAuthService";
+import { robustAuthService as authService } from "./services/robustAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -1936,7 +1936,7 @@ function App() {
     }
 
     try {
-      console.log("🔐 Attempting login for:", loginForm.email);
+      console.log("���� Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -7845,7 +7845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠️ ATENÇÃO: Esta operação é
+                                        ⚠�� ATENÇÃO: Esta operação é
                                         irreversível!
                                       </p>
                                       <button
