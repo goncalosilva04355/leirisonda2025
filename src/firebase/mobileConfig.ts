@@ -9,7 +9,7 @@ import { getAuth } from "firebase/auth";
 
 // Configuração Firebase limpa
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
   authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
