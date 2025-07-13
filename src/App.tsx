@@ -498,7 +498,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notificações de atribuição de obra...");
+      console.log("📱 Enviando notifica��ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -2169,7 +2169,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -5963,7 +5963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 "€DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
-                              console.log("🔍 User Role:", currentUser?.role);
+                              console.log("��� User Role:", currentUser?.role);
                               console.log(
                                 "🔍 User Permissions:",
                                 currentUser?.permissions,
@@ -7489,7 +7489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-blue-900 mb-2">
-                                      Notificações de Obras
+                                      Notifica��ões de Obras
                                     </h4>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Receba notificações quando uma nova obra
@@ -10957,7 +10957,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>💧</span>
+                  <span>��</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11296,16 +11296,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="px-6 py-6 border-b border-gray-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
+                    <div className="w-20 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="/icon.svg"
-                        alt="Leirisonda Logo"
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                        alt="Leirisonda - Furos e Captações de Água, Lda"
                         className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Gestão de Serviços
+                        Furos e Captações de Água
                       </p>
                     </div>
                   </div>
