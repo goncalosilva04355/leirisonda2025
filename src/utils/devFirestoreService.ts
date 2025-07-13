@@ -1,5 +1,8 @@
 // Serviço Firestore para desenvolvimento - sem regras de autenticação
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+import {
+  getFirebaseFirestore,
+  initializeFirebaseRobust,
+} from "../firebase/robustFirebase";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 
 export class DevFirestoreService {
