@@ -9,7 +9,6 @@
   Cache-Control: public, max-age=86400
 
 /sw.js
-  Content-Type: application/javascript
   Service-Worker-Allowed: /
   Cache-Control: public, max-age=0, must-revalidate
 
