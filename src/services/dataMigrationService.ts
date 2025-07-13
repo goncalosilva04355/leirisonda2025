@@ -66,7 +66,7 @@ class DataMigrationService {
       // Migrar piscinas
       for (const pool of localData.pools) {
         try {
-          const docId = await firestoreService.addDocument("pools", pool);
+          const docId = await firestoreService.saveFormData("pools", pool);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Piscina migrada: ${pool.name}`);
