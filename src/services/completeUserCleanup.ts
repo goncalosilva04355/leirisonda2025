@@ -19,11 +19,11 @@ export interface CompleteCleanupResult {
 
 class CompleteUserCleanupService {
   private readonly SUPER_ADMIN_EMAIL =
-    process.env.VITE_ADMIN_EMAIL || "admin@example.com";
+    import.meta.env.VITE_ADMIN_EMAIL || "admin@example.com";
   private readonly SUPER_ADMIN_NAME =
-    process.env.VITE_ADMIN_NAME || "Administrator";
+    import.meta.env.VITE_ADMIN_NAME || "Administrator";
   private readonly SUPER_ADMIN_PASSWORD =
-    process.env.VITE_ADMIN_PASSWORD || "defaultpass";
+    import.meta.env.VITE_ADMIN_PASSWORD || "defaultpass";
 
   /**
    * Nuclear option: Clear EVERYTHING user-related and recreate only super admin
