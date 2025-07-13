@@ -142,6 +142,9 @@ import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
+// Teste de login
+import "./utils/testLogin";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -1811,7 +1814,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPr��xima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -8138,7 +8141,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest��o de Utilizadores
+                              Gest���o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8720,7 +8723,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  📞{" "}
+                                  ���{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
