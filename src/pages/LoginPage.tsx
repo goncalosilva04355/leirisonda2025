@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
+import { FirebaseStatusBox } from "../components/FirebaseStatusBox";
 
 interface LoginPageProps {
   onLogin: (
