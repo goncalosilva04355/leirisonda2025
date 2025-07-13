@@ -14,7 +14,7 @@ No painel do Netlify (Site Settings > Environment Variables), adicione as seguin
 #### Projeto Principal (Leiria)
 
 ```
-VITE_FIREBASE_API_KEY=AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw
+VITE_FIREBASE_API_KEY=[YOUR_FIREBASE_API_KEY]
 VITE_FIREBASE_AUTH_DOMAIN=leiria-1cfc9.firebaseapp.com
 VITE_FIREBASE_DATABASE_URL=https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app
 VITE_FIREBASE_PROJECT_ID=leiria-1cfc9
@@ -27,7 +27,7 @@ VITE_FIREBASE_MEASUREMENT_ID=G-Q2QWQVH60L
 #### Projeto Legacy (Leirisonda) - Opcional
 
 ```
-VITE_LEIRISONDA_FIREBASE_API_KEY=AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE
+VITE_LEIRISONDA_FIREBASE_API_KEY=[YOUR_LEIRISONDA_FIREBASE_API_KEY]
 VITE_LEIRISONDA_FIREBASE_AUTH_DOMAIN=leirisonda-16f8b.firebaseapp.com
 VITE_LEIRISONDA_FIREBASE_DATABASE_URL=https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app
 VITE_LEIRISONDA_FIREBASE_PROJECT_ID=leirisonda-16f8b
