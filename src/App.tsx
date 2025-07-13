@@ -1894,9 +1894,9 @@ function App() {
           }
         }, 100);
 
-        return;
+        return result;
       } else {
-        throw new Error(result.error || "Login failed");
+        return result;
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -7976,7 +7976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica��ão ou conexão.
+                                    autentica����ão ou conexão.
                                   </p>
                                 </div>
 
