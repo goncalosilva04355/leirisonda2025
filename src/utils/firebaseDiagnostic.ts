@@ -11,6 +11,11 @@ import {
 export async function diagnoseFirabaseIssues() {
   console.log("🔍 Iniciando diagnóstico do Firebase...");
 
+  // 0. Forçar inicialização
+  console.log("🔧 Forçando inicialização do Firebase...");
+  const initResult = initializeFirebaseRobust();
+  console.log("🔧 Resultado da inicialização:", initResult);
+
   // 1. Verificar Firebase App
   const app = getFirebaseApp();
   if (!app) {
