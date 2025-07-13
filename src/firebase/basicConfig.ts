@@ -11,7 +11,7 @@ let firebaseApp: FirebaseApp | null = null;
 // Inicializar Firebase automaticamente
 if (!LOCAL_MODE) {
   try {
-    const config = getFirebaseEnv();
+    const config = getFirebaseConfig();
     if (getApps().length === 0) {
       firebaseApp = initializeApp(config);
       console.log("✅ Firebase inicializado com sucesso");
@@ -34,7 +34,7 @@ export function getFirebaseApp(): FirebaseApp | null {
   // Tentar inicializar se ainda não foi feito
   if (!firebaseApp) {
     try {
-      const config = getFirebaseEnv();
+      const config = getFirebaseConfig();
       if (getApps().length === 0) {
         firebaseApp = initializeApp(config);
         console.log("✅ Firebase inicializado tardiamente");
@@ -59,7 +59,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
   // Tentar inicializar se ainda não foi feito
   if (!firebaseApp) {
     try {
-      const config = getFirebaseEnv();
+      const config = getFirebaseConfig();
       if (getApps().length === 0) {
         firebaseApp = initializeApp(config);
         console.log("✅ Firebase inicializado assincronamente");
