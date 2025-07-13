@@ -89,7 +89,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
-import { useDataSyncSimpleFixed as useDataSyncSimple } from "./hooks/useDataSyncSimpleFixed";
+import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { hybridAuthService as authService } from "./services/hybridAuthService";
 import { UserProfile } from "./services/robustLoginService";
@@ -395,7 +395,7 @@ function App() {
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
-  // Sincronizar configurações entre componentes
+  // Sincronizar configura��ões entre componentes
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -5000,7 +5000,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       "app-users",
                                       JSON.stringify([defaultUser]),
                                     );
-                                    alert("✅ Utilizador padrão criado!");
+                                    alert("�� Utilizador padrão criado!");
                                   }
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
