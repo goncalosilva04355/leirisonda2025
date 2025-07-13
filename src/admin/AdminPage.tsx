@@ -101,6 +101,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({
       color: "bg-gradient-to-r from-red-600 to-orange-600",
     },
     {
+      id: "firebase-write-diagnostic" as AdminSection,
+      title: "🔍 Diagnóstico Escrita Firebase",
+      description:
+        "RESOLVER: Firebase operacional mas não grava dados - diagnóstico completo",
+      icon: Database,
+      color: "bg-gradient-to-r from-orange-600 to-red-600",
+    },
+    {
       id: "user-diagnostic" as AdminSection,
       title: "🔍 Diagnóstico de Utilizadores",
       description:
