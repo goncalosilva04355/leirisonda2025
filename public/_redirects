@@ -1,16 +1,16 @@
 # PWA and service worker files
-/manifest.json    /manifest.json    200
-/sw.js    /sw.js    200
-/firebase-messaging-sw.js    /firebase-messaging-sw.js    200
+/manifest.json /manifest.json 200
+/sw.js /sw.js 200
+/firebase-messaging-sw.js /firebase-messaging-sw.js 200
 
 # Static assets
-/icon.svg    /icon.svg    200
-/robots.txt    /robots.txt    200
-/debug-chrome.js    /debug-chrome.js    200
-/emergency-recovery.js    /emergency-recovery.js    200
+/icon.svg /icon.svg 200
+/robots.txt /robots.txt 200
+/debug-chrome.js /debug-chrome.js 200
+/emergency-recovery.js /emergency-recovery.js 200
 
 # API routes (if needed)
-/api/*    /api/:splat    200
+/api/* /api/:splat 200
 
 # SPA fallback (must be last)
-/*    /index.html    200
+/* /index.html 200
