@@ -105,10 +105,10 @@ class IntelligentFirebaseSyncService {
     console.log("🚀 HABILITANDO sincronização automática!");
     this.state.autoSyncEnabled = true;
 
-    // Iniciar sincronização automática a cada 30 segundos
+    // Sincronização automática reduzida para evitar refresh constante
     this.syncInterval = setInterval(() => {
       this.performIntelligentSync();
-    }, 30000);
+    }, 180000); // 3 minutos em vez de 30 segundos
 
     // Sincronização inicial
     setTimeout(() => this.performIntelligentSync(), 2000);
