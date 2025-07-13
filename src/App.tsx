@@ -740,7 +740,7 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await firestoreService.createManutencao(data);
+      const firestoreId = await devFirestoreService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("✅ Manutenção criada no Firestore:", firestoreId);
@@ -6184,7 +6184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç��es e Características Especiais
+                        Observações e Características Especiais
                       </label>
                       <textarea
                         rows={3}
