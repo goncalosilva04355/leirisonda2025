@@ -240,32 +240,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
-        {/* Admin Access Button */}
-        <div className="text-center mb-4 space-y-2">
-          <button
-            type="button"
-            onClick={() => {
-              window.location.hash = "administracao";
-            }}
-            className="text-sm text-gray-600 hover:text-gray-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50"
-          >
-            <Settings className="h-4 w-4" />
-            <span>Área de Administração</span>
-          </button>
-
-          {/* Emergency Fix Button - Only show on mobile with issues */}
-          {showEmergencyFix && (
-            <button
-              type="button"
-              onClick={handleEmergencyFix}
-              className="text-sm text-red-600 hover:text-red-800 flex items-center justify-center space-x-2 mx-auto px-4 py-2 border border-red-200 rounded-lg hover:bg-red-50 bg-red-25 animate-pulse"
-            >
-              <AlertTriangle className="h-4 w-4" />
-              <span>⚡ Fix Firebase (📱)</span>
-            </button>
-          )}
-        </div>
-
         {/* Quick Mobile Fix - Show if conflicts detected */}
         {showEmergencyFix && (
           <div className="mb-4">
