@@ -110,9 +110,6 @@ export const useAutoUserMigration = () => {
 
         // Try local migration as fallback
         try {
-          const { LocalUserMigration } = await import(
-            "../utils/localUserMigration"
-          );
           const localResult = await LocalUserMigration.migrateLocalUsers();
 
           if (localResult.success) {
