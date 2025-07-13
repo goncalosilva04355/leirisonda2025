@@ -22,6 +22,7 @@ import { UserDiagnostic } from "./UserDiagnostic";
 import UserManager from "./UserManager";
 import { DataPersistenceDiagnostic } from "./DataPersistenceDiagnostic";
 import FirebaseWriteDiagnosticComponent from "./FirebaseWriteDiagnostic";
+import { AutoSyncIndicator } from "./AutoSyncIndicator";
 
 interface AdminSidebarProps {
   currentUser?: any;
