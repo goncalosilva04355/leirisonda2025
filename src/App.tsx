@@ -398,7 +398,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações automáticas desabilitadas para resolver instabilidade
+    // Verificaç��es automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
@@ -1224,37 +1224,34 @@ function App() {
           "savedLoginCredentials",
         );
 
-        // Auto-login temporariamente desabilitado para evitar loops
-        console.log("ℹ️ Auto-login desabilitado - login manual necessário");
+        // Check if user is already authenticated in localStorage
+        const savedUser = safeLocalStorage.getItem("currentUser");
+        const isAuthenticatedStored =
+          safeLocalStorage.getItem("isAuthenticated");
 
-        // Limpar credenciais de auto-login para evitar tentativas futuras
-        if (autoLoginEnabled === "true" || rememberMe === "true") {
-          console.log(
-            "🧹 Limpando credenciais de auto-login para evitar loops",
-          );
-          safeSessionStorage.removeItem("savedLoginCredentials");
-          safeLocalStorage.removeItem("autoLoginEnabled");
-          safeLocalStorage.removeItem("rememberMe");
+        if (savedUser && isAuthenticatedStored === "true") {
+          try {
+            const userProfile = JSON.parse(savedUser);
+            console.log("✅ Found existing valid session:", userProfile.email);
+
+            // Restore authentication state
+            setCurrentUser(userProfile);
+            setIsAuthenticated(true);
+            console.log("✅ Session restored successfully");
+            return; // Don't clear the session
+          } catch (parseError) {
+            console.warn("⚠️ Error parsing saved user, clearing session");
+          }
         }
 
-        // Se chegou aqui, fazer logout normal (sem auto-login ou auto-login falhou)
-        console.log("🔒 Iniciando estado não autenticado");
+        // If no valid session, start fresh
+        console.log("🔒 No valid session found, starting fresh");
 
-        // Clear Firebase auth state se não há auto-login
-        try {
-          await authService.logout();
-          console.log("🔒 Firebase auth cleared");
-        } catch (error) {
-          console.log("⚠️ Firebase logout error (expected):", error);
-        }
-
-        // Ensure user starts in unauthenticated state se não há auto-login ativo
-        if (!autoLoginEnabled || !rememberMe) {
-          setCurrentUser(null);
-          setIsAuthenticated(false);
-          safeLocalStorage.removeItem("currentUser");
-          safeLocalStorage.removeItem("isAuthenticated");
-        }
+        // Clear any invalid auth state
+        setCurrentUser(null);
+        setIsAuthenticated(false);
+        safeLocalStorage.removeItem("currentUser");
+        safeLocalStorage.removeItem("isAuthenticated");
 
         // Clear all mock and test data
         safeLocalStorage.removeItem("mock-users");
@@ -2692,7 +2689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `👤 Atualizando utilizador ${userForm.name} no Firestore...`,
+          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -4181,7 +4178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr���xima manutenção:{" "}
+                                Pr����xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -4925,7 +4922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           {(() => {
                             console.log(
-                              "📊 TOTAL UTILIZADORES CARREGADOS:",
+                              "�� TOTAL UTILIZADORES CARREGADOS:",
                               users.length,
                               users,
                             );
@@ -8378,7 +8375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>📞 Piscinas associadas</li>
+                        <li>�� Piscinas associadas</li>
                         <li>��� Histórico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
