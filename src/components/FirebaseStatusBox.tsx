@@ -292,13 +292,13 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
           ? "Ativo"
           : value === "error"
             ? "Erro"
-            : "Inativo";
+            : "Sem Login";
       case "firestore":
         return value === "active"
-          ? "Ativo"
+          ? "Conectado"
           : value === "error"
             ? "Erro"
-            : "Inativo";
+            : "Desconectado";
       case "quota":
         return value === "exceeded"
           ? "Excedida"
