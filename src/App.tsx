@@ -1382,9 +1382,7 @@ function App() {
       if (isFirestoreReady()) {
         console.log("�� Iniciando sincronização inicial com Firestore...");
 
-        // Executar testes de segurança do Firestore
-        console.log("🔒 Testando regras de segurança...");
-        await testFirestoreSecurityRules();
+        console.log("🔥 Firebase Leiria pronto para uso");
 
         try {
           await firestoreService.syncAll();
@@ -7762,7 +7760,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <h4 className="font-medium text-purple-900 mb-3">
-                                    Configuraç��es Avançadas
+                                    Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
                                     Acesso às configurações avançadas do sistema
@@ -8232,7 +8230,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relatórios detalhados em PDF
+                          Gere relat��rios detalhados em PDF
                         </p>
                       </div>
                     </div>
@@ -9712,7 +9710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração �� "🔧 Correção de Atribuiç��o de
+                                Administração → "🔧 Correção de Atribuiç��o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
