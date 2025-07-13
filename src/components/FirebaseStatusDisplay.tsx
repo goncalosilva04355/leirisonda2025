@@ -116,7 +116,7 @@ export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
           Status Firebase
         </h3>
         <div className="flex items-center space-x-1">
-          <div className={`w-3 h-3 rounded-full bg-${overall.color}-500`}></div>
+          <div className={`w-3 h-3 rounded-full ${overall.colorClass}`}></div>
           <span className="text-sm font-medium text-gray-700">
             {overall.text}
           </span>
