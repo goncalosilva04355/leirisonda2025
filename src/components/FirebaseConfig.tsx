@@ -59,7 +59,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
       // If no stored config, use the provided default config
       const defaultConfig = {
-        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
         authDomain: "leiria-1cfc9.firebaseapp.com",
         databaseURL:
           "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
@@ -124,7 +124,7 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
   const handleReset = () => {
     const defaultConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
       authDomain: "leiria-1cfc9.firebaseapp.com",
       databaseURL:
         "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
