@@ -4649,7 +4649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalaç€</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Repara��ão</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
@@ -7006,7 +7006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Pr��ximas intervenções</li>
+                                <li>• Pr���ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -8265,7 +8265,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relat��rio de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
@@ -10723,6 +10723,39 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
+        case "administracao":
+          // SECURITY: Only super admin can access administration
+          if (currentUser?.role !== "super_admin") {
+            return (
+              <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                  <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                    Acesso Restrito
+                  </h2>
+                  <p className="text-gray-500">
+                    Apenas super administradores podem aceder à área de
+                    administração.
+                  </p>
+                  <button
+                    onClick={() => navigateToSection("dashboard")}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                  >
+                    Voltar ao Dashboard
+                  </button>
+                </div>
+              </div>
+            );
+          }
+          return (
+            <div className="min-h-screen bg-gray-50">
+              <AdminPage
+                currentUser={currentUser}
+                onLogout={() => navigateToSection("dashboard")}
+              />
+            </div>
+          );
+
         default:
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -10901,7 +10934,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>💧</span>
+                  <span>��</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
