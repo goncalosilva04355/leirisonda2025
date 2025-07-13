@@ -13,6 +13,11 @@ export const AUTHORIZED_USERS: AuthorizedUser[] = [
     name: "Gonçalo Fonseca",
     role: "super_admin",
   },
+  {
+    email: "goncalosfonseca@gmail.com",
+    name: "Gonçalo Fonseca",
+    role: "super_admin",
+  },
   // Adicione mais utilizadores autorizados aqui
   // {
   //   email: "exemplo@empresa.com",
