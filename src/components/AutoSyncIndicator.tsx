@@ -86,7 +86,7 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
         }
 
         setIsAutoSyncActive(autoSyncActive);
-        setIsFirestoreReady(firestoreReady);
+        setIsFirestoreReadyState(firestoreReady);
 
         if (autoSyncActive) {
           setLastSyncTime(new Date());
