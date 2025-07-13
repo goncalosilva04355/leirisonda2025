@@ -2965,7 +2965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
-                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F4aa5ed953548445997f9d2fcbd4d2e2b?format=webp&width=800')`,
+                    backgroundColor: "#0891b2",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -5028,7 +5028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "€ILTRO UTILIZADOR:",
+                                    "���ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -8887,7 +8887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <input
                             type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Nome da pessoa respons��vel"
+                            placeholder="Nome da pessoa responsável"
                           />
                         </div>
                         <div>
@@ -10922,7 +10922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Show login form if not authenticated
   if (!isAuthenticated) {
     console.log(
-      "🛡️ SECURITY: Blocking access - isAuthenticated:",
+      "🛡��� SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
