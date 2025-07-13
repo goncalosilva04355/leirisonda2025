@@ -137,6 +137,28 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           return; // Let HTML5 validation handle this
         }
 
+        // Gravar dados no Firestore antes do login
+        console.log("💾 Salvando dados de login no Firestore...");
+        try {
+          const saveId = await saveLoginAttempt({
+            email: loginForm.email.trim(),
+            rememberMe: rememberMe,
+            // Não gravar a password por segurança
+          });
+
+          if (saveId) {
+            setLastSaveId(saveId);
+            console.log(`✅ Dados gravados no Firestore com ID: ${saveId}`);
+          } else {
+            console.warn(
+              "⚠️ Falha ao gravar no Firestore - continuando com login",
+            );
+          }
+        } catch (firestoreError) {
+          console.error("❌ Erro ao gravar no Firestore:", firestoreError);
+          // Continuar com o login mesmo se a gravação falhar
+        }
+
         // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
         if (rememberMe) {
           console.log("💾 Saving credentials for auto-login");
