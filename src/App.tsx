@@ -1568,7 +1568,7 @@ function App() {
               .register("/sw.js", { updateViaCache: "none" })
               .then((fallbackRegistration) => {
                 console.log(
-                  "📞 Fallback Service Worker registered:",
+                  "��� Fallback Service Worker registered:",
                   fallbackRegistration.scope,
                 );
               })
@@ -2962,6 +2962,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
+                {/* Firebase Status Display */}
+                <FirebaseStatusDisplay compact={true} />
+
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -2997,7 +3000,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
+                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -3590,7 +3593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">��</div>
+                            <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -6945,7 +6948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
-                            manutenções e obras.
+                            manutenç��es e obras.
                           </p>
                         </div>
 
