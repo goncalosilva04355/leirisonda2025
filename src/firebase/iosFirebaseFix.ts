@@ -49,25 +49,19 @@ export class IOSFirebaseFix {
         console.warn("⚠️ Could not clear sessionStorage:", error);
       }
 
-      // Step 3: Force delete all Firebase apps
+      // Step 3: Check existing Firebase apps (don't delete)
       try {
-        const { getApps, deleteApp } = await import("firebase/app");
+        const { getApps } = await import("firebase/app");
         const apps = getApps();
 
-        for (const app of apps) {
-          try {
-            await deleteApp(app);
-            console.log(`🗑️ Deleted Firebase app: ${app.name}`);
-          } catch (error) {
-            console.warn(`⚠️ Could not delete app ${app.name}:`, error);
-          }
+        if (apps.length > 0) {
+          console.log(
+            `✅ Found ${apps.length} existing Firebase apps, will reuse them`,
+          );
         }
       } catch (error) {
-        console.warn("⚠️ Could not delete Firebase apps:", error);
+        console.warn("⚠️ Could not check Firebase apps:", error);
       }
-
-      // Step 4: Wait for cleanup
-      console.log("⏰ Waiting for cleanup to complete...");
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Step 5: Fresh initialization with iOS-specific settings
