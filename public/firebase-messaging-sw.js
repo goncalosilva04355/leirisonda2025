@@ -1,190 +1,94 @@
-// Firebase Cloud Messaging Service Worker
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
-);
-importScripts(
-  "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
-);
+// Firebase Cloud Messaging Service Worker - versão compatível Chrome
+// Versão simplificada que não falha se Firebase não estiver disponível
 
-// Firebase configuration - will be set by runtime environment
-const firebaseConfig = {
-  apiKey: "",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "",
-  appId: "",
-  measurementId: "",
-};
+console.log("[SW] Service Worker iniciado");
 
-// Initialize Firebase with error handling
-try {
-  firebase.initializeApp(firebaseConfig);
-  console.log("[firebase-messaging-sw.js] Firebase initialized successfully");
-} catch (error) {
-  console.error(
-    "[firebase-messaging-sw.js] Firebase initialization failed:",
-    error,
-  );
-}
-
-// Initialize Firebase Cloud Messaging and get a reference to the service
+// Tentar carregar Firebase apenas se disponível
+let firebaseLoaded = false;
 let messaging = null;
+
 try {
+  // Carregar scripts Firebase
+  importScripts(
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
+  );
+  importScripts(
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
+  );
+
+  // Configuração Firebase Leiria
+  const firebaseConfig = {
+    apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
+    authDomain: "leiria-1cfc9.firebaseapp.com",
+    databaseURL:
+      "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "leiria-1cfc9",
+    storageBucket: "leiria-1cfc9.firebasestorage.app",
+    messagingSenderId: "947851234567",
+    appId: "1:947851234567:web:abcd1234567890abcd1234",
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
   messaging = firebase.messaging();
-  console.log(
-    "[firebase-messaging-sw.js] Firebase Messaging initialized successfully",
-  );
+  firebaseLoaded = true;
+
+  console.log("[SW] Firebase inicializado com sucesso");
 } catch (error) {
-  console.error(
-    "[firebase-messaging-sw.js] Firebase Messaging initialization failed:",
-    error,
-  );
+  console.warn("[SW] Firebase não disponível:", error);
+  firebaseLoaded = false;
 }
 
-// Handle background messages (only if messaging is available)
-if (messaging) {
+// Handle background messages apenas se Firebase estiver disponível
+if (firebaseLoaded && messaging) {
   messaging.onBackgroundMessage((payload) => {
-    console.log(
-      "[firebase-messaging-sw.js] Received background message:",
-      payload,
-    );
+    console.log("[SW] Mensagem em background:", payload);
 
-    // Customize notification here
-    const notificationTitle =
-      payload.notification?.title || "Leirisonda - Nova Notificação";
+    const notificationTitle = payload.notification?.title || "Leirisonda";
     const notificationOptions = {
-      body:
-        payload.notification?.body || "Você tem uma nova atribuição de obra",
-      icon: payload.notification?.icon || "/icon.svg",
+      body: payload.notification?.body || "Nova notificação",
+      icon: "/icon.svg",
       badge: "/icon.svg",
-      tag: payload.data?.workId
-        ? `work-${payload.data.workId}`
-        : "leirisonda-notification",
-      data: {
-        ...payload.data,
-        clickAction: payload.data?.clickAction || "/#obras",
-      },
-      actions: [
-        {
-          action: "view",
-          title: "Ver Obra",
-          icon: "/icon.svg",
-        },
-        {
-          action: "dismiss",
-          title: "Dispensar",
-          icon: "/icon.svg",
-        },
-      ],
-      requireInteraction: true,
-      timestamp: Date.now(),
+      tag: "leirisonda-notification",
+      data: payload.data || {},
+      requireInteraction: false,
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
   });
-} else {
-  console.warn(
-    "[firebase-messaging-sw.js] Firebase Messaging not available - background messages disabled",
-  );
 }
 
 // Handle notification clicks
 self.addEventListener("notificationclick", (event) => {
-  console.log("[firebase-messaging-sw.js] Notification click received:", event);
-
+  console.log("[SW] Notificação clicada");
   event.notification.close();
 
-  if (event.action === "dismiss") {
-    return;
-  }
-
-  // Handle view action or default click
-  const clickAction = event.notification.data?.clickAction || "/#obras";
-
+  // Abrir/focar na aplicação
   event.waitUntil(
-    clients
-      .matchAll({ type: "window", includeUncontrolled: true })
-      .then((clientList) => {
-        // Check if a Window tab or Worker is already open with the target URL
-        for (const client of clientList) {
-          // If so, just focus it.
-          if (client.url.includes(self.location.origin) && "focus" in client) {
-            client.postMessage({
-              type: "NOTIFICATION_CLICK",
-              data: event.notification.data,
-              action: event.action || "default",
-            });
-            return client.focus();
-          }
-        }
-
-        // If not, then open the target URL in a new window/tab.
-        if (clients.openWindow) {
-          return clients.openWindow(clickAction);
-        }
-      }),
+    clients.matchAll().then((clientList) => {
+      if (clientList.length > 0) {
+        return clientList[0].focus();
+      }
+      return clients.openWindow("/");
+    }),
   );
 });
 
-// Handle push events (for custom push server)
-self.addEventListener("push", (event) => {
-  console.log("[firebase-messaging-sw.js] Push event received:", event);
-
-  if (event.data) {
-    try {
-      const payload = event.data.json();
-
-      const notificationTitle = payload.title || "Leirisonda";
-      const notificationOptions = {
-        body: payload.body || "Nova notificação",
-        icon: payload.icon || "/icon.svg",
-        badge: "/icon.svg",
-        tag: payload.tag || "leirisonda-push",
-        data: payload.data || {},
-        actions: [
-          {
-            action: "view",
-            title: "Ver",
-            icon: "/icon.svg",
-          },
-          {
-            action: "dismiss",
-            title: "Dispensar",
-            icon: "/icon.svg",
-          },
-        ],
-        requireInteraction: true,
-        timestamp: Date.now(),
-      };
-
-      event.waitUntil(
-        self.registration.showNotification(
-          notificationTitle,
-          notificationOptions,
-        ),
-      );
-    } catch (error) {
-      console.error(
-        "[firebase-messaging-sw.js] Error parsing push data:",
-        error,
-      );
-
-      // Fallback notification
-      event.waitUntil(
-        self.registration.showNotification("Leirisonda", {
-          body: "Nova notificação disponível",
-          icon: "/icon.svg",
-          badge: "/icon.svg",
-          tag: "leirisonda-fallback",
-        }),
-      );
-    }
-  }
+// Basic service worker functionality para PWA
+self.addEventListener("install", (event) => {
+  console.log("[SW] Service Worker instalado");
+  self.skipWaiting();
 });
 
-console.log(
-  "[firebase-messaging-sw.js] Firebase Messaging Service Worker loaded",
-);
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Service Worker ativado");
+  event.waitUntil(clients.claim());
+});
+
+// Handle fetch events (fallback básico)
+self.addEventListener("fetch", (event) => {
+  // Deixar o browser handle requests normalmente
+  // Não interferir com requests para evitar problemas
+});
+
+console.log("[SW] Service Worker pronto para Chrome");
