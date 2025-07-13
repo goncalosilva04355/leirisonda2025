@@ -93,9 +93,15 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
         }
       } catch (error) {
         console.error("❌ AutoSyncIndicator: Erro em checkStatus:", error);
-        // Set safe defaults
+        // Set safe defaults and mark error
         setIsAutoSyncActive(false);
-        setIsFirestoreReady(false);
+        setIsFirestoreReadyState(false);
+        setHasError(true);
+
+        // Try to recover after a delay
+        setTimeout(() => {
+          setHasError(false);
+        }, 5000);
       }
     };
 
