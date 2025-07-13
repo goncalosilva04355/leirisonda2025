@@ -1952,22 +1952,23 @@ function App() {
       console.log("€ Auth result:", result);
 
       if (result.success && result.user) {
-        // console.log("✅ Login successful for:", result.user.email);
+        console.log("✅ Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
 
-        // Set user state and authentication
+        // Set user state and authentication - CRITICAL: Set both states immediately
         setCurrentUser(result.user);
         setIsAuthenticated(true);
-        // Firebase handles user persistence automatically
 
-        // Firebase Leiria pronto para uso
+        // IMPORTANT: Also persist to localStorage to prevent state loss
+        safeLocalStorage.setItem("currentUser", JSON.stringify(result.user));
+        safeLocalStorage.setItem("isAuthenticated", "true");
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
-        console.log("✅ Login state updated", {
+        console.log("✅ Login state updated and persisted", {
           user: result.user.email,
           role: result.user.role,
           isAuthenticated: true,
