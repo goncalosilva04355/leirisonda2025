@@ -1,47 +1,142 @@
+// Simple, direct Firebase configuration to avoid app destruction errors
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, Auth } from "firebase/auth";
+import { getFirestore, Firestore } from "firebase/firestore";
 
-// Use environment variables for security
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain:
-    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
-    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "leiria-1cfc9",
-  storageBucket:
-    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
-    "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
-let app: FirebaseApp | null = null;
+// Simple singleton pattern without complex async initialization
+let firebaseApp: FirebaseApp | null = null;
+let auth: Auth | null = null;
+let firestore: Firestore | null = null;
 
-export function getFirebaseApp(): FirebaseApp | null {
+// Initialize Firebase immediately and simply
+function initializeFirebase(): boolean {
   try {
-    if (!app && getApps().length === 0) {
-      app = initializeApp(firebaseConfig);
-    } else if (!app) {
-      app = getApps()[0];
+    // Only initialize if not already done
+    if (!firebaseApp) {
+      const existingApps = getApps();
+      if (existingApps.length > 0) {
+        firebaseApp = existingApps[0];
+        console.log("✅ Using existing Firebase app");
+      } else {
+        firebaseApp = initializeApp(firebaseConfig);
+        console.log("✅ Firebase app initialized");
+      }
     }
-    return app;
+
+    // Initialize Auth if not already done
+    if (!auth && firebaseApp) {
+      try {
+        auth = getAuth(firebaseApp);
+        console.log("✅ Firebase Auth ready");
+      } catch (error) {
+        console.warn("⚠️ Firebase Auth not available:", error);
+      }
+    }
+
+    // Initialize Firestore if not already done
+    if (!firestore && firebaseApp) {
+      try {
+        firestore = getFirestore(firebaseApp);
+        console.log("✅ Firebase Firestore ready");
+      } catch (error) {
+        console.warn("⚠️ Firebase Firestore not available:", error);
+      }
+    }
+
+    return true;
   } catch (error) {
-    console.warn("Firebase initialization failed, using local mode:", error);
-    return null;
+    console.error("❌ Firebase initialization failed:", error);
+    return false;
   }
 }
 
+// Initialize immediately
+initializeFirebase();
+
+// Simple getters that always return current instances
+export function getFirebaseAuth(): Auth | null {
+  if (!auth) {
+    initializeFirebase();
+  }
+  return auth;
+}
+
+export function getFirebaseFirestore(): Firestore | null {
+  if (!firestore) {
+    initializeFirebase();
+  }
+  return firestore;
+}
+
+export function getFirebaseApp(): FirebaseApp | null {
+  if (!firebaseApp) {
+    initializeFirebase();
+  }
+  return firebaseApp;
+}
+
+export function isFirebaseAvailable(): boolean {
+  return !!(firebaseApp && auth);
+}
+
+// Função para obter status detalhado do Firebase
 export function getFirebaseStatus() {
-  const app = getFirebaseApp();
   return {
-    ready: !!app,
-    app: app,
-    config: firebaseConfig,
+    ready: !!(firebaseApp && auth && firestore),
+    app: !!firebaseApp,
+    auth: !!auth,
+    db: !!firestore,
+    firestore: !!firestore,
+    isInitialized: !!firebaseApp,
+    authReady: !!auth,
+    firestoreReady: !!firestore,
+    quotaExceeded: false, // TODO: Implementar verificação de quota se necessário
   };
 }
 
-export default getFirebaseApp();
+// Legacy compatibility exports
+export const getAuthService = () => Promise.resolve(getFirebaseAuth());
+export const attemptFirestoreInit = () =>
+  Promise.resolve(getFirebaseFirestore());
+export const getDB = () => Promise.resolve(getFirebaseFirestore());
+export const isFirebaseReady = () => isFirebaseAvailable();
+export const waitForFirebaseInit = () => Promise.resolve(isFirebaseAvailable());
+
+// Direct exports for immediate use
+export { auth as firebaseAuth, firestore as firebaseFirestore, firebaseApp };
+
+// Legacy db export for backward compatibility
+export const db = new Proxy(
+  {},
+  {
+    get(target, prop) {
+      const firestoreInstance = getFirebaseFirestore();
+      if (!firestoreInstance) return null;
+
+      try {
+        return (firestoreInstance as any)[prop];
+      } catch (error) {
+        console.warn("⚠️ Firestore db proxy error:", error);
+        return null;
+      }
+    },
+  },
+);
+
+// Legacy auth export for backward compatibility
+export { auth };
+
+// Legacy app export for backward compatibility
+export const app = firebaseApp;

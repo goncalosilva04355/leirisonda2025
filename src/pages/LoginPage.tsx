@@ -76,7 +76,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
     if (rememberMe) {
-      console.log("��� Saving credentials for auto-login");
+      console.log("�� Saving credentials for auto-login");
       sessionStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({
@@ -105,7 +105,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         <div className="text-center mb-8">
           <div className="w-32 h-20 bg-white rounded-lg shadow-md p-2 mx-auto">
             <img
-              src="/icon.svg"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
               alt="Leirisonda Logo"
               className="w-full h-full object-contain"
             />

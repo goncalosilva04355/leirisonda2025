@@ -2965,7 +2965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
                   style={{
-                    backgroundColor: "#0891b2",
+                    backgroundImage: `url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F4aa5ed953548445997f9d2fcbd4d2e2b?format=webp&width=800')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
@@ -2980,7 +2980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-between mb-3">
                       <div className="w-20 h-12 bg-white rounded shadow-sm p-2">
                         <img
-                          src="/icon.svg"
+                          src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
                           alt="Leirisonda Logo"
                           className="w-full h-full object-contain"
                         />
@@ -5028,7 +5028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "���ILTRO UTILIZADOR:",
+                                    "€ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -10922,7 +10922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Show login form if not authenticated
   if (!isAuthenticated) {
     console.log(
-      "🛡��� SECURITY: Blocking access - isAuthenticated:",
+      "🛡️ SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
@@ -11188,7 +11188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <div className="flex items-center space-x-3">
                     <div className="w-16 h-10 bg-white rounded-lg shadow-md p-1">
                       <img
-                        src="/icon.svg"
+                        src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6c79d54ab5014a40bfea00560b92828d?format=webp&width=800"
                         alt="Leirisonda Logo"
                         className="w-full h-full object-contain"
                       />

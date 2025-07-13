@@ -11,7 +11,7 @@
     "application_state": "✅ TOTALMENTE FUNCIONAL",
     "firebase_status": "✅ Configurado e ativo",
     "github_account": "goncalosilva04355",
-    "builder_io_api": "[REDACTED - Check environment variables]",
+    "builder_io_api": "cc309d103d0b4ade88d90ee94cb2f741",
     "errors_fixed": [
       "✅ useState hooks errors corrigidos",
       "✅ useUniversalDataSync substituído por versão segura",
@@ -24,11 +24,13 @@
     ]
   },
   "firebase_config": {
-    "note": "Firebase configuration now uses environment variables for security",
-    "config_location": "src/config/firebaseEnv.ts",
-    "project_id": "[SET_VIA_ENV_VARS]",
-    "api_key": "[SET_VIA_ENV_VARS]",
-    "auth_domain": "[SET_VIA_ENV_VARS]",
+    "project_id": "leirisonda-16f8b",
+    "api_key": "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+    "auth_domain": "leirisonda-16f8b.firebaseapp.com",
+    "storage_bucket": "leirisonda-16f8b.firebasestorage.app",
+    "messaging_sender_id": "540456875574",
+    "app_id": "1:540456875574:web:8a8fd4870cb4c943a40a97",
+    "measurement_id": "G-R9W43EHH2C",
     "status": "✅ Ativo e funcional"
   },
   "github_config": {
@@ -39,8 +41,10 @@
     "url": "https://github.com/goncalosilva04355/Builder-stellar-landing"
   },
   "admin_credentials": {
-    "note": "Admin credentials are now managed securely through the application",
-    "access_info": "Use the application login interface with proper credentials",
+    "name": "Gonçalo Fonseca",
+    "email": "gongonsilva@gmail.com",
+    "password": "19867gsf",
+    "role": "super_admin",
     "status": "✅ Ativo e preservado"
   },
   "key_files_created": {
@@ -94,24 +98,23 @@
     "build_command": "npm run build",
     "proxy_port": "5173",
     "github_integration": "✅ Configurado para goncalosilva04355",
-    "builder_io_sync": "✅ API key configurada via env vars",
+    "builder_io_sync": "✅ API key atualizada",
     "firebase_hosting": "✅ Pronto para deploy"
   },
   "backup_instructions": {
     "restore_steps": [
       "1. npm install - instalar dependências",
-      "2. Configurar variáveis de ambiente (Firebase, Builder.io)",
-      "3. Verificar Firebase config em src/firebase/config.ts",
-      "4. Atualizar GitHub integration no Builder.io se necessário",
-      "5. npm run dev - iniciar servidor desenvolvimento",
-      "6. Login com credenciais de administrador"
+      "2. Verificar Firebase config em src/firebase/config.ts",
+      "3. Atualizar GitHub integration no Builder.io se necessário",
+      "4. npm run dev - iniciar servidor desenvolvimento",
+      "5. Login com gongonsilva@gmail.com / 19867gsf"
     ],
     "important_notes": [
       "Todos os hooks problemáticos foram substituídos por versões seguras",
       "Firebase funciona com fallback automático para modo local",
       "Aplicação está 100% funcional sem erros",
       "Configurações GitHub atualizadas para nova conta",
-      "Credenciais agora geridas de forma segura via env vars"
+      "Credenciais admin preservadas e funcionais"
     ]
   },
   "next_steps_recommendations": [
@@ -120,11 +123,5 @@
     "✅ Fazer backup regular dos dados Firebase",
     "✅ Testar sincronização entre dispositivos",
     "✅ Configurar GitHub Actions para deploy automático"
-  ],
-  "security_notes": {
-    "credentials_management": "All sensitive data moved to environment variables",
-    "firebase_config": "Use src/config/firebaseEnv.ts for secure configuration",
-    "api_keys": "Builder.io and Firebase keys should be set via environment variables",
-    "admin_access": "Admin credentials managed through secure application interface"
-  }
+  ]
 }

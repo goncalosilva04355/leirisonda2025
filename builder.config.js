@@ -1,7 +1,7 @@
 // Builder.io configuration
 module.exports = {
-  // Project configuration - API key should be set via environment variable
-  apiKey: process.env.BUILDER_API_KEY || "",
+  // Project configuration
+  apiKey: "cc309d103d0b4ade88d90ee94cb2f741",
 
   // GitHub integration
   github: {
