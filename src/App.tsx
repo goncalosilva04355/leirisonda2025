@@ -1,3 +1,4 @@
+// Build: 2024-07-13
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -229,7 +230,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
     };
 
@@ -683,7 +684,7 @@ function App() {
       const firestoreId = await firestoreService.createObra(data);
 
       if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
+        console.log("�� Obra criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal também
         try {
@@ -2280,7 +2281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         }
         return permission;
       } catch (error) {
-        console.error("€️ Error requesting notification permission:", error);
+        console.error("€��� Error requesting notification permission:", error);
         return "error";
       }
     }
