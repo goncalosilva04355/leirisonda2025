@@ -395,7 +395,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
+    // Sistema funcionará normalmente sem verificações autom����ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -1949,11 +1949,7 @@ function App() {
         setIsAuthenticated(true);
         // Firebase handles user persistence automatically
 
-        // Testar Firestore com autenticação
-        setTimeout(async () => {
-          console.log("🔐 Testando Firestore com utilizador autenticado...");
-          await testFirestoreWithAuth();
-        }, 1000);
+        // Firebase Leiria pronto para uso
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
@@ -2259,7 +2255,7 @@ ESTAT📞STICAS:
 - Manutenç€s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
-PRÓXIMAS AÇÕES:
+PRÓXIMAS AÇ��ES:
 ${futureMaintenance
   .slice(0, 5)
   .map(
@@ -4234,7 +4230,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manutenções
+                          Manuten��ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -8230,7 +8226,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relat��rios detalhados em PDF
+                          Gere relatórios detalhados em PDF
                         </p>
                       </div>
                     </div>
