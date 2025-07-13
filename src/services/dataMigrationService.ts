@@ -1,5 +1,5 @@
 // Sistema de migração de dados localStorage → Firestore
-import { firestoreService } from "./firestoreDataService";
+import { firestoreService } from "./firestoreService";
 
 interface MigrationResult {
   success: boolean;
@@ -54,7 +54,7 @@ class DataMigrationService {
 
     try {
       // Verificar se Firestore está disponível
-      if (!firestoreDataService.isFirestoreAvailable()) {
+      if (!firestoreService.isFirestoreAvailable()) {
         result.errors.push("Firestore não está disponível");
         return result;
       }
@@ -65,7 +65,7 @@ class DataMigrationService {
       // Migrar piscinas
       for (const pool of localData.pools) {
         try {
-          const docId = await firestoreDataService.addDocument("pools", pool);
+          const docId = await firestoreService.addDocument("pools", pool);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Piscina migrada: ${pool.name}`);
@@ -80,7 +80,7 @@ class DataMigrationService {
       // Migrar obras
       for (const work of localData.works) {
         try {
-          const docId = await firestoreDataService.addDocument("works", work);
+          const docId = await firestoreService.addDocument("works", work);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Obra migrada: ${work.title}`);
@@ -93,7 +93,7 @@ class DataMigrationService {
       // Migrar manutenções
       for (const maint of localData.maintenance) {
         try {
-          const docId = await firestoreDataService.addDocument(
+          const docId = await firestoreService.addDocument(
             "maintenance",
             maint,
           );
@@ -111,10 +111,7 @@ class DataMigrationService {
       // Migrar clientes
       for (const client of localData.clients) {
         try {
-          const docId = await firestoreDataService.addDocument(
-            "clients",
-            client,
-          );
+          const docId = await firestoreService.addDocument("clients", client);
           if (docId) {
             totalMigrated++;
             result.details.push(`✅ Cliente migrado: ${client.name}`);
@@ -148,16 +145,16 @@ class DataMigrationService {
     const data: { [key: string]: any[] } = {};
 
     try {
-      if (!firestoreDataService.isFirestoreAvailable()) {
+      if (!firestoreService.isFirestoreAvailable()) {
         console.log("⚠️ Firestore não disponível para teste");
         return data;
       }
 
       // Testar leitura de cada coleção
-      data.pools = await firestoreDataService.getDocuments("pools");
-      data.works = await firestoreDataService.getDocuments("works");
-      data.maintenance = await firestoreDataService.getDocuments("maintenance");
-      data.clients = await firestoreDataService.getDocuments("clients");
+      data.pools = await firestoreService.getDocuments("pools");
+      data.works = await firestoreService.getDocuments("works");
+      data.maintenance = await firestoreService.getDocuments("maintenance");
+      data.clients = await firestoreService.getDocuments("clients");
 
       console.log("🧪 Teste de dados Firestore:", {
         pools: data.pools.length,
@@ -174,7 +171,7 @@ class DataMigrationService {
 
   // Criar dados de teste se não existirem
   async createTestData(): Promise<void> {
-    if (!firestoreDataService.isFirestoreAvailable()) {
+    if (!firestoreService.isFirestoreAvailable()) {
       console.log("⚠️ Firestore não disponível para criar dados de teste");
       return;
     }
@@ -183,7 +180,7 @@ class DataMigrationService {
       console.log("🧪 Criando dados de teste...");
 
       // Cliente teste
-      await firestoreDataService.addDocument("clients", {
+      await firestoreService.addDocument("clients", {
         name: "Cliente Teste",
         email: "teste@cliente.com",
         phone: "123456789",
@@ -192,7 +189,7 @@ class DataMigrationService {
       });
 
       // Piscina teste
-      await firestoreDataService.addDocument("pools", {
+      await firestoreService.addDocument("pools", {
         name: "Piscina Teste",
         location: "Localização Teste",
         client: "Cliente Teste",
@@ -202,7 +199,7 @@ class DataMigrationService {
       });
 
       // Obra teste
-      await firestoreDataService.addDocument("works", {
+      await firestoreService.addDocument("works", {
         title: "Obra Teste",
         description: "Descrição da obra teste",
         client: "Cliente Teste",
@@ -215,7 +212,7 @@ class DataMigrationService {
       });
 
       // Manutenção teste
-      await firestoreDataService.addDocument("maintenance", {
+      await firestoreService.addDocument("maintenance", {
         type: "Limpeza",
         poolName: "Piscina Teste",
         client: "Cliente Teste",
@@ -255,7 +252,7 @@ class DataMigrationService {
     // 5. Resumo final
     console.log("🎯 Migração e teste concluídos!");
     console.log("📈 Status final:", {
-      firestoreDisponivel: firestoreDataService.isFirestoreAvailable(),
+      firestoreDisponivel: firestoreService.isFirestoreAvailable(),
       dadosFirestore: Object.keys(firestoreData).reduce((acc, key) => {
         acc[key] = firestoreData[key].length;
         return acc;
