@@ -33,13 +33,14 @@ class RobustAuthService {
 
       // Validação de senha - aceitar múltiplas passwords válidas
       const normalizedEmail = email.toLowerCase().trim();
+      const isGoncaloEmail =
+        normalizedEmail === "gongonsilva@gmail.com" ||
+        normalizedEmail === "goncalosfonseca@gmail.com";
       const isPasswordValid =
         password === "123456" || // Password universal
         password === "123" || // Password simplificada
-        (normalizedEmail === "gongonsilva@gmail.com" &&
-          password === "19867gsf") || // Password específica do super admin
-        (normalizedEmail === "gongonsilva@gmail.com" &&
-          password === "123456") || // Password alternativa para super admin
+        (isGoncaloEmail && password === "19867gsf") || // Password específica do super admin
+        (isGoncaloEmail && password === "123456") || // Password alternativa para super admin
         password.length >= 3; // Qualquer password com 3+ caracteres
 
       if (!isPasswordValid) {
