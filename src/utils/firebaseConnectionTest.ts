@@ -33,13 +33,27 @@ export async function testFirebaseConnection(): Promise<{
 
     if (app) {
       try {
-        results.push("✅ Firebase App inicializada com sucesso");
-        results.push(`📱 App Name: ${app.name}`);
-        results.push(`🔧 Project ID: ${app.options.projectId}`);
+        // Verificação mais cautelosa dos detalhes da app
+        const projectId = app.options?.projectId;
+        const appName = app.name || "DEFAULT";
+
+        if (projectId) {
+          results.push("✅ Firebase App inicializada com sucesso");
+          results.push(`📱 App Name: ${appName}`);
+          results.push(`🔧 Project ID: ${projectId}`);
+        } else {
+          errors.push("⚠️ App existe mas sem projectId válido");
+        }
       } catch (appDetailsError: any) {
-        errors.push(
-          `⚠️ App existe mas com detalhes inacessíveis: ${appDetailsError.message}`,
-        );
+        // Verificar se é erro de app deletada
+        if (appDetailsError.code === "app/app-deleted") {
+          errors.push("❌ Firebase App foi deletada inesperadamente");
+          return { success: false, results, errors };
+        } else {
+          errors.push(
+            `⚠️ App existe mas com detalhes inacessíveis: ${appDetailsError.message}`,
+          );
+        }
       }
     } else {
       errors.push("❌ Firebase App não foi inicializada");
