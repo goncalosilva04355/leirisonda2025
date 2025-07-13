@@ -2939,8 +2939,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("��� Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
+                console.warn("⚠️ Login failed:", result);
+                setLoginError("Credenciais inválidas");
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
@@ -4886,7 +4886,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "��� ERRO AO FAZER PARSE DOS USERS:",
+                                  "����� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -4937,7 +4937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         JSON.parse(savedUsers);
                                       setUsers(parsedUsers);
                                       alert(
-                                        `��� ${parsedUsers.length} utilizadores carregados!`,
+                                        `���� ${parsedUsers.length} utilizadores carregados!`,
                                       );
                                     } catch (error) {
                                       console.error("Erro:", error);
