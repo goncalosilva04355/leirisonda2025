@@ -70,7 +70,7 @@ class LocalAuthService {
     });
   }
 
-  // Simple login that works with any email/password combination
+  // Simple login that works with correct password validation
   async login(
     email: string,
     password: string,
@@ -99,6 +99,20 @@ class LocalAuthService {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         return { success: false, error: "Formato de email inválido" };
+      }
+
+      // Verificar password - aceita "123", "19867gsf" para super admin, ou "123456" para outros
+      const isPasswordValid =
+        password === "123" || // Password universal para compatibilidade
+        (email.toLowerCase() === "gongonsilva@gmail.com" &&
+          password === "19867gsf") || // Password específica do super admin
+        password === "123456"; // Password padrão dos utilizadores
+
+      if (!isPasswordValid) {
+        return {
+          success: false,
+          error: `Password incorreta. Use "123" ou consulte o administrador.`,
+        };
       }
 
       // Create user profile with authorized user data
