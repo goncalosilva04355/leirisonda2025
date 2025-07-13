@@ -70,14 +70,31 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
 
   const checkConfig = (): "valid" | "invalid" | "missing" => {
     try {
+      // Verificar primeiro se há config no localStorage
       const storedConfig = localStorage.getItem("firebase-config");
-      if (!storedConfig) return "missing";
+      if (storedConfig) {
+        const config = JSON.parse(storedConfig);
+        if (config.apiKey && config.projectId && config.authDomain) {
+          return "valid";
+        }
+      }
 
-      const config = JSON.parse(storedConfig);
-      if (config.apiKey && config.projectId && config.authDomain) {
+      // Verificar se há config hardcoded (padrão do projeto)
+      const defaultConfig = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        projectId: "leiria-1cfc9",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+      };
+
+      if (
+        defaultConfig.apiKey &&
+        defaultConfig.projectId &&
+        defaultConfig.authDomain
+      ) {
         return "valid";
       }
-      return "invalid";
+
+      return "missing";
     } catch {
       return "invalid";
     }
