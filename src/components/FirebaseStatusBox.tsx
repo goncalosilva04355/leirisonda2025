@@ -134,8 +134,30 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
 
   const checkAuth = (): "active" | "inactive" | "error" => {
     try {
+      // Verificar múltiplas fontes de estado de auth
       const authState = localStorage.getItem("firebase-auth-state");
-      if (authState) return "active";
+      const firebaseUser = localStorage.getItem("firebase-user");
+      const authToken = localStorage.getItem("firebase-token");
+      const authPersistence = localStorage.getItem("firebase-persistence");
+      const currentUser = localStorage.getItem("currentUser");
+
+      // Se algum indicador de auth existe, consideramos ativo
+      if (
+        authState ||
+        firebaseUser ||
+        authToken ||
+        authPersistence ||
+        currentUser
+      ) {
+        return "active";
+      }
+
+      // Verificar se Firebase Auth está inicializado mas sem user
+      const firebaseInitialized = localStorage.getItem("firebase-initialized");
+      if (firebaseInitialized === "true") {
+        return "inactive"; // Inicializado mas sem user logado
+      }
+
       return "inactive";
     } catch {
       return "error";
