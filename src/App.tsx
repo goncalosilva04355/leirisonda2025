@@ -1955,6 +1955,12 @@ function App() {
         setIsAuthenticated(true);
         // Firebase handles user persistence automatically
 
+        // Testar Firestore com autenticação
+        setTimeout(async () => {
+          console.log("🔐 Testando Firestore com utilizador autenticado...");
+          await testFirestoreWithAuth();
+        }, 1000);
+
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
