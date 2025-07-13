@@ -255,7 +255,7 @@ class DataMigrationService {
     // 5. Resumo final
     console.log("🎯 Migração e teste concluídos!");
     console.log("📈 Status final:", {
-      firestoreDisponivel: firestoreService.isFirestoreAvailable(),
+      firestoreDisponivel: await firestoreService.testConnection(),
       dadosFirestore: Object.keys(firestoreData).reduce((acc, key) => {
         acc[key] = firestoreData[key].length;
         return acc;
