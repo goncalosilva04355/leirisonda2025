@@ -31,7 +31,7 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
       }
 
       // Aguardar a app estar completamente pronta
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Verificar se a app não foi deletada com validação mais robusta
       try {
@@ -52,17 +52,41 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
           console.warn("⚠️ Firebase App não está na lista de apps válidas");
           return null;
         }
+
+        // Teste adicional: verificar se a app ainda responde
+        const appName = app.name;
+        if (!appName) {
+          console.warn("⚠️ Firebase App sem nome válido");
+          return null;
+        }
       } catch (appError) {
         console.warn("⚠️ Firebase App não é válida:", appError);
         return null;
       }
 
-      // Inicializar Firestore com retry automático
+      // Inicializar Firestore com retry automático e validação mais rigorosa
       let retryCount = 0;
-      const maxRetries = 3;
+      const maxRetries = 5;
 
       while (retryCount < maxRetries) {
         try {
+          // Aguardar progressivamente mais tempo em cada tentativa
+          if (retryCount > 0) {
+            const waitTime = Math.min(5000 * retryCount, 15000);
+            console.log(
+              `🔄 Aguardando ${waitTime}ms antes da tentativa ${retryCount + 1}...`,
+            );
+            await new Promise((resolve) => setTimeout(resolve, waitTime));
+          }
+
+          // Re-verificar se a app ainda é válida antes de cada tentativa
+          const { getApps } = await import("firebase/app");
+          const currentApps = getApps();
+          if (!currentApps.includes(app)) {
+            throw new Error("Firebase App não está mais válida");
+          }
+
+          // Tentar inicializar Firestore
           firestoreInstance = getFirestore(app);
           console.log("✅ Firestore: Inicializado com sucesso (assíncrono)");
           console.log("🔥 Firestore sempre ativo - dados sincronizados");
@@ -73,21 +97,6 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
             `⚠️ Firestore: Tentativa ${retryCount}/${maxRetries} falhou:`,
             firestoreError.code || firestoreError.message,
           );
-
-          // Se for erro específico de getImmediate, aguardar mais tempo
-          if (firestoreError.message?.includes("getImmediate")) {
-            console.log(
-              "🔄 Erro getImmediate detectado, aguardando app estar pronta...",
-            );
-            await new Promise((resolve) =>
-              setTimeout(resolve, 3000 * retryCount),
-            );
-          } else if (retryCount < maxRetries) {
-            // Para outros erros, aguardar menos tempo
-            await new Promise((resolve) =>
-              setTimeout(resolve, 1000 * retryCount),
-            );
-          }
 
           // Se foi a última tentativa
           if (retryCount === maxRetries) {
