@@ -100,6 +100,7 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
+import("./utils/quickFirebaseTest"); // Auto-teste Firebase
 
 // Sistema de diagnóstico de persistência
 import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
