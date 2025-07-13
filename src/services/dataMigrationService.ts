@@ -146,7 +146,8 @@ class DataMigrationService {
     const data: { [key: string]: any[] } = {};
 
     try {
-      if (!firestoreService.isFirestoreAvailable()) {
+      const isAvailable = await firestoreService.testConnection();
+      if (!isAvailable) {
         console.log("⚠️ Firestore não disponível para teste");
         return data;
       }
