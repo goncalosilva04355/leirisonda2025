@@ -96,7 +96,7 @@ import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { robustAuthService as authService } from "./services/robustAuthService";
+import { directAuthService as authService } from "./services/directAuthService";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -259,7 +259,7 @@ function App() {
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
 
-    // Detectar conflitos Firebase em dispositivos móveis
+    // Detectar conflitos Firebase em dispositivos m��veis
     const detectFirebaseConflicts = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (!isMobile) return;
@@ -1295,7 +1295,7 @@ function App() {
           const db = getFirebaseFirestore();
           if (db) {
             try {
-              // Importar funç����es do Firestore dinamicamente
+              // Importar funç��es do Firestore dinamicamente
               const { doc, setDoc, getDoc } = await import(
                 "firebase/firestore"
               );
@@ -1337,7 +1337,7 @@ function App() {
           }
         } else {
           console.log(
-            "⚠️ Passo 3: Firestore não dispon��vel, usando localStorage",
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
           );
         }
       } catch (error) {
@@ -2716,7 +2716,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`�� Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -7383,7 +7383,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configurações
+                        Configuraç��es
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -8274,7 +8274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{pools.length}</strong> piscinas registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>🔍 Estado e localização</li>
+                        <li>🔍 Estado e localiza��ão</li>
                         <li>• Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
