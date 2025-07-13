@@ -8,20 +8,18 @@ const firebaseConfig = getFirebaseConfig();
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
-let isInitializing = false;
+let initializationPromise: Promise<FirebaseApp | null> | null = null;
 
-// Função robusta para inicializar Firebase apenas uma vez
-function initializeFirebaseBasic(): FirebaseApp | null {
-  // Evitar múltiplas inicializações simultâneas
-  if (isInitializing) {
-    console.log("⏳ Firebase: Inicialização já em progresso, aguardando...");
-    return firebaseApp;
+// Função assíncrona robusta para inicializar Firebase
+async function initializeFirebaseBasic(): Promise<FirebaseApp | null> {
+  // Se já estamos inicializando, retornar a promise existente
+  if (initializationPromise) {
+    return initializationPromise;
   }
 
   // Se já temos uma app válida, retorná-la
   if (firebaseApp) {
     try {
-      // Verificar se a app ainda é válida
       const apps = getApps();
       if (apps.find((app) => app === firebaseApp)) {
         console.log("✅ Firebase: App existente e válida");
@@ -33,47 +31,74 @@ function initializeFirebaseBasic(): FirebaseApp | null {
     }
   }
 
-  try {
-    isInitializing = true;
-
-    // Verificar se estamos em modo privado
-    if (isPrivateBrowsing()) {
-      console.warn("🔒 Modo privado detectado - Firebase pode ter limitações");
-    }
-
-    // Verificar se já existe uma app válida
-    const existingApps = getApps();
-
-    if (existingApps.length > 0) {
-      // Usar a primeira app existente se for válida
-      firebaseApp = existingApps[0];
-      console.log("✅ Firebase: Reutilizando app existente");
-    } else {
-      // Criar nova app apenas se não existir nenhuma
-      firebaseApp = initializeApp(firebaseConfig);
-      console.log("✅ Firebase: Nova app inicializada");
-    }
-
-    console.log("🔥 Firebase sempre ativo - sincronização garantida");
-    return firebaseApp;
-  } catch (error: any) {
-    console.error("❌ Firebase: Erro na inicialização:", error);
-    firebaseApp = null;
-
-    // Se for erro de app já existir, tentar usar a existente
-    if (error.code === "app/duplicate-app") {
-      const apps = getApps();
-      if (apps.length > 0) {
-        firebaseApp = apps[0];
-        console.log("✅ Firebase: App duplicada resolvida, usando existente");
-        return firebaseApp;
+  // Criar promise de inicialização
+  initializationPromise = (async () => {
+    try {
+      // Verificar se estamos em modo privado
+      if (isPrivateBrowsing()) {
+        console.warn(
+          "🔒 Modo privado detectado - Firebase pode ter limitações",
+        );
       }
-    }
 
-    return null;
-  } finally {
-    isInitializing = false;
+      // Verificar se já existe uma app válida
+      const existingApps = getApps();
+
+      if (existingApps.length > 0) {
+        // Usar a primeira app existente se for válida
+        firebaseApp = existingApps[0];
+        console.log("✅ Firebase: Reutilizando app existente");
+      } else {
+        // Criar nova app apenas se não existir nenhuma
+        firebaseApp = initializeApp(firebaseConfig);
+        console.log("✅ Firebase: Nova app inicializada");
+
+        // Aguardar um pouco para app estar completamente pronta
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+
+      console.log("🔥 Firebase sempre ativo - sincronização garantida");
+      return firebaseApp;
+    } catch (error: any) {
+      console.error("❌ Firebase: Erro na inicialização:", error);
+      firebaseApp = null;
+
+      // Se for erro de app já existir, tentar usar a existente
+      if (error.code === "app/duplicate-app") {
+        const apps = getApps();
+        if (apps.length > 0) {
+          firebaseApp = apps[0];
+          console.log("✅ Firebase: App duplicada resolvida, usando existente");
+          return firebaseApp;
+        }
+      }
+
+      return null;
+    } finally {
+      // Limpar promise após conclusão
+      initializationPromise = null;
+    }
+  })();
+
+  return initializationPromise;
+}
+
+// Versão síncrona para compatibilidade com código existente
+function initializeFirebaseBasicSync(): FirebaseApp | null {
+  if (firebaseApp) {
+    return firebaseApp;
   }
+
+  // Tentar inicialização assíncrona e retornar null se não estiver pronta
+  initializeFirebaseBasic()
+    .then((app) => {
+      firebaseApp = app;
+    })
+    .catch((error) => {
+      console.error("❌ Firebase: Erro na inicialização assíncrona:", error);
+    });
+
+  return firebaseApp;
 }
 
 // Função robusta para obter a app Firebase
