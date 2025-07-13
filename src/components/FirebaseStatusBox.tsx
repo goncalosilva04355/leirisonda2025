@@ -419,15 +419,45 @@ export const FirebaseStatusBox: React.FC<FirebaseStatusBoxProps> = ({
             </div>
           </div>
 
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              checkFirebaseStatus();
-            }}
-            className="text-xs text-blue-600 hover:text-blue-800 underline"
-          >
-            Atualizar Status
-          </button>
+          <div className="flex justify-between items-center">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                checkFirebaseStatus();
+              }}
+              className="text-xs text-blue-600 hover:text-blue-800 underline"
+            >
+              Atualizar Status
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("🔍 Firebase Debug Info:", {
+                  localStorage: {
+                    "firebase-config":
+                      !!localStorage.getItem("firebase-config"),
+                    "firebase-auth-state": !!localStorage.getItem(
+                      "firebase-auth-state",
+                    ),
+                    "firebase-user": !!localStorage.getItem("firebase-user"),
+                    "firebase-initialized": localStorage.getItem(
+                      "firebase-initialized",
+                    ),
+                    "firestore-cache":
+                      !!localStorage.getItem("firestore-cache"),
+                    users: !!localStorage.getItem("users"),
+                    works: !!localStorage.getItem("works"),
+                    currentUser: !!localStorage.getItem("currentUser"),
+                    "sync-status": localStorage.getItem("sync-status"),
+                  },
+                });
+                alert("Debug info no console!");
+              }}
+              className="text-xs text-gray-500 hover:text-gray-700 underline"
+            >
+              Debug
+            </button>
+          </div>
         </div>
       )}
     </div>
