@@ -1405,7 +1405,7 @@ function App() {
     syncAllData();
   }, []);
 
-  // Inicializar sincronização automática em tempo real
+  // Inicializar sincronização autom��tica em tempo real
   useEffect(() => {
     const initAutoSync = async () => {
       // Aguardar Firestore estar pronto
@@ -2409,7 +2409,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           "work-assignment",
         );
       } else {
-        console.warn("❌ Notification blocked, using alert fallback:", {
+        console.warn("��� Notification blocked, using alert fallback:", {
           notificationsEnabled,
           permission: Notification.permission,
         });
@@ -11323,6 +11323,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
+                {/* Status de Sincronização Automática */}
+                <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
+                  <AutoSyncIndicator />
+                </div>
+
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");
