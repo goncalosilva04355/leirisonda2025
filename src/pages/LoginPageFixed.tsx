@@ -295,6 +295,9 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             </div>
           )}
 
+          {/* Login Hints */}
+          <LoginHints />
+
           {/* Login Button */}
           <div className="space-y-2 pt-2">
             <button
