@@ -1895,6 +1895,9 @@ function App() {
     try {
       console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
 
+      // Auto-check Firebase before login attempt
+      await firebaseAutoFix.checkOnUserAction();
+
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
@@ -1903,16 +1906,50 @@ function App() {
         // Set user state and authentication
         setCurrentUser(result.user);
         setIsAuthenticated(true);
+        safeLocalStorage.setItem("currentUser", JSON.stringify(result.user));
+        safeLocalStorage.setItem("isAuthenticated", "true");
 
-        // Navigate to dashboard
-        setTimeout(() => {
-          const hash = window.location.hash.substring(1);
-          if (hash && hash !== "login") {
-            setActiveSection(hash);
+        // Clear login form
+        setLoginForm({ email: "", password: "" });
+
+        // Navigate to dashboard or requested section with validation
+        const hash = window.location.hash.substring(1);
+        if (hash && hash !== "login") {
+          // Validate that the section exists and user has access
+          const validSections = [
+            "dashboard",
+            "obras",
+            "piscinas",
+            "manutencoes",
+            "futuras-manutencoes",
+            "nova-obra",
+            "nova-piscina",
+            "nova-manutencao",
+            "clientes",
+            "novo-cliente",
+            "configuracoes",
+            "relatorios",
+            "utilizadores",
+            "localizacoes",
+            "register",
+            "editar-obra",
+            "editar-piscina",
+            "editar-manutencao",
+          ];
+
+          if (validSections.includes(hash)) {
+            // Use setTimeout to ensure state is properly set before navigation
+            setTimeout(() => {
+              setActiveSection(hash);
+            }, 100);
           } else {
+            // Invalid hash, redirect to dashboard
+            window.location.hash = "";
             navigateToSection("dashboard");
           }
-        }, 100);
+        } else {
+          navigateToSection("dashboard");
+        }
 
         return result;
       } else {
@@ -9813,7 +9850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observações */}
+                    {/* Observa��ões */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
