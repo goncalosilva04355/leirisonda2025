@@ -23,9 +23,42 @@ export const LEIRIA_FIREBASE_CONFIG = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
 };
 
-// Função única para obter configuração
+// Função única para obter configuração com validação
 export function getFirebaseConfig() {
-  return LEIRIA_FIREBASE_CONFIG;
+  // Validar configuração antes de retornar
+  const config = LEIRIA_FIREBASE_CONFIG;
+
+  // Verificar se todos os campos essenciais estão presentes
+  const requiredFields = [
+    "apiKey",
+    "authDomain",
+    "projectId",
+    "storageBucket",
+    "messagingSenderId",
+    "appId",
+  ];
+  const missingFields = requiredFields.filter(
+    (field) => !config[field as keyof typeof config],
+  );
+
+  if (missingFields.length > 0) {
+    console.error(
+      "❌ Firebase Config: Campos obrigatórios em falta:",
+      missingFields,
+    );
+    throw new Error(
+      `Firebase config inválida: campos em falta - ${missingFields.join(", ")}`,
+    );
+  }
+
+  // Verificar se projectId é válido
+  if (!config.projectId || config.projectId.length < 3) {
+    console.error("❌ Firebase Config: projectId inválido:", config.projectId);
+    throw new Error("Firebase config inválida: projectId inválido");
+  }
+
+  console.log("✅ Firebase Config validada:", config.projectId);
+  return config;
 }
 
 // Exportação padrão
