@@ -29,9 +29,15 @@ export class DevFirestoreService {
   }
 
   async createWork(workData: any): Promise<string | null> {
+    // Verificação robusta
     if (!this.db) {
-      console.warn("Firestore não disponível");
-      return null;
+      console.log("🔄 Tentando re-inicializar Firestore...");
+      this.initializeFirestore();
+
+      if (!this.db) {
+        console.error("❌ Firestore não está disponível");
+        return null;
+      }
     }
 
     try {
