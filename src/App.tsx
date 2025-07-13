@@ -1392,18 +1392,46 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 4000));
 
       if (isFirestoreReady()) {
-        console.log("€Iniciando sincroniza📞ão automática em tempo real...");
+        console.log("🔄 Iniciando sincronização automática em tempo real...");
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática ativa!");
+          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
+
+          // Force enable real-time sync for editing
+          console.log("🔥 FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
           console.error("❌ Erro ao iniciar sincronização automática:", error);
+          // Try again if it fails
+          setTimeout(async () => {
+            try {
+              await autoSyncService.startAutoSync();
+              setAutoSyncActive(true);
+              console.log("✅ AutoSync ativado na segunda tentativa!");
+            } catch (retryError) {
+              console.error("❌ Erro na segunda tentativa:", retryError);
+            }
+          }, 5000);
         }
+      } else {
+        console.log(
+          "⚠️ Firestore não disponível, tentando novamente em 10 segundos...",
+        );
+        setTimeout(async () => {
+          if (isFirestoreReady()) {
+            try {
+              await autoSyncService.startAutoSync();
+              setAutoSyncActive(true);
+              console.log("✅ AutoSync ativado após aguardar Firestore!");
+            } catch (error) {
+              console.error("❌ Erro ao ativar AutoSync:", error);
+            }
+          }
+        }, 10000);
       }
     };
 
@@ -3454,7 +3482,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç€endada
+                          Nenhuma manutenç��endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -7597,7 +7625,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-green-900">
-                                        Navegação Maps
+                                        Navega��ão Maps
                                       </h4>
                                       <button
                                         onClick={() =>
