@@ -152,10 +152,10 @@ class DataMigrationService {
       }
 
       // Testar leitura de cada coleção
-      data.pools = await firestoreService.getDocuments("pools");
-      data.works = await firestoreService.getDocuments("works");
-      data.maintenance = await firestoreService.getDocuments("maintenance");
-      data.clients = await firestoreService.getDocuments("clients");
+      data.pools = await firestoreService.getCollection("pools");
+      data.works = await firestoreService.getCollection("works");
+      data.maintenance = await firestoreService.getCollection("maintenance");
+      data.clients = await firestoreService.getCollection("clients");
 
       console.log("🧪 Teste de dados Firestore:", {
         pools: data.pools.length,
