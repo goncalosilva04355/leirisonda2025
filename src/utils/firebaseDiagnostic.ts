@@ -1,9 +1,12 @@
 // Script de diagnóstico do Firebase
-import { getFirebaseApp } from "../firebase/basicConfig";
 import {
+  getFirebaseApp,
   getFirebaseFirestore,
   testFirestore,
-} from "../firebase/firestoreConfig";
+  initializeFirebaseRobust,
+  isFirebaseReady,
+  isFirestoreReady,
+} from "../firebase/robustFirebase";
 
 export async function diagnoseFirabaseIssues() {
   console.log("🔍 Iniciando diagnóstico do Firebase...");
