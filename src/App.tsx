@@ -849,6 +849,32 @@ function App() {
     try {
       console.log("��� addClient iniciado com Firestore ativo");
 
+      // 🔥 GRAVAÇÃO AUTOMÁTICA NO FIRESTORE (novo)
+      try {
+        const firestoreDataService = await import(
+          "../services/firestoreDataService"
+        );
+        const saveId = await firestoreDataService.saveFormToFirestore(
+          "clientes",
+          {
+            ...data,
+            type: "cliente",
+            source: "addClient_function",
+            userAgent: navigator.userAgent,
+          },
+        );
+        if (saveId) {
+          console.log(
+            `✅ Cliente gravado automaticamente no Firestore: ${saveId}`,
+          );
+        }
+      } catch (firestoreError) {
+        console.warn(
+          "⚠️ Erro na gravação automática Firestore:",
+          firestoreError,
+        );
+      }
+
       const firestoreId = await offlineFirstService.createClient(data);
 
       if (firestoreId) {
