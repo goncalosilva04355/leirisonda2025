@@ -180,33 +180,48 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
   }, []);
 
   const getIcon = () => {
-    if (isAutoSyncActive && isFirestoreReady) {
-      return <Zap className="h-4 w-4 text-green-500" />;
+    try {
+      if (isAutoSyncActive && isFirestoreReadyState) {
+        return <Zap className="h-4 w-4 text-green-500" />;
+      }
+      if (isFirestoreReadyState) {
+        return <RotateCcw className="h-4 w-4 text-blue-500" />;
+      }
+      return <ZapOff className="h-4 w-4 text-gray-400" />;
+    } catch (error) {
+      console.error("❌ AutoSyncIndicator: Erro em getIcon:", error);
+      return <ZapOff className="h-4 w-4 text-gray-400" />;
     }
-    if (isFirestoreReady) {
-      return <RotateCcw className="h-4 w-4 text-blue-500" />;
-    }
-    return <ZapOff className="h-4 w-4 text-gray-400" />;
   };
 
   const getStatus = () => {
-    if (isAutoSyncActive && isFirestoreReady) {
-      return "Sincronização Automática ATIVA";
+    try {
+      if (isAutoSyncActive && isFirestoreReadyState) {
+        return "Sincronização Automática ATIVA";
+      }
+      if (isFirestoreReadyState) {
+        return "Firebase Conectado";
+      }
+      return "Conectando...";
+    } catch (error) {
+      console.error("❌ AutoSyncIndicator: Erro em getStatus:", error);
+      return "Status Indisponível";
     }
-    if (isFirestoreReady) {
-      return "Firebase Conectado";
-    }
-    return "Conectando...";
   };
 
   const getStatusColor = () => {
-    if (isAutoSyncActive && isFirestoreReady) {
-      return "text-green-600";
+    try {
+      if (isAutoSyncActive && isFirestoreReadyState) {
+        return "text-green-600";
+      }
+      if (isFirestoreReadyState) {
+        return "text-blue-600";
+      }
+      return "text-gray-500";
+    } catch (error) {
+      console.error("❌ AutoSyncIndicator: Erro em getStatusColor:", error);
+      return "text-gray-500";
     }
-    if (isFirestoreReady) {
-      return "text-blue-600";
-    }
-    return "text-gray-500";
   };
 
   return (
