@@ -173,16 +173,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
   return (
     <div className="min-h-screen bg-blue-200 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        {/* Logo Leirisonda */}
+        {/* Login Header */}
         <div className="text-center mb-8">
-          <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
-            <img
-              src="/leirisonda-logo.svg"
-              alt="Leirisonda - Gestão de Piscinas & Obras Aquáticas"
-              className="w-full h-auto object-contain"
-              style={{ maxHeight: "80px" }}
-            />
-          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Login</h1>
+          <p className="text-gray-600">Aceda à sua conta</p>
         </div>
 
         {/* Admin Access Button */}
