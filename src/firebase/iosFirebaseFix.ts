@@ -83,7 +83,7 @@ export class IOSFirebaseFix {
       const { getAuth, connectAuthEmulator } = await import("firebase/auth");
 
       const config = {
-        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+        apiKey: import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY || "",
         authDomain: "leirisonda-16f8b.firebaseapp.com",
         projectId: "leirisonda-16f8b",
         storageBucket: "leirisonda-16f8b.firebasestorage.app",
@@ -168,7 +168,7 @@ export class IOSFirebaseFix {
         console.warn("⚠️ Could not update UltimateSimpleFirebase:", error);
       }
 
-      console.log("🎉 iOS FIREBASE FIX SUCCESSFUL!");
+      console.log("���� iOS FIREBASE FIX SUCCESSFUL!");
       return true;
     } catch (error: any) {
       console.error("❌ iOS Firebase fix failed:", error);
