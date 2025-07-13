@@ -96,7 +96,7 @@ export function getFirebaseApp(): FirebaseApp | null {
     }
   } catch (error) {
     console.warn("⚠️ Firebase: Erro ao verificar apps:", error);
-    return firebaseApp; // Retornar a app mesmo com erro de verifica��ão
+    return firebaseApp; // Retornar a app mesmo com erro de verificação
   }
 }
 
@@ -105,8 +105,8 @@ export function isFirebaseReady(): boolean {
   return firebaseApp !== null;
 }
 
-// Inicializar automaticamente quando o módulo é carregado
-initializeFirebaseBasic();
+// Inicialização lazy - apenas quando necessário
+// initializeFirebaseBasic(); // Removido para evitar conflitos
 
 // Exportações para compatibilidade com código existente
 export const app = firebaseApp;
