@@ -6,8 +6,8 @@ export default defineConfig({
   root: ".",
   publicDir: "public",
   define: {
-    // Add global ReadableStream check
     global: "globalThis",
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
   },
   build: {
     outDir: "dist",
