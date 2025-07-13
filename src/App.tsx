@@ -100,7 +100,7 @@ import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 // Firebase works silently in background - no diagnostics or UI needed
 import("./firebase/ultimateSimpleFirebase");
 import { ForceInitialization } from "./utils/forceInitialization";
-import("./utils/quickFirebaseTest"); // Auto-teste Firebase
+// Firebase testes removidos para evitar conflitos
 import {
   testFirestoreSecurityRules,
   testFirestoreWithAuth,
@@ -2171,7 +2171,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞��ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa�����ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -5977,7 +5977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "���� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -7260,7 +7260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
                                 >
                                   <Shield className="h-4 w-4" />
-                                  <span>Ir para Administra��ão</span>
+                                  <span>Ir para Administração</span>
                                 </button>
                               </div>
                             </div>
