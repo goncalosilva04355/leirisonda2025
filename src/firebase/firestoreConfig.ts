@@ -88,8 +88,11 @@ async function initializeFirestoreAsync(): Promise<Firestore | null> {
           firestoreInstance = null;
         }
 
-        return null;
+                return null;
       }
+
+      // Se chegou aqui, todas as tentativas falharam
+      return null;
     } catch (error: any) {
       console.error(
         "❌ Firestore: Erro geral na inicialização assíncrona:",
