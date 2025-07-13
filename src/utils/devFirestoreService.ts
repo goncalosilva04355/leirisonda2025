@@ -116,7 +116,10 @@ export class DevFirestoreService {
   }
 
   async createClient(clientData: any): Promise<string | null> {
-    if (!this.db) return null;
+    if (!this.db) {
+      this.initializeFirestore();
+      if (!this.db) return null;
+    }
 
     try {
       const docRef = await addDoc(collection(this.db, "clientes"), {
