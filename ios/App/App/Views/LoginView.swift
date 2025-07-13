@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @State private var email = "gongonsilva@gmail.com"
+    @State private var email = ""
     @State private var password = ""
     @State private var rememberMe = false
     @State private var showError = true
