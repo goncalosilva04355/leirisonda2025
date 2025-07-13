@@ -41,6 +41,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -395,7 +396,7 @@ function App() {
     // Sistema funcionará normalmente sem verificações autom📞ticas
   }, []);
 
-  // Sincronizar configura��ões entre componentes
+  // Sincronizar configurações entre componentes
   useEffect(() => {
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -672,7 +673,7 @@ function App() {
 
       console.log("✅ Processo de notificações concluído");
     } catch (error) {
-      console.error("❌ Erro no sistema de notificações:", error);
+      console.error("❌ Erro no sistema de notifica��ões:", error);
     }
   };
 
@@ -3239,7 +3240,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -5000,7 +5001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       "app-users",
                                       JSON.stringify([defaultUser]),
                                     );
-                                    alert("�� Utilizador padrão criado!");
+                                    alert("✅ Utilizador padrão criado!");
                                   }
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
@@ -6881,7 +6882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configurações
+                        Configura��ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
