@@ -48,18 +48,19 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
     view: "Ver",
     create: "Criar",
     edit: "Editar",
-    delete: "Eliminar",
+    delete: "Apagar",
   };
 
-  const roleDescriptions = {
-    super_admin: "Super Administrador - Acesso total",
-    admin: "Administrador - Acesso de gestão completo",
-    manager: "Gestor - Acesso limitado à gestão",
-    technician: "Técnico - Acesso operacional",
+  const roleNames = {
+    user: "Utilizador",
+    admin: "Administrador",
+    super_admin: "Super Administrador",
+    manager: "Gestor",
+    tech: "Técnico",
   };
 
   const handlePermissionChange = (
-    module: string,
+    module: keyof UserProfile["permissions"],
     action: string,
     value: boolean,
   ) => {
@@ -74,61 +75,8 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
 
   const handleRoleChange = (newRole: UserProfile["role"]) => {
     setRole(newRole);
-
-    // Auto-set permissions based on role
-    const defaultPermissions = getDefaultPermissions(newRole);
-    setPermissions(defaultPermissions);
-  };
-
-  const getDefaultPermissions = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-        };
-      case "admin":
-        return {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-        };
-      case "manager":
-        return {
-          obras: { view: true, create: true, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: true, edit: true, delete: false },
-          utilizadores: {
-            view: true,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: true, edit: false, delete: false },
-          clientes: { view: true, create: true, edit: true, delete: false },
-        };
-      default: // technician
-        return {
-          obras: { view: true, create: true, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: true, edit: true, delete: false },
-          utilizadores: {
-            view: false,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: false, edit: false, delete: false },
-          clientes: { view: true, create: false, edit: false, delete: false },
-        };
-    }
+    // Auto-update permissions based on role
+    setPermissions(getDefaultPermissions(newRole));
   };
 
   const handleSave = async () => {
@@ -141,108 +89,90 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
-        <div className="bg-blue-600 text-white p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Shield className="w-6 h-6" />
-              <div>
-                <h3 className="text-lg font-bold">Editar Permissões</h3>
-                <p className="text-blue-100 text-sm">
-                  {user.name} ({user.email})
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onCancel}
-              className="text-blue-100 hover:text-white"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <Edit3 className="h-5 w-5" />
+            Editar Permissões - {user.name}
+          </h3>
+          <button
+            onClick={onCancel}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[70vh]">
+        <div className="space-y-6">
           {/* Role Selection */}
-          <div className="mb-6">
+          <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Função do Utilizador
+              Função
             </label>
-            <div className="space-y-2">
-              {(
-                Object.keys(roleDescriptions) as Array<
-                  keyof typeof roleDescriptions
-                >
-              ).map((roleKey) => (
-                <label
-                  key={roleKey}
-                  className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="role"
-                    value={roleKey}
-                    checked={role === roleKey}
-                    onChange={(e) =>
-                      handleRoleChange(e.target.value as UserProfile["role"])
-                    }
-                    className="text-blue-600"
-                  />
-                  <div>
-                    <div className="font-medium">
-                      {roleDescriptions[roleKey]}
-                    </div>
-                  </div>
-                </label>
+            <select
+              value={role}
+              onChange={(e) =>
+                handleRoleChange(e.target.value as UserProfile["role"])
+              }
+              className="w-full border border-gray-300 rounded-md px-3 py-2"
+            >
+              {Object.entries(roleNames).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
 
-          {/* Permissions Matrix */}
-          <div className="mb-6">
-            <h4 className="text-lg font-medium text-gray-900 mb-4">
-              Permissões Detalhadas
+          {/* Permissions Grid */}
+          <div>
+            <h4 className="text-sm font-medium text-gray-700 mb-3">
+              Permissões por Módulo
             </h4>
             <div className="overflow-x-auto">
-              <table className="min-w-full border border-gray-200 rounded-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700 border-b">
+              <table className="min-w-full border border-gray-200">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700">
                       Módulo
                     </th>
-                    {Object.entries(actionNames).map(([action, name]) => (
+                    {Object.entries(actionNames).map(([action, label]) => (
                       <th
                         key={action}
-                        className="px-4 py-3 text-center text-sm font-medium text-gray-700 border-b"
+                        className="border border-gray-200 px-3 py-2 text-center text-sm font-medium text-gray-700"
                       >
-                        {name}
+                        {label}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="bg-white">
-                  {Object.entries(moduleNames).map(([module, name]) => (
-                    <tr
-                      key={module}
-                      className="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td className="px-4 py-3 font-medium text-gray-900">
-                        {name}
+                <tbody>
+                  {Object.entries(moduleNames).map(([module, label]) => (
+                    <tr key={module}>
+                      <td className="border border-gray-200 px-3 py-2 font-medium">
+                        {label}
                       </td>
                       {Object.keys(actionNames).map((action) => (
-                        <td key={action} className="px-4 py-3 text-center">
+                        <td
+                          key={action}
+                          className="border border-gray-200 px-3 py-2 text-center"
+                        >
                           <input
                             type="checkbox"
-                            checked={permissions[module]?.[action] || false}
+                            checked={
+                              permissions[
+                                module as keyof UserProfile["permissions"]
+                              ]?.[action] || false
+                            }
                             onChange={(e) =>
                               handlePermissionChange(
-                                module,
+                                module as keyof UserProfile["permissions"],
                                 action,
                                 e.target.checked,
                               )
                             }
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                            className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                           />
                         </td>
                       ))}
@@ -252,49 +182,92 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
               </table>
             </div>
           </div>
-
-          {/* Warning for Super Admin */}
-          {role === "super_admin" && (
-            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <AlertTriangle className="w-5 h-5 text-yellow-600" />
-                <p className="text-sm text-yellow-800">
-                  <strong>Atenção:</strong> Super Administradores têm acesso
-                  total ao sistema, incluindo gestão de utilizadores.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
 
-        <div className="bg-gray-50 px-6 py-4 flex justify-end space-x-3">
+        {/* Actions */}
+        <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center space-x-2"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
           >
             {saving ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                <span>A guardar...</span>
-              </>
+              <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
             ) : (
-              <>
-                <Save className="w-4 h-4" />
-                <span>Guardar</span>
-              </>
+              <Save className="h-4 w-4" />
             )}
+            {saving ? "A guardar..." : "Guardar"}
           </button>
         </div>
       </div>
     </div>
   );
+};
+
+const getDefaultPermissions = (role: string) => {
+  switch (role) {
+    case "super_admin":
+      return {
+        obras: { view: true, create: true, edit: true, delete: true },
+        manutencoes: { view: true, create: true, edit: true, delete: true },
+        piscinas: { view: true, create: true, edit: true, delete: true },
+        utilizadores: { view: true, create: true, edit: true, delete: true },
+        relatorios: { view: true, create: true, edit: true, delete: true },
+        clientes: { view: true, create: true, edit: true, delete: true },
+      };
+    case "admin":
+      return {
+        obras: { view: true, create: true, edit: true, delete: false },
+        manutencoes: { view: true, create: true, edit: true, delete: false },
+        piscinas: { view: true, create: true, edit: true, delete: false },
+        utilizadores: { view: true, create: true, edit: false, delete: false },
+        relatorios: { view: true, create: true, edit: true, delete: false },
+        clientes: { view: true, create: true, edit: true, delete: false },
+      };
+    case "manager":
+      return {
+        obras: { view: true, create: true, edit: true, delete: false },
+        manutencoes: { view: true, create: true, edit: true, delete: false },
+        piscinas: { view: true, create: false, edit: true, delete: false },
+        utilizadores: { view: true, create: false, edit: false, delete: false },
+        relatorios: { view: true, create: true, edit: true, delete: false },
+        clientes: { view: true, create: false, edit: true, delete: false },
+      };
+    case "tech":
+      return {
+        obras: { view: true, create: false, edit: true, delete: false },
+        manutencoes: { view: true, create: true, edit: true, delete: false },
+        piscinas: { view: true, create: false, edit: true, delete: false },
+        utilizadores: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        relatorios: { view: true, create: true, edit: false, delete: false },
+        clientes: { view: true, create: false, edit: false, delete: false },
+      };
+    default: // user
+      return {
+        obras: { view: true, create: false, edit: false, delete: false },
+        manutencoes: { view: true, create: false, edit: false, delete: false },
+        piscinas: { view: true, create: false, edit: false, delete: false },
+        utilizadores: {
+          view: false,
+          create: false,
+          edit: false,
+          delete: false,
+        },
+        relatorios: { view: true, create: false, edit: false, delete: false },
+        clientes: { view: true, create: false, edit: false, delete: false },
+      };
+  }
 };
 
 export const UserPermissionsManager: React.FC = () => {
@@ -311,7 +284,7 @@ export const UserPermissionsManager: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-    // Inicializar usuários padrão se não existirem
+  // Inicializar usuários padrão se não existirem
   useEffect(() => {
     if (!loading && users.length === 0) {
       // Criar usuário admin padrão
@@ -328,65 +301,8 @@ export const UserPermissionsManager: React.FC = () => {
           console.log("✅ Usuário admin padrão criado");
         }
       });
-      }
-    } catch (err) {
-      console.error("Error loading users:", err);
-      setError("Erro ao carregar utilizadores");
-    } finally {
-      setLoading(false);
     }
-  };
-
-  const getDefaultPermissions = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-        };
-      case "admin":
-        return {
-          obras: { view: true, create: true, edit: true, delete: true },
-          manutencoes: { view: true, create: true, edit: true, delete: true },
-          piscinas: { view: true, create: true, edit: true, delete: true },
-          utilizadores: { view: true, create: true, edit: true, delete: true },
-          relatorios: { view: true, create: true, edit: true, delete: true },
-          clientes: { view: true, create: true, edit: true, delete: true },
-        };
-      case "manager":
-        return {
-          obras: { view: true, create: true, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: true, edit: true, delete: false },
-          utilizadores: {
-            view: true,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: true, edit: false, delete: false },
-          clientes: { view: true, create: true, edit: true, delete: false },
-        };
-      default:
-        return {
-          obras: { view: true, create: true, edit: true, delete: false },
-          manutencoes: { view: true, create: true, edit: true, delete: false },
-          piscinas: { view: true, create: true, edit: true, delete: false },
-          utilizadores: {
-            view: false,
-            create: false,
-            edit: false,
-            delete: false,
-          },
-          relatorios: { view: true, create: false, edit: false, delete: false },
-          clientes: { view: true, create: false, edit: false, delete: false },
-        };
-    }
-  };
+  }, [loading, users.length, save]);
 
   const handleSavePermissions = async (
     userId: string,
@@ -394,117 +310,51 @@ export const UserPermissionsManager: React.FC = () => {
     role: UserProfile["role"],
   ) => {
     try {
-      if (db) {
-        // Update in Firebase
-        const userDoc = doc(db, "users", userId);
-        await updateDoc(userDoc, {
-          permissions,
-          role,
-          updatedAt: new Date().toISOString(),
-        });
+      const success = await update(userId, { permissions, role });
+
+      if (success) {
+        setSuccessMessage("Permissões atualizadas com sucesso!");
+        setEditingUser(null);
+
+        // Clear success message after 3 seconds
+        setTimeout(() => setSuccessMessage(null), 3000);
       } else {
-        // Update in localStorage
-        const mockUsers = localStorage.getItem("mock-users");
-        if (mockUsers) {
-          const parsedUsers = JSON.parse(mockUsers);
-          if (parsedUsers[userId]) {
-            parsedUsers[userId] = {
-              ...parsedUsers[userId],
-              permissions,
-              role,
-              updatedAt: new Date().toISOString(),
-            };
-            localStorage.setItem("mock-users", JSON.stringify(parsedUsers));
-          }
-        }
+        setError("Erro ao atualizar permissões");
       }
-
-      // Update local state
-      setUsers((prev) =>
-        prev.map((user) =>
-          user.uid === userId ? { ...user, permissions, role } : user,
-        ),
-      );
-
-      setEditingUser(null);
-      setSuccessMessage("Permissões atualizadas com sucesso!");
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error updating permissions:", err);
-      setError("Erro ao atualizar permissões");
-      setTimeout(() => setError(null), 3000);
+      setError(err.message || "Erro ao atualizar permissões");
     }
   };
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm("Tem a certeza que deseja eliminar este utilizador?")) return;
+    if (!confirm("Tem certeza que deseja apagar este utilizador?")) return;
 
     try {
-      if (db) {
-        // Delete from Firebase
-        await deleteDoc(doc(db, "users", userId));
+      const success = await deleteDoc(userId);
+
+      if (success) {
+        setSuccessMessage("Utilizador apagado com sucesso!");
+        setTimeout(() => setSuccessMessage(null), 3000);
       } else {
-        // Delete from localStorage
-        const mockUsers = localStorage.getItem("mock-users");
-        if (mockUsers) {
-          const parsedUsers = JSON.parse(mockUsers);
-          delete parsedUsers[userId];
-          localStorage.setItem("mock-users", JSON.stringify(parsedUsers));
-        }
+        setError("Erro ao apagar utilizador");
       }
-
-      // Update local state
-      setUsers((prev) => prev.filter((user) => user.uid !== userId));
-      setSuccessMessage("Utilizador eliminado com sucesso!");
-      setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error deleting user:", err);
-      setError("Erro ao eliminar utilizador");
-      setTimeout(() => setError(null), 3000);
+      setError(err.message || "Erro ao apagar utilizador");
     }
   };
 
-  const getRoleBadgeColor = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return "bg-red-100 text-red-800";
-      case "admin":
-        return "bg-purple-100 text-purple-800";
-      case "manager":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-green-100 text-green-800";
-    }
-  };
-
-  const getRoleDisplayName = (role: string) => {
-    switch (role) {
-      case "super_admin":
-        return "Super Admin";
-      case "admin":
-        return "Administrador";
-      case "manager":
-        return "Gestor";
-      default:
-        return "Técnico";
-    }
-  };
-
-  const countPermissions = (permissions: UserProfile["permissions"]) => {
-    let count = 0;
-    Object.values(permissions).forEach((module) => {
-      Object.values(module).forEach((permission) => {
-        if (permission) count++;
-      });
-    });
-    return count;
+  const clearMessages = () => {
+    setError(null);
+    setSuccessMessage(null);
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-        <span className="ml-3 text-gray-600">A carregar utilizadores...</span>
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full"></div>
+        <span className="ml-2">A carregar utilizadores...</span>
       </div>
     );
   }
@@ -512,70 +362,68 @@ export const UserPermissionsManager: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <Users className="w-6 h-6 text-blue-600" />
-          <div>
-            <h3 className="text-lg font-bold text-gray-900">
-              Gestão de Utilizadores
-            </h3>
-            <p className="text-gray-600 text-sm">
-              Gerir permissões e acessos dos utilizadores
-            </p>
-          </div>
-        </div>
-        <div className="flex space-x-3">
-          <button
-            onClick={loadUsers}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center space-x-2"
-          >
-            <UserCheck className="w-4 h-4" />
-            <span>Atualizar</span>
-          </button>
-          <button
-            onClick={() => {
-              // Navigate to register form
-              window.location.hash = "register";
-            }}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 flex items-center space-x-2"
-          >
-            <Plus className="w-4 h-4" />
-            <span>Novo Utilizador</span>
-          </button>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+          <Users className="h-6 w-6" />
+          Gestão de Utilizadores
+        </h2>
+        <button
+          onClick={() => refresh()}
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+        >
+          <UserCheck className="h-4 w-4" />
+          Atualizar
+        </button>
       </div>
 
-      {/* Messages */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-          {error}
+      {/* Error/Success Messages */}
+      {(error || firestoreError || successMessage) && (
+        <div className="space-y-2">
+          {(error || firestoreError) && (
+            <div className="bg-red-50 border border-red-200 rounded-md p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+                <span className="text-red-700">{error || firestoreError}</span>
+              </div>
+              <button
+                onClick={clearMessages}
+                className="text-red-600 hover:text-red-800"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+          {successMessage && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Check className="h-5 w-5 text-green-600" />
+                <span className="text-green-700">{successMessage}</span>
+              </div>
+              <button
+                onClick={clearMessages}
+                className="text-green-600 hover:text-green-800"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      {successMessage && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
-          {successMessage}
-        </div>
-      )}
-
-      {/* Users List */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-        <div className="bg-gray-50 px-6 py-3 border-b border-gray-200">
-          <h4 className="font-medium text-gray-900">
-            Utilizadores Registados ({users.length})
-          </h4>
+      {/* Users Table */}
+      <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">
+            Utilizadores ({users.length})
+          </h3>
         </div>
 
         {users.length === 0 ? (
-          <div className="p-8 text-center text-gray-500">
-            <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-            <p>Nenhum utilizador encontrado</p>
-            <p className="text-sm">
-              Os utilizadores aparecerão aqui quando forem criados
-            </p>
+          <div className="p-6 text-center text-gray-500">
+            Nenhum utilizador encontrado.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full">
+            <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -583,9 +431,6 @@ export const UserPermissionsManager: React.FC = () => {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Função
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Permissões
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Estado
@@ -597,7 +442,7 @@ export const UserPermissionsManager: React.FC = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {users.map((user) => (
-                  <tr key={user.uid} className="hover:bg-gray-50">
+                  <tr key={user.id || user.uid}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
                         <div className="text-sm font-medium text-gray-900">
@@ -609,14 +454,9 @@ export const UserPermissionsManager: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getRoleBadgeColor(user.role)}`}
-                      >
-                        {getRoleDisplayName(user.role)}
+                      <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                        {user.role}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {countPermissions(user.permissions)}/24 permissões
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -632,20 +472,18 @@ export const UserPermissionsManager: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => setEditingUser(user)}
-                        className="text-blue-600 hover:text-blue-900 inline-flex items-center space-x-1"
+                        className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
                       >
-                        <Edit3 className="w-4 h-4" />
-                        <span>Editar</span>
+                        <Settings className="h-4 w-4" />
+                        Permissões
                       </button>
-                      {user.role !== "super_admin" && (
-                        <button
-                          onClick={() => handleDeleteUser(user.uid)}
-                          className="text-red-600 hover:text-red-900 inline-flex items-center space-x-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Eliminar</span>
-                        </button>
-                      )}
+                      <button
+                        onClick={() => handleDeleteUser(user.id || user.uid)}
+                        className="text-red-600 hover:text-red-900 flex items-center gap-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Apagar
+                      </button>
                     </td>
                   </tr>
                 ))}
