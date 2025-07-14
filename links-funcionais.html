@@ -1,0 +1,209 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Links Funcionais - Leirisonda</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #2d3748;
+        color: white;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .link-box {
+        background: #4a5568;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 10px;
+        border-left: 5px solid #4299e1;
+      }
+      .link {
+        color: #63b3ed;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      .link:hover {
+        color: #90cdf4;
+      }
+      .description {
+        margin: 10px 0;
+        color: #cbd5e0;
+      }
+      .copy-btn {
+        background: #4299e1;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+        margin-left: 10px;
+      }
+      .status {
+        background: #2b6cb0;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔗 Links Funcionais - Leirisonda</h1>
+
+      <div class="status">
+        <strong>📍 Servidor atual:</strong> <span id="currentUrl"></span><br />
+        <strong>🕐 Gerado em:</strong> <span id="timestamp"></span>
+      </div>
+
+      <div class="link-box">
+        <h3>🔥 Teste Firestore Direto</h3>
+        <a href="/test-firestore.html" class="link" target="_blank">
+          /test-firestore.html
+        </a>
+        <button onclick="copyLink('/test-firestore.html')" class="copy-btn">
+          📋 Copiar
+        </button>
+        <div class="description">
+          ✅ Teste completo da escrita no Firestore<br />
+          ✅ Funciona diretamente no browser<br />
+          ✅ Mostra resultados em tempo real
+        </div>
+      </div>
+
+      <div class="link-box">
+        <h3>🔧 Corrigir Login</h3>
+        <a href="/login-fix.html" class="link" target="_blank">
+          /login-fix.html
+        </a>
+        <button onclick="copyLink('/login-fix.html')" class="copy-btn">
+          📋 Copiar
+        </button>
+        <div class="description">
+          ✅ Resolve erro "TOO_MANY_ATTEMPTS"<br />
+          ✅ Corrige senha fraca<br />
+          ✅ Login direto de emergência
+        </div>
+      </div>
+
+      <div class="link-box">
+        <h3>🚀 Acesso Direto à App</h3>
+        <a href="/" class="link" target="_blank"> / (Homepage) </a>
+        <button onclick="copyLink('/')" class="copy-btn">📋 Copiar</button>
+        <div class="description">
+          ✅ Volta à aplicação principal<br />
+          ✅ Após corrigir login, use este link
+        </div>
+      </div>
+
+      <div class="link-box">
+        <h3>🔍 Debug Console</h3>
+        <div class="description">
+          <strong>No Console do Browser (F12):</strong><br />
+          <code
+            style="
+              background: #1a202c;
+              padding: 5px;
+              border-radius: 3px;
+              color: #68d391;
+            "
+          >
+            // Teste rápido Firestore<br />
+            fetch('/test-firestore.html').then(r => console.log('Link OK:',
+            r.status))
+          </code>
+          <br /><br />
+          <code
+            style="
+              background: #1a202c;
+              padding: 5px;
+              border-radius: 3px;
+              color: #68d391;
+            "
+          >
+            // Login direto<br />
+            localStorage.setItem('isAuthenticated', 'true'); location.reload();
+          </code>
+        </div>
+      </div>
+
+      <div class="link-box">
+        <h3>📱 URLs Completas</h3>
+        <div class="description">
+          <strong>Teste Firestore:</strong><br />
+          <span id="firestoreUrl" style="color: #68d391"></span><br /><br />
+
+          <strong>Correção Login:</strong><br />
+          <span id="loginUrl" style="color: #68d391"></span><br /><br />
+
+          <strong>App Principal:</strong><br />
+          <span id="appUrl" style="color: #68d391"></span>
+        </div>
+      </div>
+
+      <div class="status">
+        <h3>✅ Como Usar:</h3>
+        <ol>
+          <li>
+            <strong>Se há problemas de login:</strong> Clique em "Corrigir
+            Login" primeiro
+          </li>
+          <li>
+            <strong>Para testar Firestore:</strong> Clique em "Teste Firestore
+            Direto"
+          </li>
+          <li>
+            <strong>Para voltar à app:</strong> Clique em "Acesso Direto à App"
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <script>
+      function updateUrls() {
+        const baseUrl = window.location.origin;
+        document.getElementById("currentUrl").textContent = baseUrl;
+        document.getElementById("timestamp").textContent =
+          new Date().toLocaleString("pt-PT");
+
+        document.getElementById("firestoreUrl").textContent =
+          baseUrl + "/test-firestore.html";
+        document.getElementById("loginUrl").textContent =
+          baseUrl + "/login-fix.html";
+        document.getElementById("appUrl").textContent = baseUrl + "/";
+      }
+
+      function copyLink(path) {
+        const fullUrl = window.location.origin + path;
+        navigator.clipboard
+          .writeText(fullUrl)
+          .then(() => {
+            alert("✅ Link copiado: " + fullUrl);
+          })
+          .catch(() => {
+            prompt("📋 Copie este link:", fullUrl);
+          });
+      }
+
+      // Auto-update URLs
+      updateUrls();
+
+      // Test links
+      setTimeout(() => {
+        console.log("🔗 Links disponíveis:");
+        console.log(
+          "  - Teste Firestore:",
+          window.location.origin + "/test-firestore.html",
+        );
+        console.log(
+          "  - Correção Login:",
+          window.location.origin + "/login-fix.html",
+        );
+        console.log("  - App Principal:", window.location.origin + "/");
+      }, 1000);
+    </script>
+  </body>
+</html>
