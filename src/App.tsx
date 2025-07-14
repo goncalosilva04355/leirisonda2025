@@ -41,6 +41,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
+import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
@@ -1765,6 +1766,7 @@ function App() {
             "editar-obra",
             "editar-piscina",
             "editar-manutencao",
+            "diagnostic",
           ];
 
           if (validSections.includes(hash)) {
@@ -2743,6 +2745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     "editar-obra",
                     "editar-piscina",
                     "editar-manutencao",
+                    "diagnostic",
                   ];
 
                   if (validSections.includes(hash)) {
@@ -10488,6 +10491,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
+        case "diagnostic":
+          return <FirestoreDiagnostic />;
+
         default:
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -10911,6 +10917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     "editar-obra",
                     "editar-piscina",
                     "editar-manutencao",
+                    "diagnostic",
                   ];
 
                   if (validSections.includes(hash)) {
@@ -10933,7 +10940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("❌ Login error:", error);
+              console.error("�� Login error:", error);
               setLoginError(
                 "Erro de conexão. Verifique sua internet e tente novamente.",
               );
