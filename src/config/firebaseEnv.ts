@@ -99,6 +99,12 @@ export function getFirebaseConfig() {
   }
 
   console.log("✅ Firebase Config validada:", config.projectId);
+  console.log("🔍 Configuração final a ser usada:");
+  console.log("- projectId:", config.projectId);
+  console.log("- authDomain:", config.authDomain);
+  console.log("- apiKey:", config.apiKey.substring(0, 20) + "...");
+  console.log("- storageBucket:", config.storageBucket);
+
   return config;
 }
 
