@@ -139,6 +139,7 @@ import DataInputTutorial from "./components/DataInputTutorial";
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
 import FirebaseFixButton from "./components/FirebaseFixButton";
+import FirebaseQuotaRecoveryComponent from "./components/FirebaseQuotaRecovery";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -730,7 +731,7 @@ function App() {
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from Firestore + localStorage...");
+      console.log("���� Loading users from Firestore + localStorage...");
 
       try {
         // Aguardar Firestore estar pronto
@@ -3325,7 +3326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���� Morada:
+                                  ������ Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -7457,7 +7458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-green-900">
-                                        Navega��ão Maps
+                                        Navega����ão Maps
                                       </h4>
                                       <button
                                         onClick={() =>
@@ -12012,7 +12013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "N��o especificado"}
+                              : "N���o especificado"}
                           </p>
                         </div>
                       </div>
