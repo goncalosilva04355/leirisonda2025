@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Teste Firestore Write - Leirisonda</title>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        setDoc,
+        doc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      // Configuração Firebase Leirisonda
+      const firebaseConfig = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+        measurementId: "G-Q2QWQVH60L",
+      };
+
+      // Log inicial
+      console.log("🔍 Iniciando teste de escrita Firestore...");
+      console.log("📝 Projeto:", firebaseConfig.projectId);
+
+      const logElement = document.getElementById("log");
+      function log(message, type = "info") {
+        console.log(message);
+        const div = document.createElement("div");
+        div.className = type;
+        div.textContent = new Date().toLocaleTimeString() + " - " + message;
+        logElement.appendChild(div);
+        logElement.scrollTop = logElement.scrollHeight;
+      }
+
+      try {
+        // Inicializar Firebase
+        const app = initializeApp(firebaseConfig);
+        log("✅ Firebase App inicializada", "success");
+
+        // Inicializar Firestore
+        const db = getFirestore(app);
+        log("✅ Firestore inicializado", "success");
+
+        // Teste 1: Adicionar documento com ID automático
+        async function testAddDoc() {
+          try {
+            log("🧪 Teste 1: addDoc com ID automático...");
+            const docRef = await addDoc(collection(db, "test_write"), {
+              message: "Teste de escrita addDoc",
+              timestamp: serverTimestamp(),
+              testType: "addDoc",
+              userId: "test_user",
+              source: "manual_test",
+            });
+            log(`✅ addDoc sucesso! ID: ${docRef.id}`, "success");
+            return docRef.id;
+          } catch (error) {
+            log(`❌ addDoc falhou: ${error.message}`, "error");
+            log(`🔍 Código erro: ${error.code}`, "error");
+            throw error;
+          }
+        }
+
+        // Teste 2: Set documento com ID específico
+        async function testSetDoc() {
+          try {
+            log("🧪 Teste 2: setDoc com ID específico...");
+            const testId = `test_${Date.now()}`;
+            await setDoc(doc(db, "test_write", testId), {
+              message: "Teste de escrita setDoc",
+              timestamp: serverTimestamp(),
+              testType: "setDoc",
+              userId: "test_user",
+              source: "manual_test",
+              customId: testId,
+            });
+            log(`✅ setDoc sucesso! ID: ${testId}`, "success");
+            return testId;
+          } catch (error) {
+            log(`❌ setDoc falhou: ${error.message}`, "error");
+            log(`🔍 Código erro: ${error.code}`, "error");
+            throw error;
+          }
+        }
+
+        // Teste 3: Teste de obra real
+        async function testObraDoc() {
+          try {
+            log("🧪 Teste 3: documento obra real...");
+            const obraId = `obra_${Date.now()}`;
+            await setDoc(doc(db, "obras", obraId), {
+              nome: "Obra Teste Firestore",
+              endereco: "Rua Teste, 123",
+              cliente: "Cliente Teste",
+              status: "Em andamento",
+              tipo: "Piscina",
+              valor: 15000,
+              dataInicio: serverTimestamp(),
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+              userId: "test_user",
+              source: "teste_manual",
+            });
+            log(`✅ Obra documento sucesso! ID: ${obraId}`, "success");
+            return obraId;
+          } catch (error) {
+            log(`❌ Obra documento falhou: ${error.message}`, "error");
+            log(`🔍 Código erro: ${error.code}`, "error");
+            throw error;
+          }
+        }
+
+        // Executar todos os testes
+        window.runTests = async function () {
+          log("🚀 Iniciando testes de escrita Firestore...");
+          document.getElementById("runBtn").disabled = true;
+
+          try {
+            await testAddDoc();
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            await testSetDoc();
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            await testObraDoc();
+
+            log(
+              "🎉 TODOS OS TESTES PASSARAM! Firestore está funcionando!",
+              "success",
+            );
+          } catch (error) {
+            log("💥 ALGUM TESTE FALHOU - problema no Firestore", "error");
+          } finally {
+            document.getElementById("runBtn").disabled = false;
+          }
+        };
+
+        log("📋 Testes prontos. Clique em 'Executar Testes'");
+      } catch (error) {
+        log(`❌ Erro fatal na inicialização: ${error.message}`, "error");
+        log(`🔍 Stack: ${error.stack}`, "error");
+      }
+    </script>
+    <style>
+      body {
+        font-family: monospace;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      #log {
+        background: #000;
+        padding: 10px;
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #333;
+        margin: 10px 0;
+      }
+      .success {
+        color: #0f0;
+      }
+      .error {
+        color: #f00;
+      }
+      .info {
+        color: #fff;
+      }
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:disabled {
+        background: #666;
+        cursor: not-allowed;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔥 Teste Escrita Firestore - Leirisonda</h1>
+    <p>Projeto: <strong>leiria-1cfc9</strong></p>
+
+    <button id="runBtn" onclick="runTests()">
+      🚀 Executar Testes de Escrita
+    </button>
+
+    <div id="log"></div>
+
+    <h3>💡 Como interpretar:</h3>
+    <ul>
+      <li><span style="color: #0f0">✅ Verde</span> - Sucesso</li>
+      <li><span style="color: #f00">❌ Vermelho</span> - Erro</li>
+      <li>Se algum teste falhar, há problema no Firestore</li>
+      <li>Se todos passarem, o Firestore está funcionando</li>
+    </ul>
+  </body>
+</html>
