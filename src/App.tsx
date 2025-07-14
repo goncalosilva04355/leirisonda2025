@@ -1471,24 +1471,16 @@ function App() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (isFirestoreReady()) {
-          const isAutoSyncCurrentlyActive = autoSyncService.isAutoSyncActive();
+          // Usar método específico para garantir auto sync após login
+          const autoSyncStarted =
+            await autoSyncService.ensureAutoSyncAfterLogin();
 
-          if (!isAutoSyncCurrentlyActive) {
-            console.log("🚀 Iniciando auto sync após login do utilizador...");
-            await autoSyncService.startAutoSync();
+          if (autoSyncStarted) {
             setAutoSyncActive(true);
-            console.log("✅ Auto sync iniciado com sucesso após login!");
-
-            // Sincronizar todos os dados imediatamente
-            await autoSyncService.syncAllCollections();
-            console.log("🔄 Sincronização completa executada após login");
+            console.log("✅ Auto sync garantido após login!");
           } else {
-            console.log("✅ Auto sync já está ativo após login");
-            setAutoSyncActive(true);
-
-            // Forçar sincronização mesmo se já estiver ativo
-            await autoSyncService.syncAllCollections();
-            console.log("🔄 Sincronização manual executada após login");
+            console.warn("⚠️ Falha ao garantir auto sync após login");
+            setAutoSyncActive(false);
           }
         } else {
           console.log("⏳ Firestore não pronto, tentando novamente...");
@@ -4466,7 +4458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu📞do"
+                                      ? "Conclu���do"
                                       : maint.status}
                               </span>
                             </div>
