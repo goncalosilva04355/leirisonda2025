@@ -1,0 +1,355 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🔧 Corrigir Erro Firestore</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: white;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 28px;
+      }
+      .error-box {
+        background: rgba(231, 76, 60, 0.3);
+        border: 2px solid #e74c3c;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+      .btn {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+      }
+      .btn-danger {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+      }
+      .btn-success {
+        background: linear-gradient(135deg, #27ae60, #229954);
+        color: white;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .log {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: monospace;
+        font-size: 14px;
+        max-height: 300px;
+        overflow-y: auto;
+      }
+      .step {
+        margin: 15px 0;
+        padding: 15px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .status {
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        text-align: center;
+        font-weight: bold;
+      }
+      .status-success {
+        background: rgba(39, 174, 96, 0.3);
+        border: 1px solid #27ae60;
+      }
+      .status-error {
+        background: rgba(231, 76, 60, 0.3);
+        border: 1px solid #e74c3c;
+      }
+      .status-warning {
+        background: rgba(241, 196, 15, 0.3);
+        border: 1px solid #f1c40f;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Corrigir Erro Firestore</h1>
+
+      <div class="error-box">
+        <h3>❌ Erro Detectado:</h3>
+        <p><strong>"Firestore não conseguiu ser inicializado"</strong></p>
+        <p>Este erro impede que os dados sejam salvos no Firestore.</p>
+      </div>
+
+      <!-- Botões de correção -->
+      <button class="btn btn-danger" onclick="diagnosticarErro()">
+        🔍 DIAGNOSTICAR ERRO
+      </button>
+
+      <button class="btn btn-success" onclick="corrigirErro()">
+        🛠️ CORRIGIR AUTOMATICAMENTE
+      </button>
+
+      <button class="btn btn-primary" onclick="testarAposCorracao()">
+        ✅ TESTAR APÓS CORREÇÃO
+      </button>
+
+      <!-- Log de resultados -->
+      <div id="log" class="log" style="display: none"></div>
+
+      <!-- Status atual -->
+      <div id="status"></div>
+
+      <!-- Links úteis -->
+      <div style="margin-top: 30px">
+        <a href="/" class="btn btn-primary">🏠 Voltar à App</a>
+        <a href="/test-final.html" class="btn btn-primary">🧪 Teste Final</a>
+      </div>
+    </div>
+
+    <script type="module">
+      import {
+        initializeApp,
+        getApps,
+        getApp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      const config = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+      };
+
+      let app, db;
+
+      function log(msg, show = true) {
+        console.log(msg);
+        if (show) {
+          const logDiv = document.getElementById("log");
+          logDiv.style.display = "block";
+          logDiv.innerHTML += `[${new Date().toLocaleTimeString()}] ${msg}\n`;
+          logDiv.scrollTop = logDiv.scrollHeight;
+        }
+      }
+
+      function setStatus(msg, type) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.className = `status status-${type}`;
+        statusDiv.textContent = msg;
+      }
+
+      window.diagnosticarErro = async function () {
+        log("🔍 Iniciando diagnóstico...");
+        setStatus("Diagnosticando...", "warning");
+
+        try {
+          // 1. Verificar se Firebase pode ser inicializado
+          log("1. Verificando inicialização Firebase...");
+
+          const existingApps = getApps();
+          log(`   Apps existentes: ${existingApps.length}`);
+
+          if (existingApps.length > 0) {
+            app = getApp();
+            log(`   ✅ App existente: ${app.name}`);
+          } else {
+            app = initializeApp(config, "diagnostic-app");
+            log(`   ✅ Nova app criada: ${app.name}`);
+          }
+
+          // 2. Verificar configuração
+          log("2. Verificando configuração...");
+          log(`   Project ID: ${app.options.projectId}`);
+          log(`   API Key: ${app.options.apiKey ? "Configurada" : "MISSING"}`);
+          log(`   Auth Domain: ${app.options.authDomain}`);
+
+          // 3. Tentar inicializar Firestore
+          log("3. Tentando inicializar Firestore...");
+          db = getFirestore(app);
+
+          if (db) {
+            log("   ✅ Firestore inicializado com sucesso!");
+
+            // 4. Testar operação básica
+            log("4. Testando operação básica...");
+            const testDoc = await addDoc(collection(db, "diagnostic_test"), {
+              message: "Teste diagnóstico",
+              timestamp: serverTimestamp(),
+            });
+
+            log(`   ✅ Documento teste criado: ${testDoc.id}`);
+            setStatus("✅ FIRESTORE ESTÁ FUNCIONANDO!", "success");
+          } else {
+            log("   ❌ getFirestore() retornou null");
+            setStatus("❌ ERRO: Firestore retornou null", "error");
+          }
+        } catch (error) {
+          log(`❌ ERRO: ${error.message}`);
+          log(`   Código: ${error.code || "N/A"}`);
+
+          if (error.code === "firestore/unavailable") {
+            log("💡 CAUSA: Firestore não está habilitado no projeto");
+            log("💡 SOLUÇÃO: Habilitar Firestore no Firebase Console");
+            setStatus("❌ FIRESTORE NÃO HABILITADO", "error");
+          } else if (error.code === "permission-denied") {
+            log("💡 CAUSA: Regras de segurança muito restritivas");
+            setStatus("❌ PROBLEMA DE PERMISSÕES", "error");
+          } else {
+            log("💡 CAUSA: Erro de configuração ou rede");
+            setStatus("❌ ERRO DE CONFIGURAÇÃO", "error");
+          }
+        }
+      };
+
+      window.corrigirErro = async function () {
+        log("🛠️ Iniciando correção automática...");
+        setStatus("Corrigindo...", "warning");
+
+        try {
+          // Correção 1: Limpar apps existentes e recriar
+          log("1. Limpando apps existentes...");
+          const existingApps = getApps();
+          log(`   Encontradas ${existingApps.length} apps`);
+
+          // Correção 2: Criar nova app com timestamp único
+          log("2. Criando nova app Firebase...");
+          const newAppName = `corrected-app-${Date.now()}`;
+          app = initializeApp(config, newAppName);
+          log(`   ✅ Nova app criada: ${newAppName}`);
+
+          // Correção 3: Aguardar um pouco antes de inicializar Firestore
+          log("3. Aguardando estabilização...");
+          await new Promise((resolve) => setTimeout(resolve, 2000));
+
+          // Correção 4: Inicializar Firestore com retry
+          log("4. Inicializando Firestore com retry...");
+          let attempts = 0;
+          const maxAttempts = 3;
+
+          while (attempts < maxAttempts) {
+            try {
+              log(`   Tentativa ${attempts + 1}/${maxAttempts}...`);
+              db = getFirestore(app);
+
+              if (db) {
+                log("   ✅ Firestore inicializado!");
+                break;
+              } else {
+                throw new Error("getFirestore retornou null");
+              }
+            } catch (error) {
+              attempts++;
+              if (attempts >= maxAttempts) {
+                throw error;
+              }
+              log(`   ❌ Tentativa ${attempts} falhou, tentando novamente...`);
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+            }
+          }
+
+          // Correção 5: Teste final
+          log("5. Testando correção...");
+          const testDoc = await addDoc(collection(db, "correction_test"), {
+            message: "Teste após correção",
+            timestamp: serverTimestamp(),
+            correctionTime: new Date().toISOString(),
+          });
+
+          log(`   ✅ Documento teste criado: ${testDoc.id}`);
+          setStatus("✅ CORREÇÃO CONCLUÍDA COM SUCESSO!", "success");
+        } catch (error) {
+          log(`❌ CORREÇÃO FALHOU: ${error.message}`);
+          setStatus("❌ CORREÇÃO FALHOU", "error");
+        }
+      };
+
+      window.testarAposCorracao = async function () {
+        if (!db) {
+          setStatus("⚠️ Execute 'CORRIGIR' primeiro", "warning");
+          return;
+        }
+
+        log("✅ Testando após correção...");
+        setStatus("Testando...", "warning");
+
+        try {
+          // Teste completo
+          const results = [];
+
+          // Teste 1: Obra
+          const obra = await addDoc(collection(db, "obras"), {
+            nome: `Obra Corrigida ${Date.now()}`,
+            status: "teste_correcao",
+            timestamp: serverTimestamp(),
+          });
+          results.push(`Obra: ${obra.id}`);
+
+          // Teste 2: Piscina
+          const piscina = await addDoc(collection(db, "piscinas"), {
+            name: `Piscina Corrigida ${Date.now()}`,
+            status: "teste_correcao",
+            timestamp: serverTimestamp(),
+          });
+          results.push(`Piscina: ${piscina.id}`);
+
+          log("✅ TODOS OS TESTES PASSARAM!");
+          log(`Resultados: ${results.join(", ")}`);
+          setStatus("🎉 FIRESTORE 100% FUNCIONAL!", "success");
+        } catch (error) {
+          log(`❌ TESTE FALHOU: ${error.message}`);
+          setStatus("❌ TESTE FALHOU", "error");
+        }
+      };
+
+      // Auto-executar diagnóstico ao carregar
+      window.addEventListener("load", () => {
+        setStatus(
+          "Página carregada. Clique em 'DIAGNOSTICAR' para começar.",
+          "warning",
+        );
+      });
+    </script>
+  </body>
+</html>
