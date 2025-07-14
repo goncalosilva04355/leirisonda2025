@@ -277,7 +277,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há m��ltiplos projetos carregados
+      // Verificar se há múltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -721,9 +721,6 @@ function App() {
         } catch (syncError) {
           console.warn("€��� Erro na sincronização universal:", syncError);
         }
-
-        // Enviar notificações push para utilizadores atribuídos
-        await sendWorkAssignmentNotifications(data);
 
         return firestoreId;
       } else {
@@ -2972,7 +2969,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("��� Login error:", error);
+              console.error("❌ Login error:", error);
               setLoginError("Erro de sistema. Por favor, tente novamente.");
             }
           }}
@@ -8049,7 +8046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten���
+                        <strong>{maintenance.length}</strong> manuten€
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -9743,7 +9740,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ���gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10539,7 +10536,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç€ solicitada não foi encontrada.
+                  A seç€ solicitada n��o foi encontrada.
                 </p>
               </div>
             </div>
