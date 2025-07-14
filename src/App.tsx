@@ -95,6 +95,7 @@ import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
+import PostLoginAutoSyncIndicator from "./components/PostLoginAutoSyncIndicator";
 import ProductionSyncStatus from "./components/ProductionSyncStatus";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
