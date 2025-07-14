@@ -24,10 +24,10 @@ export async function testFirebaseUserSync(): Promise<void> {
       console.log("✅ SUCESSO: Utilizadores encontrados no Firestore");
       console.log(
         "📊 Utilizadores:",
-        firestoreUsers.map((u) => u.email),
+        firestoreUsers.map((u: any) => u.email || u.name),
       );
     } else {
-      console.log("⚠�� ATENÇÃO: Nenhum utilizador no Firestore");
+      console.log("⚠️ ATENÇÃO: Nenhum utilizador no Firestore");
       if (parsedLocalUsers.length > 0) {
         console.log("🔄 Tentando forçar sincronização...");
         // A função getUtilizadores() deve sincronizar automaticamente
