@@ -266,7 +266,7 @@ function App() {
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
 
-    // Detectar conflitos Firebase em dispositivos móveis
+    // Detectar conflitos Firebase em dispositivos m��veis
     const detectFirebaseConflicts = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (!isMobile) return;
@@ -7560,115 +7560,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Notifications Section */}
-                          <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificaç��es Push
-                              </h3>
-                            </div>
-                            <p className="text-gray-600 mb-6">
-                              Ative as notificações para receber alertas sobre
-                              novas obras atribuídas e atualizações importantes.
-                            </p>
-
-                            <div className="space-y-4">
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-blue-900 mb-2">
-                                      Notifica��ões de Obras
-                                    </h4>
-                                    <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificações quando uma nova obra
-                                      for atribuída a si.
-                                    </p>
-                                    <button
-                                      onClick={() => {
-                                        if ("Notification" in window) {
-                                          if (
-                                            Notification.permission ===
-                                            "default"
-                                          ) {
-                                            Notification.requestPermission().then(
-                                              (permission) => {
-                                                if (permission === "granted") {
-                                                  new Notification(
-                                                    "Leirisonda",
-                                                    {
-                                                      body: "Notificações ativadas com sucesso!",
-                                                      icon: "/icon.svg",
-                                                    },
-                                                  );
-                                                }
-                                              },
-                                            );
-                                          } else if (
-                                            Notification.permission ===
-                                            "granted"
-                                          ) {
-                                            new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
-                                              icon: "/icon.svg",
-                                            });
-                                          } else {
-                                            alert(
-                                              "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
-                                            );
-                                          }
-                                        } else {
-                                          alert(
-                                            "Este navegador não suporta notificaç€.",
-                                          );
-                                        }
-                                      }}
-                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                      Ativar Notificaç€s
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Configurações de Localização Individual - Apenas para super_admin */}
-                              {currentUser?.role === "super_admin" && (
-                                <PersonalLocationSettings />
-                              )}
-
-                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
-                                    </h4>
-                                    <ul className="text-gray-700 text-sm space-y-1">
-                                      <li>
-                                        • As notificaç��es funcionam apenas com
-                                        HTTPS
-                                      </li>
-                                      <li>
-                                        • Certifique-se de que permite
-                                        notificações no seu navegador
-                                      </li>
-                                      <li>
-                                        • Em dispositivos móveis, adicione a app
-                                        ao ecrã inicial
-                                      </li>
-                                      <li>
-                                        • Configure a sua localiza��ão abaixo e
-                                        veja o mapa da equipa na página
-                                        "Localizações"
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
                           {/* Mobile Interaction Settings */}
                           <div className="bg-white rounded-lg p-6 shadow-sm">
                             <div className="flex items-center mb-4">
@@ -10846,7 +10737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h2>
                   <p className="text-gray-500">
-                    Apenas super administradores podem aceder à área de
+                    Apenas super administradores podem aceder �� área de
                     administração.
                   </p>
                   <button
