@@ -8,10 +8,13 @@ import {
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
-// Estado atual: Firestore sempre ativo em produção
+// Estado atual: Firestore apenas ativo no Netlify (produção)
 const LOCAL_MODE = import.meta.env.DEV;
+const IS_NETLIFY_BUILD =
+  import.meta.env.NETLIFY === "true" ||
+  import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIRESTORE_PRODUCTION =
-  !LOCAL_MODE || import.meta.env.VITE_FORCE_FIREBASE;
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
@@ -46,7 +49,10 @@ async function initializeFirestore(
   retryCount = 0,
   maxRetries = 2,
 ): Promise<Firestore | null> {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("💾 Firestore não inicializado - aguardando deploy no Netlify");
+    return null;
+  }
 
   try {
     console.log(
@@ -100,20 +106,29 @@ async function initializeFirestore(
   }
 }
 
-// Tentar inicializar Firestore automaticamente (produção ou quando forçado)
+// Tentar inicializar Firestore apenas no Netlify (produção)
 if (FORCE_FIRESTORE_PRODUCTION) {
+  console.log("🔥 Firestore: inicialização agendada para ambiente Netlify");
   // Usar setTimeout assíncrono para garantir que Firebase App foi inicializado primeiro
   setTimeout(async () => {
     if (!firestoreInstance) {
+      console.log("🚀 Iniciando Firestore após deploy no Netlify...");
       firestoreInstance = await initializeFirestore();
+      if (firestoreInstance) {
+        console.log("✅ Firestore ativo no ambiente de produção (Netlify)");
+      }
     }
   }, 1000); // Aumentar delay para garantir inicialização
+} else {
+  console.log(
+    "⏸️ Firestore inicialização adiada - aguardando deploy no Netlify",
+  );
 }
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  if (LOCAL_MODE) {
-    console.log("📱 Firestore em modo local - dados guardados no localStorage");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
 
@@ -128,8 +143,8 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  if (LOCAL_MODE) {
-    console.log("📱 Firestore em modo local - dados guardados no localStorage");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
 
@@ -147,14 +162,14 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return false;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return false;
   return firestoreInstance !== null;
 }
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  if (LOCAL_MODE) {
-    console.log("📱 Firestore teste: modo local ativo");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("💾 Firestore teste: aguardando deploy no Netlify");
     return false;
   }
 
@@ -179,8 +194,8 @@ export async function testFirestore(): Promise<boolean> {
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  if (LOCAL_MODE) {
-    console.log("📱 Firestore forçado: modo local ativo");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("💾 Firestore forçado: aguardando deploy no Netlify");
     return false;
   }
 
@@ -203,8 +218,8 @@ export async function forceFirestoreInit(): Promise<boolean> {
 
 // Função para limpar instância
 export function clearFirestoreInstance(): void {
-  if (LOCAL_MODE) {
-    console.log("🧹 Firestore limpo: modo local ativo");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("🧹 Firestore limpo: aguardando deploy no Netlify");
     return;
   }
 
