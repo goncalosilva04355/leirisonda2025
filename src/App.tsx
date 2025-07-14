@@ -513,7 +513,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notifica����ões de atribuição de obra...");
+      console.log("📱 Enviando notifica�����ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -988,7 +988,7 @@ function App() {
           // Sincronizar com Firestore se dispon��vel
           if (isFirestoreReady()) {
             console.log(
-              "�� Sincronizando utilizadores locais para Firestore...",
+              "🔄 Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!(user as any).firestoreId) {
@@ -2019,7 +2019,7 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("��� Auth result:", result);
+      console.log("���� Auth result:", result);
 
       if (result.success && result.user) {
         console.log("��� Login successful for:", result.user.email);
@@ -3129,7 +3129,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
-                {!import.meta.env.DEV && (
+                {(typeof import.meta === "undefined" ||
+                  !import.meta.env ||
+                  !import.meta.env.DEV) && (
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
@@ -9013,7 +9015,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C����digo Postal *
+                            C��digo Postal *
                           </label>
                           <input
                             type="text"
@@ -9066,7 +9068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç�������es
+                            Notas e Observaç��������es
                           </label>
                           <textarea
                             rows={4}
@@ -10360,7 +10362,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dimens��es (m)
+                          Dimensões (m)
                         </label>
                         <input
                           type="text"
