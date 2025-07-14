@@ -153,16 +153,16 @@ export async function forceFirestoreInit(): Promise<boolean> {
   }
 
   try {
-    const apps = getApps();
-    if (apps.length === 0) {
-      console.error("❌ Nenhuma Firebase App disponível para forçar Firestore");
+    console.log("🔄 Forçando inicialização Firestore...");
+    firestoreInstance = await initializeFirestore();
+
+    if (firestoreInstance) {
+      console.log("✅ Firestore inicialização forçada com sucesso");
+      return true;
+    } else {
+      console.error("❌ Forçar inicialização falhou");
       return false;
     }
-
-    const app = getApp();
-    firestoreInstance = getFirestore(app);
-    console.log("✅ Firestore inicialização forçada com sucesso");
-    return true;
   } catch (error: any) {
     console.error("❌ Erro ao forçar inicialização Firestore:", error.message);
     return false;
