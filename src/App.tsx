@@ -151,6 +151,11 @@ import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 import { FirestoreTest } from "./components/FirestoreTest";
 import { FirestoreTestPage } from "./pages/FirestoreTestPage";
+import { saveToFirestore } from "./services/universalFirestoreSync";
+import {
+  fixAuthenticationIssues,
+  autoFixIfNeeded,
+} from "./utils/forceLoginFix";
 
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
@@ -4513,7 +4518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Conclu��do"}
+                                    : "Conclu���do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -6597,7 +6602,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Químicos Utilizados
+                        Produtos Qu��micos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -8151,7 +8156,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat📞rios com filtros específicos
+                        Crie relat���rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -11147,7 +11152,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Para super_admin e admin */}
+                {/* Localizaç��es - Para super_admin e admin */}
                 {/* Clientes */}
                 {hasPermission("clientes", "view") && (
                   <button
