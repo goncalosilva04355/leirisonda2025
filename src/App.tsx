@@ -988,7 +988,7 @@ function App() {
           // Sincronizar com Firestore se dispon��vel
           if (isFirestoreReady()) {
             console.log(
-              "🔄 Sincronizando utilizadores locais para Firestore...",
+              "�� Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!(user as any).firestoreId) {
@@ -1294,6 +1294,7 @@ function App() {
 
       try {
         // const firestoreResult = await testFirestore(); // Comentado temporariamente
+        const firestoreResult = false; // Temporariamente false
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -3408,7 +3409,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu���das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -5692,7 +5693,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Descriç��o"]',
+                                'textarea[placeholder*="Descrição"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const observations =
@@ -6299,7 +6300,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç��o
+                          Frequência de Manutenção
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -9012,7 +9013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C��digo Postal *
+                            C����digo Postal *
                           </label>
                           <input
                             type="text"
@@ -10359,7 +10360,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dimensões (m)
+                          Dimens��es (m)
                         </label>
                         <input
                           type="text"
@@ -10570,7 +10571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do t��cnico"
+                          placeholder="Nome do técnico"
                           required
                         />
                       </div>
