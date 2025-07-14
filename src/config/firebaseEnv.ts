@@ -38,26 +38,30 @@ export const LEIRIA_FIREBASE_CONFIG = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX",
 };
 
-// Função para obter configuração Firebase do Netlify
+// Função para obter configuração Firebase
 export function getFirebaseConfig() {
   const config = LEIRIA_FIREBASE_CONFIG;
 
-  // Verificar se as vari��veis de ambiente do Netlify estão configuradas
-  if (!config.apiKey || !config.projectId || !config.authDomain) {
-    console.error("❌ Variáveis Firebase não configuradas:");
-    console.error("VITE_FIREBASE_API_KEY:", config.apiKey ? "✅" : "❌");
-    console.error("VITE_FIREBASE_PROJECT_ID:", config.projectId ? "✅" : "❌");
-    console.error(
-      "VITE_FIREBASE_AUTH_DOMAIN:",
-      config.authDomain ? "✅" : "❌",
-    );
+  // Determinar se está usando variáveis do Netlify ou fallback
+  const usingNetlifyVars = !isPlaceholder(
+    import.meta.env.VITE_FIREBASE_API_KEY,
+  );
 
-    throw new Error(
-      "Variáveis de ambiente Firebase não configuradas no Netlify. Configure VITE_FIREBASE_API_KEY, VITE_FIREBASE_PROJECT_ID, VITE_FIREBASE_AUTH_DOMAIN no Netlify.",
+  if (usingNetlifyVars) {
+    console.log("✅ Firebase: usando variáveis do Netlify", config.projectId);
+  } else {
+    console.log(
+      "🔄 Firebase: usando fallback local (Leirisonda)",
+      config.projectId,
     );
+    console.log("📝 No Netlify, usará as suas variáveis VITE_FIREBASE_*");
   }
 
-  console.log("✅ Firebase configurado para produção:", config.projectId);
+  // Verificar se a configuração é válida
+  if (!config.apiKey || !config.projectId || !config.authDomain) {
+    throw new Error("Configuração Firebase inválida");
+  }
+
   return config;
 }
 
