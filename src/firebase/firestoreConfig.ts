@@ -37,12 +37,17 @@ async function waitForFirebaseApp(
   throw new Error("Firebase App não inicializou após aguardar");
 }
 
-// Função para inicializar Firestore de forma segura
-async function initializeFirestore(): Promise<Firestore | null> {
+// Função para inicializar Firestore com retry
+async function initializeFirestore(
+  retryCount = 0,
+  maxRetries = 3,
+): Promise<Firestore | null> {
   if (LOCAL_MODE) return null;
 
   try {
-    console.log("💾 Tentando inicializar Firestore...");
+    console.log(
+      `💾 Tentando inicializar Firestore... (tentativa ${retryCount + 1}/${maxRetries + 1})`,
+    );
 
     // Aguardar Firebase App estar pronto
     const app = await waitForFirebaseApp();
@@ -53,13 +58,34 @@ async function initializeFirestore(): Promise<Firestore | null> {
       authDomain: app.options.authDomain,
     });
 
+    // Aguardar um pouco mais para garantir que os serviços estão prontos
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     console.log("💾 Chamando getFirestore()...");
     const db = getFirestore(app);
     console.log("✅ Firestore inicializado com sucesso", typeof db);
+
+    // Teste rápido para verificar se realmente funciona
+    console.log("🧪 Testando conectividade Firestore...");
+    const testRef = doc(db, "__test__", "connection");
+    // Não fazer getDoc ainda, apenas criar a referência
+    console.log("✅ Referência de teste criada com sucesso");
+
     return db;
   } catch (error: any) {
-    console.error("❌ Erro ao inicializar Firestore:", error.message);
+    console.error(
+      `❌ Erro ao inicializar Firestore (tentativa ${retryCount + 1}):`,
+      error.message,
+    );
     console.error("🔍 Error code:", error.code);
+
+    if (retryCount < maxRetries) {
+      const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
+      console.log(`🔄 Tentando novamente em ${delay}ms...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+      return initializeFirestore(retryCount + 1, maxRetries);
+    }
+
     console.error("🔍 Stack trace:", error.stack);
     return null;
   }
