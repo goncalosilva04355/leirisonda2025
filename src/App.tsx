@@ -1393,22 +1393,6 @@ function App() {
       );
     };
     // console.log("€Initializing notifications...");
-    if ("Notification" in window) {
-      const permission = Notification.permission;
-      console.log("€rrent notification permission:", permission);
-      setPushPermission(permission);
-      setNotificationsEnabled(permission === "granted");
-
-      if (permission === "granted") {
-        console.log("�� Notifications already granted");
-      } else if (permission === "denied") {
-        console.warn("❌ Notifications denied by user");
-      } else {
-        console.log("⏳ Notifications permission not yet requested");
-      }
-    } else {
-      console.warn("⚠️ Notifications not supported in this browser");
-    }
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
