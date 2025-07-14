@@ -3979,6 +3979,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
                 </div>
+
+                {/* Firestore Test Component - Only for debugging */}
+                {import.meta.env.VITE_FORCE_FIREBASE && <FirestoreTest />}
               </div>
             </div>
           );
@@ -5311,7 +5314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa📞ções Específicas do Furo */}
+                          {/* Observa📞��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -11421,7 +11424,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Atribuída a
+                          Atribu��da a
                         </label>
                         <p className="text-gray-900">
                           {selectedWork.assignedUsers &&
