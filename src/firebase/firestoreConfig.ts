@@ -11,7 +11,7 @@ import { getApps, getApp } from "firebase/app";
 // Estado atual: Firestore ativo
 const LOCAL_MODE = false;
 
-// Variável para armazenar a inst��ncia do Firestore
+// Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
 // Função para aguardar Firebase App estar pronto
@@ -42,7 +42,7 @@ async function waitForFirebaseApp(
 // Função para inicializar Firestore com retry
 async function initializeFirestore(
   retryCount = 0,
-  maxRetries = 3,
+  maxRetries = 1,
 ): Promise<Firestore | null> {
   if (LOCAL_MODE) return null;
 
