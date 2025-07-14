@@ -985,14 +985,6 @@ function App() {
             JSON.parse(savedPhoneDialer),
           );
         }
-
-        // Load notification preference
-        const savedNotifications = safeLocalStorage.getItem(
-          "notificationsEnabled",
-        );
-        if (savedNotifications !== null) {
-          setNotificationsEnabled(JSON.parse(savedNotifications));
-        }
       } catch (error) {
         console.error("❌ Erro ao carregar configura��ões:", error);
       }
@@ -9109,7 +9101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa��ões Básicas
+                          Informa����ões Básicas
                         </h3>
                       </div>
 
