@@ -1,7 +1,0 @@
-Deploy timestamp: 2025-07-04T18:35:00Z
-Status: Fixed encoding issues and optimized build
-Changes:
-- Corrected all � characters 
-- Optimized bundle chunks
-- Fixed build configuration
-- Application working locally
