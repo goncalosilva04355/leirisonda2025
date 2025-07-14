@@ -1,0 +1,285 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Debug Firestore Initialization</title>
+    <style>
+      body {
+        font-family: monospace;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .log {
+        margin: 5px 0;
+        padding: 10px;
+        border-left: 4px solid #ccc;
+      }
+      .success {
+        border-color: #0f0;
+        background: #001100;
+        color: #0f0;
+      }
+      .error {
+        border-color: #f00;
+        background: #110000;
+        color: #f00;
+      }
+      .warning {
+        border-color: #ff0;
+        background: #111100;
+        color: #ff0;
+      }
+      .info {
+        border-color: #0ff;
+        background: #001111;
+        color: #0ff;
+      }
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Debug Firestore Initialization</h1>
+
+    <button onclick="debugStep1()">🔧 Passo 1: Verificar Firebase App</button>
+    <button onclick="debugStep2()">🔥 Passo 2: Inicializar Firestore</button>
+    <button onclick="debugStep3()">📝 Passo 3: Testar Escrita</button>
+    <button onclick="debugComplete()">🚀 Debug Completo</button>
+    <button onclick="clearLogs()">🗑️ Limpar</button>
+
+    <div id="logs"></div>
+
+    <script type="module">
+      import {
+        initializeApp,
+        getApps,
+        getApp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      // Configuração exata do projeto
+      const firebaseConfig = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+        measurementId: "G-Q2QWQVH60L",
+      };
+
+      let app = null;
+      let db = null;
+
+      function log(message, type = "info") {
+        const timestamp = new Date().toLocaleTimeString();
+        console.log(`[${timestamp}] ${message}`);
+
+        const div = document.createElement("div");
+        div.className = `log ${type}`;
+        div.textContent = `[${timestamp}] ${message}`;
+        document.getElementById("logs").appendChild(div);
+        div.scrollIntoView({ behavior: "smooth" });
+      }
+
+      window.clearLogs = () => {
+        document.getElementById("logs").innerHTML = "";
+      };
+
+      window.debugStep1 = async () => {
+        log("🔧 PASSO 1: Verificando Firebase App...", "info");
+
+        try {
+          // Verificar se já existe uma app
+          const existingApps = getApps();
+          log(`📋 Apps existentes: ${existingApps.length}`, "info");
+
+          if (existingApps.length > 0) {
+            app = getApp();
+            log(`✅ App existente encontrada: ${app.name}`, "success");
+            log(`📊 Project ID: ${app.options.projectId}`, "info");
+            log(
+              `🔑 API Key: ${app.options.apiKey ? "Configurada" : "MISSING"}`,
+              app.options.apiKey ? "success" : "error",
+            );
+          } else {
+            log("🆕 Nenhuma app existente, criando nova...", "info");
+            app = initializeApp(firebaseConfig);
+            log(`✅ Nova app criada: ${app.name}`, "success");
+            log(`📊 Project ID: ${app.options.projectId}`, "info");
+          }
+
+          // Verificar propriedades essenciais
+          const required = ["projectId", "apiKey", "authDomain"];
+          for (const prop of required) {
+            const value = app.options[prop];
+            if (value) {
+              log(`✅ ${prop}: ${value}`, "success");
+            } else {
+              log(`❌ ${prop}: MISSING`, "error");
+            }
+          }
+        } catch (error) {
+          log(`❌ Erro no Passo 1: ${error.message}`, "error");
+          log(`🔍 Stack: ${error.stack}`, "error");
+        }
+      };
+
+      window.debugStep2 = async () => {
+        log("🔥 PASSO 2: Inicializando Firestore...", "info");
+
+        try {
+          if (!app) {
+            log(
+              "⚠️ Firebase App não encontrada, executando Passo 1 primeiro...",
+              "warning",
+            );
+            await debugStep1();
+          }
+
+          if (!app) {
+            log("❌ Não é possível continuar sem Firebase App", "error");
+            return;
+          }
+
+          log("📞 Chamando getFirestore()...", "info");
+          db = getFirestore(app);
+
+          if (db) {
+            log("✅ Firestore inicializado com sucesso!", "success");
+            log(`🆔 Tipo: ${typeof db}`, "info");
+            log(`📍 App associada: ${db.app.name}`, "info");
+            log(`🏗️ Project: ${db.app.options.projectId}`, "info");
+          } else {
+            log("❌ getFirestore() retornou null/undefined", "error");
+          }
+        } catch (error) {
+          log(`❌ Erro no Passo 2: ${error.message}`, "error");
+          log(`🔍 Código: ${error.code || "N/A"}`, "error");
+
+          // Diagnóstico específico de erros
+          if (error.code === "firestore/unavailable") {
+            log(
+              "🚫 Firestore não está habilitado neste projeto Firebase",
+              "error",
+            );
+            log(
+              "💡 Solução: Vá ao Firebase Console > Firestore Database > Criar banco",
+              "warning",
+            );
+          } else if (error.code === "auth/invalid-api-key") {
+            log("🔑 API Key inválida", "error");
+            log("💡 Solução: Verificar configuração da API Key", "warning");
+          } else if (error.message.includes("network")) {
+            log("🌐 Problema de conectividade", "error");
+            log("💡 Solução: Verificar conexão à internet", "warning");
+          }
+
+          log(`🔍 Stack: ${error.stack}`, "error");
+        }
+      };
+
+      window.debugStep3 = async () => {
+        log("📝 PASSO 3: Testando Escrita...", "info");
+
+        try {
+          if (!db) {
+            log(
+              "⚠️ Firestore não inicializada, executando passos anteriores...",
+              "warning",
+            );
+            await debugStep1();
+            await debugStep2();
+          }
+
+          if (!db) {
+            log("❌ Não é possível testar escrita sem Firestore", "error");
+            return;
+          }
+
+          log("✍️ Tentando escrever documento de teste...", "info");
+          const testData = {
+            message: "Debug test from HTML",
+            timestamp: serverTimestamp(),
+            debugStep: 3,
+            userAgent: navigator.userAgent,
+            url: window.location.href,
+          };
+
+          const docRef = await addDoc(collection(db, "debug_tests"), testData);
+          log(`✅ Escrita SUCESSO! ID: ${docRef.id}`, "success");
+          log("🎉 Firestore está 100% funcional!", "success");
+        } catch (error) {
+          log(`❌ Erro no Passo 3: ${error.message}`, "error");
+          log(`🔍 Código: ${error.code || "N/A"}`, "error");
+
+          // Diagnóstico de erros de escrita
+          if (error.code === "permission-denied") {
+            log("🔒 Permissão negada - verificar Firestore Rules", "error");
+          } else if (error.code === "unavailable") {
+            log("🚫 Serviço indisponível", "error");
+          } else if (error.code === "deadline-exceeded") {
+            log("⏰ Timeout - operação muito lenta", "error");
+          }
+
+          log(`🔍 Stack: ${error.stack}`, "error");
+        }
+      };
+
+      window.debugComplete = async () => {
+        log("🚀 EXECUTANDO DEBUG COMPLETO...", "info");
+        log("", "info");
+
+        await debugStep1();
+        log("", "info");
+        await debugStep2();
+        log("", "info");
+        await debugStep3();
+        log("", "info");
+
+        if (db) {
+          log("🎉 RESULTADO: Firestore está FUNCIONANDO!", "success");
+        } else {
+          log("💥 RESULTADO: Firestore NÃO está funcionando", "error");
+
+          // Resumo de soluções
+          log("", "info");
+          log("🔧 POSSÍVEIS SOLUÇÕES:", "warning");
+          log(
+            "1. Verificar se Firestore está habilitado no Firebase Console",
+            "warning",
+          );
+          log("2. Confirmar API Key e configuração do projeto", "warning");
+          log("3. Verificar regras de segurança (firestore.rules)", "warning");
+          log("4. Testar conectividade com a internet", "warning");
+        }
+      };
+
+      // Auto-executar
+      window.addEventListener("load", () => {
+        log("🔍 Debug page loaded", "info");
+        log("📊 Configuração do projeto:", "info");
+        log(`  - Project ID: ${firebaseConfig.projectId}`, "info");
+        log(`  - Auth Domain: ${firebaseConfig.authDomain}`, "info");
+        log("", "info");
+        log(
+          "👆 Clique em 'Debug Completo' para executar todos os testes",
+          "info",
+        );
+      });
+    </script>
+  </body>
+</html>
