@@ -1,68 +1,90 @@
-// Script de diagnóstico do Firebase
-import {
-  getFirebaseApp,
-  getFirebaseFirestore,
-  testFirestore,
-  initializeFirebaseRobust,
-  isFirebaseReady,
-  isFirestoreReady,
-} from "../firebase/robustFirebase";
+// Diagnóstico Firebase para debug
+export async function diagnoseFirebaseSetup() {
+  console.log("🔍 DIAGNÓSTICO FIREBASE INICIADO");
+  console.log("====================================");
 
-export async function diagnoseFirabaseIssues() {
-  console.log("🔍 Iniciando diagnóstico do Firebase...");
+  // 1. Verificar variáveis de ambiente
+  console.log("📋 Variáveis de Ambiente:");
+  console.log("  VITE_FORCE_FIREBASE:", import.meta.env.VITE_FORCE_FIREBASE);
+  console.log(
+    "  VITE_FIREBASE_PROJECT_ID:",
+    import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  );
+  console.log(
+    "  VITE_FIREBASE_API_KEY:",
+    import.meta.env.VITE_FIREBASE_API_KEY ? "✅ Definida" : "❌ Não definida",
+  );
+  console.log(
+    "  VITE_FIREBASE_AUTH_DOMAIN:",
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  );
 
-  // 0. Forçar inicialização
-  console.log("🔧 Forçando inicialização do Firebase...");
-  const initResult = initializeFirebaseRobust();
-  console.log("🔧 Resultado da inicialização:", initResult);
-
-  // 1. Verificar Firebase App
-  const app = getFirebaseApp();
-  if (!app) {
-    console.error("❌ Firebase App não está inicializada");
-    return { success: false, error: "Firebase App não inicializada" };
-  }
-  console.log("✅ Firebase App: OK");
-
-  // 2. Verificar Firestore
-  const db = getFirebaseFirestore();
-  if (!db) {
-    console.error("❌ Firestore não está disponível");
-    return { success: false, error: "Firestore não disponível" };
-  }
-  console.log("✅ Firestore Instance: OK");
-
-  // 3. Testar conexão
-  const firestoreTest = await testFirestore();
-  if (!firestoreTest) {
-    console.error("❌ Teste de conexão Firestore falhou");
-    return { success: false, error: "Falha na conexão com Firestore" };
-  }
-  console.log("✅ Firestore Connection: OK");
-
-  // 4. Testar escrita básica
+  // 2. Tentar carregar configuração Firebase
   try {
-    const { doc, setDoc } = await import("firebase/firestore");
-    const testDoc = doc(db, "diagnostic", "test");
-    await setDoc(testDoc, {
-      message: "Teste de diagnóstico",
-      timestamp: new Date().toISOString(),
-    });
-    console.log("✅ Firestore Write Test: OK");
-
-    // 5. Testar leitura
-    const { getDoc } = await import("firebase/firestore");
-    const docSnap = await getDoc(testDoc);
-    if (docSnap.exists()) {
-      console.log("✅ Firestore Read Test: OK");
-      console.log("🎉 Firebase está completamente funcional!");
-      return { success: true };
-    } else {
-      console.error("❌ Documento não foi encontrado após escrita");
-      return { success: false, error: "Problema na persistência de dados" };
-    }
-  } catch (error: any) {
-    console.error("❌ Erro nos testes de leitura/escrita:", error);
-    return { success: false, error: error.message };
+    const { getFirebaseConfig } = await import("../config/firebaseEnv");
+    const config = getFirebaseConfig();
+    console.log("🔧 Configuração Firebase carregada:");
+    console.log("  Projeto ID:", config.projectId);
+    console.log("  Auth Domain:", config.authDomain);
+    console.log("  API Key:", config.apiKey ? "✅ OK" : "❌ Faltando");
+  } catch (error) {
+    console.error("❌ Erro ao carregar configuração Firebase:", error);
   }
+
+  // 3. Tentar inicializar Firebase App
+  try {
+    const { getApps, getApp, initializeApp } = await import("firebase/app");
+    const { getFirebaseConfig } = await import("../config/firebaseEnv");
+
+    let app;
+    if (getApps().length === 0) {
+      const config = getFirebaseConfig();
+      app = initializeApp(config);
+      console.log("🚀 Firebase App inicializada:", app.name);
+    } else {
+      app = getApp();
+      console.log("✅ Firebase App já existente:", app.name);
+    }
+
+    console.log("📱 Projeto ativo:", app.options.projectId);
+
+    // 4. Tentar verificar Firestore
+    try {
+      const { getFirestore } = await import("firebase/firestore");
+      const db = getFirestore(app);
+      console.log("✅ Firestore inicializado com sucesso");
+
+      // 5. Tentar criar uma referência de teste
+      const { doc } = await import("firebase/firestore");
+      const testRef = doc(db, "diagnostic", "test");
+      console.log("✅ Referência de teste criada");
+
+      console.log("🎉 DIAGNÓSTICO: Firestore está FUNCIONAL!");
+      return true;
+    } catch (firestoreError: any) {
+      console.error("❌ Erro no Firestore:", firestoreError.message);
+      console.error("🔍 Código do erro:", firestoreError.code);
+
+      if (
+        firestoreError.message.includes("Service firestore is not available")
+      ) {
+        console.error("💡 SOLUÇÃO: Habilite Firestore no Firebase Console");
+        console.error(
+          `🔗 Link: https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
+        );
+      }
+
+      return false;
+    }
+  } catch (appError) {
+    console.error("❌ Erro na inicialização do Firebase App:", appError);
+    return false;
+  }
+}
+
+// Executar diagnóstico automaticamente em desenvolvimento
+if (import.meta.env.VITE_FORCE_FIREBASE) {
+  setTimeout(() => {
+    diagnoseFirebaseSetup();
+  }, 2000);
 }
