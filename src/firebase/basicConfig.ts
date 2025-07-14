@@ -1,6 +1,13 @@
 // Configuração Firebase básica ativa
 import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
+import { getAuth as getFirebaseAuth } from "firebase/auth";
+import {
+  getFirebaseFirestore,
+  getFirebaseFirestoreAsync,
+  isFirestoreReady,
+  testFirestore,
+} from "./firestoreConfig";
 
 // Estado: Firebase ativo
 const LOCAL_MODE = false;
@@ -96,9 +103,6 @@ export function getDB() {
   }
 }
 
-// Import necessário para getFirebaseFirestore
-import { getFirebaseFirestore } from "./firestoreConfig";
-
 // Função para verificar se Firestore está disponível (sempre retorna fallback)
 export function withFirestore<T>(
   callback: (db: any) => T,
@@ -130,18 +134,8 @@ export function getAuth() {
   }
 }
 
-// Import necessário para getAuth
-import { getAuth as getFirebaseAuth } from "firebase/auth";
-
 // Export auth como função (sempre null)
 export const auth = null;
-
-// Importar funções do Firestore (modo local)
-import {
-  getFirebaseFirestore,
-  isFirestoreReady,
-  testFirestore,
-} from "./firestoreConfig";
 
 // Status Firebase sempre em modo local
 
@@ -171,9 +165,6 @@ export const testFirebaseFirestore = async () => {
   if (LOCAL_MODE) return false;
   return await testFirestore();
 };
-
-// Imports necessários para funções de compatibilidade
-import { getFirebaseFirestoreAsync, testFirestore } from "./firestoreConfig";
 
 // Exportações principais
 export { getFirebaseFirestore, isFirestoreReady };
