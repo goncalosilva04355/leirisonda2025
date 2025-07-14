@@ -85,6 +85,17 @@ class DirectAuthService {
         }
 
         console.log("✅ DirectAuth: Login successful for:", email);
+
+        // Disparar evento para ativar auto sync após login
+        setTimeout(() => {
+          console.log("🔄 Disparando evento de login para ativar auto sync...");
+          window.dispatchEvent(
+            new CustomEvent("userLoggedIn", {
+              detail: { user: userProfile, timestamp: Date.now() },
+            }),
+          );
+        }, 100);
+
         return { success: true, user: userProfile };
       } catch (storageError) {
         console.error("❌ DirectAuth: Storage error:", storageError);
