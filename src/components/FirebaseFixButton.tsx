@@ -23,8 +23,9 @@ export const FirebaseFixButton: React.FC = () => {
       firebaseKeys.forEach((key) => localStorage.removeItem(key));
 
       // Reinitialize Firebase
-      const { firebaseService } = await import("../firebase/robustConfig");
-      await firebaseService.initialize();
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
+      const app = getFirebaseApp();
+      console.log("Firebase reinitialized:", app ? "✅" : "❌");
 
       // Clear any Auth state
       try {
