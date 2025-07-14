@@ -100,7 +100,6 @@ export async function testFirestore(): Promise<boolean> {
     }
 
     // Teste simples de conectividade
-    const { doc, getDoc } = require("firebase/firestore");
     const testDoc = doc(db, "test", "connection");
     await getDoc(testDoc);
 
@@ -111,6 +110,9 @@ export async function testFirestore(): Promise<boolean> {
     return false;
   }
 }
+
+// Imports necessários
+import { doc, getDoc } from "firebase/firestore";
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
