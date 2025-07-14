@@ -2745,6 +2745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     "editar-obra",
                     "editar-piscina",
                     "editar-manutencao",
+                    "diagnostic",
                   ];
 
                   if (validSections.includes(hash)) {
@@ -10913,6 +10914,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     "editar-obra",
                     "editar-piscina",
                     "editar-manutencao",
+                    "diagnostic",
                   ];
 
                   if (validSections.includes(hash)) {
