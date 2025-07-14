@@ -1766,6 +1766,7 @@ function App() {
             "editar-obra",
             "editar-piscina",
             "editar-manutencao",
+            "diagnostic",
           ];
 
           if (validSections.includes(hash)) {
