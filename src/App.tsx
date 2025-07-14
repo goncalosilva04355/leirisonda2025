@@ -9869,7 +9869,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        €etalhes do Furo de Água
+                        ��etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -11302,6 +11302,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          {/* Status da sincronização automática */}
+          <ProductionSyncStatus />
+
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
