@@ -51,17 +51,9 @@ export function getFirebaseFirestore(): Firestore | null {
 
   // Tentar inicializar se ainda não foi feito
   if (!firestoreInstance) {
-    try {
-      const app = getFirebaseApp();
-      if (app) {
-        firestoreInstance = getFirestore(app);
-        console.log("✅ Firestore inicializado tardiamente");
-      }
-    } catch (error: any) {
-      console.error(
-        "❌ Erro na inicialização tardia do Firestore:",
-        error.message,
-      );
+    firestoreInstance = initializeFirestore();
+    if (!firestoreInstance) {
+      console.error("❌ Firestore não conseguiu ser inicializado");
     }
   }
 
@@ -77,17 +69,9 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
   // Tentar inicializar se ainda não foi feito
   if (!firestoreInstance) {
-    try {
-      const app = getFirebaseApp();
-      if (app) {
-        firestoreInstance = getFirestore(app);
-        console.log("✅ Firestore inicializado assincronamente");
-      }
-    } catch (error: any) {
-      console.error(
-        "❌ Erro na inicialização assíncrona do Firestore:",
-        error.message,
-      );
+    firestoreInstance = initializeFirestore();
+    if (!firestoreInstance) {
+      console.error("❌ Firestore não conseguiu ser inicializado");
     }
   }
 
