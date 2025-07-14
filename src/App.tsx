@@ -220,7 +220,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necess��rio
+    // Restaurar utilizadores automaticamente se necessário
     userRestoreService.autoRestore();
 
     // Monitoriza���ão automática de persistência de dados
@@ -1872,7 +1872,7 @@ function App() {
                       "✅ Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
-                    console.error("��� Erro ao garantir auto sync:", error);
+                    console.error("❌ Erro ao garantir auto sync:", error);
                     setAutoSyncActive(false);
                   }
                 }
@@ -3594,7 +3594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">����</div>
+                            <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
                               N��o há dados para pesquisar
                             </p>
@@ -7866,7 +7866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest����o de Utilizadores
+                              Gest�����o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8001,7 +8001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
-                        <li>📞 T��cnicos responsáveis</li>
+                        <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -10709,7 +10709,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon������alo Fonseca",
+  //       name: "Gon��������alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -10982,6 +10982,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Firebase Quota Recovery */}
           <FirebaseQuotaRecoveryComponent />
+
+          {/* Quick Firebase Reset (always visible) */}
+          <QuickFirebaseReset />
 
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
