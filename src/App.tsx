@@ -11000,6 +11000,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {/* Status da sincronização automática */}
           <ProductionSyncStatus />
 
+          {/* Firebase Quota Recovery */}
+          {showQuotaRecovery && quotaStatus?.isBlocked && (
+            <div className="fixed top-4 right-4 z-50 bg-red-50 border border-red-200 rounded-lg p-4 shadow-lg max-w-md">
+              <div className="flex items-start space-x-3">
+                <AlertCircle className="text-red-500 mt-1" size={20} />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-red-800 mb-2">
+                    🚨 Firebase Bloqueado
+                  </h3>
+                  <p className="text-red-700 text-sm mb-3">
+                    {quotaStatus.recommendation}
+                  </p>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => {
+                        const recovered =
+                          FirebaseQuotaRecovery.manualRecovery();
+                        if (recovered) {
+                          setShowQuotaRecovery(false);
+                          window.location.reload();
+                        }
+                      }}
+                      className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                    >
+                      Recuperar
+                    </button>
+                    <button
+                      onClick={() => setShowQuotaRecovery(false)}
+                      className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
+                    >
+                      Ocultar
+                    </button>
+                    <button
+                      onClick={() => {
+                        FirebaseQuotaRecovery.diagnoseQuotaIssues();
+                      }}
+                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
+                    >
+                      Debug
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
