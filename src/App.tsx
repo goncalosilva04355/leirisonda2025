@@ -2768,6 +2768,115 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
+                {/* Sistema Técnico - Painel Informativo */}
+                <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
+                  <div className="flex items-center mb-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Estado do Sistema
+                    </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Auto Sync Status */}
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex items-center mb-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        <h3 className="font-medium text-green-800">
+                          Auto Sync
+                        </h3>
+                      </div>
+                      <p className="text-xs text-green-700">
+                        ✅ Ativo
+                        <br />
+                        🔄 Sincronização automática de dados
+                        <br />
+                        📱 Offline-first com backup local
+                      </p>
+                    </div>
+
+                    {/* Firebase Status */}
+                    <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                      <div className="flex items-center mb-2">
+                        <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+                        <h3 className="font-medium text-orange-800">
+                          Firebase
+                        </h3>
+                      </div>
+                      <p className="text-xs text-orange-700">
+                        🔥 Projeto Leiria
+                        <br />
+                        🔐 Autenticação ativa
+                        <br />
+                        🌐 Conectado (leiria-1cfc9)
+                      </p>
+                    </div>
+
+                    {/* Firestore Status */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                      <div className="flex items-center mb-2">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                        <h3 className="font-medium text-blue-800">Firestore</h3>
+                      </div>
+                      <p className="text-xs text-blue-700">
+                        💾 Base de dados ativa
+                        <br />
+                        📊 Sincronização em tempo real
+                        <br />
+                        🔒 Regras de segurança aplicadas
+                      </p>
+                    </div>
+
+                    {/* Netlify Status */}
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                      <div className="flex items-center mb-2">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                        <h3 className="font-medium text-purple-800">Netlify</h3>
+                      </div>
+                      <p className="text-xs text-purple-700">
+                        🚀 Deploy automático
+                        <br />
+                        🌍 CDN global ativo
+                        <br />
+                        📡 Edge functions disponíveis
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Informações Técnicas Adicionais */}
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-gray-600">
+                      <div>
+                        <span className="font-medium text-gray-800">
+                          🏗️ Arquitetura:
+                        </span>
+                        <br />
+                        React + Vite + TypeScript
+                        <br />
+                        PWA Ready + Service Worker
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-800">
+                          💾 Armazenamento:
+                        </span>
+                        <br />
+                        LocalStorage + Firestore
+                        <br />
+                        Sincronização bidirecional
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-800">
+                          🔧 Funcionalidades:
+                        </span>
+                        <br />
+                        Modo offline, Auto-backup
+                        <br />
+                        Geolocalização, Relatórios PDF
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -5405,7 +5514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condiç��es do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6686,7 +6795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura��ões
+                        Configura���ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -6851,7 +6960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>👥 Equipas atribuídas</li>
+                                <li>��� Equipas atribuídas</li>
                                 <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -6876,7 +6985,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
-                            preferências.
+                            prefer��ncias.
                           </p>
                         </div>
 
@@ -7767,7 +7876,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informações de clientes</li>
+                        <li>��� Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -7874,7 +7983,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>��� Hist��rico de serviços</li>
+                        <li>���� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
