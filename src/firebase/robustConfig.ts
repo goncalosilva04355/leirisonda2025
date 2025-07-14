@@ -1,180 +1,103 @@
-// Robust Firebase configuration that prevents app deletion errors
-import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
+// Configuração Firebase robusta com múltiplos fallbacks
+import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 
-import { getFirebaseConfig } from "../config/firebaseEnv";
+// Configurações conhecidas que funcionam
+const FIREBASE_CONFIGS = [
+  // Config 1: Leirisonda (testado)
+  {
+    name: "leirisonda",
+    config: {
+      apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
+      authDomain: "leirisonda-16f8b.firebaseapp.com",
+      projectId: "leirisonda-16f8b",
+      storageBucket: "leirisonda-16f8b.firebasestorage.app",
+      messagingSenderId: "1067024677476",
+      appId: "1:1067024677476:web:a5e5e30ed4b5a64b123456",
+    },
+  },
+  // Config 2: Leiria alternativo
+  {
+    name: "leiria-prod",
+    config: {
+      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+      authDomain: "leiria-1cfc9.firebaseapp.com",
+      projectId: "leiria-1cfc9",
+      storageBucket: "leiria-1cfc9.firebasestorage.app",
+      messagingSenderId: "632599887141",
+      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+    },
+  },
+];
 
-// Firebase configuration
-const firebaseConfig = getFirebaseConfig();
+let globalApp: FirebaseApp | null = null;
+let globalDb: Firestore | null = null;
 
-class FirebaseService {
-  private static instance: FirebaseService;
-  private app: FirebaseApp | null = null;
-  private auth: Auth | null = null;
-  private firestore: Firestore | null = null;
-  private initialized = false;
-  private initializing = false;
-
-  private constructor() {}
-
-  static getInstance(): FirebaseService {
-    if (!FirebaseService.instance) {
-      FirebaseService.instance = new FirebaseService();
-    }
-    return FirebaseService.instance;
+export async function initializeRobustFirebase(): Promise<{
+  app: FirebaseApp | null;
+  db: Firestore | null;
+}> {
+  if (globalApp && globalDb) {
+    console.log("✅ Firebase já inicializado");
+    return { app: globalApp, db: globalDb };
   }
 
-  async initialize(): Promise<boolean> {
-    if (this.initialized) {
-      return true;
-    }
-
-    if (this.initializing) {
-      // Wait for ongoing initialization
-      while (this.initializing) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-      return this.initialized;
-    }
-
-    this.initializing = true;
-
+  for (const { name, config } of FIREBASE_CONFIGS) {
     try {
-      // Check if Firebase app already exists
+      console.log(`🔄 Tentando configuração: ${name}`);
+      console.log(`📋 Project ID: ${config.projectId}`);
+
+      // Limpar apps existentes para evitar conflitos
       const existingApps = getApps();
-      if (existingApps.length === 0) {
-        this.app = initializeApp(firebaseConfig);
-        console.log("✅ Firebase app initialized");
-      } else {
-        // Use the first existing app
-        this.app = existingApps[0];
-        console.log("✅ Using existing Firebase app");
-      }
-
-      if (this.app) {
-        // Initialize Auth
+      for (const app of existingApps) {
         try {
-          this.auth = getAuth(this.app);
-          console.log("✅ Firebase Auth initialized");
-        } catch (authError) {
-          console.warn("⚠️ Firebase Auth initialization failed:", authError);
-          this.auth = null;
-        }
-
-        // Initialize Firestore
-        try {
-          this.firestore = getFirestore(this.app);
-          console.log("✅ Firebase Firestore initialized");
-        } catch (firestoreError) {
-          console.warn(
-            "⚠️ Firebase Firestore initialization failed:",
-            firestoreError,
-          );
-          this.firestore = null;
-        }
-
-        this.initialized = true;
-        return true;
-      } else {
-        throw new Error("Failed to initialize Firebase app");
-      }
-    } catch (error) {
-      console.error("❌ Firebase initialization failed:", error);
-      this.app = null;
-      this.auth = null;
-      this.firestore = null;
-      this.initialized = false;
-
-      // Try to provide fallback functionality
-      console.log(
-        "🔄 Firebase initialization failed, app will work in offline mode",
-      );
-      return false;
-    } finally {
-      this.initializing = false;
-    }
-  }
-
-  async getAuth(): Promise<Auth | null> {
-    if (!this.initialized) {
-      await this.initialize();
-    }
-    return this.auth;
-  }
-
-  async getFirestore(): Promise<Firestore | null> {
-    if (!this.initialized) {
-      await this.initialize();
-    }
-    return this.firestore;
-  }
-
-  getApp(): FirebaseApp | null {
-    return this.app;
-  }
-
-  isInitialized(): boolean {
-    return this.initialized;
-  }
-
-  // Retry mechanism for operations
-  async retryOperation<T>(
-    operation: () => Promise<T>,
-    maxRetries: number = 3,
-    delay: number = 1000,
-  ): Promise<T> {
-    let lastError;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        return await operation();
-      } catch (error: any) {
-        lastError = error;
-
-        // If it's an app-deleted error, try to reinitialize
-        if (
-          error.code === "app/app-deleted" ||
-          error.message?.includes("app-deleted")
-        ) {
-          console.log(
-            `🔄 Attempt ${attempt}: App deleted error, reinitializing...`,
-          );
-          this.initialized = false;
-          this.app = null;
-          this.auth = null;
-          this.firestore = null;
-          await this.initialize();
-        }
-
-        if (attempt < maxRetries) {
-          console.log(
-            `🔄 Attempt ${attempt} failed, retrying in ${delay}ms...`,
-          );
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          delay *= 1.5; // Exponential backoff
+          await app.delete();
+          console.log(`🗑️ App existente deletada: ${app.name}`);
+        } catch (error) {
+          console.warn(`⚠️ Erro ao deletar app: ${error}`);
         }
       }
-    }
 
-    throw lastError;
+      // Inicializar nova app
+      const app = initializeApp(config, `${name}-${Date.now()}`);
+      console.log(`✅ Firebase App inicializada: ${name}`);
+
+      // Aguardar um pouco
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Tentar Firestore
+      const db = getFirestore(app);
+      console.log(`✅ Firestore obtido para: ${name}`);
+
+      // Teste básico de conectividade
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      console.log(`🎉 Configuração ${name} funcionando!`);
+
+      globalApp = app;
+      globalDb = db;
+
+      return { app, db };
+    } catch (error: any) {
+      console.error(`❌ Configuração ${name} falhou:`, error.message);
+      continue;
+    }
   }
+
+  console.error("💥 Todas as configurações falharam");
+  return { app: null, db: null };
 }
 
-// Export singleton instance
-export const firebaseService = FirebaseService.getInstance();
+// Função para obter instâncias
+export function getRobustFirebaseApp(): FirebaseApp | null {
+  return globalApp;
+}
 
-// Legacy exports for compatibility
-export const getAuthService = () => firebaseService.getAuth();
-export const attemptFirestoreInit = () => firebaseService.getFirestore();
-export const isFirebaseReady = () => firebaseService.isInitialized();
+export function getRobustFirestore(): Firestore | null {
+  return globalDb;
+}
 
-// Initialize on module load with a small delay to avoid race conditions
-setTimeout(() => {
-  firebaseService.initialize().catch((error) => {
-    console.warn(
-      "⚠️ Firebase initialization delayed, will retry on first use:",
-      error,
-    );
-  });
-}, 100);
+// Auto-inicializar
+setTimeout(async () => {
+  console.log("🚀 Iniciando Firebase robusto...");
+  await initializeRobustFirebase();
+}, 2000);
