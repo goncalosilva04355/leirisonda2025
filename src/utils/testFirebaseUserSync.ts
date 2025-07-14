@@ -16,7 +16,7 @@ export async function testFirebaseUserSync(): Promise<void> {
     console.log("🔥 FirestoreService importado com sucesso");
 
     // 3. Tentar sincronização
-    const firestoreUsers = await firestoreService.getUtilizadores();
+    const firestoreUsers = await firestoreService.getCollection("users");
     console.log("☁️ Firestore utilizadores:", firestoreUsers.length);
 
     // 4. Comparar
@@ -27,7 +27,7 @@ export async function testFirebaseUserSync(): Promise<void> {
         firestoreUsers.map((u) => u.email),
       );
     } else {
-      console.log("⚠️ ATENÇÃO: Nenhum utilizador no Firestore");
+      console.log("⚠�� ATENÇÃO: Nenhum utilizador no Firestore");
       if (parsedLocalUsers.length > 0) {
         console.log("🔄 Tentando forçar sincronização...");
         // A função getUtilizadores() deve sincronizar automaticamente
