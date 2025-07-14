@@ -94,9 +94,17 @@ export function getDB() {
     return null;
   }
 
-  // Usar lazy import para evitar dependência circular
+  // Usar lazy loading para evitar dependência circular
   try {
-    return getFirebaseFirestore();
+    const apps = getApps();
+    if (apps.length === 0) {
+      console.warn("💾 Firebase App não inicializada ainda");
+      return null;
+    }
+
+    const { getFirestore } = require("firebase/firestore");
+    const app = getApp();
+    return getFirestore(app);
   } catch (error: any) {
     console.error("💾 Erro ao obter DB:", error.message);
     return null;
