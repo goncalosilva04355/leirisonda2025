@@ -295,7 +295,7 @@ function App() {
         hasQuotaIssues ||
         hasEmergencyShutdown
       ) {
-        console.log("�� Firebase conflict detected on mobile device");
+        console.log("���� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -1177,7 +1177,7 @@ function App() {
         if (savedPhoneDialer !== null) {
           setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
           console.log(
-            "✅ Configuração Phone Dialer carregada:",
+            "✅ Configura��ão Phone Dialer carregada:",
             JSON.parse(savedPhoneDialer),
           );
         }
@@ -1410,7 +1410,7 @@ function App() {
         }
       } else {
         console.log(
-          "⚠️ Firestore não disponível, tentando novamente em 10 segundos...",
+          "���️ Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -3023,8 +3023,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display */}
-                <FirebaseStatusDisplay compact={true} expandable={true} />
+                {/* Firebase Status Display - Apenas em produção */}
+                {!import.meta.env.DEV && (
+                  <FirebaseStatusDisplay compact={true} expandable={true} />
+                )}
 
                 {/* Simple Welcome Header */}
                 <div
@@ -3106,7 +3108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Autom��tica Ativa"
+                            ? "Sincronização Autom����tica Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
