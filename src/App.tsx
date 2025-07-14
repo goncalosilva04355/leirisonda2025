@@ -691,7 +691,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
+            `��� Erro ao enviar notificação para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -731,7 +731,7 @@ function App() {
         console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
-        // Enviar notifica��ões mesmo no fallback
+        // Enviar notifica����es mesmo no fallback
         await sendWorkAssignmentNotifications(data);
 
         return result;
@@ -6101,7 +6101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISS📞O NEGADA: clientes.create",
+                                    "❌ PERMISS��O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
@@ -7559,7 +7559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informações do Sistema
+                              Informa��ões do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -12550,46 +12550,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           )}
         </div>
 
-        {/* Realtime Notifications - REMOVIDAS */}
-        {/* <RealtimeNotifications /> */}
-
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
-
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
-
-        {/* User Restore Notification */}
-        <UserRestoreNotificationSimple />
-
-        {/* Firebase Auto-Monitor - Discrete indicator */}
-        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
-
-        {/* User Migration Indicator - Shows migration status */}
-        <UserMigrationIndicator migrationStatus={userMigration} />
-
-        {/* Data Persistence Diagnostic - Modal for persistence issues */}
-        {showDataDiagnostic && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="max-w-4xl w-full max-h-screen overflow-y-auto">
-              <DataPersistenceDiagnostic
-                autoCheck={true}
-                onClose={() => setShowDataDiagnostic(false)}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Data Persistence Alert - Smart automatic alert */}
-        <DataPersistenceAlert
-          onOpenDiagnostic={() => setShowDataDiagnostic(true)}
-        />
-
-        {/* Data Persistence Status Indicator */}
-        <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
-
-        {/* Proteção de Dados - Notificações e Status */}
-        <DataRestoredNotification />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
