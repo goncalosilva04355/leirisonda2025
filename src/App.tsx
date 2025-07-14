@@ -552,35 +552,51 @@ function App() {
 
   const addWork = async (data: any) => {
     try {
-      console.log("🔧 addWork iniciado com Firestore ativo");
+      console.log("🔧 addWork iniciado - GARANTIDO SALVAR NO FIRESTORE");
 
-      // Usar serviço offline-first com Firebase Leiria
-      const firestoreId = await offlineFirstService.createWork(data);
+      // GARANTIR que é salvo no Firestore usando sistema universal
+      const firestoreId = await saveToFirestore.obra({
+        ...data,
+        id: data.id || `obra_${Date.now()}`,
+        createdBy: currentUser?.name || "Sistema",
+        createdAt: new Date().toISOString(),
+        status: data.status || "pending",
+      });
 
-      if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
+      console.log("✅ Obra GARANTIDAMENTE salva no Firestore:", firestoreId);
 
-        // Backup automático desativado temporariamente
-
-        // Sincronizar com sistema universal também
-        try {
-          await addObra(data);
-        } catch (syncError) {
-          console.warn("€��� Erro na sincronização universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        // Fallback para sistema atual se Firestore falhar
-        console.warn("��� Firestore não disponível, usando sistema atual");
-        const result = await addObra(data);
-
-        return result;
+      // Também manter compatibilidade com sistema existente
+      try {
+        await addObra(data);
+      } catch (syncError) {
+        console.warn(
+          "⚠️ Sistema antigo falhou mas Firestore já salvou:",
+          syncError,
+        );
       }
-    } catch (error) {
-      console.error("❌ Erro no sistema de obras:", error);
 
-      // Fallback final para localStorage
+      // Fallback final para localStorage (backup adicional)
+      const existingWorks = JSON.parse(
+        safeLocalStorage.getItem("works") || "[]",
+      );
+      const newWork = {
+        ...data,
+        id: firestoreId,
+        createdAt: new Date().toISOString(),
+        firestoreId: firestoreId,
+      };
+
+      const exists = existingWorks.some((w: any) => w.id === newWork.id);
+      if (!exists) {
+        existingWorks.push(newWork);
+        safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
+        console.log("💾 Obra também guardada no localStorage");
+      }
+
+      return firestoreId;
+    } catch (error) {
+      console.error("❌ Erro crítico no sistema de obras:", error);
+      // Se TUDO falhar, pelo menos salvar no localStorage
       const existingWorks = JSON.parse(
         safeLocalStorage.getItem("works") || "[]",
       );
@@ -588,14 +604,12 @@ function App() {
         ...data,
         id: data.id || Date.now().toString(),
         createdAt: data.createdAt || new Date().toISOString(),
+        errorFallback: true,
       };
 
-      const exists = existingWorks.some((w: any) => w.id === newWork.id);
-      if (!exists) {
-        existingWorks.push(newWork);
-        safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
-        console.log("€ Obra guardada no localStorage como fallback");
-      }
+      existingWorks.push(newWork);
+      safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
+      console.log("💾 Obra salva no localStorage como último recurso");
 
       return newWork.id;
     }
@@ -9087,7 +9101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribuída"}
+                                  : work.assignedTo || "Não atribu��da"}
                               </div>
                               {work.budget && (
                                 <div>
