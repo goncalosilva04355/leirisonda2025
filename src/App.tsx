@@ -141,6 +141,7 @@ import DataInputTutorial from "./components/DataInputTutorial";
 import FirebaseFixButton from "./components/FirebaseFixButton";
 import FirebaseQuotaRecoveryComponent from "./components/FirebaseQuotaRecovery";
 import QuickFirebaseReset from "./components/QuickFirebaseReset";
+import AutoFirebaseQuotaFix from "./components/AutoFirebaseQuotaFix";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -7208,7 +7209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers��o</span>
+                        <span className="text-gray-600">Vers���o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7866,7 +7867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest�����o de Utilizadores
+                              Gest����o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8002,7 +8003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
-                        <li>• Datas e duraç��es</li>
+                        <li>• Datas e dura����es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10709,7 +10710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon��������alo Fonseca",
+  //       name: "Gon������alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
