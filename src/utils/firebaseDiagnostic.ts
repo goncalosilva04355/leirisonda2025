@@ -89,4 +89,3 @@ export async function diagnoseFirebaseSetup() {
 // Diagnóstico disponível mas não executado automaticamente
 // Use smartFirestoreDetection.ts para detecção automática
 // Para executar manualmente: diagnoseFirebaseSetup()
-export { diagnoseFirebaseSetup };
