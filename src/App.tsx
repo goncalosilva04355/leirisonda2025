@@ -102,11 +102,12 @@ import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
+// Desativados durante desenvolvimento para evitar refresh no Builder.io
 // Firebase works silently in background - no diagnostics or UI needed
-import("./firebase/ultimateSimpleFirebase");
-import { ForceInitialization } from "./utils/forceInitialization";
+// import("./firebase/ultimateSimpleFirebase");
+// import { ForceInitialization } from "./utils/forceInitialization";
 // Teste simples Firebase Leiria
-import("./utils/testeLeiria");
+// import("./utils/testeLeiria");
 // Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
