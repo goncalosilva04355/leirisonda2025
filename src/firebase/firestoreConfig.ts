@@ -44,6 +44,33 @@ async function waitForFirebaseApp(
   throw new Error("Firebase App não inicializou após aguardar");
 }
 
+// Função para verificar se Firestore está disponível no projeto
+async function checkFirestoreAvailability(app: any): Promise<boolean> {
+  try {
+    // Tentar importar Firestore usando getImmediate para verificar disponibilidade
+    const { getFirestore } = await import("firebase/firestore");
+    const db = getFirestore(app);
+    console.log("✅ Firestore disponível no projeto:", app.options.projectId);
+    return true;
+  } catch (error: any) {
+    if (
+      error.code === "firestore/unavailable" ||
+      error.message.includes("Service firestore is not available")
+    ) {
+      console.error(
+        `❌ Firestore não está habilitado no projeto ${app.options.projectId}`,
+      );
+      console.error("💡 Solução: Habilite Firestore no Firebase Console");
+      console.error(
+        `🔗 https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
+      );
+      return false;
+    }
+    console.error("❌ Erro inesperado ao verificar Firestore:", error);
+    return false;
+  }
+}
+
 // Função para inicializar Firestore com retry
 async function initializeFirestore(
   retryCount = 0,
@@ -68,6 +95,16 @@ async function initializeFirestore(
       authDomain: app.options.authDomain,
     });
 
+    // Verificar se Firestore está disponível neste projeto
+    const firestoreAvailable = await checkFirestoreAvailability(app);
+
+    if (!firestoreAvailable) {
+      console.error(
+        "❌ Firestore não disponível no projeto, voltando ao modo localStorage",
+      );
+      return null;
+    }
+
     // Aguardar um pouco mais para garantir que os serviços estão prontos
     await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -89,6 +126,20 @@ async function initializeFirestore(
     );
     console.error("🔍 Error code:", error.code);
 
+    // Se é erro de Firestore não disponível, não tentar novamente
+    if (
+      error.code === "firestore/unavailable" ||
+      error.message.includes("Service firestore is not available")
+    ) {
+      console.error(
+        "❌ Firestore não está habilitado - não tentando novamente",
+      );
+      console.error(
+        "💡 A aplicação continuará funcionando com localStorage apenas",
+      );
+      return null;
+    }
+
     if (retryCount < maxRetries) {
       const delay = Math.pow(2, retryCount) * 1000; // Exponential backoff
       console.log(`🔄 Tentando novamente em ${delay}ms...`);
@@ -97,10 +148,10 @@ async function initializeFirestore(
     }
 
     // Todas as tentativas falharam
+    console.error("❌ Firestore falhou após todas as tentativas");
     console.error(
-      "❌ Firestore falhou - verifique se está ativado no Firebase Console",
+      "💾 A aplicação continuará funcionando apenas com localStorage",
     );
-
     console.error("🔍 Stack trace original:", error.stack);
     return null;
   }
