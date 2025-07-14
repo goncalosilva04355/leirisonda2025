@@ -616,26 +616,36 @@ function App() {
   };
   const addMaintenance = async (data: any) => {
     try {
-      console.log("🔧 addMaintenance iniciado com Firestore ativo");
+      console.log("🔧 addMaintenance iniciado - GARANTIDO SALVAR NO FIRESTORE");
 
-      const firestoreId = await offlineFirstService.createMaintenance(data);
+      // GARANTIR que é salvo no Firestore usando sistema universal
+      const firestoreId = await saveToFirestore.manutencao({
+        ...data,
+        id: data.id || `manutencao_${Date.now()}`,
+        createdBy: currentUser?.name || "Sistema",
+        createdAt: new Date().toISOString(),
+        status: data.status || "scheduled",
+      });
 
-      if (firestoreId) {
-        console.log("���� Manutenção criada no Firestore:", firestoreId);
+      console.log(
+        "✅ Manutenção GARANTIDAMENTE salva no Firestore:",
+        firestoreId,
+      );
 
-        // Sincronizar com sistema universal
-        try {
-          await addManutencao(data);
-        } catch (syncError) {
-          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        return await addManutencao(data);
+      // Também manter compatibilidade com sistema existente
+      try {
+        await addManutencao(data);
+      } catch (syncError) {
+        console.warn(
+          "⚠️ Sistema antigo falhou mas Firestore já salvou:",
+          syncError,
+        );
       }
+
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro no sistema de manutenções:", error);
+      // Fallback para sistema antigo
       return await addManutencao(data);
     }
   };
@@ -837,7 +847,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se dispon��vel
+          // Sincronizar com Firestore se dispon����vel
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
@@ -7256,7 +7266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers���o</span>
+                        <span className="text-gray-600">Vers����o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -9101,7 +9111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? work.assignedUsers
                                       .map((u) => u.name)
                                       .join(", ")
-                                  : work.assignedTo || "Não atribu��da"}
+                                  : work.assignedTo || "Não atribuída"}
                               </div>
                               {work.budget && (
                                 <div>
@@ -9599,7 +9609,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ���etalhes do Furo de Água
+                        ����etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
