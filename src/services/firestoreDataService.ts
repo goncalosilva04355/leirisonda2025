@@ -61,13 +61,21 @@ export class FirestoreDataService {
 
   // Verificar se Firestore está disponível
   private isAvailable(): boolean {
+    if (this.db === null && !this.warningShown) {
+      console.info(
+        "📱 Firestore não disponível - usando localStorage como armazenamento principal",
+      );
+      this.warningShown = true;
+    }
     return this.db !== null;
   }
+
+  private warningShown = false;
 
   // Gravar dados de login (sem senha por segurança)
   async saveLoginData(formData: LoginFormData): Promise<string | null> {
     if (!this.isAvailable()) {
-      console.warn("⚠️ Firestore não disponível - dados não gravados");
+      // Silenciosamente retorna null - o aviso já foi mostrado em isAvailable()
       return null;
     }
 
@@ -103,7 +111,7 @@ export class FirestoreDataService {
     documentId?: string,
   ): Promise<string | null> {
     if (!this.isAvailable()) {
-      console.warn("⚠️ Firestore não disponível - dados não gravados");
+      // Silenciosamente retorna null - fallback para localStorage será usado
       return null;
     }
 
@@ -270,7 +278,10 @@ export class FirestoreDataService {
   // Método de teste para verificar conectividade
   async testConnection(): Promise<boolean> {
     if (!this.isAvailable()) {
-      console.warn("⚠️ Firestore não disponível para teste");
+      // Para teste, mostramos uma mensagem mais detalhada
+      console.info(
+        "🔍 Firestore não disponível para teste - localStorage está funcionando",
+      );
       return false;
     }
 
