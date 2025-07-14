@@ -261,6 +261,32 @@ function App() {
     };
   }, []);
 
+  // Verificar status da quota Firebase na inicialização
+  useEffect(() => {
+    console.log("🔍 Verificando status da quota Firebase...");
+
+    // Tentar recuperação automática primeiro
+    const autoRecovered = autoRecoverOnInit();
+
+    // Verificar status atual
+    const status = FirebaseQuotaRecovery.checkQuotaStatus();
+    setQuotaStatus(status);
+
+    if (status.isBlocked) {
+      console.warn("⚠️ Firebase bloqueado por quota:", status);
+      setShowQuotaRecovery(true);
+    } else {
+      console.log("✅ Firebase não está bloqueado por quota");
+    }
+
+    // Monitorar mudanças na quota
+    const stopMonitoring = FirebaseQuotaRecovery.startQuotaMonitoring(30000);
+
+    return () => {
+      stopMonitoring();
+    };
+  }, []);
+
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
@@ -9512,7 +9538,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observaç��es
+                          Observações
                         </h3>
                       </div>
 
@@ -10643,7 +10669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-gray-900 mb-2">
-                Conteúdo do Relat��rio:
+                Conteúdo do Relatório:
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
