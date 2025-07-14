@@ -151,6 +151,72 @@ export function FirestoreTest() {
           </Button>
         </div>
 
+        {/* Status do Firestore */}
+        {firestoreStatus && (
+          <div
+            className={`p-4 rounded-lg ${firestoreStatus.available ? "bg-green-50 border border-green-200" : "bg-blue-50 border border-blue-200"}`}
+          >
+            <h3 className="font-semibold mb-2 flex items-center">
+              {firestoreStatus.available ? "✅" : "📱"} Status do Firestore
+            </h3>
+
+            <div className="space-y-2">
+              <div>
+                <strong>Status:</strong>{" "}
+                {firestoreStatus.available ? "Disponível" : "Não habilitado"}
+              </div>
+
+              {firestoreStatus.projectId && (
+                <div>
+                  <strong>Projeto:</strong> {firestoreStatus.projectId}
+                </div>
+              )}
+
+              {firestoreStatus.error && (
+                <div>
+                  <strong>Informação:</strong> {firestoreStatus.error}
+                </div>
+              )}
+            </div>
+
+            {/* Recomendações */}
+            <div className="mt-3">
+              <strong>Recomendações:</strong>
+              <ul className="mt-1 text-sm space-y-1">
+                {smartFirestore.getRecommendations().map((rec, index) => (
+                  <li key={index} className="text-gray-700">
+                    {rec}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {!firestoreStatus.available && (
+              <div className="mt-3 p-3 bg-white rounded border">
+                <strong>🔧 Como habilitar Firestore:</strong>
+                <ol className="mt-2 text-sm space-y-1 list-decimal list-inside">
+                  <li>
+                    Acesse{" "}
+                    <a
+                      href={`https://console.firebase.google.com/project/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/firestore`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline"
+                    >
+                      Firebase Console
+                    </a>
+                  </li>
+                  <li>Clique em "Firestore Database"</li>
+                  <li>Clique em "Criar base de dados"</li>
+                  <li>Escolha "Modo de teste"</li>
+                  <li>Selecione uma localização (ex: eur3)</li>
+                  <li>Recarregue esta página</li>
+                </ol>
+              </div>
+            )}
+          </div>
+        )}
+
         {testResult && (
           <div className="bg-gray-100 p-4 rounded-lg">
             <h3 className="font-semibold mb-2">Resultado:</h3>
