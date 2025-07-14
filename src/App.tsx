@@ -569,7 +569,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("�� Manutenção criada no Firestore:", firestoreId);
+        console.log("���� Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -1083,7 +1083,8 @@ function App() {
     initializeAuth();
   }, []);
 
-  // Passo 3: Teste completo do Firestore com operações reais
+  // Passo 3: Teste completo do Firestore com operações reais - COMENTADO para evitar erros
+  /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
       console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
@@ -1154,6 +1155,7 @@ function App() {
 
     testFirestoreStep3();
   }, []);
+  */
 
   // Sincronização inicial de todos os dados com Firestore
   useEffect(() => {
@@ -2083,7 +2085,7 @@ ${index + 1}. ${maint.poolName}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descrição: ${maint.description}
+   Descri��ão: ${maint.description}
    ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
 `,
   )
