@@ -117,9 +117,7 @@ async function initializeFirestore(
     const firestoreAvailable = await checkFirestoreAvailability(app);
 
     if (!firestoreAvailable) {
-      console.error(
-        "❌ Firestore não disponível no projeto, voltando ao modo localStorage",
-      );
+      // Silenciosamente retorna null - checkFirestoreAvailability já mostrou a informação necessária
       return null;
     }
 
