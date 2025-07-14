@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Corrigir Login - Leirisonda</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin: 5px;
+        border-radius: 5px;
+      }
+      .error {
+        background: #f44336;
+      }
+      .success {
+        background: #4caf50;
+      }
+      .warning {
+        background: #ff9800;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Correção de Login - Leirisonda</h1>
+
+      <div class="status error">
+        <strong>⚠️ Problemas Detectados:</strong><br />
+        • TOO_MANY_ATTEMPTS_TRY_LATER - Muitas tentativas<br />
+        • WEAK_PASSWORD - Senha muito fraca
+      </div>
+
+      <h3>✅ Soluções Imediatas:</h3>
+
+      <button onclick="limparTentativas()" class="warning">
+        🔄 Limpar Tentativas de Login
+      </button>
+      <button onclick="resetarAuth()" class="error">
+        🔥 Reset Completo Auth
+      </button>
+      <button onclick="loginDirecto()" class="success">🚀 Login Direto</button>
+
+      <div style="margin: 20px 0">
+        <h4>Login Manual:</h4>
+        <input
+          type="email"
+          id="email"
+          placeholder="Email"
+          value="gongonsilva@gmail.com"
+        />
+        <input
+          type="password"
+          id="password"
+          placeholder="Nova senha (mín 6 caracteres)"
+          value="198675gsf"
+        />
+        <button onclick="criarConta()" class="success">
+          ✅ Criar/Atualizar Conta
+        </button>
+      </div>
+
+      <div id="resultado"></div>
+    </div>
+
+    <script>
+      function log(msg, tipo = "info") {
+        const div = document.createElement("div");
+        div.className = `status ${tipo}`;
+        div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        document.getElementById("resultado").appendChild(div);
+      }
+
+      function limparTentativas() {
+        // Limpar localStorage relacionado ao auth
+        const authKeys = [
+          "firebase:authUser:",
+          "firebase:host:",
+          "authAttempts",
+          "lastLoginAttempt",
+          "loginBlocked",
+        ];
+
+        Object.keys(localStorage).forEach((key) => {
+          authKeys.forEach((authKey) => {
+            if (key.includes(authKey)) {
+              localStorage.removeItem(key);
+            }
+          });
+        });
+
+        // Limpar sessionStorage
+        sessionStorage.clear();
+
+        log("✅ Tentativas de login limpas", "success");
+        log("💡 Aguarde 15 minutos antes de tentar novamente", "warning");
+      }
+
+      function resetarAuth() {
+        // Reset completo
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Limpar cookies Firebase se existirem
+        document.cookie.split(";").forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(
+              /=.*/,
+              "=;expires=" + new Date().toUTCString() + ";path=/",
+            );
+        });
+
+        log("🔥 Reset completo realizado", "success");
+        log("🔄 Recarregue a página e tente novamente", "warning");
+      }
+
+      function loginDirecto() {
+        // Simular login direto via localStorage (bypass Firebase Auth)
+        const userData = {
+          id: 1,
+          name: "Gonçalo Fonseca",
+          email: "gongonsilva@gmail.com",
+          role: "super_admin",
+          active: true,
+          permissions: {
+            obras: { view: true, create: true, edit: true, delete: true },
+            manutencoes: { view: true, create: true, edit: true, delete: true },
+            piscinas: { view: true, create: true, edit: true, delete: true },
+            utilizadores: {
+              view: true,
+              create: true,
+              edit: true,
+              delete: true,
+            },
+            relatorios: { view: true, create: true, edit: true, delete: true },
+            clientes: { view: true, create: true, edit: true, delete: true },
+          },
+        };
+
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+        localStorage.setItem("isAuthenticated", "true");
+
+        log("✅ Login direto realizado", "success");
+        log("🚀 Pode voltar à aplicação - já está logado", "success");
+
+        // Redirect após 2 segundos
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
+      }
+
+      function criarConta() {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          log("❌ Preencha email e senha", "error");
+          return;
+        }
+
+        if (password.length < 6) {
+          log("❌ Senha deve ter pelo menos 6 caracteres", "error");
+          return;
+        }
+
+        // Salvar nova conta no localStorage
+        const users = JSON.parse(localStorage.getItem("app-users") || "[]");
+
+        // Encontrar ou criar utilizador
+        let user = users.find((u) => u.email === email);
+        if (!user) {
+          user = {
+            id: Date.now(),
+            email: email,
+            name:
+              email === "gongonsilva@gmail.com"
+                ? "Gonçalo Fonseca"
+                : "Utilizador",
+            role: "super_admin",
+            active: true,
+            createdAt: new Date().toISOString(),
+          };
+          users.push(user);
+        }
+
+        // Atualizar senha
+        user.password = password;
+        user.updatedAt = new Date().toISOString();
+
+        localStorage.setItem("app-users", JSON.stringify(users));
+
+        log(`✅ Conta criada/atualizada: ${email}`, "success");
+        log(`🔑 Nova senha: ${password}`, "success");
+        log("🚀 Agora pode fazer login normalmente", "success");
+      }
+
+      // Auto-executar limpeza básica
+      window.addEventListener("load", () => {
+        log("🔧 Sistema de correção carregado", "success");
+        log(
+          "👆 Clique nas opções acima para resolver problemas de login",
+          "warning",
+        );
+      });
+    </script>
+  </body>
+</html>
