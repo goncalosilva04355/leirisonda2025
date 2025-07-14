@@ -2063,17 +2063,14 @@ function App() {
             console.log("🔄 Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
-              const isAutoSyncCurrentlyActive =
-                autoSyncService.isAutoSyncActive();
+              const autoSyncStarted =
+                await autoSyncService.ensureAutoSyncAfterLogin();
+              setAutoSyncActive(autoSyncStarted);
 
-              if (!isAutoSyncCurrentlyActive) {
-                console.log("🚀 Reativando auto sync após login...");
-                await autoSyncService.startAutoSync();
-                setAutoSyncActive(true);
-                console.log("✅ Auto sync reativado com sucesso após login!");
+              if (autoSyncStarted) {
+                console.log("✅ Auto sync garantido após login!");
               } else {
-                console.log("✅ Auto sync já está ativo após login");
-                setAutoSyncActive(true);
+                console.warn("⚠️ Falha ao garantir auto sync após login");
               }
             } else {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
