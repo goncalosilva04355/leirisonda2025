@@ -58,10 +58,7 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
-import {
-  DataRestoredNotification,
-  DataProtectionStatus,
-} from "./components/DataRestoredNotification";
+
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 import { fcmService } from "./services/fcmService";
@@ -2438,7 +2435,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
+          `���� Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -7741,7 +7738,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relatórios detalhados em PDF
+                          Gere relat��rios detalhados em PDF
                         </p>
                       </div>
                     </div>
