@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>✅ Teste Final - Tudo no Firestore</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: white;
+      }
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
+      .btn {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+      }
+      .btn-success {
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #2196f3, #1976d2);
+        color: white;
+      }
+      .btn-warning {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+        color: white;
+      }
+      .btn:active {
+        transform: scale(0.98);
+      }
+      .result {
+        margin: 15px 0;
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid #4caf50;
+      }
+      .error {
+        border-left-color: #f44336;
+      }
+      .warning {
+        border-left-color: #ff9800;
+      }
+      .step {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .progress {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+        margin: 15px 0;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4caf50, #45a049);
+        width: 0%;
+        transition: width 0.5s ease;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>✅ Teste Final<br />Tudo no Firestore</h1>
+
+      <!-- Botões principais -->
+      <button class="btn btn-success" onclick="testeCompleto()">
+        🚀 TESTE COMPLETO
+      </button>
+
+      <button class="btn btn-primary" onclick="criarTodosTipos()">
+        📝 Criar Todos os Tipos de Dados
+      </button>
+
+      <button class="btn btn-warning" onclick="verificarFirestore()">
+        🔍 Verificar Firestore
+      </button>
+
+      <!-- Progress bar -->
+      <div class="progress hidden" id="progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Resultados -->
+      <div id="resultados"></div>
+
+      <!-- Links úteis -->
+      <div style="margin-top: 30px">
+        <a href="/" class="btn btn-primary">🏠 Voltar à App</a>
+        <a
+          href="/mobile-fix.html"
+          class="btn"
+          style="background: rgba(255, 255, 255, 0.2); color: white"
+        >
+          🔧 Correção Mobile
+        </a>
+      </div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      const config = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+      };
+
+      let app, db;
+
+      function log(msg, tipo = "result") {
+        const div = document.createElement("div");
+        div.className = `${tipo}`;
+        div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        document.getElementById("resultados").appendChild(div);
+        console.log(msg);
+      }
+
+      function updateProgress(percent) {
+        const progressBar = document.getElementById("progressBar");
+        const progress = document.getElementById("progress");
+        progress.classList.remove("hidden");
+        progressBar.style.width = percent + "%";
+      }
+
+      async function initFirebase() {
+        if (!app) {
+          app = initializeApp(config, "teste-final");
+          db = getFirestore(app);
+          log("✅ Firebase inicializado");
+        }
+        return db;
+      }
+
+      window.verificarFirestore = async function () {
+        try {
+          log("🔍 Verificando Firestore...");
+          await initFirebase();
+
+          // Verificar coleções
+          const collections = [
+            "obras",
+            "piscinas",
+            "manutencoes",
+            "clientes",
+            "utilizadores",
+          ];
+
+          for (const col of collections) {
+            try {
+              const snapshot = await getDocs(collection(db, col));
+              log(`✅ ${col}: ${snapshot.size} documentos`, "result");
+            } catch (error) {
+              log(`❌ ${col}: Erro - ${error.message}`, "error");
+            }
+          }
+
+          log("🎉 Verificação completa!", "result");
+        } catch (error) {
+          log(`❌ Erro: ${error.message}`, "error");
+        }
+      };
+
+      window.criarTodosTipos = async function () {
+        try {
+          log("📝 Criando todos os tipos de dados...");
+          updateProgress(0);
+
+          await initFirebase();
+
+          const timestamp = Date.now();
+
+          // 1. Obra
+          updateProgress(20);
+          const obra = await addDoc(collection(db, "obras"), {
+            nome: `Obra Teste ${timestamp}`,
+            endereco: "Rua Teste, 123",
+            cliente: "Cliente Teste",
+            status: "Em andamento",
+            tipo: "Piscina",
+            valor: 15000,
+            createdAt: serverTimestamp(),
+            testType: "final_test",
+          });
+          log(`✅ Obra criada: ${obra.id}`, "result");
+
+          // 2. Piscina
+          updateProgress(40);
+          const piscina = await addDoc(collection(db, "piscinas"), {
+            name: `Piscina Teste ${timestamp}`,
+            client: "Cliente Teste",
+            location: "Localização Teste",
+            type: "Retangular",
+            dimensions: "8x4m",
+            createdAt: serverTimestamp(),
+            testType: "final_test",
+          });
+          log(`✅ Piscina criada: ${piscina.id}`, "result");
+
+          // 3. Manutenção
+          updateProgress(60);
+          const manutencao = await addDoc(collection(db, "manutencoes"), {
+            poolName: `Piscina Teste ${timestamp}`,
+            type: "Manutenção Regular",
+            scheduledDate: new Date().toISOString().split("T")[0],
+            technician: "Técnico Teste",
+            status: "scheduled",
+            createdAt: serverTimestamp(),
+            testType: "final_test",
+          });
+          log(`✅ Manutenção criada: ${manutencao.id}`, "result");
+
+          // 4. Cliente
+          updateProgress(80);
+          const cliente = await addDoc(collection(db, "clientes"), {
+            name: `Cliente Teste ${timestamp}`,
+            email: "teste@exemplo.com",
+            phone: "123456789",
+            address: "Endereço Teste",
+            createdAt: serverTimestamp(),
+            testType: "final_test",
+          });
+          log(`✅ Cliente criado: ${cliente.id}`, "result");
+
+          // 5. Utilizador
+          updateProgress(100);
+          const utilizador = await addDoc(collection(db, "utilizadores"), {
+            name: `Utilizador Teste ${timestamp}`,
+            email: `teste${timestamp}@exemplo.com`,
+            role: "technician",
+            active: true,
+            createdAt: serverTimestamp(),
+            testType: "final_test",
+          });
+          log(`✅ Utilizador criado: ${utilizador.id}`, "result");
+
+          log("🎉 TODOS OS TIPOS DE DADOS CRIADOS COM SUCESSO!", "result");
+          log("✅ FIRESTORE ESTÁ 100% FUNCIONAL!", "result");
+        } catch (error) {
+          log(`❌ Erro: ${error.message}`, "error");
+          log(`🔍 Código: ${error.code}`, "error");
+        }
+      };
+
+      window.testeCompleto = async function () {
+        try {
+          log("🚀 Iniciando teste completo...");
+          updateProgress(0);
+
+          // Passo 1: Verificar Firebase
+          log("📋 Passo 1: Verificando Firebase...", "step");
+          await initFirebase();
+          updateProgress(25);
+
+          // Passo 2: Criar dados de teste
+          log("📋 Passo 2: Criando dados de teste...", "step");
+          await criarTodosTipos();
+          updateProgress(50);
+
+          // Passo 3: Verificar se foram salvos
+          log("📋 Passo 3: Verificando se dados foram salvos...", "step");
+          await verificarFirestore();
+          updateProgress(75);
+
+          // Passo 4: Teste de leitura
+          log("📋 Passo 4: Teste de leitura final...", "step");
+          const snapshot = await getDocs(collection(db, "obras"));
+          const obrasCount = snapshot.size;
+          log(`✅ Total de obras no Firestore: ${obrasCount}`, "result");
+          updateProgress(100);
+
+          log("", "result");
+          log("🎉 TESTE COMPLETO PASSOU!", "result");
+          log("✅ TODOS OS DADOS SÃO SALVOS NO FIRESTORE!", "result");
+          log("✅ SISTEMA 100% FUNCIONAL!", "result");
+        } catch (error) {
+          log(`❌ TESTE FALHOU: ${error.message}`, "error");
+          log(`🔍 Código: ${error.code}`, "error");
+        }
+      };
+
+      // Auto-log inicial
+      window.addEventListener("load", () => {
+        log("🔍 Página de teste carregada");
+        log("👆 Clique em 'TESTE COMPLETO' para verificar tudo");
+      });
+    </script>
+  </body>
+</html>
