@@ -67,33 +67,31 @@ async function initializeFirestore(): Promise<Firestore | null> {
 
 // Tentar inicializar Firestore automaticamente
 if (!LOCAL_MODE) {
-  // Usar setTimeout para garantir que Firebase App foi inicializado primeiro
-  setTimeout(() => {
+  // Usar setTimeout assíncrono para garantir que Firebase App foi inicializado primeiro
+  setTimeout(async () => {
     if (!firestoreInstance) {
-      firestoreInstance = initializeFirestore();
+      firestoreInstance = await initializeFirestore();
     }
-  }, 500); // Aumentar delay para garantir inicialização
+  }, 1000); // Aumentar delay para garantir inicialização
 }
 
-// Função principal para obter Firestore
+// Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
   if (LOCAL_MODE) {
     console.log("📱 Firestore em modo local - dados guardados no localStorage");
     return null;
   }
 
-  // Tentar inicializar se ainda não foi feito
   if (!firestoreInstance) {
-    firestoreInstance = initializeFirestore();
-    if (!firestoreInstance) {
-      console.error("❌ Firestore não conseguiu ser inicializado");
-    }
+    console.warn(
+      "⚠️ Firestore ainda não foi inicializado - use getFirebaseFirestoreAsync()",
+    );
   }
 
   return firestoreInstance;
 }
 
-// Função assíncrona para obter Firestore
+// Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
   if (LOCAL_MODE) {
     console.log("📱 Firestore em modo local - dados guardados no localStorage");
@@ -102,7 +100,8 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
   // Tentar inicializar se ainda não foi feito
   if (!firestoreInstance) {
-    firestoreInstance = initializeFirestore();
+    console.log("🔄 Inicializando Firestore assincronamente...");
+    firestoreInstance = await initializeFirestore();
     if (!firestoreInstance) {
       console.error("❌ Firestore não conseguiu ser inicializado");
     }
