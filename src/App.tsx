@@ -277,7 +277,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há múltiplos projetos carregados
+      // Verificar se há m��ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -2424,144 +2424,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  // Push Notification functions
-  const requestNotificationPermission = async () => {
-    console.log("�� Requesting notification permission...");
-    if ("Notification" in window) {
-      try {
-        const permission = await Notification.requestPermission();
-        console.log("🔔 Permission result:", permission);
-        setPushPermission(permission);
-        if (permission === "granted") {
-          setNotificationsEnabled(true);
-          safeLocalStorage.setItem("notificationsEnabled", "true");
-          showNotification(
-            "Notificações Ativadas",
-            "Agora vai receber notificações de obras atribuídas",
-            "success",
-          );
-          console.log("✅ Notifications enabled successfully");
-        } else {
-          console.warn("❌ Notification permission denied or dismissed");
-        }
-        return permission;
-      } catch (error) {
-        console.error("€️ Error requesting notification permission:", error);
-        return "error";
-      }
-    }
-    console.warn("⚠️ Notifications not supported in this browser");
-    return "denied";
-  };
-
-  const showNotification = (title: string, body: string, type = "info") => {
-    if (Notification.permission === "granted") {
-      const notification = new Notification(title, {
-        body: body,
-        icon: "/icon-192x192.png",
-        badge: "/icon-192x192.png",
-        tag: type,
-        requireInteraction: true,
-      });
-
-      notification.onclick = () => {
-        window.focus();
-        notification.close();
-      };
-    }
-  };
-
-  const sendWorkAssignmentNotification = (
-    workTitle: string,
-    assignedTo: string,
-  ) => {
-    console.log("���� DEBUG: sendWorkAssignmentNotification called with:", {
-      workTitle,
-      assignedTo,
-      currentUser: currentUser?.name,
-      notificationsEnabled,
-      notificationPermission: Notification.permission,
-    });
-
-    // Always add to assigned works list when a work is assigned
-    const newAssignedWork = {
-      id: Date.now(),
-      title: workTitle,
-      assignedTo: assignedTo,
-      dateAssigned: new Date().toISOString(),
-      status: "Nova",
-    };
-    setAssignedWorks((prev) => [newAssignedWork, ...prev]);
-
-    // Check notification conditions
-
-    // Check if current user is the one assigned (exact match or partial match for combined assignments)
-    const isAssignedToCurrentUser =
-      currentUser &&
-      assignedTo &&
-      (assignedTo === currentUser?.name ||
-        assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
-        currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
-
-    console.log("🔍 DEBUG: Assignment check:", {
-      currentUser: currentUser?.name,
-      assignedTo,
-      exactMatch: currentUser?.name === assignedTo,
-      partialMatch: assignedTo
-        .toLowerCase()
-        .includes(currentUser?.name.toLowerCase()),
-      isAssignedToCurrentUser,
-    });
-
-    // Send notification if user is assigned to current user and notifications are enabled
-    if (isAssignedToCurrentUser) {
-      if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("📞 All conditions met, sending notification...");
-        showNotification(
-          "Nova Obra Atribuída",
-          `A obra "${workTitle}" foi-lhe atribuída`,
-          "work-assignment",
-        );
-      } else {
-        console.warn("��� Notification blocked, using alert fallback:", {
-          notificationsEnabled,
-          permission: Notification.permission,
-        });
-
-        // Show alert as fallback for better user experience
-        setTimeout(() => {
-          alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
-          );
-        }, 1000);
-      }
-    } else {
-      console.log("ℹ️ Notification not for current user:", {
-        currentUser: currentUser?.name,
-        assignedTo,
-        isAssignedToCurrentUser,
-      });
-    }
-
-    // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" ��� ${assignedTo}`);
-    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
-  };
-
-  const testPushNotification = () => {
-    if (Notification.permission === "granted") {
-      showNotification(
-        "Teste de Notificação",
-        "As notificações estão a funcionar corretamente!",
-        "test",
-      );
-    } else {
-      alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
-      );
-    }
-  };
-
   // Photo management functions
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -3110,7 +2972,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("❌ Login error:", error);
+              console.error("��� Login error:", error);
               setLoginError("Erro de sistema. Por favor, tente novamente.");
             }
           }}
@@ -8187,7 +8049,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€
+                        <strong>{maintenance.length}</strong> manuten���
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
