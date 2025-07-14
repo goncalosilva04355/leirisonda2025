@@ -809,7 +809,7 @@ function App() {
           const defaultUsers = [
             {
               id: 1,
-              name: "Gonçalo Fonseca",
+              name: "Gon��alo Fonseca",
               email: "gongonsilva@gmail.com",
               active: true,
               role: "super_admin",
@@ -5918,7 +5918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="cartucho">Filtro de Cartucho</option>
                           <option value="diatomaceas">Terra Diatomáceas</option>
                           <option value="uv">Sistema UV</option>
-                          <option value="sal">Eletr��lise de Sal</option>
+                          <option value="sal">Eletr����lise de Sal</option>
                         </select>
                       </div>
                       <div>
@@ -6893,28 +6893,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Notificações
                             </h3>
                             <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-red-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
                                   Sincronização Autom���tica
