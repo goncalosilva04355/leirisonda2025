@@ -248,7 +248,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               htmlFor="remember-me"
               className="ml-2 block text-sm text-gray-700"
             >
-              Lembrar-me (auto-login)
+              Lembrar-me
             </label>
           </div>
 
