@@ -273,9 +273,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           </div>
         </form>
       </div>
-
-      {/* Verificador de variáveis Netlify - Só em produção */}
-      <NetlifyEnvChecker />
     </div>
   );
 };
