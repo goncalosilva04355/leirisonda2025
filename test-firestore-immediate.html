@@ -1,0 +1,365 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Teste Imediato Firestore - Leirisonda</title>
+    <style>
+      body {
+        font-family: monospace;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+        margin: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .status {
+        margin: 10px 0;
+        padding: 15px;
+        border-left: 4px solid #ccc;
+        background: #333;
+      }
+      .success {
+        border-color: #0f0;
+        background: #001100;
+        color: #0f0;
+      }
+      .error {
+        border-color: #f00;
+        background: #110000;
+        color: #f00;
+      }
+      .warning {
+        border-color: #ff0;
+        background: #111100;
+        color: #ff0;
+      }
+      .info {
+        border-color: #0ff;
+        background: #001111;
+        color: #0ff;
+      }
+      .loading {
+        border-color: #ffa500;
+        background: #221100;
+        color: #ffa500;
+      }
+      pre {
+        background: #222;
+        padding: 10px;
+        overflow-x: auto;
+        color: #ccc;
+      }
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        cursor: pointer;
+        margin: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+      }
+      button:hover {
+        background: #005a9e;
+      }
+      h1 {
+        text-align: center;
+        color: #ff6b35;
+        margin-bottom: 30px;
+      }
+      .exec-time {
+        font-size: 12px;
+        opacity: 0.7;
+        float: right;
+      }
+      .critical {
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        50% {
+          opacity: 1;
+        }
+        51%,
+        100% {
+          opacity: 0.5;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔥 Teste Imediato Firestore - Leirisonda</h1>
+
+      <div class="status info">
+        <strong>📍 URL:</strong> <span id="currentUrl"></span><br />
+        <strong>🕐 Iniciado:</strong> <span id="startTime"></span>
+      </div>
+
+      <button onclick="runImmediateTest()">🚀 Executar Teste Agora</button>
+      <button onclick="clearResults()">🗑️ Limpar Resultados</button>
+
+      <div id="results"></div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        setDoc,
+        doc,
+        serverTimestamp,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      // Configuração Firebase Leirisonda - Projeto ativo
+      const firebaseConfig = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+        measurementId: "G-Q2QWQVH60L",
+      };
+
+      // Estado global
+      let app = null;
+      let db = null;
+      let testRunning = false;
+
+      // Funções de logging
+      function log(message, type = "info") {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString("pt-PT");
+
+        console.log(`[${timeStr}] ${message}`);
+
+        const div = document.createElement("div");
+        div.className = `status ${type}`;
+        div.innerHTML = `
+                <span class="exec-time">${timeStr}</span>
+                ${message}
+            `;
+        document.getElementById("results").appendChild(div);
+
+        // Auto-scroll
+        div.scrollIntoView({ behavior: "smooth" });
+      }
+
+      function clearResults() {
+        document.getElementById("results").innerHTML = "";
+      }
+
+      // Inicialização da página
+      function initPage() {
+        document.getElementById("currentUrl").textContent =
+          window.location.href;
+        document.getElementById("startTime").textContent =
+          new Date().toLocaleString("pt-PT");
+
+        log("🔍 Página de teste carregada", "info");
+        log("📋 Clique em 'Executar Teste Agora' para começar", "info");
+      }
+
+      // Teste imediato principal
+      window.runImmediateTest = async function () {
+        if (testRunning) {
+          log("⚠️ Teste já em execução, aguarde...", "warning");
+          return;
+        }
+
+        testRunning = true;
+        clearResults();
+
+        try {
+          log("🚀 INICIANDO TESTE IMEDIATO FIRESTORE", "loading");
+          log(`📊 Projeto: ${firebaseConfig.projectId}`, "info");
+
+          // Passo 1: Inicializar Firebase
+          log("🔧 Passo 1: Inicializando Firebase App...", "loading");
+          app = initializeApp(firebaseConfig);
+          log(`✅ Firebase App inicializada: ${app.name}`, "success");
+
+          // Passo 2: Inicializar Firestore
+          log("🔥 Passo 2: Inicializando Firestore...", "loading");
+          db = getFirestore(app);
+          log("✅ Firestore inicializado com sucesso", "success");
+
+          // Passo 3: Teste de escrita com addDoc
+          log("📝 Passo 3: Testando addDoc...", "loading");
+          const testData1 = {
+            message: "Teste imediato - addDoc",
+            timestamp: serverTimestamp(),
+            testType: "addDoc",
+            userAgent: navigator.userAgent,
+            url: window.location.href,
+            executed: new Date().toISOString(),
+          };
+
+          const docRef1 = await addDoc(
+            collection(db, "immediate_tests"),
+            testData1,
+          );
+          log(`✅ addDoc SUCESSO! Documento criado: ${docRef1.id}`, "success");
+
+          // Passo 4: Teste de escrita com setDoc
+          log("🔨 Passo 4: Testando setDoc...", "loading");
+          const testId = `immediate_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+          const testData2 = {
+            message: "Teste imediato - setDoc",
+            timestamp: serverTimestamp(),
+            testType: "setDoc",
+            customId: testId,
+            userAgent: navigator.userAgent,
+            url: window.location.href,
+            executed: new Date().toISOString(),
+          };
+
+          await setDoc(doc(db, "immediate_tests", testId), testData2);
+          log(`✅ setDoc SUCESSO! Documento criado: ${testId}`, "success");
+
+          // Passo 5: Teste de leitura
+          log("📖 Passo 5: Testando leitura de dados...", "loading");
+          const querySnapshot = await getDocs(
+            collection(db, "immediate_tests"),
+          );
+          let docCount = 0;
+          const recentDocs = [];
+
+          querySnapshot.forEach((doc) => {
+            docCount++;
+            recentDocs.push({
+              id: doc.id,
+              ...doc.data(),
+            });
+          });
+
+          log(
+            `✅ Leitura SUCESSO! ${docCount} documentos encontrados`,
+            "success",
+          );
+
+          // Mostrar documentos recentes
+          if (recentDocs.length > 0) {
+            const recent = recentDocs.slice(-3); // últimos 3
+            log(`📄 Últimos documentos criados:`, "info");
+            recent.forEach((doc) => {
+              log(`  - ${doc.id}: ${doc.message}`, "info");
+            });
+          }
+
+          // Passo 6: Teste de documento real tipo obra
+          log("🏗️ Passo 6: Testando documento tipo obra...", "loading");
+          const obraId = `obra_teste_${Date.now()}`;
+          const obraData = {
+            nome: "Obra Teste Firestore",
+            endereco: "Rua Teste, 123 - Lisboa",
+            cliente: "Cliente Teste Leirisonda",
+            status: "Em andamento",
+            tipo: "Piscina",
+            valor: 15000,
+            dataInicio: serverTimestamp(),
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            userId: "test_user",
+            source: "teste_imediato",
+          };
+
+          await setDoc(doc(db, "obras", obraId), obraData);
+          log(`✅ Documento obra SUCESSO! ID: ${obraId}`, "success");
+
+          // RESULTADO FINAL
+          log("", "info"); // espaço
+          log(
+            "🎉 TESTE IMEDIATO COMPLETO - TODOS OS TESTES PASSARAM!",
+            "success",
+          );
+          log(
+            "✅ Firestore está 100% FUNCIONAL para escrita e leitura!",
+            "success",
+          );
+          log(
+            "💾 Dados estão sendo gravados corretamente no Firebase",
+            "success",
+          );
+          log("", "info"); // espaço
+          log("📊 RESUMO:", "info");
+          log(`  - addDoc: ✅ Funcionando (${docRef1.id})`, "success");
+          log(`  - setDoc: ✅ Funcionando (${testId})`, "success");
+          log(`  - Leitura: ✅ Funcionando (${docCount} docs)`, "success");
+          log(`  - Obras: ✅ Funcionando (${obraId})`, "success");
+        } catch (error) {
+          log("", "info"); // espaço
+          log("💥 ERRO DETECTADO NO TESTE!", "error");
+          log(`❌ Erro: ${error.message}`, "error");
+          log(`🔍 Código: ${error.code || "N/A"}`, "error");
+
+          // Diagnóstico específico do erro
+          if (error.code === "permission-denied") {
+            log("🔒 PROBLEMA: Regras de segurança muito restritivas", "error");
+            log("💡 SOLUÇÃO: Verificar e ajustar firestore.rules", "warning");
+          } else if (error.code === "unavailable") {
+            log(
+              "🚫 PROBLEMA: Firestore não está habilitado no projeto",
+              "error",
+            );
+            log(
+              "💡 SOLUÇÃO: Habilitar Firestore no Firebase Console",
+              "warning",
+            );
+          } else if (error.code === "failed-precondition") {
+            log("⚙️ PROBLEMA: Configuração do projeto Firebase", "error");
+            log("💡 SOLUÇÃO: Verificar configuração do projeto", "warning");
+          } else {
+            log("❓ PROBLEMA: Erro desconhecido", "error");
+            log(
+              "💡 SOLUÇÃO: Verificar console do navegador para mais detalhes",
+              "warning",
+            );
+          }
+
+          // Stack trace em modo debug
+          if (error.stack) {
+            log("🔍 Stack trace:", "error");
+            log(`<pre>${error.stack}</pre>`, "error");
+          }
+        } finally {
+          testRunning = false;
+          log("", "info"); // espaço
+          log("🏁 Teste finalizado", "info");
+          log(
+            `🕐 Duração: ${(Date.now() - window.testStartTime) / 1000}s`,
+            "info",
+          );
+        }
+      };
+
+      // Auto-executar se URL contém parâmetro
+      window.addEventListener("load", () => {
+        initPage();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get("auto") === "true") {
+          log(
+            "🤖 Execução automática detectada, iniciando teste...",
+            "warning",
+          );
+          setTimeout(() => {
+            window.testStartTime = Date.now();
+            runImmediateTest();
+          }, 1000);
+        }
+      });
+
+      // Registrar tempo de início global
+      window.testStartTime = Date.now();
+    </script>
+  </body>
+</html>
