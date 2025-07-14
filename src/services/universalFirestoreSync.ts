@@ -1,4 +1,7 @@
-import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfigFixed";
+import {
+  getFirebaseFirestoreAsync,
+  checkAndShowInstructions,
+} from "../firebase/firestoreConfigFinal";
 import {
   collection,
   doc,
