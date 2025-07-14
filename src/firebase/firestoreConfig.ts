@@ -12,19 +12,34 @@ const LOCAL_MODE = false;
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
-// Inicializar Firestore automaticamente
-if (!LOCAL_MODE) {
+// Função para inicializar Firestore de forma segura
+function initializeFirestore(): Firestore | null {
+  if (LOCAL_MODE) return null;
+
   try {
     const app = getFirebaseApp();
-    if (app) {
-      firestoreInstance = getFirestore(app);
-      console.log("✅ Firestore inicializado com sucesso");
-    } else {
+    if (!app) {
       console.warn("⚠️ Firebase App não disponível para inicializar Firestore");
+      return null;
     }
+
+    const db = getFirestore(app);
+    console.log("✅ Firestore inicializado com sucesso");
+    return db;
   } catch (error: any) {
     console.error("❌ Erro ao inicializar Firestore:", error.message);
+    return null;
   }
+}
+
+// Tentar inicializar Firestore automaticamente
+if (!LOCAL_MODE) {
+  // Usar setTimeout para garantir que Firebase App foi inicializado primeiro
+  setTimeout(() => {
+    if (!firestoreInstance) {
+      firestoreInstance = initializeFirestore();
+    }
+  }, 100);
 }
 
 // Função principal para obter Firestore
