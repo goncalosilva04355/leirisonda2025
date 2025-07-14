@@ -264,28 +264,10 @@ function App() {
 
   // Verificar status da quota Firebase na inicialização
   useEffect(() => {
-    console.log("🔍 Verificando status da quota Firebase...");
+    console.log("🔍 Verificando e recuperando quota Firebase...");
 
-    // Tentar recuperação automática primeiro
-    const autoRecovered = autoRecoverOnInit();
-
-    // Verificar status atual
-    const status = FirebaseQuotaRecovery.checkQuotaStatus();
-    setQuotaStatus(status);
-
-    if (status.isBlocked) {
-      console.warn("⚠️ Firebase bloqueado por quota:", status);
-      setShowQuotaRecovery(true);
-    } else {
-      console.log("✅ Firebase não está bloqueado por quota");
-    }
-
-    // Monitorar mudanças na quota
-    const stopMonitoring = FirebaseQuotaRecovery.startQuotaMonitoring(30000);
-
-    return () => {
-      stopMonitoring();
-    };
+    // Tentar recuperação automática
+    autoRecoverOnInit();
   }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
