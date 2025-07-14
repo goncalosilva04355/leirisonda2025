@@ -56,6 +56,36 @@ export function FirestoreWriteTest() {
     }
   };
 
+  const runDebugTest = async () => {
+    setLoading(true);
+    try {
+      console.log("🔍 Executando teste debug detalhado...");
+      const result = await debugFirestoreWriteIssue();
+      setDebugResult(result);
+    } catch (error: any) {
+      console.error("Erro no teste debug:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const runQuickTest = async () => {
+    setLoading(true);
+    try {
+      console.log("🚀 Executando teste rápido...");
+      const success = await quickFirestoreTest();
+      if (success) {
+        alert("✅ Teste rápido PASSOU! Firestore está funcionando.");
+      } else {
+        alert("❌ Teste rápido FALHOU! Há problemas no Firestore.");
+      }
+    } catch (error: any) {
+      alert(`❌ Erro no teste rápido: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="p-6 bg-gray-900 text-white rounded-lg max-w-4xl mx-auto">
       <h2 className="text-2xl font-bold mb-6 text-center">
