@@ -3,49 +3,66 @@ import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
 
-// Estado: Firebase sempre ativo em produção, opcional em desenvolvimento
+// Estado: Firebase apenas ativo no Netlify (produção)
 const LOCAL_MODE = import.meta.env.DEV;
+const IS_NETLIFY_BUILD =
+  import.meta.env.NETLIFY === "true" ||
+  import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIREBASE_PRODUCTION =
-  !LOCAL_MODE || import.meta.env.VITE_FORCE_FIREBASE;
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
 
-// Wrapper para desenvolvimento
-if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
-  console.log("🚫 Firebase DESATIVADO em desenvolvimento");
+// Wrapper para desenvolvimento e detecção do Netlify
+if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  console.log("🚫 Firebase DESATIVADO - não está no Netlify");
   console.log("📝 Use apenas localStorage durante desenvolvimento");
-  console.log("🚀 Firebase será ativo automaticamente no Netlify");
+  console.log("🚀 Firebase será ativo automaticamente após deploy no Netlify");
+  console.log("🔍 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
 } else {
-  console.log("🔥 Firebase ATIVO - sincronização automática habilitada");
+  console.log("🔥 Firebase ATIVO - rodando no Netlify ou forçado");
+  console.log("🌐 Ambiente de produção detectado");
 }
 
-// Inicializar Firebase automaticamente (produção ou quando forçado)
+// Inicializar Firebase apenas no Netlify (produção)
 if (FORCE_FIREBASE_PRODUCTION) {
   try {
-    console.log("🔥 Iniciando Firebase com variáveis do Netlify...");
+    console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
     const config = getFirebaseConfig();
     console.log("🔧 Firebase Project:", config.projectId);
+    console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
 
     if (getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
       firebaseApp = initializeApp(config);
-      console.log("✅ Firebase inicializado com sucesso", firebaseApp.name);
+      console.log(
+        "✅ Firebase inicializado com sucesso no Netlify",
+        firebaseApp.name,
+      );
       console.log("🔍 Project ID ativo:", firebaseApp.options.projectId);
     } else {
       firebaseApp = getApp();
-      console.log("✅ Firebase já estava inicializado", firebaseApp.name);
+      console.log(
+        "✅ Firebase já estava inicializado no Netlify",
+        firebaseApp.name,
+      );
     }
   } catch (error: any) {
-    console.error("❌ Erro ao inicializar Firebase:", error.message);
+    console.error("❌ Erro ao inicializar Firebase no Netlify:", error.message);
     console.error("🔍 Stack trace:", error.stack);
+    console.log("📝 Verifique as variáveis de ambiente do Netlify");
   }
+} else {
+  console.log(
+    "⏸️ Firebase inicialização adiada - aguardando deploy no Netlify",
+  );
 }
 
 // Função robusta para obter a app Firebase
 export function getFirebaseApp(): FirebaseApp | null {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("📱 Firebase App em modo local");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("📱 Firebase App indisponível - aguardando deploy no Netlify");
     return null;
   }
 
@@ -69,8 +86,8 @@ export function getFirebaseApp(): FirebaseApp | null {
 
 // Função assíncrona para obter a app Firebase
 export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("📱 Firebase App em modo local");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("📱 Firebase App indisponível - aguardando deploy no Netlify");
     return null;
   }
 
@@ -94,7 +111,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
 
 // Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return false;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return false;
   return firebaseApp !== null;
 }
 
@@ -118,8 +135,8 @@ export const db = null;
 
 // Função para obter auth seguro
 export function getAuth() {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("🔐 Auth: modo local ativo");
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+    console.log("🔐 Auth indisponível - aguardando deploy no Netlify");
     return null;
   }
 
@@ -142,17 +159,17 @@ export const auth = null;
 
 // Funções de compatibilidade
 export const getDBAsync = async () => {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return await getFirebaseFirestoreAsync();
 };
 
 export const getAuthService = async () => {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return getAuth();
 };
 
 export const attemptFirestoreInit = async () => {
-  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
+  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return await getFirebaseFirestoreAsync();
 };
 
