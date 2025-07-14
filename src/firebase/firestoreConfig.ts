@@ -11,7 +11,7 @@ import { getApps, getApp } from "firebase/app";
 // Estado atual: Firestore ativo
 const LOCAL_MODE = false;
 
-// Variável para armazenar a instância do Firestore
+// Variável para armazenar a inst��ncia do Firestore
 let firestoreInstance: Firestore | null = null;
 
 // Função para aguardar Firebase App estar pronto
@@ -88,7 +88,23 @@ async function initializeFirestore(
       return initializeFirestore(retryCount + 1, maxRetries);
     }
 
-    console.error("🔍 Stack trace:", error.stack);
+    // Se todas as tentativas falharam, tentar configuração robusta
+    console.log("🔄 Tentando configuração robusta como fallback...");
+    try {
+      const { initializeRobustFirebase } = await import("./robustConfig");
+      const { db } = await initializeRobustFirebase();
+      if (db) {
+        console.log("✅ Firestore inicializado via configuração robusta!");
+        return db;
+      }
+    } catch (robustError: any) {
+      console.error(
+        "❌ Configuração robusta também falhou:",
+        robustError.message,
+      );
+    }
+
+    console.error("🔍 Stack trace original:", error.stack);
     return null;
   }
 }
