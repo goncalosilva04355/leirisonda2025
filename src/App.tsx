@@ -1457,6 +1457,63 @@ function App() {
       }
     };
 
+    // Listener para quando utilizador faz login
+    const handleUserLoggedIn = async (event: CustomEvent) => {
+      const { user, timestamp } = event.detail;
+      console.log(
+        "🔑 Utilizador fez login, verificando auto sync:",
+        user.email,
+      );
+
+      try {
+        // Aguardar um momento para o sistema se estabilizar
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if (isFirestoreReady()) {
+          const isAutoSyncCurrentlyActive = autoSyncService.isAutoSyncActive();
+
+          if (!isAutoSyncCurrentlyActive) {
+            console.log("🚀 Iniciando auto sync após login do utilizador...");
+            await autoSyncService.startAutoSync();
+            setAutoSyncActive(true);
+            console.log("✅ Auto sync iniciado com sucesso após login!");
+
+            // Sincronizar todos os dados imediatamente
+            await autoSyncService.syncAllCollections();
+            console.log("🔄 Sincronização completa executada após login");
+          } else {
+            console.log("✅ Auto sync já está ativo após login");
+            setAutoSyncActive(true);
+
+            // Forçar sincronização mesmo se já estiver ativo
+            await autoSyncService.syncAllCollections();
+            console.log("🔄 Sincronização manual executada após login");
+          }
+        } else {
+          console.log("⏳ Firestore não pronto, tentando novamente...");
+          setTimeout(async () => {
+            if (isFirestoreReady()) {
+              try {
+                await autoSyncService.startAutoSync();
+                setAutoSyncActive(true);
+                await autoSyncService.syncAllCollections();
+                console.log(
+                  "✅ Auto sync e sincronização executados após aguardar!",
+                );
+              } catch (error) {
+                console.error(
+                  "❌ Erro ao ativar auto sync após aguardar:",
+                  error,
+                );
+              }
+            }
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("❌ Erro ao processar login para auto sync:", error);
+      }
+    };
+
     // Adicionar listeners para todas as coleções
     const collections = [
       "obras",
