@@ -26,11 +26,13 @@ export class DataInputDiagnostic {
     console.log("🔥 Verificando Firebase...");
 
     try {
-      const { firebaseService } = await import("../firebase/robustConfig");
-      const isInit = await firebaseService.initialize();
-      console.log("✅ Firebase inicializado:", isInit);
+      const { getFirebaseApp, getAuth } = await import(
+        "../firebase/basicConfig"
+      );
+      const app = getFirebaseApp();
+      console.log("✅ Firebase inicializado:", !!app);
 
-      const auth = await firebaseService.getAuth();
+      const auth = getAuth();
       console.log("🔐 Firebase Auth disponível:", !!auth);
 
       const firestore = await firebaseService.getFirestore();
