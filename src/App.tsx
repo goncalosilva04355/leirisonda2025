@@ -769,7 +769,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+        console.log("�� Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -5217,7 +5217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Já atribuído:",
+                                    "| Já atribu��do:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
                                     !alreadyAssigned,
@@ -6875,7 +6875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observa��ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -7603,7 +7603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Bell className="h-6 w-6 text-blue-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações Push
+                                Notificaç��es Push
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -7805,7 +7805,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "���� Ativo"
+                                        ? "����� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7852,7 +7852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configuraç��es protegidas por palavra-passe para
+                              Configura����es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -11455,6 +11455,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Status de Sincronização Automática */}
                 <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
                   <AutoSyncIndicator />
+                  <div className="mt-2 pt-2 border-t border-green-300">
+                    <PostLoginAutoSyncIndicator className="text-xs" />
+                  </div>
                 </div>
 
                 <button
