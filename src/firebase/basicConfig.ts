@@ -3,8 +3,8 @@ import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
 
-// Estado: Firebase sempre ativo para produção
-const LOCAL_MODE = false;
+// Estado: Firebase DESATIVADO em desenvolvimento, ativo só no Netlify
+const LOCAL_MODE = import.meta.env.DEV;
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
