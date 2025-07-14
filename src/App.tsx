@@ -63,9 +63,7 @@ import {
   DataProtectionStatus,
 } from "./components/DataRestoredNotification";
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FCMNotificationSetup } from "./components/FCMNotificationSetup";
+
 import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
@@ -809,7 +807,7 @@ function App() {
           const defaultUsers = [
             {
               id: 1,
-              name: "Gon��alo Fonseca",
+              name: "Gonçalo Fonseca",
               email: "gongonsilva@gmail.com",
               active: true,
               role: "super_admin",
@@ -5918,7 +5916,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="cartucho">Filtro de Cartucho</option>
                           <option value="diatomaceas">Terra Diatomáceas</option>
                           <option value="uv">Sistema UV</option>
-                          <option value="sal">Eletr����lise de Sal</option>
+                          <option value="sal">Eletr��lise de Sal</option>
                         </select>
                       </div>
                       <div>
@@ -9498,7 +9496,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ���gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -11624,7 +11622,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Localização
+                            Localiza��ão
                           </label>
                           <button
                             onClick={() => {
