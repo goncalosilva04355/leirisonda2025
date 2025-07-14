@@ -1,6 +1,8 @@
 // Sistema inteligente de detecção de Firestore
 // Verifica automaticamente se Firestore está disponível e ajusta o comportamento da app
 
+import { firebaseLogControl } from "./firebaseLogControl";
+
 interface FirestoreStatus {
   available: boolean;
   checked: boolean;
