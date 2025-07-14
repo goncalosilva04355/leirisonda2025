@@ -8,8 +8,8 @@ import {
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
-// Estado atual: Firestore ativo
-const LOCAL_MODE = false;
+// Estado atual: Firestore DESATIVADO em desenvolvimento
+const LOCAL_MODE = import.meta.env.DEV;
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
