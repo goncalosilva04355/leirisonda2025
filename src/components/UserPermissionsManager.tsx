@@ -298,15 +298,18 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
 };
 
 export const UserPermissionsManager: React.FC = () => {
-  const [users, setUsers] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    documents: users,
+    loading,
+    error: firestoreError,
+    update,
+    save,
+    deleteDoc,
+    refresh,
+  } = useUsers();
   const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    loadUsers();
-  }, []);
 
   const loadUsers = async () => {
     setLoading(true);
