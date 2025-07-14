@@ -1532,6 +1532,12 @@ function App() {
       );
     });
 
+    // Adicionar listener para login de utilizador
+    window.addEventListener(
+      "userLoggedIn",
+      handleUserLoggedIn as EventListener,
+    );
+
     // Cleanup listeners
     return () => {
       collections.forEach((collection) => {
@@ -2017,7 +2023,7 @@ function App() {
       console.log("��� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("��� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -7082,7 +7088,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-center space-x-2">
                           <Settings className="h-4 w-4" />
-                          <span>Configura��ões</span>
+                          <span>Configura���ões</span>
                         </div>
                       </button>
                       {(currentUser?.role === "super_admin" ||
