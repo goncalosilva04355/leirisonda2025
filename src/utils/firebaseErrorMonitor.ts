@@ -129,12 +129,16 @@ export class FirebaseErrorMonitor {
 
   private async reinitializeFirebase(): Promise<void> {
     try {
-      const { firebaseService } = await import("../firebase/robustConfig");
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
 
-      // Force reinitialize
-      await firebaseService.initialize();
+      // Check if Firebase is working
+      const app = getFirebaseApp();
 
-      console.log("✅ Firebase reinitialized successfully");
+      if (app) {
+        console.log("✅ Firebase reinitialized successfully");
+      } else {
+        throw new Error("Firebase app not available");
+      }
     } catch (error) {
       console.error("❌ Firebase reinitialization failed:", error);
       throw error;
