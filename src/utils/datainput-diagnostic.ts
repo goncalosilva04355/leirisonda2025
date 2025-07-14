@@ -23,6 +23,12 @@ export class DataInputDiagnostic {
   }
 
   private static async checkFirebaseStatus(): Promise<void> {
+    // Firebase desativado em desenvolvimento
+    if (import.meta.env.DEV) {
+      console.log("🚫 Firebase desativado em desenvolvimento");
+      return;
+    }
+
     console.log("🔥 Verificando Firebase...");
 
     try {
