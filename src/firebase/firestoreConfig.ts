@@ -8,8 +8,10 @@ import {
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
-// Estado atual: Firestore DESATIVADO em desenvolvimento
+// Estado atual: Firestore sempre ativo em produção
 const LOCAL_MODE = import.meta.env.DEV;
+const FORCE_FIRESTORE_PRODUCTION =
+  !LOCAL_MODE || import.meta.env.VITE_FORCE_FIREBASE;
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
@@ -44,7 +46,7 @@ async function initializeFirestore(
   retryCount = 0,
   maxRetries = 2,
 ): Promise<Firestore | null> {
-  if (LOCAL_MODE) return null;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
 
   try {
     console.log(
@@ -98,8 +100,8 @@ async function initializeFirestore(
   }
 }
 
-// Tentar inicializar Firestore automaticamente
-if (!LOCAL_MODE) {
+// Tentar inicializar Firestore automaticamente (produção ou quando forçado)
+if (FORCE_FIRESTORE_PRODUCTION) {
   // Usar setTimeout assíncrono para garantir que Firebase App foi inicializado primeiro
   setTimeout(async () => {
     if (!firestoreInstance) {
@@ -145,7 +147,7 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (LOCAL_MODE) return false;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return false;
   return firestoreInstance !== null;
 }
 

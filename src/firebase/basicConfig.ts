@@ -3,21 +3,25 @@ import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
 
-// Estado: Firebase DESATIVADO em desenvolvimento, ativo só no Netlify
+// Estado: Firebase sempre ativo em produção, opcional em desenvolvimento
 const LOCAL_MODE = import.meta.env.DEV;
+const FORCE_FIREBASE_PRODUCTION =
+  !LOCAL_MODE || import.meta.env.VITE_FORCE_FIREBASE;
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
 
 // Wrapper para desenvolvimento
-if (LOCAL_MODE) {
+if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
   console.log("🚫 Firebase DESATIVADO em desenvolvimento");
   console.log("📝 Use apenas localStorage durante desenvolvimento");
-  console.log("🚀 Firebase será ativo apenas no Netlify");
+  console.log("🚀 Firebase será ativo automaticamente no Netlify");
+} else {
+  console.log("🔥 Firebase ATIVO - sincronização automática habilitada");
 }
 
-// Inicializar Firebase automaticamente (apenas em produção)
-if (!LOCAL_MODE) {
+// Inicializar Firebase automaticamente (produção ou quando forçado)
+if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase com variáveis do Netlify...");
     const config = getFirebaseConfig();
@@ -40,7 +44,7 @@ if (!LOCAL_MODE) {
 
 // Função robusta para obter a app Firebase
 export function getFirebaseApp(): FirebaseApp | null {
-  if (LOCAL_MODE) {
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
     console.log("📱 Firebase App em modo local");
     return null;
   }
@@ -65,7 +69,7 @@ export function getFirebaseApp(): FirebaseApp | null {
 
 // Função assíncrona para obter a app Firebase
 export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
-  if (LOCAL_MODE) {
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
     console.log("📱 Firebase App em modo local");
     return null;
   }
@@ -90,7 +94,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
 
 // Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  if (LOCAL_MODE) return false;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return false;
   return firebaseApp !== null;
 }
 
@@ -114,7 +118,7 @@ export const db = null;
 
 // Função para obter auth seguro
 export function getAuth() {
-  if (LOCAL_MODE) {
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) {
     console.log("🔐 Auth: modo local ativo");
     return null;
   }
@@ -138,26 +142,26 @@ export const auth = null;
 
 // Funções de compatibilidade
 export const getDBAsync = async () => {
-  if (LOCAL_MODE) return null;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return await getFirebaseFirestoreAsync();
 };
 
 export const getAuthService = async () => {
-  if (LOCAL_MODE) return null;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return getAuth();
 };
 
 export const attemptFirestoreInit = async () => {
-  if (LOCAL_MODE) return null;
+  if (LOCAL_MODE && !import.meta.env.VITE_FORCE_FIREBASE) return null;
   return await getFirebaseFirestoreAsync();
 };
 
 export const waitForFirebaseInit = () =>
-  Promise.resolve(!LOCAL_MODE && firebaseApp !== null);
+  Promise.resolve(FORCE_FIREBASE_PRODUCTION && firebaseApp !== null);
 export const isFirebaseAuthAvailable = () =>
-  !LOCAL_MODE && firebaseApp !== null;
+  FORCE_FIREBASE_PRODUCTION && firebaseApp !== null;
 export const isFirebaseFirestoreAvailable = () =>
-  !LOCAL_MODE && firebaseApp !== null;
+  FORCE_FIREBASE_PRODUCTION && firebaseApp !== null;
 export const testFirebaseFirestore = async () => {
   console.log("💾 Use testFirestore() diretamente do firestoreConfig");
   return false;
