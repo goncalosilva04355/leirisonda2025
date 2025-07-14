@@ -46,19 +46,37 @@ export function getFirebaseConfig() {
   const usingNetlifyVars = !isPlaceholder(
     import.meta.env.VITE_FIREBASE_API_KEY,
   );
+  const isNetlifyBuild =
+    import.meta.env.NETLIFY === "true" ||
+    import.meta.env.VITE_IS_NETLIFY === "true";
 
-  if (usingNetlifyVars) {
-    console.log("✅ Firebase: usando variáveis do Netlify", config.projectId);
+  console.log("🔍 Firebase Environment Detection:");
+  console.log("  - NETLIFY:", import.meta.env.NETLIFY);
+  console.log("  - VITE_IS_NETLIFY:", import.meta.env.VITE_IS_NETLIFY);
+  console.log("  - Using Netlify vars:", usingNetlifyVars);
+  console.log("  - Is Netlify build:", isNetlifyBuild);
+
+  if (usingNetlifyVars && isNetlifyBuild) {
+    console.log("✅ Firebase: CONFIGURADO COM VARIÁVEIS DO NETLIFY");
+    console.log("🚀 Projeto ativo:", config.projectId);
+    console.log("🔑 API Key configurada:", config.apiKey ? "✅" : "❌");
+    console.log("🏠 Auth Domain:", config.authDomain);
+  } else if (usingNetlifyVars) {
+    console.log("⚠️ Firebase: usando variáveis mas não no Netlify");
+    console.log("🔄 Projeto:", config.projectId);
   } else {
-    console.log(
-      "🔄 Firebase: usando fallback local (Leirisonda)",
-      config.projectId,
-    );
-    console.log("📝 No Netlify, usará as suas variáveis VITE_FIREBASE_*");
+    console.log("🔄 Firebase: usando fallback local (Leirisonda)");
+    console.log("📝 Deploy no Netlify usará as suas variáveis VITE_FIREBASE_*");
+    console.log("🎯 Projeto fallback:", config.projectId);
   }
 
   // Verificar se a configuração é válida
   if (!config.apiKey || !config.projectId || !config.authDomain) {
+    console.error("❌ Configuração Firebase inválida:", {
+      apiKey: !!config.apiKey,
+      projectId: !!config.projectId,
+      authDomain: !!config.authDomain,
+    });
     throw new Error("Configuração Firebase inválida");
   }
 
