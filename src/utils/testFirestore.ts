@@ -5,6 +5,12 @@ import {
 } from "../firebase/basicConfig";
 
 export async function runFirestoreTest() {
+  // Firebase desativado em desenvolvimento
+  if (import.meta.env.DEV) {
+    console.log("🚫 Teste Firestore desativado em desenvolvimento");
+    return;
+  }
+
   console.log("🧪 Teste Firestore - Passo 3");
 
   try {
