@@ -7,7 +7,7 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
 } from "firebase/auth";
-import { firebaseService } from "../firebase/robustConfig";
+import { getAuth } from "../firebase/basicConfig";
 
 export interface FirebaseAuthFixResult {
   success: boolean;
