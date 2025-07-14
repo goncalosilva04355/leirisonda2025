@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Debug Firebase Environment - Leirisonda</title>
+    <style>
+      body {
+        font-family: monospace;
+        padding: 20px;
+        background: #1a1a1a;
+        color: #fff;
+      }
+      .status {
+        margin: 10px 0;
+        padding: 10px;
+        border-left: 4px solid #ccc;
+      }
+      .success {
+        border-color: #0f0;
+        background: #001100;
+      }
+      .error {
+        border-color: #f00;
+        background: #110000;
+      }
+      .warning {
+        border-color: #ff0;
+        background: #111100;
+      }
+      .info {
+        border-color: #0ff;
+        background: #001111;
+      }
+      pre {
+        background: #333;
+        padding: 10px;
+        overflow-x: auto;
+      }
+      button {
+        background: #007acc;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔍 Debug Ambiente Firebase - Leirisonda</h1>
+
+    <button onclick="checkEnvironment()">🔍 Verificar Ambiente</button>
+    <button onclick="testNetlifyVars()">🌐 Testar Variáveis Netlify</button>
+    <button onclick="forceFirebaseTest()">🔥 Forçar Teste Firebase</button>
+
+    <div id="results"></div>
+
+    <script>
+      function log(message, type = 'info') {
+          const div = document.createElement('div');
+          div.className = `status ${type}`;
+          div.innerHTML = message;
+          document.getElementById('results').appendChild(div);
+      }
+
+      function checkEnvironment() {
+          document.getElementById('results').innerHTML = '';
+
+          log("🔍 <strong>VERIFICAÇÃO DE AMBIENTE</strong>");
+
+          // Verificar se estamos no desenvolvimento
+          const isDev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+          log(`📍 Ambiente: ${isDev ? 'DESENVOLVIMENTO' : 'PRODUÇÃO'}`, isDev ? 'warning' : 'success');
+
+          // Verificar URL atual
+          log(`🌐 URL atual: ${window.location.href}`, 'info');
+
+          // Verificar se há variáveis de ambiente expostas
+          const hasViteVars = typeof import !== 'undefined';
+          log(`⚙️ Suporte import.meta: ${hasViteVars ? 'SIM' : 'NÃO'}`, hasViteVars ? 'success' : 'error');
+
+          // Simular verificação do Firebase
+          const firebaseConfig = {
+              apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+              projectId: "leiria-1cfc9",
+              authDomain: "leiria-1cfc9.firebaseapp.com"
+          };
+
+          log(`🔥 Projeto Firebase: <strong>${firebaseConfig.projectId}</strong>`, 'success');
+          log(`🔑 API Key presente: ${firebaseConfig.apiKey ? 'SIM' : 'NÃO'}`, firebaseConfig.apiKey ? 'success' : 'error');
+          log(`🏠 Auth Domain: ${firebaseConfig.authDomain}`, 'info');
+
+          // Verificar se estamos no Netlify
+          const isNetlify = window.location.hostname.includes('netlify') ||
+                           window.location.hostname.includes('.app') ||
+                           window.location.hostname !== 'localhost';
+          log(`🌐 Detectado Netlify: ${isNetlify ? 'SIM' : 'NÃO'}`, isNetlify ? 'success' : 'warning');
+
+          // Status do localStorage
+          try {
+              localStorage.setItem('test', 'test');
+              localStorage.removeItem('test');
+              log("💾 localStorage: FUNCIONANDO", 'success');
+          } catch (e) {
+              log("💾 localStorage: ERRO", 'error');
+          }
+      }
+
+      function testNetlifyVars() {
+          log("🌐 <strong>TESTE VARIÁVEIS NETLIFY</strong>");
+
+          // Lista de variáveis que deveriam existir no Netlify
+          const expectedVars = [
+              'VITE_FIREBASE_API_KEY',
+              'VITE_FIREBASE_AUTH_DOMAIN',
+              'VITE_FIREBASE_PROJECT_ID',
+              'VITE_FIREBASE_STORAGE_BUCKET',
+              'VITE_FIREBASE_MESSAGING_SENDER_ID',
+              'VITE_FIREBASE_APP_ID'
+          ];
+
+          // Como estamos em HTML puro, simular verificação
+          const isNetlifyBuild = window.location.hostname.includes('netlify') ||
+                                window.location.hostname.includes('.app');
+
+          if (isNetlifyBuild) {
+              log("✅ Ambiente Netlify detectado", 'success');
+              log("📝 Variáveis VITE_FIREBASE_* devem estar configuradas no Netlify", 'info');
+          } else {
+              log("⚠️ Não está no Netlify - usando fallback local", 'warning');
+              log("🔧 Deploy no Netlify ativará as variáveis de ambiente", 'info');
+          }
+
+          log("💡 <strong>IMPORTANTE:</strong> Firebase só funciona 100% após deploy no Netlify com as variáveis configuradas", 'warning');
+      }
+
+      async function forceFirebaseTest() {
+          log("🔥 <strong>TESTE FIREBASE FORÇADO</strong>");
+
+          try {
+              // Importar Firebase
+              const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+              const { getFirestore, doc, setDoc, serverTimestamp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+
+              log("✅ Firebase SDK carregado", 'success');
+
+              const firebaseConfig = {
+                  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+                  authDomain: "leiria-1cfc9.firebaseapp.com",
+                  databaseURL: "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+                  projectId: "leiria-1cfc9",
+                  storageBucket: "leiria-1cfc9.firebasestorage.app",
+                  messagingSenderId: "632599887141",
+                  appId: "1:632599887141:web:1290b471d41fc3ad64eecc"
+              };
+
+              const app = initializeApp(firebaseConfig);
+              log("✅ Firebase App inicializada", 'success');
+
+              const db = getFirestore(app);
+              log("✅ Firestore obtido", 'success');
+
+              // Teste de escrita
+              const testId = `debug_test_${Date.now()}`;
+              await setDoc(doc(db, "debug_tests", testId), {
+                  message: "Teste de debug ambiente",
+                  timestamp: serverTimestamp(),
+                  userAgent: navigator.userAgent,
+                  url: window.location.href,
+                  testType: "environment_debug"
+              });
+
+              log(`🎉 <strong>SUCESSO!</strong> Documento gravado no Firestore com ID: ${testId}`, 'success');
+              log("✅ Firestore está FUNCIONANDO PERFEITAMENTE!", 'success');
+
+          } catch (error) {
+              log(`❌ <strong>ERRO:</strong> ${error.message}`, 'error');
+              log(`🔍 Código: ${error.code || 'N/A'}`, 'error');
+              log(`📍 Stack: <pre>${error.stack}</pre>`, 'error');
+
+              if (error.code === 'permission-denied') {
+                  log("🔒 Problema de PERMISSÕES - verificar Firestore Rules", 'error');
+              } else if (error.code === 'unavailable') {
+                  log("🚫 Firestore INDISPONÍVEL - serviço desabilitado?", 'error');
+              } else {
+                  log("❓ Erro desconhecido - verificar configuração", 'error');
+              }
+          }
+      }
+
+      // Executar verificação automática
+      checkEnvironment();
+    </script>
+  </body>
+</html>
