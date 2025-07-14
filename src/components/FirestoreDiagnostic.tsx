@@ -74,10 +74,13 @@ Force Firebase: ${forceFirebaseEnabled}
       if (!isNetlify && !forceFirebaseEnabled) {
         addDiagnostic({
           step: "Configuração Firebase",
-          status: "warning",
-          message: "Firebase está desativado em desenvolvimento",
-          details:
-            "Para testar localmente, ative VITE_FORCE_FIREBASE=true ou use o botão 'Forçar Firebase'",
+          status: "success",
+          message:
+            "Firebase desativado durante desenvolvimento (configurado corretamente)",
+          details: `VITE_FORCE_FIREBASE=${import.meta.env.VITE_FORCE_FIREBASE}
+Modo desenvolvimento: ${isDev}
+Aplicação funcionará com localStorage apenas
+Firebase será ativado automaticamente no Netlify`,
         });
         setIsRunning(false);
         return;
