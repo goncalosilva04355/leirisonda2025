@@ -5,16 +5,26 @@ import {
   firestoreService,
   testFirestoreConnection,
 } from "../services/firestoreDataService";
+import { smartFirestore } from "../utils/smartFirestoreDetection";
 
 export function FirestoreTest() {
   const [testResult, setTestResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [firebaseStatus, setFirebaseStatus] = useState<string>("");
+  const [firestoreStatus, setFirestoreStatus] = useState<any>(null);
 
   useEffect(() => {
     // Verificar status do Firebase ao carregar
     checkFirebaseStatus();
+
+    // Verificar status do Firestore
+    checkFirestoreStatus();
   }, []);
+
+  const checkFirestoreStatus = async () => {
+    const status = await smartFirestore.checkFirestoreAvailability();
+    setFirestoreStatus(status);
+  };
 
   const checkFirebaseStatus = () => {
     const envVars = {
