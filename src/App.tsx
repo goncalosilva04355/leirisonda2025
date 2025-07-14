@@ -1840,7 +1840,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("📞 Navigating to dashboard");
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -3002,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -10059,7 +10059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instalaç��o
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -10977,6 +10977,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       showNotifications={false}
     >
       <InstantSyncManagerSafe>
+        {/* Auto-fix Firebase quota issues */}
+        <AutoFirebaseQuotaFix />
+
         <div className="min-h-screen bg-gray-50">
           {/* Status da sincronização automática */}
           <ProductionSyncStatus />
