@@ -2,12 +2,6 @@
 import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
-import {
-  getFirebaseFirestore,
-  getFirebaseFirestoreAsync,
-  isFirestoreReady,
-  testFirestore,
-} from "./firestoreConfig";
 
 // Estado: Firebase ativo
 const LOCAL_MODE = false;
@@ -87,29 +81,10 @@ export function isFirebaseReady(): boolean {
   return firebaseApp !== null;
 }
 
-// Função para obter db seguro
+// Função para obter db seguro - usar firestoreConfig diretamente
 export function getDB() {
-  if (LOCAL_MODE) {
-    console.log("💾 Banco de dados: modo local ativo");
-    return null;
-  }
-
-  // Usar lazy loading para evitar dependência circular
-  try {
-    const apps = getApps();
-    if (apps.length === 0) {
-      console.warn("💾 Firebase App não inicializada ainda");
-      return null;
-    }
-
-    const app = getApp();
-    // Use getFirestore directly from import to avoid circular dependency
-    const { getFirestore } = await import("firebase/firestore");
-    return getFirestore(app);
-  } catch (error: any) {
-    console.error("💾 Erro ao obter DB:", error.message);
-    return null;
-  }
+  console.log("💾 Use getFirebaseFirestore() diretamente do firestoreConfig");
+  return null;
 }
 
 // Função para verificar se Firestore está disponível (sempre retorna fallback)
