@@ -156,6 +156,7 @@ import {
   fixAuthenticationIssues,
   autoFixIfNeeded,
 } from "./utils/forceLoginFix";
+import { FirestoreGuaranteeButton } from "./components/FirestoreGuaranteeButton";
 
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
@@ -455,7 +456,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -1361,7 +1362,7 @@ function App() {
                 const autoSyncStarted =
                   await autoSyncService.ensureAutoSyncAfterLogin();
                 setAutoSyncActive(autoSyncStarted);
-                console.log("✅ Auto sync garantido ap��s aguardar Firestore!");
+                console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
                   "❌ Erro ao garantir auto sync após aguardar:",
@@ -7281,7 +7282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers����o</span>
+                        <span className="text-gray-600">Vers���o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7505,7 +7506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    ����
+                                    ��
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
