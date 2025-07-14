@@ -80,7 +80,7 @@ import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronizaç��o automática para produção
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
@@ -152,6 +152,8 @@ import { FirestoreTest } from "./components/FirestoreTest";
 
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
+// Detecção inteligente de Firestore
+import "./utils/smartFirestoreDetection";
 
 // Teste de login
 import "./utils/testLogin";
@@ -418,14 +420,14 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR�����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
     // Verificaç��es automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionar📞 normalmente sem verifica��ões constantes
     // Sistema funcionar�� normalmente sem verificações autom📞ticas
   }, []);
 
@@ -10682,7 +10684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>���</span>
-                  <span>Observaç€s e próxima manutenção</span>
+                  <span>Observaç€s e pr��xima manutenção</span>
                 </div>
               </div>
             </div>
