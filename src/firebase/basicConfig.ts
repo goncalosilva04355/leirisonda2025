@@ -12,16 +12,26 @@ let firebaseApp: FirebaseApp | null = null;
 // Inicializar Firebase automaticamente
 if (!LOCAL_MODE) {
   try {
+    console.log("🔥 Iniciando configuração Firebase...");
     const config = getFirebaseConfig();
+    console.log("🔧 Config Firebase:", {
+      projectId: config.projectId,
+      authDomain: config.authDomain,
+      apiKey: config.apiKey.substring(0, 20) + "...",
+    });
+
     if (getApps().length === 0) {
+      console.log("🎆 Inicializando nova Firebase App...");
       firebaseApp = initializeApp(config);
-      console.log("✅ Firebase inicializado com sucesso");
+      console.log("✅ Firebase inicializado com sucesso", firebaseApp.name);
+      console.log("🔍 Project ID ativo:", firebaseApp.options.projectId);
     } else {
       firebaseApp = getApp();
-      console.log("✅ Firebase já estava inicializado");
+      console.log("✅ Firebase já estava inicializado", firebaseApp.name);
     }
   } catch (error: any) {
     console.error("❌ Erro ao inicializar Firebase:", error.message);
+    console.error("🔍 Stack trace:", error.stack);
   }
 }
 
