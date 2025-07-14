@@ -86,9 +86,7 @@ export async function diagnoseFirebaseSetup() {
   }
 }
 
-// Executar diagnóstico automaticamente em desenvolvimento
-if (import.meta.env.VITE_FORCE_FIREBASE) {
-  setTimeout(() => {
-    diagnoseFirebaseSetup();
-  }, 2000);
-}
+// Diagnóstico disponível mas não executado automaticamente
+// Use smartFirestoreDetection.ts para detecção automática
+// Para executar manualmente: diagnoseFirebaseSetup()
+export { diagnoseFirebaseSetup };
