@@ -82,10 +82,17 @@ export class DataPersistenceManager {
         status.recommendations.push("Verificar configuração do Firebase");
       }
     } catch (error) {
-      status.issues.push(`Erro no Firestore: ${error}`);
-      status.recommendations.push(
-        "Verificar ligação à internet e configuração Firebase",
-      );
+      // Não reportar como erro se Firestore simplesmente não está habilitado
+      if (error.toString().includes("Service firestore is not available")) {
+        status.recommendations.push(
+          "Firestore não habilitado - aplicação funciona com localStorage",
+        );
+      } else {
+        status.issues.push(`Problema no Firestore: ${error}`);
+        status.recommendations.push(
+          "Verificar ligação à internet e configuração Firebase",
+        );
+      }
     }
 
     // Determinar se o sistema está funcional
