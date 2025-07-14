@@ -2,6 +2,12 @@
 import { getFirebaseApp, isFirebaseReady } from "../firebase/basicConfig";
 
 export function testFirebaseBasic() {
+  // Firebase desativado em desenvolvimento
+  if (import.meta.env.DEV) {
+    console.log("🚫 Teste Firebase básico desativado em desenvolvimento");
+    return false;
+  }
+
   console.log("🧪 Teste Firebase Básico - Passo 1");
 
   try {
@@ -38,7 +44,9 @@ export function testFirebaseBasic() {
   }
 }
 
-// Executar teste automaticamente
-setTimeout(() => {
-  testFirebaseBasic();
-}, 1000);
+// Executar teste automaticamente (apenas em produção)
+if (!import.meta.env.DEV) {
+  setTimeout(() => {
+    testFirebaseBasic();
+  }, 1000);
+}

@@ -115,14 +115,18 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
       );
     }
 
-    // Atualizar a cada 5 segundos com proteção
-    const interval = setInterval(() => {
-      try {
-        checkStatus();
-      } catch (error) {
-        console.error("❌ AutoSyncIndicator: Erro no interval:", error);
-      }
-    }, 5000);
+    // Desativar polling durante desenvolvimento para evitar refresh no Builder.io
+    let interval: NodeJS.Timeout | null = null;
+    if (!import.meta.env.DEV) {
+      // Atualizar a cada 5 segundos com proteção
+      interval = setInterval(() => {
+        try {
+          checkStatus();
+        } catch (error) {
+          console.error("❌ AutoSyncIndicator: Erro no interval:", error);
+        }
+      }, 5000);
+    }
 
     // Escutar eventos de sync com proteção
     const handleAutoSyncStarted = () => {

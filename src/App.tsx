@@ -82,9 +82,10 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
-import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
+// Desativados durante desenvolvimento para evitar refresh no Builder.io
+// import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+// import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
+// import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -101,11 +102,12 @@ import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
+// Desativados durante desenvolvimento para evitar refresh no Builder.io
 // Firebase works silently in background - no diagnostics or UI needed
-import("./firebase/ultimateSimpleFirebase");
-import { ForceInitialization } from "./utils/forceInitialization";
+// import("./firebase/ultimateSimpleFirebase");
+// import { ForceInitialization } from "./utils/forceInitialization";
 // Teste simples Firebase Leiria
-import("./utils/testeLeiria");
+// import("./utils/testeLeiria");
 // Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
@@ -132,8 +134,8 @@ import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
-// Monitor de erros Firebase para detectar e corrigir automaticamente
-import "./utils/firebaseErrorMonitor";
+// Monitor de erros Firebase desativado durante desenvolvimento
+// import "./utils/firebaseErrorMonitor";
 import FirebaseFixButton from "./components/FirebaseFixButton";
 
 // Inicialização de emergência de utilizadores
@@ -295,7 +297,7 @@ function App() {
         hasQuotaIssues ||
         hasEmergencyShutdown
       ) {
-        console.log("�� Firebase conflict detected on mobile device");
+        console.log("���� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -508,7 +510,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notifica��ões de atribuição de obra...");
+      console.log("📱 Enviando notifica����ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -546,7 +548,7 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `⚠️ Utilizador ${assignedUser.name} n��o encontrado na lista`,
             );
             continue;
           }
@@ -1177,7 +1179,7 @@ function App() {
         if (savedPhoneDialer !== null) {
           setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
           console.log(
-            "✅ Configuração Phone Dialer carregada:",
+            "✅ Configura��ão Phone Dialer carregada:",
             JSON.parse(savedPhoneDialer),
           );
         }
@@ -1410,7 +1412,7 @@ function App() {
         }
       } else {
         console.log(
-          "⚠️ Firestore não disponível, tentando novamente em 10 segundos...",
+          "���️ Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -3023,8 +3025,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display */}
-                <FirebaseStatusDisplay compact={true} expandable={true} />
+                {/* Firebase Status Display - Apenas em produção */}
+                {!import.meta.env.DEV && (
+                  <FirebaseStatusDisplay compact={true} expandable={true} />
+                )}
 
                 {/* Simple Welcome Header */}
                 <div
@@ -3106,7 +3110,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }`}
                         title={
                           autoSyncActive
-                            ? "Sincronização Autom��tica Ativa"
+                            ? "Sincronização Autom����tica Ativa"
                             : "Sincronização Automática Inativa"
                         }
                       ></div>
@@ -4094,7 +4098,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manutenções
+                      Futuras Manuten��ões
                     </button>
                   </div>
                 </div>
@@ -4382,7 +4386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        ��� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -8384,7 +8388,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>��� Histórico de serviços</li>
+                        <li>��� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>

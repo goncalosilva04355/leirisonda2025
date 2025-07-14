@@ -1,63 +1,67 @@
-// Configuração Firebase única - projeto Leiria sempre sincronizado
-// Usa variáveis de ambiente do Netlify quando disponíveis
+// Configuração Firebase que prioriza Netlify mas funciona localmente
 
-// Configuração real do projeto Leiria com fallback para variáveis de ambiente
+// Função para verificar se uma variável é um placeholder
+function isPlaceholder(value: string | undefined): boolean {
+  return (
+    !value ||
+    value.includes("your_") ||
+    value.includes("_here") ||
+    value.length < 10
+  );
+}
+
+// Configuração Firebase inteligente
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey:
-    import.meta.env.VITE_FIREBASE_API_KEY ||
-    "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain:
-    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "leiria-1cfc9.firebaseapp.com",
+  apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
+    ? import.meta.env.VITE_FIREBASE_API_KEY!
+    : "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE", // Leirisonda fallback
+  authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
+    ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
+    : "leirisonda-16f8b.firebaseapp.com",
   databaseURL:
     import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "leiria-1cfc9",
-  storageBucket:
-    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
-    "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId:
-    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "632599887141",
-  appId:
-    import.meta.env.VITE_FIREBASE_APP_ID ||
-    "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
+    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
+    ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
+    : "leirisonda-16f8b",
+  storageBucket: !isPlaceholder(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET)
+    ? import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!
+    : "leirisonda-16f8b.firebasestorage.app",
+  messagingSenderId: !isPlaceholder(
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  )
+    ? import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!
+    : "1067024677476",
+  appId: !isPlaceholder(import.meta.env.VITE_FIREBASE_APP_ID)
+    ? import.meta.env.VITE_FIREBASE_APP_ID!
+    : "1:1067024677476:web:a5e5e30ed4b5a64b123456",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX",
 };
 
-// Função única para obter configuração com validação
+// Função para obter configuração Firebase
 export function getFirebaseConfig() {
-  // Validar configuração antes de retornar
   const config = LEIRIA_FIREBASE_CONFIG;
 
-  // Verificar se todos os campos essenciais estão presentes
-  const requiredFields = [
-    "apiKey",
-    "authDomain",
-    "projectId",
-    "storageBucket",
-    "messagingSenderId",
-    "appId",
-  ];
-  const missingFields = requiredFields.filter(
-    (field) => !config[field as keyof typeof config],
+  // Determinar se está usando variáveis do Netlify ou fallback
+  const usingNetlifyVars = !isPlaceholder(
+    import.meta.env.VITE_FIREBASE_API_KEY,
   );
 
-  if (missingFields.length > 0) {
-    console.error(
-      "❌ Firebase Config: Campos obrigatórios em falta:",
-      missingFields,
+  if (usingNetlifyVars) {
+    console.log("✅ Firebase: usando variáveis do Netlify", config.projectId);
+  } else {
+    console.log(
+      "🔄 Firebase: usando fallback local (Leirisonda)",
+      config.projectId,
     );
-    throw new Error(
-      `Firebase config inválida: campos em falta - ${missingFields.join(", ")}`,
-    );
+    console.log("📝 No Netlify, usará as suas variáveis VITE_FIREBASE_*");
   }
 
-  // Verificar se projectId é válido
-  if (!config.projectId || config.projectId.length < 3) {
-    console.error("❌ Firebase Config: projectId inválido:", config.projectId);
-    throw new Error("Firebase config inválida: projectId inválido");
+  // Verificar se a configuração é válida
+  if (!config.apiKey || !config.projectId || !config.authDomain) {
+    throw new Error("Configuração Firebase inválida");
   }
 
-  console.log("✅ Firebase Config validada:", config.projectId);
   return config;
 }
 

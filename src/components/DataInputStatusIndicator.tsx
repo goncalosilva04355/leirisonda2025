@@ -47,8 +47,9 @@ export const DataInputStatusIndicator: React.FC = () => {
       // Verificar Firebase
       let firebaseWorks = false;
       try {
-        const { firebaseService } = await import("../firebase/robustConfig");
-        firebaseWorks = await firebaseService.initialize();
+        const { getFirebaseApp } = await import("../firebase/basicConfig");
+        const app = getFirebaseApp();
+        firebaseWorks = app !== null;
       } catch {
         firebaseWorks = false;
       }

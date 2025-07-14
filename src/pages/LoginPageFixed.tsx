@@ -6,6 +6,7 @@ import {
 } from "../services/firestoreDataService";
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 import { LoginHints } from "../components/LoginHints";
+import NetlifyEnvChecker from "../components/NetlifyEnvChecker";
 
 interface LoginPageProps {
   onLogin: (
@@ -153,7 +154,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           sessionStorage.removeItem("savedLoginCredentials");
         }
 
-        console.log("📤 LoginPage: Calling onLogin function...");
+        console.log("�� LoginPage: Calling onLogin function...");
         await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
         console.log("✅ LoginPage: onLogin completed");
       } catch (error) {
@@ -270,10 +271,12 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
                 )}
               </div>
             )}
-            {/* Status Firebase sempre conectado */}
-            <div className="flex items-center justify-center">
-              <FirebaseAlwaysOnStatus />
-            </div>
+            {/* Status Firebase - Apenas em produção */}
+            {!import.meta.env.DEV && (
+              <div className="flex items-center justify-center">
+                <FirebaseAlwaysOnStatus />
+              </div>
+            )}
           </div>
 
           {/* Error Message */}
@@ -310,6 +313,9 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           </div>
         </form>
       </div>
+
+      {/* Verificador de variáveis Netlify - Só em produção */}
+      <NetlifyEnvChecker />
     </div>
   );
 };
