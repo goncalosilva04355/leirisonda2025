@@ -348,6 +348,10 @@ function App() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
+
+  // Firebase quota recovery states
+  const [quotaStatus, setQuotaStatus] = useState<any>(null);
+  const [showQuotaRecovery, setShowQuotaRecovery] = useState(false);
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
 
@@ -9508,7 +9512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
+                          Observaç��es
                         </h3>
                       </div>
 
@@ -10639,7 +10643,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
             <div className="bg-gray-50 rounded-lg p-4 mb-6">
               <h4 className="font-medium text-gray-900 mb-2">
-                Conteúdo do Relatório:
+                Conteúdo do Relat��rio:
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
