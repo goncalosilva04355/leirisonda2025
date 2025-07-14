@@ -176,6 +176,126 @@ export function FirestoreWriteTest() {
         </div>
       )}
 
+      {/* Resultado do debug detalhado */}
+      {debugResult && (
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-3">🔍 Debug Detalhado</h3>
+
+          {/* Ambiente */}
+          <div className="mb-4">
+            <h4 className="text-lg font-semibold mb-2">🌍 Ambiente:</h4>
+            <div className="bg-gray-800 p-3 rounded space-y-1 text-sm">
+              <p>
+                <strong>Desenvolvimento:</strong>{" "}
+                {debugResult.environment.isDev ? "SIM" : "NÃO"}
+              </p>
+              <p>
+                <strong>Netlify:</strong>{" "}
+                {debugResult.environment.isNetlify ? "SIM" : "NÃO"}
+              </p>
+              <p>
+                <strong>Firebase Forçado:</strong>{" "}
+                {debugResult.environment.forceFirebase ? "SIM" : "NÃO"}
+              </p>
+              <p>
+                <strong>URL:</strong> {debugResult.environment.url}
+              </p>
+            </div>
+          </div>
+
+          {/* Conexão Firestore */}
+          <div className="mb-4">
+            <h4 className="text-lg font-semibold mb-2">
+              🔥 Conexão Firestore:
+            </h4>
+            <div
+              className={`p-3 rounded ${debugResult.firestoreConnection.status === "success" ? "bg-green-900" : "bg-red-900"}`}
+            >
+              <p>
+                <strong>Status:</strong>{" "}
+                {debugResult.firestoreConnection.status}
+              </p>
+              {debugResult.firestoreConnection.error && (
+                <p>
+                  <strong>Erro:</strong> {debugResult.firestoreConnection.error}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Testes de Escrita */}
+          {debugResult.writeTests &&
+            Object.keys(debugResult.writeTests).length > 0 && (
+              <div className="mb-4">
+                <h4 className="text-lg font-semibold mb-2">
+                  📝 Testes de Escrita:
+                </h4>
+                <div className="space-y-2">
+                  {Object.entries(debugResult.writeTests).map(
+                    ([test, result]: [string, any]) => (
+                      <div
+                        key={test}
+                        className={`p-2 rounded ${result.status === "success" ? "bg-green-900" : "bg-red-900"}`}
+                      >
+                        <p>
+                          <strong>{test}:</strong> {result.status}
+                        </p>
+                        {result.id && (
+                          <p>
+                            <strong>ID:</strong> {result.id}
+                          </p>
+                        )}
+                        {result.error && (
+                          <p>
+                            <strong>Erro:</strong> {result.error}
+                          </p>
+                        )}
+                      </div>
+                    ),
+                  )}
+                </div>
+              </div>
+            )}
+
+          {/* Problemas e Recomendações */}
+          {debugResult.issues && debugResult.issues.length > 0 && (
+            <div className="mb-4">
+              <h4 className="text-lg font-semibold mb-2 text-red-400">
+                ⚠️ Problemas:
+              </h4>
+              <ul className="space-y-1">
+                {debugResult.issues.map((issue: string, i: number) => (
+                  <li key={i} className="text-red-300 flex items-start gap-2">
+                    <span className="text-red-500 font-bold">{i + 1}.</span>
+                    <span>{issue}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {debugResult.recommendations &&
+            debugResult.recommendations.length > 0 && (
+              <div className="mb-4">
+                <h4 className="text-lg font-semibold mb-2 text-blue-400">
+                  💡 Recomendações:
+                </h4>
+                <ul className="space-y-1">
+                  {debugResult.recommendations.map((rec: string, i: number) => (
+                    <li
+                      key={i}
+                      className="text-blue-300 flex items-start gap-2"
+                    >
+                      <span className="text-blue-500 font-bold">{i + 1}.</span>
+                      <span>{rec}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+        </div>
+      )}
+
       {/* Resultado do diagnóstico */}
       {diagnosis && (
         <div className="mb-6">
