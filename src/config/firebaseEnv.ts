@@ -29,6 +29,33 @@ export const LEIRIA_FIREBASE_CONFIG = {
 
 // Função única para obter configuração com validação
 export function getFirebaseConfig() {
+  // Log das variáveis de ambiente para verificar se Netlify está funcionando
+  console.log("🔍 Verificando variáveis de ambiente do Netlify:");
+  console.log(
+    "VITE_FIREBASE_API_KEY:",
+    import.meta.env.VITE_FIREBASE_API_KEY ? "✅ Presente" : "❌ Ausente",
+  );
+  console.log(
+    "VITE_FIREBASE_PROJECT_ID:",
+    import.meta.env.VITE_FIREBASE_PROJECT_ID ? "✅ Presente" : "❌ Ausente",
+  );
+  console.log(
+    "VITE_FIREBASE_AUTH_DOMAIN:",
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ? "✅ Presente" : "❌ Ausente",
+  );
+  console.log(
+    "VITE_LEIRISONDA_FIREBASE_API_KEY:",
+    import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY
+      ? "✅ Presente"
+      : "❌ Ausente",
+  );
+  console.log(
+    "VITE_LEIRISONDA_FIREBASE_PROJECT_ID:",
+    import.meta.env.VITE_LEIRISONDA_FIREBASE_PROJECT_ID
+      ? "✅ Presente"
+      : "❌ Ausente",
+  );
+
   // Validar configuração antes de retornar
   const config = LEIRIA_FIREBASE_CONFIG;
 
