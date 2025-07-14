@@ -4,6 +4,7 @@ import {
   getFirestore,
   connectFirestoreEmulator,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
@@ -168,9 +169,6 @@ export async function testFirestore(): Promise<boolean> {
     return false;
   }
 }
-
-// Imports necessários
-import { doc, getDoc } from "firebase/firestore";
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
