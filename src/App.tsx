@@ -41,6 +41,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
+import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
