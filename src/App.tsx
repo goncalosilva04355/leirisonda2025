@@ -82,9 +82,10 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 import { autoSyncService } from "./services/autoSyncService";
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
-import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
-import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
-import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
+// Desativados durante desenvolvimento para evitar refresh no Builder.io
+// import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
+// import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
+// import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -508,7 +509,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notifica��ões de atribuição de obra...");
+      console.log("📱 Enviando notifica����ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -546,7 +547,7 @@ function App() {
           const user = allUsers.find((u: any) => u.id === assignedUser.id);
           if (!user) {
             console.warn(
-              `⚠️ Utilizador ${assignedUser.name} não encontrado na lista`,
+              `⚠️ Utilizador ${assignedUser.name} n��o encontrado na lista`,
             );
             continue;
           }
@@ -4384,7 +4385,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        📞 {maint.clientContact}
+                                        ��� {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -8386,7 +8387,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>��� Histórico de serviços</li>
+                        <li>��� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
