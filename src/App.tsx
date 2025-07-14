@@ -728,9 +728,6 @@ function App() {
         console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
-        // Enviar notifica��ões mesmo no fallback
-        await sendWorkAssignmentNotifications(data);
-
         return result;
       }
     } catch (error) {
@@ -8085,7 +8082,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Orçamentos e custos</li>
+                        <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -9740,7 +9737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ���gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10536,7 +10533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   P��gina não encontrada
                 </h1>
                 <p className="text-gray-600">
-                  A seç€ solicitada n��o foi encontrada.
+                  A seç€ solicitada não foi encontrada.
                 </p>
               </div>
             </div>
