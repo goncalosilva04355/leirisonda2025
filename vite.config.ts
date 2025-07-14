@@ -32,6 +32,15 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    hmr: {
+      // Reduzir freqüência de HMR para evitar refreshes no Builder.io
+      overlay: false, // Desativar overlay de erros
+    },
+    watch: {
+      // Reduzir watch sensitivity
+      ignored: ["**/node_modules/**", "**/dist/**"],
+      usePolling: false,
+    },
   },
   css: {
     postcss: "./postcss.config.cjs",
