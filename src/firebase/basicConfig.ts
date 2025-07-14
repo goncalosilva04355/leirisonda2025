@@ -102,8 +102,9 @@ export function getDB() {
       return null;
     }
 
-    const { getFirestore } = require("firebase/firestore");
     const app = getApp();
+    // Use getFirestore directly from import to avoid circular dependency
+    const { getFirestore } = await import("firebase/firestore");
     return getFirestore(app);
   } catch (error: any) {
     console.error("💾 Erro ao obter DB:", error.message);
