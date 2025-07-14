@@ -518,17 +518,32 @@ function App() {
   // Funções de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
-      console.log("🏊 addPool iniciado com Firestore ativo");
+      console.log("🏊 addPool iniciado - GARANTIDO SALVAR NO FIRESTORE");
 
-      // Usar serviço offline-first
-      const firestoreId = await offlineFirstService.createPool(data);
-      if (firestoreId) {
-        console.log("✅ Piscina criada:", firestoreId);
+      // GARANTIR que é salvo no Firestore usando sistema universal
+      const firestoreId = await saveToFirestore.piscina({
+        ...data,
+        id: data.id || `piscina_${Date.now()}`,
+        createdBy: currentUser?.name || "Sistema",
+        createdAt: new Date().toISOString(),
+      });
+
+      console.log("✅ Piscina GARANTIDAMENTE salva no Firestore:", firestoreId);
+
+      // Também manter compatibilidade com sistema existente
+      try {
+        await addPiscina(data);
+      } catch (error) {
+        console.warn(
+          "⚠️ Sistema antigo falhou mas Firestore já salvou:",
+          error,
+        );
       }
 
-      return await addPiscina(data);
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro no sistema de piscinas:", error);
+      // Fallback para sistema antigo se tudo falhar
       return await addPiscina(data);
     }
   };
@@ -4518,7 +4533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Conclu���do"}
+                                    : "Conclu��do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -6602,7 +6617,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Qu��micos Utilizados
+                        Produtos Químicos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -8156,7 +8171,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        Crie relat���rios com filtros específicos
+                        Crie relat📞rios com filtros específicos
                       </p>
                       <div className="space-y-2">
                         <label className="flex items-center">
@@ -11152,7 +11167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizaç��es - Para super_admin e admin */}
+                {/* Localizações - Para super_admin e admin */}
                 {/* Clientes */}
                 {hasPermission("clientes", "view") && (
                   <button
