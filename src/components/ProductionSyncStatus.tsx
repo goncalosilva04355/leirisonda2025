@@ -40,8 +40,8 @@ export function ProductionSyncStatus() {
   }, []);
 
   // Não mostrar em desenvolvimento unless forçado
-  const isDev = import.meta.env.DEV;
-  const showInDev = import.meta.env.VITE_FORCE_FIREBASE;
+  const isDev = (import.meta as any).env?.DEV;
+  const showInDev = (import.meta as any).env?.VITE_FORCE_FIREBASE;
 
   if (isDev && !showInDev) {
     return null;
