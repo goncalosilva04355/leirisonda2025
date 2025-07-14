@@ -6940,7 +6940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Autom��tica
+                                  Sincronização Autom���tica
                                 </span>
                                 <button
                                   onClick={() =>
@@ -10441,7 +10441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relatório
+                  Escolha como pretende partilhar o relat��rio
                 </p>
               </div>
             </div>
@@ -10622,13 +10622,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               lastSync,
               syncWithFirebase,
               enableSync,
-            }}
-            notifications={{
-              pushPermission,
-              notificationsEnabled,
-              requestNotificationPermission,
-              testPushNotification,
-              sendWorkAssignmentNotification,
             }}
           />
         );
