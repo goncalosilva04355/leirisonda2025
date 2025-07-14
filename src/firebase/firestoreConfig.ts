@@ -4,7 +4,7 @@ import {
   getFirestore,
   connectFirestoreEmulator,
 } from "firebase/firestore";
-import { getFirebaseApp } from "./basicConfig";
+import { getApps, getApp } from "firebase/app";
 
 // Estado atual: Firestore ativo
 const LOCAL_MODE = false;
@@ -17,12 +17,14 @@ function initializeFirestore(): Firestore | null {
   if (LOCAL_MODE) return null;
 
   try {
-    const app = getFirebaseApp();
-    if (!app) {
-      console.warn("⚠️ Firebase App não disponível para inicializar Firestore");
+    // Obter Firebase App diretamente para evitar dependência circular
+    const apps = getApps();
+    if (apps.length === 0) {
+      console.warn("⚠️ Nenhuma Firebase App inicializada ainda");
       return null;
     }
 
+    const app = getApp(); // Pega a app padrão
     const db = getFirestore(app);
     console.log("✅ Firestore inicializado com sucesso");
     return db;
