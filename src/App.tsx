@@ -375,10 +375,6 @@ function App() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
-
-  // Firebase quota recovery states
-  const [quotaStatus, setQuotaStatus] = useState<any>(null);
-  const [showQuotaRecovery, setShowQuotaRecovery] = useState(false);
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
 
@@ -6182,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Caracter����sticas especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter��sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -8093,7 +8089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>������ Hist��rico de serviços</li>
+                        <li>���� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -9310,7 +9306,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
-                            <option value="furo">Furo de ��gua</option>
+                            <option value="furo">Furo de Água</option>
                           </select>
                         </div>
 
@@ -9414,7 +9410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* T��cnicos Atribuídos */}
+                    {/* Técnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10188,7 +10184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç�����">Reparação</option>
+                          <option value="Reparaç���">Reparação</option>
                         </select>
                       </div>
                       <div>
