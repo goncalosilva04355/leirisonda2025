@@ -29,7 +29,7 @@ function initializeFirestore(): Firestore | null {
     console.log("✅ Firestore inicializado com sucesso");
     return db;
   } catch (error: any) {
-    console.error("❌ Erro ao inicializar Firestore:", error.message);
+    console.error("��� Erro ao inicializar Firestore:", error.message);
     return null;
   }
 }
@@ -41,7 +41,7 @@ if (!LOCAL_MODE) {
     if (!firestoreInstance) {
       firestoreInstance = initializeFirestore();
     }
-  }, 100);
+  }, 500); // Aumentar delay para garantir inicialização
 }
 
 // Função principal para obter Firestore
@@ -123,12 +123,13 @@ export async function forceFirestoreInit(): Promise<boolean> {
   }
 
   try {
-    const app = getFirebaseApp();
-    if (!app) {
-      console.error("❌ Firebase App não disponível para forçar Firestore");
+    const apps = getApps();
+    if (apps.length === 0) {
+      console.error("❌ Nenhuma Firebase App disponível para forçar Firestore");
       return false;
     }
 
+    const app = getApp();
     firestoreInstance = getFirestore(app);
     console.log("✅ Firestore inicialização forçada com sucesso");
     return true;
