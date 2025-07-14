@@ -24,7 +24,6 @@ import {
   AlertCircle,
   Download,
   ArrowLeft,
-  Bell,
   FileText,
   MapPin,
   Share,
@@ -9673,7 +9672,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ���gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da �����gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10367,7 +10366,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    ← Voltar aos Utilizadores
+                    ��� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
