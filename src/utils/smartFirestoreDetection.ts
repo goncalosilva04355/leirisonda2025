@@ -59,6 +59,7 @@ class SmartFirestoreDetection {
         error: null,
       };
 
+      firebaseLogControl.markFirestoreWorking();
       console.log(
         `✅ Firestore disponível no projeto: ${app.options.projectId}`,
       );
