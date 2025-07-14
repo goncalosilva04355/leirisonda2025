@@ -51,7 +51,9 @@ export default function FirestoreDiagnostic() {
       const isDev = import.meta.env.DEV;
       const hasFirebaseVars = !!import.meta.env.VITE_FIREBASE_API_KEY;
       const forceFirebaseEnabled =
-        import.meta.env.VITE_FORCE_FIREBASE || forceFirebase;
+        import.meta.env.VITE_FORCE_FIREBASE === "true" ||
+        import.meta.env.VITE_FORCE_FIREBASE === true ||
+        forceFirebase;
 
       addDiagnostic({
         step: "Variáveis de Ambiente",
@@ -71,7 +73,7 @@ Force Firebase: ${forceFirebaseEnabled}
 
       if (!isNetlify && !forceFirebaseEnabled) {
         addDiagnostic({
-          step: "Configura��ão Firebase",
+          step: "Configuração Firebase",
           status: "warning",
           message: "Firebase está desativado em desenvolvimento",
           details:
