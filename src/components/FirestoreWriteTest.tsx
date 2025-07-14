@@ -3,6 +3,10 @@ import {
   testFirestoreWriteCapability,
   diagnoseFirestoreIssues,
 } from "../utils/testFirestoreWrite";
+import {
+  debugFirestoreWriteIssue,
+  quickFirestoreTest,
+} from "../utils/firestoreDebugTest";
 
 interface TestResult {
   success: boolean;
