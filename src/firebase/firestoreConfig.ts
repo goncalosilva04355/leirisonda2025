@@ -8,13 +8,17 @@ import {
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
-// Estado atual: Firestore apenas ativo no Netlify (produção)
+// Estado: Firestore inteligente - só ativa se disponível
 const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIRESTORE_PRODUCTION =
   IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
+
+// Flag para controlar se já verificamos a disponibilidade do Firestore
+let firestoreAvailabilityChecked = false;
+let firestoreIsAvailable = false;
 
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
@@ -46,24 +50,38 @@ async function waitForFirebaseApp(
 
 // Função para verificar se Firestore está disponível no projeto
 async function checkFirestoreAvailability(app: any): Promise<boolean> {
+  // Se já verificamos, retornar o resultado cached
+  if (firestoreAvailabilityChecked) {
+    return firestoreIsAvailable;
+  }
+
   try {
     // Tentar importar Firestore usando getImmediate para verificar disponibilidade
     const { getFirestore } = await import("firebase/firestore");
     const db = getFirestore(app);
     console.log("✅ Firestore disponível no projeto:", app.options.projectId);
+
+    firestoreAvailabilityChecked = true;
+    firestoreIsAvailable = true;
     return true;
   } catch (error: any) {
+    firestoreAvailabilityChecked = true;
+    firestoreIsAvailable = false;
+
     if (
       error.code === "firestore/unavailable" ||
       error.message.includes("Service firestore is not available")
     ) {
-      console.error(
-        `❌ Firestore não está habilitado no projeto ${app.options.projectId}`,
+      console.warn(
+        `⚠️ Firestore não habilitado no projeto ${app.options.projectId}`,
       );
-      console.error("💡 Solução: Habilite Firestore no Firebase Console");
-      console.error(
+      console.info(
+        "💡 Para habilitar: Firebase Console → Firestore Database → Criar base de dados",
+      );
+      console.info(
         `🔗 https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
       );
+      console.info("📱 Aplicação funcionará perfeitamente com localStorage");
       return false;
     }
     console.error("❌ Erro inesperado ao verificar Firestore:", error);
@@ -157,23 +175,25 @@ async function initializeFirestore(
   }
 }
 
-// Tentar inicializar Firestore apenas no Netlify (produção)
+// Tentar inicializar Firestore se forçado ou em produção
 if (FORCE_FIRESTORE_PRODUCTION) {
-  console.log("🔥 Firestore: inicialização agendada para ambiente Netlify");
+  console.log("🔥 Verificando disponibilidade do Firestore...");
   // Usar setTimeout assíncrono para garantir que Firebase App foi inicializado primeiro
   setTimeout(async () => {
     if (!firestoreInstance) {
-      console.log("🚀 Iniciando Firestore após deploy no Netlify...");
+      console.log("🔍 Testando Firestore no projeto...");
       firestoreInstance = await initializeFirestore();
       if (firestoreInstance) {
-        console.log("✅ Firestore ativo no ambiente de produção (Netlify)");
+        console.log("✅ Firestore ativo e funcional");
+      } else {
+        console.info(
+          "📱 Modo localStorage ativo - aplicação funcionará normalmente",
+        );
       }
     }
-  }, 1000); // Aumentar delay para garantir inicialização
+  }, 1000);
 } else {
-  console.log(
-    "⏸️ Firestore inicialização adiada - aguardando deploy no Netlify",
-  );
+  console.log("⏸️ Firestore verificação adiada - aguardando deploy no Netlify");
 }
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
@@ -195,7 +215,7 @@ export function getFirebaseFirestore(): Firestore | null {
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
   if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
+    console.log("�� Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
 
