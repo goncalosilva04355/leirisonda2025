@@ -23,6 +23,7 @@ interface DiagnosisResult {
 export function FirestoreWriteTest() {
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [diagnosis, setDiagnosis] = useState<DiagnosisResult | null>(null);
+  const [debugResult, setDebugResult] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
 
   const runWriteTest = async () => {
