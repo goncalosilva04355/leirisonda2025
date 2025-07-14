@@ -17,19 +17,32 @@ function initializeFirestore(): Firestore | null {
   if (LOCAL_MODE) return null;
 
   try {
+    console.log("💾 Tentando inicializar Firestore...");
+
     // Obter Firebase App diretamente para evitar dependência circular
     const apps = getApps();
+    console.log("📱 Firebase Apps disponíveis:", apps.length);
+
     if (apps.length === 0) {
       console.warn("⚠️ Nenhuma Firebase App inicializada ainda");
       return null;
     }
 
     const app = getApp(); // Pega a app padrão
+    console.log("🎆 Firebase App obtida:", {
+      name: app.name,
+      projectId: app.options.projectId,
+      authDomain: app.options.authDomain,
+    });
+
+    console.log("💾 Chamando getFirestore()...");
     const db = getFirestore(app);
-    console.log("✅ Firestore inicializado com sucesso");
+    console.log("✅ Firestore inicializado com sucesso", typeof db);
     return db;
   } catch (error: any) {
-    console.error("��� Erro ao inicializar Firestore:", error.message);
+    console.error("❌ Erro ao inicializar Firestore:", error.message);
+    console.error("🔍 Error code:", error.code);
+    console.error("🔍 Stack trace:", error.stack);
     return null;
   }
 }
