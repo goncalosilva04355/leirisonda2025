@@ -3,7 +3,7 @@ import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
 
-// Estado: Firebase ativo
+// Estado: Firebase sempre ativo para produção
 const LOCAL_MODE = false;
 
 // Variável para armazenar a instância do Firebase
@@ -12,23 +12,9 @@ let firebaseApp: FirebaseApp | null = null;
 // Inicializar Firebase automaticamente
 if (!LOCAL_MODE) {
   try {
-    console.log("🔥 Iniciando configuração Firebase...");
+    console.log("🔥 Iniciando Firebase com variáveis do Netlify...");
     const config = getFirebaseConfig();
-    console.log("🔧 Config Firebase completa:", {
-      projectId: config.projectId,
-      authDomain: config.authDomain,
-      apiKey: config.apiKey.substring(0, 20) + "...",
-      storageBucket: config.storageBucket,
-      messagingSenderId: config.messagingSenderId,
-      appId: config.appId.substring(0, 20) + "...",
-    });
-
-    // Verificar se é uma configuração válida
-    if (config.projectId.includes("your_") || config.apiKey.includes("your_")) {
-      console.warn(
-        "⚠️ Detectada configuração placeholder - tentando fallback...",
-      );
-    }
+    console.log("🔧 Firebase Project:", config.projectId);
 
     if (getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
