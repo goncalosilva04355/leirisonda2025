@@ -87,10 +87,12 @@ class FirebaseAuthFix {
     try {
       console.log("🔧 Ensuring Firebase is ready...");
 
-      // Force reinitialize if needed
-      const isReady = await firebaseService.initialize();
-      if (!isReady) {
-        throw new Error("Firebase initialization failed");
+      // Check if Firebase app is available
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
+      const app = getFirebaseApp();
+
+      if (!app) {
+        throw new Error("Firebase app not available");
       }
 
       console.log("✅ Firebase ready");
@@ -102,7 +104,7 @@ class FirebaseAuthFix {
 
   private async getSafeAuthInstance(): Promise<Auth | null> {
     try {
-      const auth = await firebaseService.getAuth();
+      const auth = getAuth();
 
       if (!auth) {
         console.warn("⚠️ No auth instance available");
