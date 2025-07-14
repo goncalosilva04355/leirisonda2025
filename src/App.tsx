@@ -11086,11 +11086,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             )}
           </div>
 
-          {/* Sync Status Indicator - Top Right */}
-          <div className="fixed top-4 right-4 z-[60]">
-            <SyncStatusIndicator />
-          </div>
-
           {/* Mobile Overlay */}
           {sidebarOpen && (
             <div
