@@ -1,454 +1,337 @@
-// Serviço centralizado do Firestore para todas as entidades
 import {
   collection,
   doc,
-  getDocs,
-  getDoc,
   addDoc,
+  setDoc,
+  getDoc,
+  getDocs,
   updateDoc,
   deleteDoc,
-  setDoc,
   query,
   where,
   orderBy,
   limit,
-  onSnapshot,
   Timestamp,
-  writeBatch,
 } from "firebase/firestore";
-import { getFirebaseFirestore } from "../firebase/leiriaConfig";
+import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfig";
 
-export interface FirestoreEntity {
+export interface FirestoreDocument {
   id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
   [key: string]: any;
 }
 
 export class FirestoreService {
-  private db = getFirebaseFirestore();
+  private static instance: FirestoreService;
+  private db: any = null;
 
-  // Verificar se Firestore está disponível
-  private isAvailable(): boolean {
-    return this.db !== null;
+  private constructor() {}
+
+  static getInstance(): FirestoreService {
+    if (!FirestoreService.instance) {
+      FirestoreService.instance = new FirestoreService();
+    }
+    return FirestoreService.instance;
   }
 
-  // Triggerar sincronização automática após operações
-  private async triggerAutoSync(
-    collectionName: string,
-    operation: "create" | "update" | "delete",
-    data?: any,
-  ): Promise<void> {
-    try {
-      const { autoSyncService } = await import("./autoSyncService");
-      await autoSyncService.forceSyncAfterOperation(
-        collectionName,
-        operation,
-        data,
-      );
-    } catch (error) {
-      console.warn(
-        `⚠️ Erro na sincronização automática de ${collectionName}:`,
-        error,
-      );
+  private async getDb() {
+    if (!this.db) {
+      this.db = await getFirebaseFirestoreAsync();
+      if (!this.db) {
+        console.warn(
+          "Firestore n��o está disponível - usando fallback localStorage",
+        );
+        return null;
+      }
     }
+    return this.db;
   }
 
-  // CRUD genérico para qualquer coleção
-  async create<T extends FirestoreEntity>(
-    collectionName: string,
-    data: T,
-  ): Promise<string | null> {
-    if (!this.isAvailable()) {
-      console.warn(`Firestore não disponível para criar ${collectionName}`);
-      return null;
-    }
-
+  // Salvar um documento com ID automático
+  async addDocument(collectionName: string, data: any): Promise<string | null> {
     try {
-      const now = new Date().toISOString();
-      const docRef = await addDoc(collection(this.db!, collectionName), {
+      const db = await this.getDb();
+      if (!db) {
+        // Fallback para localStorage
+        return this.saveToLocalStorage(collectionName, data);
+      }
+
+      const docData = {
         ...data,
-        createdAt: now,
-        updatedAt: now,
-      });
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+      };
 
-      console.log(`✅ ${collectionName} criado no Firestore:`, docRef.id);
-
-      // Sincronização automática imediata
-      this.triggerAutoSync(collectionName, "create", data);
-
+      const docRef = await addDoc(collection(db, collectionName), docData);
+      console.log("✅ Documento salvo no Firestore:", docRef.id);
       return docRef.id;
     } catch (error) {
-      console.error(`❌ Erro ao criar ${collectionName}:`, error);
-      return null;
+      console.error("❌ Erro ao salvar no Firestore:", error);
+      // Fallback para localStorage
+      return this.saveToLocalStorage(collectionName, data);
     }
   }
 
-  async read<T extends FirestoreEntity>(collectionName: string): Promise<T[]> {
-    if (!this.isAvailable()) {
-      console.warn(`Firestore não disponível para ler ${collectionName}`);
-      return [];
-    }
-
-    try {
-      const querySnapshot = await getDocs(collection(this.db!, collectionName));
-      const items: T[] = [];
-
-      querySnapshot.forEach((doc) => {
-        items.push({
-          id: doc.id,
-          ...doc.data(),
-        } as T);
-      });
-
-      console.log(`📖 ${collectionName} lidos do Firestore:`, items.length);
-      return items;
-    } catch (error) {
-      console.error(`❌ Erro ao ler ${collectionName}:`, error);
-      return [];
-    }
-  }
-
-  async readOne<T extends FirestoreEntity>(
+  // Salvar um documento com ID específico
+  async setDocument(
     collectionName: string,
-    id: string,
-  ): Promise<T | null> {
-    if (!this.isAvailable()) return null;
-
+    docId: string,
+    data: any,
+  ): Promise<boolean> {
     try {
-      const docRef = doc(this.db!, collectionName, id);
+      const db = await this.getDb();
+      if (!db) {
+        return this.saveToLocalStorageWithId(collectionName, docId, data);
+      }
+
+      const docData = {
+        ...data,
+        updatedAt: Timestamp.now(),
+      };
+
+      // Se não existe createdAt, adicionar
+      if (!data.createdAt) {
+        docData.createdAt = Timestamp.now();
+      }
+
+      await setDoc(doc(db, collectionName, docId), docData);
+      console.log("✅ Documento definido no Firestore:", docId);
+      return true;
+    } catch (error) {
+      console.error("❌ Erro ao definir documento no Firestore:", error);
+      return this.saveToLocalStorageWithId(collectionName, docId, data);
+    }
+  }
+
+  // Atualizar um documento existente
+  async updateDocument(
+    collectionName: string,
+    docId: string,
+    data: any,
+  ): Promise<boolean> {
+    try {
+      const db = await this.getDb();
+      if (!db) {
+        return this.updateLocalStorage(collectionName, docId, data);
+      }
+
+      const updateData = {
+        ...data,
+        updatedAt: Timestamp.now(),
+      };
+
+      await updateDoc(doc(db, collectionName, docId), updateData);
+      console.log("✅ Documento atualizado no Firestore:", docId);
+      return true;
+    } catch (error) {
+      console.error("❌ Erro ao atualizar documento no Firestore:", error);
+      return this.updateLocalStorage(collectionName, docId, data);
+    }
+  }
+
+  // Buscar um documento por ID
+  async getDocument(
+    collectionName: string,
+    docId: string,
+  ): Promise<FirestoreDocument | null> {
+    try {
+      const db = await this.getDb();
+      if (!db) {
+        return this.getFromLocalStorage(collectionName, docId);
+      }
+
+      const docRef = doc(db, collectionName, docId);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
         return {
           id: docSnap.id,
           ...docSnap.data(),
-        } as T;
+        } as FirestoreDocument;
+      } else {
+        console.log("Documento não encontrado no Firestore:", docId);
+        return null;
       }
-      return null;
     } catch (error) {
-      console.error(`❌ Erro ao ler ${collectionName}/${id}:`, error);
-      return null;
+      console.error("❌ Erro ao buscar documento no Firestore:", error);
+      return this.getFromLocalStorage(collectionName, docId);
     }
   }
 
-  async update<T extends FirestoreEntity>(
-    collectionName: string,
-    id: string,
-    data: Partial<T>,
-  ): Promise<boolean> {
-    if (!this.isAvailable()) return false;
-
+  // Buscar todos os documentos de uma coleção
+  async getCollection(collectionName: string): Promise<FirestoreDocument[]> {
     try {
-      const docRef = doc(this.db!, collectionName, id);
-      await updateDoc(docRef, {
-        ...data,
-        updatedAt: new Date().toISOString(),
+      const db = await this.getDb();
+      if (!db) {
+        return this.getCollectionFromLocalStorage(collectionName);
+      }
+
+      const querySnapshot = await getDocs(collection(db, collectionName));
+      const documents: FirestoreDocument[] = [];
+
+      querySnapshot.forEach((doc) => {
+        documents.push({
+          id: doc.id,
+          ...doc.data(),
+        } as FirestoreDocument);
       });
 
-      console.log(`✅ ${collectionName}/${id} atualizado no Firestore`);
-
-      // Sincronização automática imediata
-      this.triggerAutoSync(collectionName, "update", data);
-
-      return true;
+      console.log(
+        `✅ ${documents.length} documentos encontrados na coleção ${collectionName}`,
+      );
+      return documents;
     } catch (error) {
-      console.error(`❌ Erro ao atualizar ${collectionName}/${id}:`, error);
-      return false;
+      console.error("��� Erro ao buscar coleção no Firestore:", error);
+      return this.getCollectionFromLocalStorage(collectionName);
     }
   }
 
-  async delete(collectionName: string, id: string): Promise<boolean> {
-    if (!this.isAvailable()) return false;
-
-    try {
-      await deleteDoc(doc(this.db!, collectionName, id));
-      console.log(`✅ ${collectionName}/${id} eliminado do Firestore`);
-
-      // Sincronização automática imediata
-      this.triggerAutoSync(collectionName, "delete", { id });
-
-      return true;
-    } catch (error) {
-      console.error(`❌ Erro ao eliminar ${collectionName}/${id}:`, error);
-      return false;
-    }
-  }
-
-  // Sync bidireccional com localStorage
-  async syncWithLocalStorage<T extends FirestoreEntity>(
+  // Deletar um documento
+  async deleteDocument(
     collectionName: string,
-    localStorageKey: string,
-  ): Promise<T[]> {
-    if (!this.isAvailable()) {
-      // Fallback para localStorage
-      const localData = localStorage.getItem(localStorageKey);
-      return localData ? JSON.parse(localData) : [];
-    }
-
+    docId: string,
+  ): Promise<boolean> {
     try {
-      // 1. Ler dados do Firestore
-      const firestoreData = await this.read<T>(collectionName);
-
-      // 2. Ler dados locais
-      const localDataStr = localStorage.getItem(localStorageKey);
-      const localData: T[] = localDataStr ? JSON.parse(localDataStr) : [];
-
-      // 3. Sincronizar dados locais para Firestore (se houver)
-      for (const localItem of localData) {
-        if (!localItem.id) {
-          // Item local sem ID - criar no Firestore
-          const newId = await this.create(collectionName, localItem);
-          if (newId) {
-            localItem.id = newId;
-          }
-        }
+      const db = await this.getDb();
+      if (!db) {
+        return this.deleteFromLocalStorage(collectionName, docId);
       }
 
-      // 4. Atualizar localStorage com dados do Firestore
-      localStorage.setItem(localStorageKey, JSON.stringify(firestoreData));
-
-      console.log(
-        `🔄 ${collectionName} sincronizado: ${firestoreData.length} itens`,
-      );
-      return firestoreData;
+      await deleteDoc(doc(db, collectionName, docId));
+      console.log("✅ Documento deletado do Firestore:", docId);
+      return true;
     } catch (error) {
-      console.error(`❌ Erro na sincronização de ${collectionName}:`, error);
-      // Fallback para dados locais
-      const localData = localStorage.getItem(localStorageKey);
-      return localData ? JSON.parse(localData) : [];
+      console.error("❌ Erro ao deletar documento do Firestore:", error);
+      return this.deleteFromLocalStorage(collectionName, docId);
     }
   }
 
-  // Métodos específicos para cada entidade
+  // Métodos de fallback para localStorage
+  private saveToLocalStorage(collectionName: string, data: any): string {
+    const id = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const key = `firestore_${collectionName}`;
+    const existing = JSON.parse(localStorage.getItem(key) || "{}");
 
-  // OBRAS
-  async createObra(obra: any): Promise<string | null> {
-    return this.create("obras", obra);
-  }
-
-  async getObras(): Promise<any[]> {
-    return this.syncWithLocalStorage("obras", "works");
-  }
-
-  async updateObra(id: string, obra: any): Promise<boolean> {
-    const success = await this.update("obras", id, obra);
-    if (success) {
-      // Atualizar localStorage também
-      const obras = await this.getObras();
-      localStorage.setItem("works", JSON.stringify(obras));
-    }
-    return success;
-  }
-
-  async deleteObra(id: string): Promise<boolean> {
-    const success = await this.delete("obras", id);
-    if (success) {
-      const obras = await this.getObras();
-      localStorage.setItem("works", JSON.stringify(obras));
-    }
-    return success;
-  }
-
-  // PISCINAS
-  async createPiscina(piscina: any): Promise<string | null> {
-    return this.create("piscinas", piscina);
-  }
-
-  async getPiscinas(): Promise<any[]> {
-    return this.syncWithLocalStorage("piscinas", "pools");
-  }
-
-  async updatePiscina(id: string, piscina: any): Promise<boolean> {
-    const success = await this.update("piscinas", id, piscina);
-    if (success) {
-      const piscinas = await this.getPiscinas();
-      localStorage.setItem("pools", JSON.stringify(piscinas));
-    }
-    return success;
-  }
-
-  async deletePiscina(id: string): Promise<boolean> {
-    const success = await this.delete("piscinas", id);
-    if (success) {
-      const piscinas = await this.getPiscinas();
-      localStorage.setItem("pools", JSON.stringify(piscinas));
-    }
-    return success;
-  }
-
-  // MANUTENÇÕES
-  async createManutencao(manutencao: any): Promise<string | null> {
-    return this.create("manutencoes", manutencao);
-  }
-
-  async getManutencoes(): Promise<any[]> {
-    return this.syncWithLocalStorage("manutencoes", "maintenance");
-  }
-
-  async updateManutencao(id: string, manutencao: any): Promise<boolean> {
-    const success = await this.update("manutencoes", id, manutencao);
-    if (success) {
-      const manutencoes = await this.getManutencoes();
-      localStorage.setItem("maintenance", JSON.stringify(manutencoes));
-    }
-    return success;
-  }
-
-  async deleteManutencao(id: string): Promise<boolean> {
-    const success = await this.delete("manutencoes", id);
-    if (success) {
-      const manutencoes = await this.getManutencoes();
-      localStorage.setItem("maintenance", JSON.stringify(manutencoes));
-    }
-    return success;
-  }
-
-  // UTILIZADORES
-  async createUtilizador(utilizador: any): Promise<string | null> {
-    return this.create("utilizadores", utilizador);
-  }
-
-  async getUtilizadores(): Promise<any[]> {
-    return this.syncWithLocalStorage("utilizadores", "app-users");
-  }
-
-  async updateUtilizador(id: string, utilizador: any): Promise<boolean> {
-    const success = await this.update("utilizadores", id, utilizador);
-    if (success) {
-      const utilizadores = await this.getUtilizadores();
-      localStorage.setItem("app-users", JSON.stringify(utilizadores));
-    }
-    return success;
-  }
-
-  async deleteUtilizador(id: string): Promise<boolean> {
-    const success = await this.delete("utilizadores", id);
-    if (success) {
-      const utilizadores = await this.getUtilizadores();
-      localStorage.setItem("app-users", JSON.stringify(utilizadores));
-    }
-    return success;
-  }
-
-  // CLIENTES
-  async createCliente(cliente: any): Promise<string | null> {
-    return this.create("clientes", cliente);
-  }
-
-  async getClientes(): Promise<any[]> {
-    return this.syncWithLocalStorage("clientes", "clients");
-  }
-
-  async updateCliente(id: string, cliente: any): Promise<boolean> {
-    const success = await this.update("clientes", id, cliente);
-    if (success) {
-      const clientes = await this.getClientes();
-      localStorage.setItem("clients", JSON.stringify(clientes));
-    }
-    return success;
-  }
-
-  async deleteCliente(id: string): Promise<boolean> {
-    const success = await this.delete("clientes", id);
-    if (success) {
-      const clientes = await this.getClientes();
-      localStorage.setItem("clients", JSON.stringify(clientes));
-    }
-    return success;
-  }
-
-  // LOCALIZAÇÕES
-  async createLocalizacao(localizacao: any): Promise<string | null> {
-    return this.create("localizacoes", localizacao);
-  }
-
-  async getLocalizacoes(): Promise<any[]> {
-    return this.syncWithLocalStorage("localizacoes", "locations");
-  }
-
-  async updateLocalizacao(id: string, localizacao: any): Promise<boolean> {
-    const success = await this.update("localizacoes", id, localizacao);
-    if (success) {
-      const localizacoes = await this.getLocalizacoes();
-      localStorage.setItem("locations", JSON.stringify(localizacoes));
-    }
-    return success;
-  }
-
-  async deleteLocalizacao(id: string): Promise<boolean> {
-    const success = await this.delete("localizacoes", id);
-    if (success) {
-      const localizacoes = await this.getLocalizacoes();
-      localStorage.setItem("locations", JSON.stringify(localizacoes));
-    }
-    return success;
-  }
-
-  // NOTIFICAÇÕES
-  async createNotificacao(notificacao: any): Promise<string | null> {
-    return this.create("notificacoes", notificacao);
-  }
-
-  async createNotification(notification: any): Promise<string | null> {
-    const notificationData = {
-      ...notification,
+    existing[id] = {
+      ...data,
+      id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
-    const docId = await this.create("notificacoes", notificationData);
-    if (docId) {
-      // Atualizar localStorage
-      const notificacoes = await this.getNotificacoes();
-      localStorage.setItem("notifications", JSON.stringify(notificacoes));
-    }
-    return docId;
+    localStorage.setItem(key, JSON.stringify(existing));
+    console.log("💾 Documento salvo no localStorage:", id);
+    return id;
   }
 
-  async getNotificacoes(): Promise<any[]> {
-    return this.syncWithLocalStorage("notificacoes", "notifications");
-  }
-
-  async updateNotificacao(id: string, notificacao: any): Promise<boolean> {
-    const success = await this.update("notificacoes", id, notificacao);
-    if (success) {
-      const notificacoes = await this.getNotificacoes();
-      localStorage.setItem("notifications", JSON.stringify(notificacoes));
-    }
-    return success;
-  }
-
-  async deleteNotificacao(id: string): Promise<boolean> {
-    const success = await this.delete("notificacoes", id);
-    if (success) {
-      const notificacoes = await this.getNotificacoes();
-      localStorage.setItem("notifications", JSON.stringify(notificacoes));
-    }
-    return success;
-  }
-
-  // Sincronização completa de tudo
-  async syncAll(): Promise<void> {
-    console.log("🔄 Iniciando sincronização completa com Firestore...");
-
+  private saveToLocalStorageWithId(
+    collectionName: string,
+    docId: string,
+    data: any,
+  ): boolean {
     try {
-      await Promise.all([
-        this.getObras(),
-        this.getPiscinas(),
-        this.getManutencoes(),
-        this.getUtilizadores(),
-        this.getClientes(),
-        this.getLocalizacoes(),
-        this.getNotificacoes(),
-      ]);
+      const key = `firestore_${collectionName}`;
+      const existing = JSON.parse(localStorage.getItem(key) || "{}");
 
-      console.log("✅ Sincronização completa concluída!");
+      existing[docId] = {
+        ...data,
+        id: docId,
+        updatedAt: new Date().toISOString(),
+      };
+
+      if (!existing[docId].createdAt) {
+        existing[docId].createdAt = new Date().toISOString();
+      }
+
+      localStorage.setItem(key, JSON.stringify(existing));
+      console.log("💾 Documento definido no localStorage:", docId);
+      return true;
     } catch (error) {
-      console.error("❌ Erro na sincronização completa:", error);
+      console.error("❌ Erro ao salvar no localStorage:", error);
+      return false;
+    }
+  }
+
+  private updateLocalStorage(
+    collectionName: string,
+    docId: string,
+    data: any,
+  ): boolean {
+    try {
+      const key = `firestore_${collectionName}`;
+      const existing = JSON.parse(localStorage.getItem(key) || "{}");
+
+      if (existing[docId]) {
+        existing[docId] = {
+          ...existing[docId],
+          ...data,
+          updatedAt: new Date().toISOString(),
+        };
+
+        localStorage.setItem(key, JSON.stringify(existing));
+        console.log("💾 Documento atualizado no localStorage:", docId);
+        return true;
+      } else {
+        console.log("Documento não encontrado no localStorage:", docId);
+        return false;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao atualizar localStorage:", error);
+      return false;
+    }
+  }
+
+  private getFromLocalStorage(
+    collectionName: string,
+    docId: string,
+  ): FirestoreDocument | null {
+    try {
+      const key = `firestore_${collectionName}`;
+      const existing = JSON.parse(localStorage.getItem(key) || "{}");
+      return existing[docId] || null;
+    } catch (error) {
+      console.error("❌ Erro ao buscar do localStorage:", error);
+      return null;
+    }
+  }
+
+  private getCollectionFromLocalStorage(
+    collectionName: string,
+  ): FirestoreDocument[] {
+    try {
+      const key = `firestore_${collectionName}`;
+      const existing = JSON.parse(localStorage.getItem(key) || "{}");
+      return Object.values(existing);
+    } catch (error) {
+      console.error("❌ Erro ao buscar coleção do localStorage:", error);
+      return [];
+    }
+  }
+
+  private deleteFromLocalStorage(
+    collectionName: string,
+    docId: string,
+  ): boolean {
+    try {
+      const key = `firestore_${collectionName}`;
+      const existing = JSON.parse(localStorage.getItem(key) || "{}");
+
+      if (existing[docId]) {
+        delete existing[docId];
+        localStorage.setItem(key, JSON.stringify(existing));
+        console.log("💾 Documento deletado do localStorage:", docId);
+        return true;
+      } else {
+        console.log("Documento não encontrado no localStorage:", docId);
+        return false;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao deletar do localStorage:", error);
+      return false;
     }
   }
 }
 
 // Instância singleton
-export const firestoreService = new FirestoreService();
+export const firestoreService = FirestoreService.getInstance();
