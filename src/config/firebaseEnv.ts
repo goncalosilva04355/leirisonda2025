@@ -1,43 +1,19 @@
 // Configuração Firebase única - projeto Leiria sempre sincronizado
 // Usa variáveis de ambiente do Netlify quando disponíveis
 
-// Configuração que prioriza variáveis do Netlify
+// Configuração Firebase direta do Netlify (produção)
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey:
-    import.meta.env.VITE_FIREBASE_API_KEY ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_API_KEY ||
-    "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-  authDomain:
-    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_AUTH_DOMAIN ||
-    "leirisonda-16f8b.firebaseapp.com",
-  databaseURL:
-    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_DATABASE_URL ||
-    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:
-    import.meta.env.VITE_FIREBASE_PROJECT_ID ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_PROJECT_ID ||
-    "leirisonda-16f8b",
-  storageBucket:
-    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_STORAGE_BUCKET ||
-    "leirisonda-16f8b.firebasestorage.app",
-  messagingSenderId:
-    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_MESSAGING_SENDER_ID ||
-    "1067024677476",
-  appId:
-    import.meta.env.VITE_FIREBASE_APP_ID ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_APP_ID ||
-    "1:1067024677476:web:a5e5e30ed4b5a64b123456",
-  measurementId:
-    import.meta.env.VITE_FIREBASE_MEASUREMENT_ID ||
-    import.meta.env.VITE_LEIRISONDA_FIREBASE_MEASUREMENT_ID ||
-    "G-XXXXXXXXXX",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY!,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID!,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID!,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Função única para obter configuração com validação
+// Fun��ão única para obter configuração com validação
 export function getFirebaseConfig() {
   // Log das variáveis de ambiente para verificar se Netlify está funcionando
   console.log("🔍 Verificando variáveis de ambiente do Netlify:");
