@@ -84,12 +84,14 @@ class SmartFirestoreDetection {
       };
 
       if (isServiceUnavailable) {
-        console.info(
-          "📱 Firestore não habilitado - aplicação funcionará com localStorage",
-        );
-        console.info(
-          "💡 Para habilitar Firestore: Firebase Console → Firestore Database → Criar base de dados",
-        );
+        // Usar controle de logs para mostrar mensagem única
+        try {
+          const { getFirebaseConfig } = await import("../config/firebaseEnv");
+          const config = getFirebaseConfig();
+          firebaseLogControl.showFirestoreUnavailableOnce(config.projectId);
+        } catch {
+          firebaseLogControl.showFirestoreUnavailableOnce("leiria-1cfc9");
+        }
       } else {
         console.warn("⚠️ Erro ao verificar Firestore:", errorMessage);
       }
