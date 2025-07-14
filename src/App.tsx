@@ -2756,7 +2756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       try {
         window.open(mapsUrl, "_blank");
-        console.log("✅ Google Maps opened successfully");
+        console.log("��� Google Maps opened successfully");
       } catch (error) {
         console.error("📞 Error opening Google Maps:", error);
       }
@@ -2883,7 +2883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("��� Erro ao salvar utilizador:", error);
+      console.error("����� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -6487,7 +6487,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar interven��ão de manutenção
@@ -7849,63 +7849,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           )}
 
-                          {/* Notifications and Settings content continues... */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações
-                              </h3>
-                            </div>
-                            <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Sincronizaç��o Automática
-                                </span>
-                                <button
-                                  onClick={() =>
-                                    setAutoSyncEnabled(!autoSyncEnabled)
-                                  }
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    autoSyncEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      autoSyncEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
                           {currentUser?.role === "super_admin" && (
                             <div className="bg-gray-50 rounded-lg p-6">
                               <h3 className="text-lg font-semibold mb-4">
@@ -8929,7 +8872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Validação básica
                           const name = (
                             form.querySelector(
-                              'input[placeholder="Nome completo ou razão social"]',
+                              'input[placeholder="Nome completo ou raz��o social"]',
                             ) as HTMLInputElement
                           )?.value;
                           const email = (
@@ -11391,7 +11334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Para super_admin e admin */}
+                {/* Localiza��ões - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
                   currentUser?.role === "admin") && (
                   <button
