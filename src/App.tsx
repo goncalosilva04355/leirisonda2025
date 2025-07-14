@@ -690,7 +690,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados críticos - NUNCA PERDER DADOS
+  // Proteç��o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -902,8 +902,7 @@ function App() {
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [pushPermission, setPushPermission] = useState("default");
+
   const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
@@ -3138,7 +3137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📍 Morada:
+                                  ���� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -4866,7 +4865,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "���ILTRO UTILIZADOR:",
+                                    "�����ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -8447,7 +8446,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C��digo Postal *
+                            C���digo Postal *
                           </label>
                           <input
                             type="text"
