@@ -148,7 +148,6 @@ import {
 // Funções de compatibilidade
 export const getDBAsync = async () => {
   if (LOCAL_MODE) return null;
-  const { getFirebaseFirestoreAsync } = require("./firestoreConfig");
   return await getFirebaseFirestoreAsync();
 };
 
@@ -159,7 +158,6 @@ export const getAuthService = async () => {
 
 export const attemptFirestoreInit = async () => {
   if (LOCAL_MODE) return null;
-  const { getFirebaseFirestoreAsync } = require("./firestoreConfig");
   return await getFirebaseFirestoreAsync();
 };
 
@@ -171,9 +169,11 @@ export const isFirebaseFirestoreAvailable = () =>
   !LOCAL_MODE && firebaseApp !== null;
 export const testFirebaseFirestore = async () => {
   if (LOCAL_MODE) return false;
-  const { testFirestore } = require("./firestoreConfig");
   return await testFirestore();
 };
+
+// Imports necessários para funções de compatibilidade
+import { getFirebaseFirestoreAsync, testFirestore } from "./firestoreConfig";
 
 // Exportações principais
 export { getFirebaseFirestore, isFirestoreReady };
