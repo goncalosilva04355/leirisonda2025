@@ -140,6 +140,7 @@ import DataInputTutorial from "./components/DataInputTutorial";
 // import "./utils/firebaseErrorMonitor";
 import FirebaseFixButton from "./components/FirebaseFixButton";
 import FirebaseQuotaRecoveryComponent from "./components/FirebaseQuotaRecovery";
+import QuickFirebaseReset from "./components/QuickFirebaseReset";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -219,7 +220,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
+    // Restaurar utilizadores automaticamente se necess��rio
     userRestoreService.autoRestore();
 
     // Monitoriza���ão automática de persistência de dados
@@ -1871,7 +1872,7 @@ function App() {
                       "✅ Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
-                    console.error("❌ Erro ao garantir auto sync:", error);
+                    console.error("��� Erro ao garantir auto sync:", error);
                     setAutoSyncActive(false);
                   }
                 }
@@ -3593,7 +3594,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">📊</div>
+                            <div className="text-gray-400 mb-2">����</div>
                             <p className="text-gray-500 text-sm font-medium">
                               N��o há dados para pesquisar
                             </p>
@@ -8000,7 +8001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
-                        <li>📞 Técnicos responsáveis</li>
+                        <li>📞 T��cnicos responsáveis</li>
                         <li>• Datas e duraç��es</li>
                         <li>• Estados e observações</li>
                       </ul>
