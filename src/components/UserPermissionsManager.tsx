@@ -14,14 +14,7 @@ import {
   Settings,
 } from "lucide-react";
 import { authService, UserProfile } from "../services/authService";
-import {
-  collection,
-  getDocs,
-  doc,
-  updateDoc,
-  deleteDoc,
-} from "firebase/firestore";
-import { db, isFirestoreReady } from "../firebase/config";
+import { useUsers } from "../hooks/useFirestore";
 
 interface PermissionsEditorProps {
   user: UserProfile;
