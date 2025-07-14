@@ -748,9 +748,6 @@ function App() {
         existingWorks.push(newWork);
         safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
-
-        // Enviar notificações mesmo no fallback final
-        await sendWorkAssignmentNotifications(newWork);
       }
 
       return newWork.id;
@@ -7913,7 +7910,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest���o de Utilizadores
+                              Gest����o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8082,7 +8079,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Orçamentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -10894,7 +10891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("🔐 Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
