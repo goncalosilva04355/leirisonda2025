@@ -42,7 +42,7 @@ async function waitForFirebaseApp(
 // Função para inicializar Firestore com retry
 async function initializeFirestore(
   retryCount = 0,
-  maxRetries = 1,
+  maxRetries = 2,
 ): Promise<Firestore | null> {
   if (LOCAL_MODE) return null;
 
@@ -88,21 +88,10 @@ async function initializeFirestore(
       return initializeFirestore(retryCount + 1, maxRetries);
     }
 
-    // Se todas as tentativas falharam, tentar configuração robusta
-    console.log("🔄 Tentando configuração robusta como fallback...");
-    try {
-      const { initializeRobustFirebase } = await import("./robustConfig");
-      const { db } = await initializeRobustFirebase();
-      if (db) {
-        console.log("✅ Firestore inicializado via configuração robusta!");
-        return db;
-      }
-    } catch (robustError: any) {
-      console.error(
-        "❌ Configuração robusta também falhou:",
-        robustError.message,
-      );
-    }
+    // Todas as tentativas falharam
+    console.error(
+      "❌ Firestore falhou - verifique se está ativado no Firebase Console",
+    );
 
     console.error("🔍 Stack trace original:", error.stack);
     return null;
