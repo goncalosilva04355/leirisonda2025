@@ -80,7 +80,7 @@ import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronizaç��o automática para produção
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
@@ -148,6 +148,12 @@ import "./utils/emergencyUserInit";
 import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
+import { FirestoreTest } from "./components/FirestoreTest";
+
+// Diagnóstico Firebase
+import "./utils/firebaseDiagnostic";
+// Detecção inteligente de Firestore
+import "./utils/smartFirestoreDetection";
 
 // Teste de login
 import "./utils/testLogin";
@@ -293,7 +299,7 @@ function App() {
           const src = iframe.getAttribute("src") || "";
           return (
             src.includes("leiria-1cfc9") &&
-            document.querySelector('iframe[src*="leirisonda-16f8b"]')
+            document.querySelector('iframe[src*="leiria-1cfc9"]')
           );
         },
       );
@@ -414,14 +420,14 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR�����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
     // Verificaç��es automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionar📞 normalmente sem verifica��ões constantes
     // Sistema funcionar�� normalmente sem verificações autom📞ticas
   }, []);
 
@@ -599,7 +605,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("��� addClient iniciado com Firestore ativo");
+      console.log("����� addClient iniciado com Firestore ativo");
 
       const firestoreId = await offlineFirstService.createClient(data);
 
@@ -3490,7 +3496,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh��";
+                            timeText = "Amanh���";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -3978,6 +3984,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
                 </div>
+
+                {/* Firestore Test Component - Only for debugging */}
+                {import.meta.env.VITE_FORCE_FIREBASE && <FirestoreTest />}
               </div>
             </div>
           );
@@ -10118,7 +10127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -10675,7 +10684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>���</span>
-                  <span>Observaç€s e próxima manutenção</span>
+                  <span>Observaç€s e pr��xima manutenção</span>
                 </div>
               </div>
             </div>

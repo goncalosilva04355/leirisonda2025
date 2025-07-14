@@ -73,7 +73,7 @@ export async function checkFirebaseOnMobile() {
         console.log("❌ Firestore: NÃO DISPONÍVEL");
       }
     } catch (dbError) {
-      console.error("❌ Erro no Firestore:", dbError);
+      // Silenciar erro - smartFirestoreDetection já gerencia isso
       results.errorDetails = dbError;
     }
 

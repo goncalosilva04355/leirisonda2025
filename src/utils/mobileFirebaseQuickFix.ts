@@ -27,9 +27,9 @@ export const mobileFirebaseQuickFix = {
     const hasConflictingDomains = Array.from(firebaseIframes).some((iframe) => {
       const src = iframe.getAttribute("src") || "";
       return (
-        (src.includes("leiria-1cfc9") && src.includes("leirisonda-16f8b")) ||
+        (src.includes("leiria-1cfc9") && src.includes("old-project")) ||
         (document.querySelector('iframe[src*="leiria-1cfc9"]') &&
-          document.querySelector('iframe[src*="leirisonda-16f8b"]'))
+          document.querySelector('iframe[src*="old-project"]'))
       );
     });
 

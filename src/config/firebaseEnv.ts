@@ -10,31 +10,31 @@ function isPlaceholder(value: string | undefined): boolean {
   );
 }
 
-// Configuração Firebase inteligente
+// Configuração Firebase inteligente - Projeto ativo: leiria-1cfc9
 export const LEIRIA_FIREBASE_CONFIG = {
   apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
     ? import.meta.env.VITE_FIREBASE_API_KEY!
-    : "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE", // Leirisonda fallback
+    : "AIzaSyB2GZJ8YJw2dFBd6dwbAE7fBQ1UZyQxRZY", // Leiria projeto ativo
   authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
     ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
-    : "leirisonda-16f8b.firebaseapp.com",
+    : "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    "https://leirisonda-16f8b-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
     ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
-    : "leirisonda-16f8b",
+    : "leiria-1cfc9",
   storageBucket: !isPlaceholder(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET)
     ? import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!
-    : "leirisonda-16f8b.firebasestorage.app",
+    : "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: !isPlaceholder(
     import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   )
     ? import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!
-    : "1067024677476",
+    : "123456789012",
   appId: !isPlaceholder(import.meta.env.VITE_FIREBASE_APP_ID)
     ? import.meta.env.VITE_FIREBASE_APP_ID!
-    : "1:1067024677476:web:a5e5e30ed4b5a64b123456",
+    : "1:123456789012:web:abcdef123456789012345",
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX",
 };
 
