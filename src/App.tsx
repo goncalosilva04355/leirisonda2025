@@ -1487,17 +1487,16 @@ function App() {
           setTimeout(async () => {
             if (isFirestoreReady()) {
               try {
-                await autoSyncService.startAutoSync();
-                setAutoSyncActive(true);
-                await autoSyncService.syncAllCollections();
-                console.log(
-                  "✅ Auto sync e sincronização executados após aguardar!",
-                );
+                const autoSyncStarted =
+                  await autoSyncService.ensureAutoSyncAfterLogin();
+                setAutoSyncActive(autoSyncStarted);
+                console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
-                  "❌ Erro ao ativar auto sync após aguardar:",
+                  "❌ Erro ao garantir auto sync após aguardar:",
                   error,
                 );
+                setAutoSyncActive(false);
               }
             }
           }, 2000);
@@ -2545,7 +2544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" ��� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -4458,7 +4457,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu���do"
+                                      ? "Conclu📞do"
                                       : maint.status}
                               </span>
                             </div>
@@ -5513,7 +5512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -9971,7 +9970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��etalhes do Furo de Água
+                        ���etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
