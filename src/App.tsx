@@ -5048,7 +5048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               safeLocalStorage.getItem("app-users");
                             console.log(
-                              "💾 USERS NO LOCALSTORAGE (app-users):",
+                              "��� USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -7415,37 +7415,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex justify-between py-2">
                         <span className="text-gray-600">Modo de Dados</span>
                         <span className="font-medium">Armazenamento Local</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Basic Notifications for all users */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center mb-4">
-                      <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Notificações
-                      </h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">
-                          Notificações Push
-                        </span>
-                        <button
-                          onClick={requestNotificationPermission}
-                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                            notificationsEnabled ? "bg-blue-600" : "bg-gray-200"
-                          }`}
-                        >
-                          <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                              notificationsEnabled
-                                ? "translate-x-5"
-                                : "translate-x-0"
-                            }`}
-                          />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -12084,7 +12053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Orçamento
                         </label>
                         <p className="text-gray-900">
-                          ����{selectedWork.budget}
+                          ������{selectedWork.budget}
                         </p>
                       </div>
                     )}
