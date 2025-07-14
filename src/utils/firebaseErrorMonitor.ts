@@ -128,6 +128,12 @@ export class FirebaseErrorMonitor {
   }
 
   private async reinitializeFirebase(): Promise<void> {
+    // Firebase desativado em desenvolvimento
+    if (import.meta.env.DEV) {
+      console.log("🚫 Firebase reinitialization desativado em desenvolvimento");
+      return;
+    }
+
     try {
       const { getFirebaseApp } = await import("../firebase/basicConfig");
 
