@@ -146,12 +146,12 @@ export const isFirebaseAuthAvailable = () =>
 export const isFirebaseFirestoreAvailable = () =>
   !LOCAL_MODE && firebaseApp !== null;
 export const testFirebaseFirestore = async () => {
-  if (LOCAL_MODE) return false;
-  return await testFirestore();
+  console.log("💾 Use testFirestore() diretamente do firestoreConfig");
+  return false;
 };
 
-// Exportações principais
-export { getFirebaseFirestore, isFirestoreReady };
+// Exportações principais - removidas para evitar dependência circular
+// Use as funções diretamente do firestoreConfig
 
 // Export app como instância (sempre null)
 export const app = null;
