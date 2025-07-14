@@ -243,7 +243,7 @@ function App() {
             console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
+              "⚠️ N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -691,7 +691,7 @@ function App() {
           }
         } catch (userError) {
           console.error(
-            `��� Erro ao enviar notificação para ${assignedUser.name}:`,
+            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
             userError,
           );
         }
@@ -731,7 +731,7 @@ function App() {
         console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
-        // Enviar notifica����es mesmo no fallback
+        // Enviar notifica��ões mesmo no fallback
         await sendWorkAssignmentNotifications(data);
 
         return result;
@@ -908,7 +908,7 @@ function App() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (isFirestoreReady()) {
-          console.log("📱 Carregando utilizadores do Firestore...");
+          console.log("���� Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
           const firestoreUsers = await firestoreService.getUtilizadores();
@@ -2197,7 +2197,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicaç��o agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplica����o agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -4642,7 +4642,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manutenção</span>
+                        <span>Agendar Manuten��ão</span>
                       </button>
                     </div>
                   ) : (
@@ -6101,7 +6101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISS��O NEGADA: clientes.create",
+                                    "❌ PERMISS📞O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
@@ -7559,7 +7559,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informa��ões do Sistema
+                              Informações do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -9433,7 +9433,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {work.contact}
+                                        ���� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -11445,14 +11445,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
-                {/* Status de Sincronização Automática */}
-                <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
-                  <AutoSyncIndicator />
-                  <div className="mt-2 pt-2 border-t border-green-300">
-                    <PostLoginAutoSyncIndicator className="text-xs" />
-                  </div>
-                </div>
-
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");
