@@ -253,7 +253,7 @@ function App() {
             console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
-              "⚠️ N��o foi possível reparar a persistência automaticamente",
+              "⚠��� N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -394,7 +394,7 @@ function App() {
   useEffect(() => {
     if (userMigration.status.completed && userMigration.status.migrated > 0) {
       console.log(
-        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+        `���� AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
         "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
@@ -428,7 +428,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificaç���es automáticas desabilitadas para resolver instabilidade
+    // Verificaç��es automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verifica��ões constantes
     // Sistema funcionar�� normalmente sem verificações autom📞ticas
   }, []);
@@ -518,7 +518,7 @@ function App() {
       // Usar serviço offline-first
       const firestoreId = await offlineFirstService.createPool(data);
       if (firestoreId) {
-        console.log("�� Piscina criada:", firestoreId);
+        console.log("✅ Piscina criada:", firestoreId);
       }
 
       return await addPiscina(data);
@@ -2080,7 +2080,7 @@ ${index + 1}. ${maint.poolName}
    Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descri����o: ${maint.description}
+   Descri��ão: ${maint.description}
    ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
 `,
   )
@@ -7979,7 +7979,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>���� Informações de clientes</li>
+                        <li>��� Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -10494,6 +10494,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         case "diagnostic":
           return <FirestoreDiagnostic />;
+
+        case "firestore-test":
+          return <FirestoreTestPage />;
 
         default:
           return (
