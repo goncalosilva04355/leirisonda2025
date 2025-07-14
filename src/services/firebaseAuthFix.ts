@@ -113,9 +113,8 @@ class FirebaseAuthFix {
 
       // Verify auth instance is not destroyed
       if ((auth as any)._deleted) {
-        console.warn("⚠️ Auth instance is deleted, reinitializing...");
-        await firebaseService.initialize();
-        return await firebaseService.getAuth();
+        console.warn("⚠️ Auth instance is deleted, getting new instance...");
+        return getAuth();
       }
 
       return auth;
