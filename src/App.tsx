@@ -8041,7 +8041,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>��� Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
-                        <li>• Próximas intervenções</li>
+                        <li>�� Próximas intervenções</li>
                       </ul>
                     </div>
                     <button
@@ -8592,7 +8592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P📞blica</option>
+                            <option value="publico">Entidade P���blica</option>
                           </select>
                         </div>
                       </div>
@@ -12201,6 +12201,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
+
+        {/* Botão para garantir salvamento no Firestore - sempre visível quando logado */}
+        {isAuthenticated && <FirestoreGuaranteeButton />}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
