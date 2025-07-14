@@ -87,10 +87,17 @@ export function getDB() {
     return null;
   }
 
-  // Importar Firestore dinamicamente para evitar dependência circular
-  const { getFirebaseFirestore } = require("./firestoreConfig");
-  return getFirebaseFirestore();
+  // Usar lazy import para evitar dependência circular
+  try {
+    return getFirebaseFirestore();
+  } catch (error: any) {
+    console.error("💾 Erro ao obter DB:", error.message);
+    return null;
+  }
 }
+
+// Import necessário para getFirebaseFirestore
+import { getFirebaseFirestore } from "./firestoreConfig";
 
 // Função para verificar se Firestore está disponível (sempre retorna fallback)
 export function withFirestore<T>(
@@ -112,13 +119,19 @@ export function getAuth() {
   }
 
   try {
-    const { getAuth: getFirebaseAuth } = require("firebase/auth");
-    return getFirebaseAuth(firebaseApp || undefined);
+    if (!firebaseApp) {
+      console.error("🔐 Firebase App não inicializada para Auth");
+      return null;
+    }
+    return getFirebaseAuth(firebaseApp);
   } catch (error: any) {
     console.error("🔐 Erro ao obter Auth:", error.message);
     return null;
   }
 }
+
+// Import necessário para getAuth
+import { getAuth as getFirebaseAuth } from "firebase/auth";
 
 // Export auth como função (sempre null)
 export const auth = null;
