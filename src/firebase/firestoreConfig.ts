@@ -3,6 +3,7 @@ import {
   Firestore,
   getFirestore,
   connectFirestoreEmulator,
+  doc,
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
