@@ -651,26 +651,33 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("����� addClient iniciado com Firestore ativo");
+      console.log("👤 addClient iniciado - GARANTIDO SALVAR NO FIRESTORE");
 
-      const firestoreId = await offlineFirstService.createClient(data);
+      // GARANTIR que é salvo no Firestore usando sistema universal
+      const firestoreId = await saveToFirestore.cliente({
+        ...data,
+        id: data.id || `cliente_${Date.now()}`,
+        createdBy: currentUser?.name || "Sistema",
+        createdAt: new Date().toISOString(),
+        active: data.active !== false,
+      });
 
-      if (firestoreId) {
-        console.log("✅ Cliente criado no Firestore:", firestoreId);
+      console.log("✅ Cliente GARANTIDAMENTE salvo no Firestore:", firestoreId);
 
-        // Sincronizar com sistema universal
-        try {
-          await addCliente(data);
-        } catch (syncError) {
-          console.warn("€�� Erro na sincronização universal:", syncError);
-        }
-
-        return firestoreId;
-      } else {
-        return await addCliente(data);
+      // Também manter compatibilidade com sistema existente
+      try {
+        await addCliente(data);
+      } catch (syncError) {
+        console.warn(
+          "⚠️ Sistema antigo falhou mas Firestore já salvou:",
+          syncError,
+        );
       }
+
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro no sistema de clientes:", error);
+      // Fallback para sistema antigo
       return await addCliente(data);
     }
   };
@@ -847,7 +854,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se dispon����vel
+          // Sincronizar com Firestore se dispon��vel
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
@@ -1141,7 +1148,7 @@ function App() {
   /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
+      console.log("�� Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -7266,7 +7273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers����o</span>
+                        <span className="text-gray-600">Vers���o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -9609,7 +9616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ����etalhes do Furo de Água
+                        ���etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
