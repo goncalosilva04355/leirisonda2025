@@ -412,7 +412,7 @@ function App() {
 
     // Verificaç��es automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
+    // Sistema funcionar�� normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -4459,7 +4459,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu📞do"
+                                      ? "Conclu��do"
                                       : maint.status}
                               </span>
                             </div>
@@ -8158,39 +8158,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <span className="font-medium">
                             Armazenamento Local
                           </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Basic Notifications for all users */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <div className="flex items-center mb-4">
-                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Notificações
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">
-                            Notificações Push
-                          </span>
-                          <button
-                            onClick={requestNotificationPermission}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                              notificationsEnabled
-                                ? "bg-blue-600"
-                                : "bg-gray-200"
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                notificationsEnabled
-                                  ? "translate-x-5"
-                                  : "translate-x-0"
-                              }`}
-                            />
-                          </button>
                         </div>
                       </div>
                     </div>
