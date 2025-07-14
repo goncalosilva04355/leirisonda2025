@@ -45,6 +45,12 @@ import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
 
+// Firebase Quota Recovery - recuperar operações bloqueadas
+import {
+  autoRecoverOnInit,
+  FirebaseQuotaRecovery,
+} from "./utils/firebaseQuotaRecovery";
+
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
@@ -133,6 +139,9 @@ import DataInputTutorial from "./components/DataInputTutorial";
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
 import FirebaseFixButton from "./components/FirebaseFixButton";
+import FirebaseQuotaRecoveryComponent from "./components/FirebaseQuotaRecovery";
+import QuickFirebaseReset from "./components/QuickFirebaseReset";
+import AutoFirebaseQuotaFix from "./components/AutoFirebaseQuotaFix";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -253,6 +262,14 @@ function App() {
     return () => {
       // Cleanup functions if needed
     };
+  }, []);
+
+  // Verificar status da quota Firebase na inicialização
+  useEffect(() => {
+    console.log("🔍 Verificando e recuperando quota Firebase...");
+
+    // Tentar recuperação automática
+    autoRecoverOnInit();
   }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
@@ -1823,7 +1840,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("📞 Navigating to dashboard");
+            console.log("��� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -2985,7 +3002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -6090,7 +6107,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar sistema</option>
                           <option value="areia">Filtro de Areia</option>
                           <option value="cartucho">Filtro de Cartucho</option>
-                          <option value="diatomaceas">Terra Diatomáceas</option>
+                          <option value="diatomaceas">
+                            Terra Diatom��ceas
+                          </option>
                           <option value="uv">Sistema UV</option>
                           <option value="sal">Eletr��lise de Sal</option>
                         </select>
@@ -7190,7 +7209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers��o</span>
+                        <span className="text-gray-600">Vers���o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7984,7 +8003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
-                        <li>• Datas e duraç��es</li>
+                        <li>• Datas e dura����es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10040,7 +10059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalação
+                          ).value; // Data de Instalaç��o
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -10958,9 +10977,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       showNotifications={false}
     >
       <InstantSyncManagerSafe>
+        {/* Auto-fix Firebase quota issues */}
+        <AutoFirebaseQuotaFix />
+
         <div className="min-h-screen bg-gray-50">
           {/* Status da sincronização automática */}
           <ProductionSyncStatus />
+
+          {/* Firebase Quota Recovery */}
+          <FirebaseQuotaRecoveryComponent />
+
+          {/* Quick Firebase Reset (always visible) */}
+          <QuickFirebaseReset />
 
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
