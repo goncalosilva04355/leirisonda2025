@@ -95,6 +95,7 @@ import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
+import PostLoginAutoSyncIndicator from "./components/PostLoginAutoSyncIndicator";
 import ProductionSyncStatus from "./components/ProductionSyncStatus";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
@@ -512,7 +513,7 @@ function App() {
   // Função para enviar notificações push quando uma obra é atribuída
   const sendWorkAssignmentNotifications = async (workData: any) => {
     try {
-      console.log("📱 Enviando notifica����ões de atribuição de obra...");
+      console.log("📱 Enviando notifica�����ões de atribuição de obra...");
 
       // Verificar se há utilizadores atribuídos
       if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
@@ -768,7 +769,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("✅ Manutenção criada no Firestore:", firestoreId);
+        console.log("�� Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -984,7 +985,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se disponível
+          // Sincronizar com Firestore se dispon��vel
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
@@ -1293,6 +1294,7 @@ function App() {
 
       try {
         // const firestoreResult = await testFirestore(); // Comentado temporariamente
+        const firestoreResult = false; // Temporariamente false
 
         if (firestoreResult) {
           console.log("✅ Passo 3: Firestore ativo e funcional!");
@@ -1457,6 +1459,54 @@ function App() {
       }
     };
 
+    // Listener para quando utilizador faz login
+    const handleUserLoggedIn = async (event: CustomEvent) => {
+      const { user, timestamp } = event.detail;
+      console.log(
+        "🔑 Utilizador fez login, verificando auto sync:",
+        user.email,
+      );
+
+      try {
+        // Aguardar um momento para o sistema se estabilizar
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        if (isFirestoreReady()) {
+          // Usar método específico para garantir auto sync após login
+          const autoSyncStarted =
+            await autoSyncService.ensureAutoSyncAfterLogin();
+
+          if (autoSyncStarted) {
+            setAutoSyncActive(true);
+            console.log("✅ Auto sync garantido após login!");
+          } else {
+            console.warn("⚠️ Falha ao garantir auto sync após login");
+            setAutoSyncActive(false);
+          }
+        } else {
+          console.log("⏳ Firestore não pronto, tentando novamente...");
+          setTimeout(async () => {
+            if (isFirestoreReady()) {
+              try {
+                const autoSyncStarted =
+                  await autoSyncService.ensureAutoSyncAfterLogin();
+                setAutoSyncActive(autoSyncStarted);
+                console.log("✅ Auto sync garantido após aguardar Firestore!");
+              } catch (error) {
+                console.error(
+                  "❌ Erro ao garantir auto sync após aguardar:",
+                  error,
+                );
+                setAutoSyncActive(false);
+              }
+            }
+          }, 2000);
+        }
+      } catch (error) {
+        console.error("❌ Erro ao processar login para auto sync:", error);
+      }
+    };
+
     // Adicionar listeners para todas as coleções
     const collections = [
       "obras",
@@ -1475,6 +1525,12 @@ function App() {
       );
     });
 
+    // Adicionar listener para login de utilizador
+    window.addEventListener(
+      "userLoggedIn",
+      handleUserLoggedIn as EventListener,
+    );
+
     // Cleanup listeners
     return () => {
       collections.forEach((collection) => {
@@ -1483,6 +1539,12 @@ function App() {
           handleDataUpdate as EventListener,
         );
       });
+
+      // Remover listener de login
+      window.removeEventListener(
+        "userLoggedIn",
+        handleUserLoggedIn as EventListener,
+      );
     };
   }, []);
 
@@ -1957,10 +2019,10 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("��� Auth result:", result);
+      console.log("���� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("��� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1995,6 +2057,45 @@ function App() {
             navigateToSection("dashboard");
           }
         }, 100);
+
+        // Garantir que auto sync está ativo após login
+        setTimeout(async () => {
+          try {
+            console.log("🔄 Verificando auto sync após login...");
+
+            if (isFirestoreReady()) {
+              const autoSyncStarted =
+                await autoSyncService.ensureAutoSyncAfterLogin();
+              setAutoSyncActive(autoSyncStarted);
+
+              if (autoSyncStarted) {
+                console.log("✅ Auto sync garantido após login!");
+              } else {
+                console.warn("⚠️ Falha ao garantir auto sync após login");
+              }
+            } else {
+              console.log("⏳ Aguardando Firestore para ativar auto sync...");
+              // Tentar novamente após 3 segundos
+              setTimeout(async () => {
+                if (isFirestoreReady()) {
+                  try {
+                    const autoSyncStarted =
+                      await autoSyncService.ensureAutoSyncAfterLogin();
+                    setAutoSyncActive(autoSyncStarted);
+                    console.log(
+                      "✅ Auto sync garantido após aguardar Firestore!",
+                    );
+                  } catch (error) {
+                    console.error("❌ Erro ao garantir auto sync:", error);
+                    setAutoSyncActive(false);
+                  }
+                }
+              }, 3000);
+            }
+          } catch (error) {
+            console.error("❌ Erro na verificação de auto sync:", error);
+          }
+        }, 500);
       } else {
         console.warn("❌ Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
@@ -2096,7 +2197,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç��o agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2325,7 +2426,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("🔔 Requesting notification permission...");
+    console.log("�� Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -2443,7 +2544,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     }
 
     // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" → ${assignedTo}`);
+    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" ��� ${assignedTo}`);
     console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
   };
 
@@ -2782,7 +2883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("�� Erro ao salvar utilizador:", error);
+      console.error("��� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -3028,7 +3129,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
-                {!import.meta.env.DEV && (
+                {(typeof import.meta === "undefined" ||
+                  !import.meta.env ||
+                  !import.meta.env.DEV) && (
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
@@ -3133,7 +3236,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras necessitam atenç��o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -5107,7 +5210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Já atribuído:",
+                                    "| Já atribu��do:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
                                     !alreadyAssigned,
@@ -5411,7 +5514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observações sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -6765,7 +6868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Gerais
+                          Observa��ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -6985,7 +7088,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-center space-x-2">
                           <Settings className="h-4 w-4" />
-                          <span>Configura��ões</span>
+                          <span>Configura���ões</span>
                         </div>
                       </button>
                       {(currentUser?.role === "super_admin" ||
@@ -7493,7 +7596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Bell className="h-6 w-6 text-blue-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações Push
+                                Notificaç��es Push
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -7695,7 +7798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "���� Ativo"
+                                        ? "����� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7742,7 +7845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configuraç��es protegidas por palavra-passe para
+                              Configura����es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -8965,7 +9068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç�������es
+                            Notas e Observaç��������es
                           </label>
                           <textarea
                             rows={4}
@@ -9869,7 +9972,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ��etalhes do Furo de Água
+                        ���etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -10991,7 +11094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Observaç€s e próxima manutenção</span>
                 </div>
               </div>
@@ -11345,6 +11448,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Status de Sincronização Automática */}
                 <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
                   <AutoSyncIndicator />
+                  <div className="mt-2 pt-2 border-t border-green-300">
+                    <PostLoginAutoSyncIndicator className="text-xs" />
+                  </div>
                 </div>
 
                 <button

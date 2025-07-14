@@ -200,6 +200,42 @@ export class AutoSyncService {
     return this.isActive;
   }
 
+  // Verificar e iniciar auto sync após login (método específico)
+  async ensureAutoSyncAfterLogin(): Promise<boolean> {
+    try {
+      console.log("🔑 Verificando auto sync após login...");
+
+      if (!this.db) {
+        console.warn("⚠️ Firebase não disponível para auto sync");
+        return false;
+      }
+
+      if (this.isActive) {
+        console.log("✅ Auto sync já está ativo após login");
+        return true;
+      }
+
+      console.log("🚀 Iniciando auto sync após login...");
+      await this.startAutoSync();
+
+      if (this.isActive) {
+        console.log("✅ Auto sync iniciado com sucesso após login!");
+
+        // Forçar uma sincronização completa imediata
+        await this.syncAllCollections();
+        console.log("🔄 Sincronização completa executada após login");
+
+        return true;
+      } else {
+        console.warn("⚠️ Falha ao iniciar auto sync após login");
+        return false;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao garantir auto sync após login:", error);
+      return false;
+    }
+  }
+
   // Obter status dos observadores
   getObserversStatus(): { [key: string]: boolean } {
     const status: { [key: string]: boolean } = {};
