@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Settings } from "lucide-react";
+import NetlifyEnvTest from "../components/NetlifyEnvTest";
 
 interface LoginPageProps {
   onLogin: (
@@ -189,6 +190,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </form>
       </div>
+
+      {/* Teste de Variáveis de Ambiente (apenas em desenvolvimento) */}
+      {import.meta.env.DEV && (
+        <div className="mt-8">
+          <NetlifyEnvTest />
+        </div>
+      )}
 
       {/* Floating Action Buttons (Bottom Right) - Hidden */}
       {/*
