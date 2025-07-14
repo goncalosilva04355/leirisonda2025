@@ -248,35 +248,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               htmlFor="remember-me"
               className="ml-2 block text-sm text-gray-700"
             >
-              Lembrar-me (auto-login)
+              Lembrar-me
             </label>
-          </div>
-
-          {/* Firestore Status Indicator */}
-          <div className="text-xs text-center">
-            {firestoreStatus === "checking" && (
-              <div className="text-blue-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3 animate-pulse" />
-                <span>Verificando Firestore...</span>
-              </div>
-            )}
-            {firestoreStatus === "ready" && (
-              <div className="text-green-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3" />
-                <span>✅ Firestore conectado</span>
-                {lastSaveId && (
-                  <span className="text-gray-500">
-                    | ID: {lastSaveId.slice(-6)}
-                  </span>
-                )}
-              </div>
-            )}
-            {/* Status Firebase - Apenas em produção */}
-            {!import.meta.env.DEV && (
-              <div className="flex items-center justify-center">
-                <FirebaseAlwaysOnStatus />
-              </div>
-            )}
           </div>
 
           {/* Error Message */}
@@ -285,21 +258,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               <strong>Erro de Login:</strong>
               <br />
               {loginError}
-
-              {/* Mobile quick fix hint */}
-              {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
-                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-700">
-                  <strong>💡 Solução Rápida (Mobile):</strong>
-                  <br />
-                  Tente usar password:{" "}
-                  <code className="bg-yellow-100 px-1 rounded">123</code>
-                </div>
-              )}
             </div>
           )}
-
-          {/* Login Hints */}
-          <LoginHints />
 
           {/* Login Button */}
           <div className="space-y-2 pt-2">
@@ -313,9 +273,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           </div>
         </form>
       </div>
-
-      {/* Verificador de variáveis Netlify - Só em produção */}
-      <NetlifyEnvChecker />
     </div>
   );
 };

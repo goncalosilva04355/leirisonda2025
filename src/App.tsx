@@ -58,14 +58,9 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
-import {
-  DataRestoredNotification,
-  DataProtectionStatus,
-} from "./components/DataRestoredNotification";
+
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
-import { RealtimeNotifications } from "./components/RealtimeNotifications";
-import { WorkAssignmentNotifications } from "./components/WorkAssignmentNotifications";
-import { FCMNotificationSetup } from "./components/FCMNotificationSetup";
+
 import { fcmService } from "./services/fcmService";
 
 import { syncManager } from "./utils/syncManager";
@@ -94,8 +89,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
-import PostLoginAutoSyncIndicator from "./components/PostLoginAutoSyncIndicator";
+
 import ProductionSyncStatus from "./components/ProductionSyncStatus";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
@@ -243,7 +237,7 @@ function App() {
             console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
+              "⚠️ N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -266,7 +260,7 @@ function App() {
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
 
-    // Detectar conflitos Firebase em dispositivos móveis
+    // Detectar conflitos Firebase em dispositivos m��veis
     const detectFirebaseConflicts = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (!isMobile) return;
@@ -412,7 +406,7 @@ function App() {
 
     // Verificaç��es automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionará normalmente sem verificações autom📞ticas
+    // Sistema funcionar�� normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
@@ -511,197 +505,6 @@ function App() {
   };
 
   // Função para enviar notificações push quando uma obra é atribuída
-  const sendWorkAssignmentNotifications = async (workData: any) => {
-    try {
-      console.log("📱 Enviando notifica�����ões de atribuição de obra...");
-
-      // Verificar se há utilizadores atribuídos
-      if (!workData.assignedUsers || workData.assignedUsers.length === 0) {
-        console.log(
-          "⚠️ Nenhum utilizador atribuído, não enviando notificações",
-        );
-        return;
-      }
-
-      // Preparar dados da notifica��ão
-      const notificationData = {
-        title: "🔔 Nova Obra Atribu��da",
-        body: `${workData.title} - ${workData.client}`,
-        icon: "/icon.svg",
-        badge: "/icon.svg",
-        data: {
-          workId: workData.id,
-          workTitle: workData.title,
-          client: workData.client,
-          location: workData.location,
-          startDate: workData.startDate,
-          type: "work_assignment",
-          url: `/obras/${workData.id}`,
-        },
-      };
-
-      // Carregar todos os utilizadores para obter tokens FCM
-      const allUsers = JSON.parse(
-        safeLocalStorage.getItem("app-users") || "[]",
-      );
-
-      // Para cada utilizador atribuído
-      for (const assignedUser of workData.assignedUsers) {
-        try {
-          const user = allUsers.find((u: any) => u.id === assignedUser.id);
-          if (!user) {
-            console.warn(
-              `⚠️ Utilizador ${assignedUser.name} n��o encontrado na lista`,
-            );
-            continue;
-          }
-
-          console.log(`📱 Enviando notificação para ${assignedUser.name}...`);
-
-          // 1. Enviar notificação FCM (notificação push real)
-          const fcmSuccess = await fcmService.sendNotificationToUser(
-            assignedUser.id,
-            {
-              title: "🔔 Nova Obra Atribuída",
-              body: `${workData.title} - ${workData.client}`,
-              icon: "/icon.svg",
-              clickAction: "/#obras",
-              data: {
-                workId: workData.id,
-                workTitle: workData.title,
-                client: workData.client,
-                location: workData.location,
-                type: "work_assignment",
-              },
-            },
-          );
-
-          if (fcmSuccess) {
-            console.log(`✅ Notificação FCM enviada para ${assignedUser.name}`);
-          } else {
-            console.warn(`���️ Falha no envio FCM para ${assignedUser.name}`);
-          }
-
-          // 2. Salvar notificação local para o utilizador
-          const userNotifications = JSON.parse(
-            safeLocalStorage.getItem(`work-notifications-${assignedUser.id}`) ||
-              "[]",
-          );
-
-          const newNotification = {
-            id: `${workData.id}-${Date.now()}`,
-            workId: workData.id,
-            workTitle: workData.title,
-            client: workData.client,
-            location: workData.location,
-            startDate: workData.startDate,
-            type: "new_assignment",
-            timestamp: Date.now(),
-            read: false,
-            urgent: workData.priority === "urgent",
-          };
-
-          userNotifications.unshift(newNotification);
-          // Manter apenas as últimas 50 notificações
-          const limitedNotifications = userNotifications.slice(0, 50);
-
-          safeLocalStorage.setItem(
-            `work-notifications-${assignedUser.id}`,
-            JSON.stringify(limitedNotifications),
-          );
-
-          // 3. Disparar evento customizado para atualizar UI em tempo real
-          const customEvent = new CustomEvent("worksUpdated", {
-            detail: {
-              type: "assignment",
-              workId: workData.id,
-              workTitle: workData.title,
-              client: workData.client,
-              location: workData.location,
-              startDate: workData.startDate,
-              assignedUser: assignedUser,
-            },
-          });
-          window.dispatchEvent(customEvent);
-
-          // 4. Fallback: notificação local se FCM falhar e app estiver aberta
-          if (
-            !fcmSuccess &&
-            "serviceWorker" in navigator &&
-            "PushManager" in window
-          ) {
-            try {
-              const permission = await Notification.requestPermission();
-
-              if (permission === "granted") {
-                // Mostrar notificação local como fallback
-                const notification = new Notification(notificationData.title, {
-                  body: notificationData.body,
-                  icon: notificationData.icon,
-                  badge: notificationData.badge,
-                  tag: `work-${workData.id}`,
-                  requireInteraction: true,
-                  data: notificationData.data,
-                });
-
-                // Auto-close notification after 10 seconds
-                setTimeout(() => {
-                  notification.close();
-                }, 10000);
-
-                // Handle notification click
-                notification.onclick = () => {
-                  window.focus();
-                  notification.close();
-                  // Navegar para obras
-                  window.location.hash = "#obras";
-                };
-
-                console.log(
-                  `✅ Notificação local (fallback) enviada para ${assignedUser.name}`,
-                );
-              }
-            } catch (pushError) {
-              console.warn("⚠️ Erro ao enviar notificação local:", pushError);
-            }
-          }
-
-          // Salvar notificação no Firestore (se disponível)
-          try {
-            if (firestoreService) {
-              await firestoreService.createNotification({
-                userId: assignedUser.id,
-                workId: workData.id,
-                type: "work_assignment",
-                title: notificationData.title,
-                body: notificationData.body,
-                data: notificationData.data,
-                timestamp: new Date().toISOString(),
-                read: false,
-              });
-              console.log(
-                `✅ Notificação salva no Firestore para ${assignedUser.name}`,
-              );
-            }
-          } catch (firestoreError) {
-            console.warn(
-              "⚠️ Erro ao salvar notificação no Firestore:",
-              firestoreError,
-            );
-          }
-        } catch (userError) {
-          console.error(
-            `❌ Erro ao enviar notificação para ${assignedUser.name}:`,
-            userError,
-          );
-        }
-      }
-
-      console.log("✅ Processo de notificações concluído");
-    } catch (error) {
-      console.error("❌ Erro no sistema de notifica��ões:", error);
-    }
-  };
 
   const addWork = async (data: any) => {
     try {
@@ -722,17 +525,11 @@ function App() {
           console.warn("€��� Erro na sincronização universal:", syncError);
         }
 
-        // Enviar notificações push para utilizadores atribuídos
-        await sendWorkAssignmentNotifications(data);
-
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
         console.warn("��� Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
-
-        // Enviar notifica��ões mesmo no fallback
-        await sendWorkAssignmentNotifications(data);
 
         return result;
       }
@@ -754,9 +551,6 @@ function App() {
         existingWorks.push(newWork);
         safeLocalStorage.setItem("works", JSON.stringify(existingWorks));
         console.log("€ Obra guardada no localStorage como fallback");
-
-        // Enviar notificações mesmo no fallback final
-        await sendWorkAssignmentNotifications(newWork);
       }
 
       return newWork.id;
@@ -769,7 +563,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("�� Manutenção criada no Firestore:", firestoreId);
+        console.log("���� Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -890,7 +684,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados críticos - NUNCA PERDER DADOS
+  // Proteç��o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -908,7 +702,7 @@ function App() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (isFirestoreReady()) {
-          console.log("📱 Carregando utilizadores do Firestore...");
+          console.log("���� Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
           const firestoreUsers = await firestoreService.getUtilizadores();
@@ -1102,8 +896,7 @@ function App() {
   const [selectedWorkType, setSelectedWorkType] = useState("");
   const [showShareModal, setShowShareModal] = useState(false);
   const [interventionSaved, setInterventionSaved] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [pushPermission, setPushPermission] = useState("default");
+
   const [assignedWorks, setAssignedWorks] = useState<any[]>([]);
   const [uploadedPhotos, setUploadedPhotos] = useState<any[]>([]);
   const [showPhotoGallery, setShowPhotoGallery] = useState(false);
@@ -1185,14 +978,6 @@ function App() {
             "✅ Configura��ão Phone Dialer carregada:",
             JSON.parse(savedPhoneDialer),
           );
-        }
-
-        // Load notification preference
-        const savedNotifications = safeLocalStorage.getItem(
-          "notificationsEnabled",
-        );
-        if (savedNotifications !== null) {
-          setNotificationsEnabled(JSON.parse(savedNotifications));
         }
       } catch (error) {
         console.error("❌ Erro ao carregar configura��ões:", error);
@@ -1284,7 +1069,8 @@ function App() {
     initializeAuth();
   }, []);
 
-  // Passo 3: Teste completo do Firestore com operações reais
+  // Passo 3: Teste completo do Firestore com operações reais - COMENTADO para evitar erros
+  /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
       console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
@@ -1355,6 +1141,7 @@ function App() {
 
     testFirestoreStep3();
   }, []);
+  */
 
   // Sincronização inicial de todos os dados com Firestore
   useEffect(() => {
@@ -1480,7 +1267,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("⚠️ Falha ao garantir auto sync após login");
+            console.warn("���️ Falha ao garantir auto sync após login");
             setAutoSyncActive(false);
           }
         } else {
@@ -1600,22 +1387,6 @@ function App() {
       );
     };
     // console.log("€Initializing notifications...");
-    if ("Notification" in window) {
-      const permission = Notification.permission;
-      console.log("€rrent notification permission:", permission);
-      setPushPermission(permission);
-      setNotificationsEnabled(permission === "granted");
-
-      if (permission === "granted") {
-        console.log("�� Notifications already granted");
-      } else if (permission === "denied") {
-        console.warn("❌ Notifications denied by user");
-      } else {
-        console.log("⏳ Notifications permission not yet requested");
-      }
-    } else {
-      console.warn("⚠️ Notifications not supported in this browser");
-    }
 
     // Register service worker for better push notification support
     if ("serviceWorker" in navigator) {
@@ -2197,7 +1968,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicaç��o agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplica����o agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2281,10 +2052,10 @@ ${maintenance
     (maint, index) => `
 ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
-   Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descrição: ${maint.description}
+   Descri��ão: ${maint.description}
    ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
 `,
   )
@@ -2422,144 +2193,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     alert(
       "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
-  };
-
-  // Push Notification functions
-  const requestNotificationPermission = async () => {
-    console.log("�� Requesting notification permission...");
-    if ("Notification" in window) {
-      try {
-        const permission = await Notification.requestPermission();
-        console.log("🔔 Permission result:", permission);
-        setPushPermission(permission);
-        if (permission === "granted") {
-          setNotificationsEnabled(true);
-          safeLocalStorage.setItem("notificationsEnabled", "true");
-          showNotification(
-            "Notificações Ativadas",
-            "Agora vai receber notificações de obras atribuídas",
-            "success",
-          );
-          console.log("✅ Notifications enabled successfully");
-        } else {
-          console.warn("❌ Notification permission denied or dismissed");
-        }
-        return permission;
-      } catch (error) {
-        console.error("€️ Error requesting notification permission:", error);
-        return "error";
-      }
-    }
-    console.warn("⚠️ Notifications not supported in this browser");
-    return "denied";
-  };
-
-  const showNotification = (title: string, body: string, type = "info") => {
-    if (Notification.permission === "granted") {
-      const notification = new Notification(title, {
-        body: body,
-        icon: "/icon-192x192.png",
-        badge: "/icon-192x192.png",
-        tag: type,
-        requireInteraction: true,
-      });
-
-      notification.onclick = () => {
-        window.focus();
-        notification.close();
-      };
-    }
-  };
-
-  const sendWorkAssignmentNotification = (
-    workTitle: string,
-    assignedTo: string,
-  ) => {
-    console.log("���� DEBUG: sendWorkAssignmentNotification called with:", {
-      workTitle,
-      assignedTo,
-      currentUser: currentUser?.name,
-      notificationsEnabled,
-      notificationPermission: Notification.permission,
-    });
-
-    // Always add to assigned works list when a work is assigned
-    const newAssignedWork = {
-      id: Date.now(),
-      title: workTitle,
-      assignedTo: assignedTo,
-      dateAssigned: new Date().toISOString(),
-      status: "Nova",
-    };
-    setAssignedWorks((prev) => [newAssignedWork, ...prev]);
-
-    // Check notification conditions
-
-    // Check if current user is the one assigned (exact match or partial match for combined assignments)
-    const isAssignedToCurrentUser =
-      currentUser &&
-      assignedTo &&
-      (assignedTo === currentUser?.name ||
-        assignedTo.toLowerCase().includes(currentUser?.name.toLowerCase()) ||
-        currentUser?.name.toLowerCase().includes(assignedTo.toLowerCase()));
-
-    console.log("🔍 DEBUG: Assignment check:", {
-      currentUser: currentUser?.name,
-      assignedTo,
-      exactMatch: currentUser?.name === assignedTo,
-      partialMatch: assignedTo
-        .toLowerCase()
-        .includes(currentUser?.name.toLowerCase()),
-      isAssignedToCurrentUser,
-    });
-
-    // Send notification if user is assigned to current user and notifications are enabled
-    if (isAssignedToCurrentUser) {
-      if (notificationsEnabled && Notification.permission === "granted") {
-        console.log("📞 All conditions met, sending notification...");
-        showNotification(
-          "Nova Obra Atribuída",
-          `A obra "${workTitle}" foi-lhe atribuída`,
-          "work-assignment",
-        );
-      } else {
-        console.warn("��� Notification blocked, using alert fallback:", {
-          notificationsEnabled,
-          permission: Notification.permission,
-        });
-
-        // Show alert as fallback for better user experience
-        setTimeout(() => {
-          alert(
-            `🔔 Nova Obra Atribuída!\n\n📋 ${workTitle}\n\n👤 Atribuída a: ${assignedTo}\n\n💡 Ative as notificações nas configurações para receber alertas automáticos.`,
-          );
-        }, 1000);
-      }
-    } else {
-      console.log("ℹ️ Notification not for current user:", {
-        currentUser: currentUser?.name,
-        assignedTo,
-        isAssignedToCurrentUser,
-      });
-    }
-
-    // Console log for debugging purposes (admin view)
-    console.log(`🔔 OBRA ATRIBUÍDA: "${workTitle}" ��� ${assignedTo}`);
-    console.log(`📋 Total de obras atribuídas: ${assignedWorks.length + 1}`);
-  };
-
-  const testPushNotification = () => {
-    if (Notification.permission === "granted") {
-      showNotification(
-        "Teste de Notificação",
-        "As notificações estão a funcionar corretamente!",
-        "test",
-      );
-    } else {
-      alert(
-        "As notificações não estão ativadas. Active-as primeiro nas configurações.",
-      );
-    }
   };
 
   // Photo management functions
@@ -2756,7 +2389,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       try {
         window.open(mapsUrl, "_blank");
-        console.log("✅ Google Maps opened successfully");
+        console.log("��� Google Maps opened successfully");
       } catch (error) {
         console.error("📞 Error opening Google Maps:", error);
       }
@@ -2883,7 +2516,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("��� Erro ao salvar utilizador:", error);
+      console.error("����� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -3134,6 +2767,187 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   !import.meta.env.DEV) && (
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
+
+                {/* Sistema Técnico - Painel Informativo */}
+                <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+                      <h2 className="text-lg font-semibold text-gray-900">
+                        Estado do Sistema
+                      </h2>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Última verificação:{" "}
+                      {new Date().toLocaleTimeString("pt-PT")}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* LocalStorage Status - SEMPRE ATIVO */}
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                          <h3 className="font-medium text-green-800">
+                            LocalStorage
+                          </h3>
+                        </div>
+                        <span className="text-xs text-green-600 font-medium">
+                          ✅ ATIVO
+                        </span>
+                      </div>
+                      <p className="text-xs text-green-700">
+                        💾{" "}
+                        {safeLocalStorage.getItem("app-users")
+                          ? "Dados carregados"
+                          : "Sem dados"}
+                        <br />
+                        🔄 Sempre disponível
+                        <br />
+                        📱 Modo offline garantido
+                      </p>
+                    </div>
+
+                    {/* Firebase Status - VERIFICAÇÃO REAL */}
+                    <div
+                      className={`${isFirebaseReady() ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"} rounded-lg p-3`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div
+                            className={`w-2 h-2 ${isFirebaseReady() ? "bg-green-500 animate-pulse" : "bg-red-500"} rounded-full mr-2`}
+                          ></div>
+                          <h3
+                            className={`font-medium ${isFirebaseReady() ? "text-green-800" : "text-red-800"}`}
+                          >
+                            Firebase
+                          </h3>
+                        </div>
+                        <span
+                          className={`text-xs font-medium ${isFirebaseReady() ? "text-green-600" : "text-red-600"}`}
+                        >
+                          {isFirebaseReady() ? "✅ ATIVO" : "❌ OFFLINE"}
+                        </span>
+                      </div>
+                      <p
+                        className={`text-xs ${isFirebaseReady() ? "text-green-700" : "text-red-700"}`}
+                      >
+                        🔥 {isFirebaseReady() ? "Conectado" : "Desconectado"}
+                        <br />
+                        🔐{" "}
+                        {isFirebaseReady()
+                          ? "Autenticação OK"
+                          : "Sem autenticação"}
+                        <br />
+                        🌐{" "}
+                        {isFirebaseReady() ? "leiria-1cfc9" : "Projeto offline"}
+                      </p>
+                    </div>
+
+                    {/* Firestore Status - VERIFICAÇÃO REAL */}
+                    <div
+                      className={`${isFirestoreReady() ? "bg-blue-50 border-blue-200" : "bg-yellow-50 border-yellow-200"} rounded-lg p-3`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div
+                            className={`w-2 h-2 ${isFirestoreReady() ? "bg-blue-500 animate-pulse" : "bg-yellow-500"} rounded-full mr-2`}
+                          ></div>
+                          <h3
+                            className={`font-medium ${isFirestoreReady() ? "text-blue-800" : "text-yellow-800"}`}
+                          >
+                            Firestore
+                          </h3>
+                        </div>
+                        <span
+                          className={`text-xs font-medium ${isFirestoreReady() ? "text-blue-600" : "text-yellow-600"}`}
+                        >
+                          {isFirestoreReady() ? "✅ ATIVO" : "⚠️ LOCAL"}
+                        </span>
+                      </div>
+                      <p
+                        className={`text-xs ${isFirestoreReady() ? "text-blue-700" : "text-yellow-700"}`}
+                      >
+                        💾{" "}
+                        {isFirestoreReady() ? "Base dados ativa" : "Modo local"}
+                        <br />
+                        📊{" "}
+                        {isFirestoreReady()
+                          ? "Sync tempo real"
+                          : "Sem sincronização"}
+                        <br />
+                        🔒{" "}
+                        {isFirestoreReady()
+                          ? "Segurança ativa"
+                          : "Local apenas"}
+                      </p>
+                    </div>
+
+                    {/* Environment Status */}
+                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
+                          <h3 className="font-medium text-purple-800">
+                            Ambiente
+                          </h3>
+                        </div>
+                        <span className="text-xs text-purple-600 font-medium">
+                          {import.meta.env.DEV ? "🔧 DEV" : "🚀 PROD"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-purple-700">
+                        🌍{" "}
+                        {import.meta.env.DEV ? "Desenvolvimento" : "Produção"}
+                        <br />
+                        📡{" "}
+                        {window.location.protocol === "https:"
+                          ? "HTTPS ativo"
+                          : "HTTP local"}
+                        <br />⚡ Vite + React 18
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Status Bar em Tempo Real */}
+                  <div className="mt-4 pt-4 border-t border-gray-100">
+                    <div className="flex items-center justify-between text-xs">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                          <div className="w-1 h-1 bg-green-500 rounded-full mr-1"></div>
+                          <span className="text-gray-600">App: Funcional</span>
+                        </div>
+                        <div className="flex items-center">
+                          <div
+                            className={`w-1 h-1 ${safeLocalStorage.getItem("currentUser") ? "bg-green-500" : "bg-red-500"} rounded-full mr-1`}
+                          ></div>
+                          <span className="text-gray-600">
+                            Auth:{" "}
+                            {safeLocalStorage.getItem("currentUser")
+                              ? "Logado"
+                              : "Sem login"}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <div
+                            className={`w-1 h-1 ${navigator.onLine ? "bg-green-500" : "bg-red-500"} rounded-full mr-1`}
+                          ></div>
+                          <span className="text-gray-600">
+                            Rede: {navigator.onLine ? "Online" : "Offline"}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="text-gray-500">
+                        Uptime:{" "}
+                        {Math.floor(
+                          (Date.now() - performance.timeOrigin) / 1000,
+                        )}
+                        s
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Simple Welcome Header */}
                 <div
@@ -3476,7 +3290,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  📍 Morada:
+                                  ���� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -3767,7 +3581,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="text-center py-8">
                             <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
-                              Não há dados para pesquisar
+                              N��o há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
                               Adicione obras, piscinas, manutenções ou clientes
@@ -4459,7 +4273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu📞do"
+                                      ? "Conclu��do"
                                       : maint.status}
                               </span>
                             </div>
@@ -4642,7 +4456,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manutenção</span>
+                        <span>Agendar Manuten��ão</span>
                       </button>
                     </div>
                   ) : (
@@ -5048,7 +4862,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               safeLocalStorage.getItem("app-users");
                             console.log(
-                              "💾 USERS NO LOCALSTORAGE (app-users):",
+                              "��� USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -5204,7 +5018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "���ILTRO UTILIZADOR:",
+                                    "�����ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -5772,7 +5586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condições do terreno"]',
+                                    'textarea[placeholder*="Condiç��es do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -6487,7 +6301,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manutenção
+                        Nova Manuten��ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar interven��ão de manutenção
@@ -7053,7 +6867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura��ões
+                        Configura���ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7218,7 +7032,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>👥 Equipas atribuídas</li>
+                                <li>��� Equipas atribuídas</li>
                                 <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -7243,7 +7057,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
-                            preferências.
+                            prefer��ncias.
                           </p>
                         </div>
 
@@ -7256,29 +7070,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-4">
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-red-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Autom��tica
+                                  Sincronização Autom���tica
                                 </span>
                                 <button
                                   onClick={() =>
@@ -7415,37 +7207,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex justify-between py-2">
                         <span className="text-gray-600">Modo de Dados</span>
                         <span className="font-medium">Armazenamento Local</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Basic Notifications for all users */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <div className="flex items-center mb-4">
-                      <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Notificações
-                      </h3>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium text-gray-700">
-                          Notificações Push
-                        </span>
-                        <button
-                          onClick={requestNotificationPermission}
-                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                            notificationsEnabled ? "bg-blue-600" : "bg-gray-200"
-                          }`}
-                        >
-                          <span
-                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                              notificationsEnabled
-                                ? "translate-x-5"
-                                : "translate-x-0"
-                            }`}
-                          />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -7587,115 +7348,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <span className="font-medium">
                                   Armazenamento Local
                                 </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Notifications Section */}
-                          <div className="bg-white rounded-lg p-6 shadow-sm">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificaç��es Push
-                              </h3>
-                            </div>
-                            <p className="text-gray-600 mb-6">
-                              Ative as notificações para receber alertas sobre
-                              novas obras atribuídas e atualizações importantes.
-                            </p>
-
-                            <div className="space-y-4">
-                              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-blue-900 mb-2">
-                                      Notifica��ões de Obras
-                                    </h4>
-                                    <p className="text-blue-700 text-sm mb-3">
-                                      Receba notificações quando uma nova obra
-                                      for atribuída a si.
-                                    </p>
-                                    <button
-                                      onClick={() => {
-                                        if ("Notification" in window) {
-                                          if (
-                                            Notification.permission ===
-                                            "default"
-                                          ) {
-                                            Notification.requestPermission().then(
-                                              (permission) => {
-                                                if (permission === "granted") {
-                                                  new Notification(
-                                                    "Leirisonda",
-                                                    {
-                                                      body: "Notificações ativadas com sucesso!",
-                                                      icon: "/icon.svg",
-                                                    },
-                                                  );
-                                                }
-                                              },
-                                            );
-                                          } else if (
-                                            Notification.permission ===
-                                            "granted"
-                                          ) {
-                                            new Notification("Leirisonda", {
-                                              body: "Notificações já estão ativadas!",
-                                              icon: "/icon.svg",
-                                            });
-                                          } else {
-                                            alert(
-                                              "Notificações foram bloqueadas. Por favor, ative-as nas configurações do navegador.",
-                                            );
-                                          }
-                                        } else {
-                                          alert(
-                                            "Este navegador não suporta notificaç€.",
-                                          );
-                                        }
-                                      }}
-                                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-                                    >
-                                      Ativar Notificaç€s
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-
-                              {/* Configurações de Localização Individual - Apenas para super_admin */}
-                              {currentUser?.role === "super_admin" && (
-                                <PersonalLocationSettings />
-                              )}
-
-                              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                                <div className="flex items-start space-x-3">
-                                  <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
-                                  <div className="flex-1">
-                                    <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruções
-                                    </h4>
-                                    <ul className="text-gray-700 text-sm space-y-1">
-                                      <li>
-                                        • As notificaç��es funcionam apenas com
-                                        HTTPS
-                                      </li>
-                                      <li>
-                                        • Certifique-se de que permite
-                                        notificações no seu navegador
-                                      </li>
-                                      <li>
-                                        • Em dispositivos móveis, adicione a app
-                                        ao ecrã inicial
-                                      </li>
-                                      <li>
-                                        • Configure a sua localiza��ão abaixo e
-                                        veja o mapa da equipa na página
-                                        "Localizações"
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
                               </div>
                             </div>
                           </div>
@@ -7989,63 +7641,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           )}
 
-                          {/* Notifications and Settings content continues... */}
-                          <div className="bg-gray-50 rounded-lg p-6">
-                            <div className="flex items-center mb-4">
-                              <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                              <h3 className="text-lg font-semibold text-gray-900">
-                                Notificações
-                              </h3>
-                            </div>
-                            <div className="space-y-4">
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Notificações Push
-                                </span>
-                                <button
-                                  onClick={requestNotificationPermission}
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    notificationsEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      notificationsEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-
-                              <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700">
-                                  Sincronizaç��o Automática
-                                </span>
-                                <button
-                                  onClick={() =>
-                                    setAutoSyncEnabled(!autoSyncEnabled)
-                                  }
-                                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                                    autoSyncEnabled
-                                      ? "bg-blue-600"
-                                      : "bg-gray-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      autoSyncEnabled
-                                        ? "translate-x-5"
-                                        : "translate-x-0"
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-
                           {currentUser?.role === "super_admin" && (
                             <div className="bg-gray-50 rounded-lg p-6">
                               <h3 className="text-lg font-semibold mb-4">
@@ -8254,7 +7849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest���o de Utilizadores
+                              Gest����o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -8298,39 +7893,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <span className="font-medium">
                             Armazenamento Local
                           </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Basic Notifications for all users */}
-                    <div className="bg-white rounded-lg p-6 shadow-sm">
-                      <div className="flex items-center mb-4">
-                        <Bell className="h-6 w-6 text-blue-600 mr-3" />
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          Notificações
-                        </h3>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm font-medium text-gray-700">
-                            Notificações Push
-                          </span>
-                          <button
-                            onClick={requestNotificationPermission}
-                            className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                              notificationsEnabled
-                                ? "bg-blue-600"
-                                : "bg-gray-200"
-                            }`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                notificationsEnabled
-                                  ? "translate-x-5"
-                                  : "translate-x-0"
-                              }`}
-                            />
-                          </button>
                         </div>
                       </div>
                     </div>
@@ -8386,7 +7948,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>• Informações de clientes</li>
+                        <li>��� Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -8493,7 +8055,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>��� Hist��rico de serviços</li>
+                        <li>���� Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -9015,7 +8577,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C��digo Postal *
+                            C���digo Postal *
                           </label>
                           <input
                             type="text"
@@ -9102,7 +8664,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Validação básica
                           const name = (
                             form.querySelector(
-                              'input[placeholder="Nome completo ou razão social"]',
+                              'input[placeholder="Nome completo ou raz��o social"]',
                             ) as HTMLInputElement
                           )?.value;
                           const email = (
@@ -9433,7 +8995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {work.contact}
+                                        ���� {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -9676,7 +9238,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa��ões Básicas
+                          Informa����ões Básicas
                         </h3>
                       </div>
 
@@ -10111,7 +9673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da ��gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da ���gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10163,7 +9725,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa��ões
+                          ).value; // Observa����es
 
                           // Prepare update data
                           let updateData: any = {
@@ -10877,7 +10439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h2>
                   <p className="text-gray-500">
-                    Apenas super administradores podem aceder à área de
+                    Apenas super administradores podem aceder �� área de
                     administração.
                   </p>
                   <button
@@ -11009,7 +10571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relatório
+                  Escolha como pretende partilhar o relat��rio
                 </p>
               </div>
             </div>
@@ -11130,7 +10692,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon����alo Fonseca",
+  //       name: "Gon������alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11190,13 +10752,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               lastSync,
               syncWithFirebase,
               enableSync,
-            }}
-            notifications={{
-              pushPermission,
-              notificationsEnabled,
-              requestNotificationPermission,
-              testPushNotification,
-              sendWorkAssignmentNotification,
             }}
           />
         );
@@ -11268,7 +10823,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("🔐 Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -11445,14 +11000,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Navigation */}
               <nav className="flex-1 px-4 py-6 space-y-2">
-                {/* Status de Sincronização Automática */}
-                <div className="px-4 py-3 bg-green-50 border border-green-200 rounded-lg mb-4">
-                  <AutoSyncIndicator />
-                  <div className="mt-2 pt-2 border-t border-green-300">
-                    <PostLoginAutoSyncIndicator className="text-xs" />
-                  </div>
-                </div>
-
                 <button
                   onClick={() => {
                     navigateToSection("dashboard");
@@ -11572,7 +11119,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localizações - Para super_admin e admin */}
+                {/* Localiza��ões - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
                   currentUser?.role === "admin") && (
                   <button
@@ -11668,11 +11215,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <ArrowLeft className="h-6 w-6 text-gray-600" />
               </button>
             )}
-          </div>
-
-          {/* Sync Status Indicator - Top Right */}
-          <div className="fixed top-4 right-4 z-[60]">
-            <SyncStatusIndicator />
           </div>
 
           {/* Mobile Overlay */}
@@ -12092,7 +11634,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Orçamento
                         </label>
                         <p className="text-gray-900">
-                          ����{selectedWork.budget}
+                          ������{selectedWork.budget}
                         </p>
                       </div>
                     )}
@@ -12257,7 +11799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Localização
+                            Localiza��ão
                           </label>
                           <button
                             onClick={() => {
@@ -12550,46 +12092,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           )}
         </div>
 
-        {/* Realtime Notifications - REMOVIDAS */}
-        {/* <RealtimeNotifications /> */}
-
-        {/* Work Assignment Notifications */}
-        <WorkAssignmentNotifications currentUser={currentUser} />
-
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
-
-        {/* User Restore Notification */}
-        <UserRestoreNotificationSimple />
-
-        {/* Firebase Auto-Monitor - Discrete indicator */}
-        <FirebaseAutoMonitor firebaseStatus={firebaseAutoFix} />
-
-        {/* User Migration Indicator - Shows migration status */}
-        <UserMigrationIndicator migrationStatus={userMigration} />
-
-        {/* Data Persistence Diagnostic - Modal for persistence issues */}
-        {showDataDiagnostic && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="max-w-4xl w-full max-h-screen overflow-y-auto">
-              <DataPersistenceDiagnostic
-                autoCheck={true}
-                onClose={() => setShowDataDiagnostic(false)}
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Data Persistence Alert - Smart automatic alert */}
-        <DataPersistenceAlert
-          onOpenDiagnostic={() => setShowDataDiagnostic(true)}
-        />
-
-        {/* Data Persistence Status Indicator */}
-        <DataPersistenceIndicator onClick={() => setShowDataDiagnostic(true)} />
-
-        {/* Proteção de Dados - Notificações e Status */}
-        <DataRestoredNotification />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
