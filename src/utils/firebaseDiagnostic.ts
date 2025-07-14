@@ -72,6 +72,9 @@ export async function diagnoseFirebaseSetup() {
         console.error(
           `🔗 Link: https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
         );
+        console.error(
+          "📄 Veja PROJETO-ATIVO-CONFIG.md para instruções completas",
+        );
       }
 
       return false;
