@@ -117,7 +117,11 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
 
     // Desativar polling durante desenvolvimento para evitar refresh no Builder.io
     let interval: NodeJS.Timeout | null = null;
-    if (!import.meta.env.DEV) {
+    if (
+      typeof import.meta === "undefined" ||
+      !import.meta.env ||
+      !import.meta.env.DEV
+    ) {
       // Atualizar a cada 5 segundos com proteção
       interval = setInterval(() => {
         try {
