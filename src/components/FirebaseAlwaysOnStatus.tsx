@@ -47,10 +47,11 @@ export const FirebaseAlwaysOnStatus: React.FC<FirebaseStatusProps> = ({
     // Teste inicial rápido
     runQuickTest();
 
-    // Teste periódico mais espaçado
-    const interval = setInterval(runQuickTest, 30000); // 30 segundos
-
-    return () => clearInterval(interval);
+    // Desativar polling durante desenvolvimento para evitar refresh no Builder.io
+    if (!import.meta.env.DEV) {
+      const interval = setInterval(runQuickTest, 30000); // 30 segundos
+      return () => clearInterval(interval);
+    }
   }, []);
 
   const getStatusIcon = () => {
