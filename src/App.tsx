@@ -731,7 +731,7 @@ function App() {
   // Load users from Firestore and localStorage on app start
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("���� Loading users from Firestore + localStorage...");
+      console.log("🔄 Loading users from Firestore + localStorage...");
 
       try {
         // Aguardar Firestore estar pronto
@@ -3326,7 +3326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ������ Morada:
+                                  ���� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -6182,7 +6182,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Caracter��sticas especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter����sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -7458,7 +7458,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-green-900">
-                                        Navega����ão Maps
+                                        Navega��ão Maps
                                       </h4>
                                       <button
                                         onClick={() =>
@@ -8093,7 +8093,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>���� Hist��rico de serviços</li>
+                        <li>������ Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -9310,7 +9310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="instalacao">Instalação</option>
                             <option value="reparacao">Reparação</option>
                             <option value="limpeza">Limpeza</option>
-                            <option value="furo">Furo de Água</option>
+                            <option value="furo">Furo de ��gua</option>
                           </select>
                         </div>
 
@@ -9414,7 +9414,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Técnicos Atribuídos */}
+                    {/* T��cnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10188,7 +10188,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç���">Reparação</option>
+                          <option value="Reparaç�����">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -11002,50 +11002,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           <ProductionSyncStatus />
 
           {/* Firebase Quota Recovery */}
-          {showQuotaRecovery && quotaStatus?.isBlocked && (
-            <div className="fixed top-4 right-4 z-50 bg-red-50 border border-red-200 rounded-lg p-4 shadow-lg max-w-md">
-              <div className="flex items-start space-x-3">
-                <AlertCircle className="text-red-500 mt-1" size={20} />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-red-800 mb-2">
-                    🚨 Firebase Bloqueado
-                  </h3>
-                  <p className="text-red-700 text-sm mb-3">
-                    {quotaStatus.recommendation}
-                  </p>
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => {
-                        const recovered =
-                          FirebaseQuotaRecovery.manualRecovery();
-                        if (recovered) {
-                          setShowQuotaRecovery(false);
-                          window.location.reload();
-                        }
-                      }}
-                      className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-                    >
-                      Recuperar
-                    </button>
-                    <button
-                      onClick={() => setShowQuotaRecovery(false)}
-                      className="px-3 py-1 bg-gray-200 text-gray-700 text-sm rounded hover:bg-gray-300"
-                    >
-                      Ocultar
-                    </button>
-                    <button
-                      onClick={() => {
-                        FirebaseQuotaRecovery.diagnoseQuotaIssues();
-                      }}
-                      className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700"
-                    >
-                      Debug
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          <FirebaseQuotaRecoveryComponent />
 
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
@@ -12013,7 +11970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "N���o especificado"}
+                              : "N��o especificado"}
                           </p>
                         </div>
                       </div>
