@@ -14,11 +14,21 @@ if (!LOCAL_MODE) {
   try {
     console.log("🔥 Iniciando configuração Firebase...");
     const config = getFirebaseConfig();
-    console.log("🔧 Config Firebase:", {
+    console.log("🔧 Config Firebase completa:", {
       projectId: config.projectId,
       authDomain: config.authDomain,
       apiKey: config.apiKey.substring(0, 20) + "...",
+      storageBucket: config.storageBucket,
+      messagingSenderId: config.messagingSenderId,
+      appId: config.appId.substring(0, 20) + "...",
     });
+
+    // Verificar se é uma configuração válida
+    if (config.projectId.includes("your_") || config.apiKey.includes("your_")) {
+      console.warn(
+        "⚠️ Detectada configuração placeholder - tentando fallback...",
+      );
+    }
 
     if (getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
