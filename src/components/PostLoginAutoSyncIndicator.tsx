@@ -86,7 +86,11 @@ export const PostLoginAutoSyncIndicator: React.FC<
 
     // Polling para verificar status (apenas em produção)
     let interval: NodeJS.Timeout | null = null;
-    if (!import.meta.env.DEV) {
+    if (
+      typeof import.meta === "undefined" ||
+      !import.meta.env ||
+      !import.meta.env.DEV
+    ) {
       interval = setInterval(checkStatus, 5000);
     }
 
