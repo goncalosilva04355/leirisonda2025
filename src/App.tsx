@@ -148,6 +148,7 @@ import "./utils/emergencyUserInit";
 import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
+import { FirestoreTest } from "./components/FirestoreTest";
 
 // Teste de login
 import "./utils/testLogin";
@@ -599,7 +600,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("��� addClient iniciado com Firestore ativo");
+      console.log("����� addClient iniciado com Firestore ativo");
 
       const firestoreId = await offlineFirstService.createClient(data);
 
@@ -3490,7 +3491,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh��";
+                            timeText = "Amanh���";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -10118,7 +10119,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenção
+                        Editar Manutenç��o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
