@@ -1995,6 +1995,46 @@ function App() {
             navigateToSection("dashboard");
           }
         }, 100);
+
+        // Garantir que auto sync está ativo após login
+        setTimeout(async () => {
+          try {
+            console.log("🔄 Verificando auto sync após login...");
+
+            if (isFirestoreReady()) {
+              const isAutoSyncCurrentlyActive =
+                autoSyncService.isAutoSyncActive();
+
+              if (!isAutoSyncCurrentlyActive) {
+                console.log("🚀 Reativando auto sync após login...");
+                await autoSyncService.startAutoSync();
+                setAutoSyncActive(true);
+                console.log("✅ Auto sync reativado com sucesso após login!");
+              } else {
+                console.log("✅ Auto sync já está ativo após login");
+                setAutoSyncActive(true);
+              }
+            } else {
+              console.log("⏳ Aguardando Firestore para ativar auto sync...");
+              // Tentar novamente após 3 segundos
+              setTimeout(async () => {
+                if (isFirestoreReady()) {
+                  try {
+                    await autoSyncService.startAutoSync();
+                    setAutoSyncActive(true);
+                    console.log(
+                      "✅ Auto sync ativado após aguardar Firestore!",
+                    );
+                  } catch (error) {
+                    console.error("❌ Erro ao ativar auto sync:", error);
+                  }
+                }
+              }, 3000);
+            }
+          } catch (error) {
+            console.error("❌ Erro na verificação de auto sync:", error);
+          }
+        }, 500);
       } else {
         console.warn("❌ Login failed:", result.error);
         setLoginError(result.error || "Credenciais inválidas");
@@ -2096,7 +2136,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç��o agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2325,7 +2365,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   // Push Notification functions
   const requestNotificationPermission = async () => {
-    console.log("🔔 Requesting notification permission...");
+    console.log("�� Requesting notification permission...");
     if ("Notification" in window) {
       try {
         const permission = await Notification.requestPermission();
@@ -3133,7 +3173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras necessitam atenç��o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
