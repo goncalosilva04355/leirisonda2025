@@ -62,18 +62,19 @@ export async function diagnoseFirebaseSetup() {
       console.log("🎉 DIAGNÓSTICO: Firestore está FUNCIONAL!");
       return true;
     } catch (firestoreError: any) {
-      console.error("❌ Erro no Firestore:", firestoreError.message);
-      console.error("🔍 Código do erro:", firestoreError.code);
-
       if (
         firestoreError.message.includes("Service firestore is not available")
       ) {
-        console.error("💡 SOLUÇÃO: Habilite Firestore no Firebase Console");
-        console.error(
-          `🔗 Link: https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
+        console.info(
+          "📱 Firestore não habilitado - aplicação funcionando com localStorage",
         );
-        console.error(
-          "📄 Veja PROJETO-ATIVO-CONFIG.md para instruções completas",
+        console.info(
+          `💡 Para habilitar: https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
+        );
+      } else {
+        console.warn(
+          "⚠️ Erro inesperado no Firestore:",
+          firestoreError.message,
         );
       }
 
