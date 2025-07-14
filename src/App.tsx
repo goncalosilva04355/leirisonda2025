@@ -45,6 +45,12 @@ import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
 
+// Firebase Quota Recovery - recuperar operações bloqueadas
+import {
+  autoRecoverOnInit,
+  FirebaseQuotaRecovery,
+} from "./utils/firebaseQuotaRecovery";
+
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
@@ -6090,7 +6096,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="">Selecionar sistema</option>
                           <option value="areia">Filtro de Areia</option>
                           <option value="cartucho">Filtro de Cartucho</option>
-                          <option value="diatomaceas">Terra Diatomáceas</option>
+                          <option value="diatomaceas">
+                            Terra Diatom��ceas
+                          </option>
                           <option value="uv">Sistema UV</option>
                           <option value="sal">Eletr��lise de Sal</option>
                         </select>
