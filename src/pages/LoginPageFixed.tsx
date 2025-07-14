@@ -270,10 +270,12 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
                 )}
               </div>
             )}
-            {/* Status Firebase sempre conectado */}
-            <div className="flex items-center justify-center">
-              <FirebaseAlwaysOnStatus />
-            </div>
+            {/* Status Firebase - Apenas em produção */}
+            {!import.meta.env.DEV && (
+              <div className="flex items-center justify-center">
+                <FirebaseAlwaysOnStatus />
+              </div>
+            )}
           </div>
 
           {/* Error Message */}
