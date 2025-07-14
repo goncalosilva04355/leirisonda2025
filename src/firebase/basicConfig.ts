@@ -9,7 +9,14 @@ const LOCAL_MODE = import.meta.env.DEV;
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
 
-// Inicializar Firebase automaticamente
+// Wrapper para desenvolvimento
+if (LOCAL_MODE) {
+  console.log("🚫 Firebase DESATIVADO em desenvolvimento");
+  console.log("📝 Use apenas localStorage durante desenvolvimento");
+  console.log("🚀 Firebase será ativo apenas no Netlify");
+}
+
+// Inicializar Firebase automaticamente (apenas em produção)
 if (!LOCAL_MODE) {
   try {
     console.log("🔥 Iniciando Firebase com variáveis do Netlify...");
