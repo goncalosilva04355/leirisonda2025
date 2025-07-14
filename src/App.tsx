@@ -984,7 +984,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se disponível
+          // Sincronizar com Firestore se dispon��vel
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
@@ -1546,6 +1546,12 @@ function App() {
           handleDataUpdate as EventListener,
         );
       });
+
+      // Remover listener de login
+      window.removeEventListener(
+        "userLoggedIn",
+        handleUserLoggedIn as EventListener,
+      );
     };
   }, []);
 
@@ -2885,7 +2891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("�� Erro ao salvar utilizador:", error);
+      console.error("��� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -11094,7 +11100,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>���</span>
                   <span>Observaç€s e próxima manutenção</span>
                 </div>
               </div>
