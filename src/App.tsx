@@ -89,8 +89,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
-import PostLoginAutoSyncIndicator from "./components/PostLoginAutoSyncIndicator";
+
 import ProductionSyncStatus from "./components/ProductionSyncStatus";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
@@ -1268,7 +1267,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("⚠️ Falha ao garantir auto sync após login");
+            console.warn("���️ Falha ao garantir auto sync após login");
             setAutoSyncActive(false);
           }
         } else {
@@ -2435,7 +2434,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `���� Atualizando utilizador ${userForm.name} no Firestore...`,
+          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -7738,7 +7737,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gere relat��rios detalhados em PDF
+                          Gere relatórios detalhados em PDF
                         </p>
                       </div>
                     </div>
