@@ -95,6 +95,7 @@ import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import { AutoSyncIndicator } from "./components/AutoSyncIndicator";
+import ProductionSyncStatus from "./components/ProductionSyncStatus";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -7858,7 +7859,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠�� ATENÇÃO: Esta operação é
+                                        ⚠�� ATENÇÃO: Esta opera��ão é
                                         irreversível!
                                       </p>
                                       <button
