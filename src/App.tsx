@@ -150,6 +150,9 @@ import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 import { FirestoreTest } from "./components/FirestoreTest";
 
+// Diagnóstico Firebase
+import "./utils/firebaseDiagnostic";
+
 // Teste de login
 import "./utils/testLogin";
 // Força atualização de utilizadores
@@ -1797,7 +1800,7 @@ function App() {
     }
 
     try {
-      console.log("���� Attempting login for:", loginForm.email);
+      console.log("������ Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -3561,7 +3564,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">📞</span>
+                      <span className="text-blue-600">���</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -5314,7 +5317,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa📞��ões Específicas do Furo */}
+                          {/* Observa📞ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -7623,7 +7626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          • Todas as manutenções (
+                                          • Todas as manuten��ões (
                                           {maintenance.length} registos)
                                         </li>
                                         <li>
@@ -11424,7 +11427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Atribu��da a
+                          Atribuída a
                         </label>
                         <p className="text-gray-900">
                           {selectedWork.assignedUsers &&
