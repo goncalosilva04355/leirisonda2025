@@ -92,7 +92,15 @@ export function FirestoreWriteTest() {
         🔥 Teste Escrita Firestore - Leirisonda
       </h2>
 
-      <div className="flex gap-4 mb-6 justify-center">
+      <div className="flex flex-wrap gap-3 mb-6 justify-center">
+        <button
+          onClick={runQuickTest}
+          disabled={loading}
+          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-gray-600 rounded-lg font-semibold transition-colors text-white"
+        >
+          {loading ? "⏳" : "🚀 Teste Rápido"}
+        </button>
+
         <button
           onClick={runWriteTest}
           disabled={loading}
@@ -106,7 +114,15 @@ export function FirestoreWriteTest() {
           disabled={loading}
           className="px-6 py-3 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 rounded-lg font-semibold transition-colors"
         >
-          {loading ? "⏳ Diagnosticando..." : "🔍 Diagnóstico Completo"}
+          {loading ? "⏳ Diagnosticando..." : "🔍 Diagnóstico"}
+        </button>
+
+        <button
+          onClick={runDebugTest}
+          disabled={loading}
+          className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 rounded-lg font-semibold transition-colors"
+        >
+          {loading ? "⏳ Debugando..." : "🔍 Debug Detalhado"}
         </button>
       </div>
 
