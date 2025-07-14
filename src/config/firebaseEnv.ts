@@ -14,7 +14,7 @@ function isPlaceholder(value: string | undefined): boolean {
 export const LEIRIA_FIREBASE_CONFIG = {
   apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
     ? import.meta.env.VITE_FIREBASE_API_KEY!
-    : "AIzaSyB2GZJ8YJw2dFBd6dwbAE7fBQ1UZyQxRZY", // Leiria projeto ativo
+    : "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw", // API Key REAL do projeto leiria-1cfc9
   authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
     ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
     : "leiria-1cfc9.firebaseapp.com",
@@ -31,11 +31,11 @@ export const LEIRIA_FIREBASE_CONFIG = {
     import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   )
     ? import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!
-    : "123456789012",
+    : "632599887141",
   appId: !isPlaceholder(import.meta.env.VITE_FIREBASE_APP_ID)
     ? import.meta.env.VITE_FIREBASE_APP_ID!
-    : "1:123456789012:web:abcdef123456789012345",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-XXXXXXXXXX",
+    : "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
 };
 
 // Função para obter configuração Firebase
