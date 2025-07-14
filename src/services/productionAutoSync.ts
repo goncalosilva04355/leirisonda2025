@@ -16,14 +16,14 @@ export class ProductionAutoSyncService {
     console.log("🚀 ProductionAutoSync: Inicializando...");
 
     // Em produção, sempre tentar ativar sincronização
-    const isProduction = !import.meta.env.DEV;
+    const isProduction = !(import.meta as any).env?.DEV;
 
     if (isProduction) {
       console.log(
         "🔥 MODO PRODUÇÃO DETECTADO - Ativando sincronização automática",
       );
       await this.enableProductionSync();
-    } else if (import.meta.env.VITE_FORCE_FIREBASE) {
+    } else if ((import.meta as any).env?.VITE_FORCE_FIREBASE) {
       console.log(
         "🔥 DESENVOLVIMENTO com Firebase forçado - Ativando sincronização",
       );
