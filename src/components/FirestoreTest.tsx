@@ -38,10 +38,18 @@ export function FirestoreTest() {
       if (result) {
         setTestResult("✅ Firestore está funcionando corretamente!");
       } else {
-        setTestResult("❌ Falha no teste de conectividade Firestore");
+        setTestResult(
+          `❌ Firestore não disponível\n\nPossíveis causas:\n1. Firestore não está habilitado no projeto Firebase\n2. Configuração Firebase incorreta\n3. Regras de segurança muito restritivas\n\n💡 A aplicação continua funcional com localStorage`,
+        );
       }
     } catch (error: any) {
-      setTestResult(`❌ Erro: ${error.message}`);
+      let errorMsg = `❌ Erro: ${error.message}`;
+
+      if (error.message.includes("Service firestore is not available")) {
+        errorMsg += `\n\n💡 Solução: Habilite Firestore no Firebase Console:\nhttps://console.firebase.google.com/project/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/firestore`;
+      }
+
+      setTestResult(errorMsg);
       console.error("Erro no teste:", error);
     } finally {
       setIsLoading(false);
@@ -69,10 +77,18 @@ export function FirestoreTest() {
         setTestResult(`✅ Dados gravados com sucesso! ID: ${docId}`);
         console.log("Documento criado com ID:", docId);
       } else {
-        setTestResult("❌ Falha ao gravar dados no Firestore");
+        setTestResult(
+          `❌ Firestore não disponível para gravação\n\n💾 Os dados foram salvos no localStorage como fallback\n💡 Para usar Firestore, habilite-o no Firebase Console`,
+        );
       }
     } catch (error: any) {
-      setTestResult(`❌ Erro ao gravar: ${error.message}`);
+      let errorMsg = `❌ Erro ao gravar: ${error.message}`;
+
+      if (error.message.includes("Service firestore is not available")) {
+        errorMsg += `\n\n💾 Fallback: dados serão salvos no localStorage\n💡 Para usar Firestore, habilite-o no projeto Firebase`;
+      }
+
+      setTestResult(errorMsg);
       console.error("Erro na gravação:", error);
     } finally {
       setIsLoading(false);
