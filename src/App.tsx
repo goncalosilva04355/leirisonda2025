@@ -2078,13 +2078,15 @@ function App() {
               setTimeout(async () => {
                 if (isFirestoreReady()) {
                   try {
-                    await autoSyncService.startAutoSync();
-                    setAutoSyncActive(true);
+                    const autoSyncStarted =
+                      await autoSyncService.ensureAutoSyncAfterLogin();
+                    setAutoSyncActive(autoSyncStarted);
                     console.log(
-                      "✅ Auto sync ativado após aguardar Firestore!",
+                      "✅ Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
-                    console.error("❌ Erro ao ativar auto sync:", error);
+                    console.error("❌ Erro ao garantir auto sync:", error);
+                    setAutoSyncActive(false);
                   }
                 }
               }, 3000);
@@ -3406,7 +3408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu���das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -5690,7 +5692,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Descrição"]',
+                                'textarea[placeholder*="Descriç��o"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const observations =
@@ -6297,7 +6299,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenção
+                          Frequência de Manutenç��o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -10568,7 +10570,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingMaintenance?.technician}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Nome do técnico"
+                          placeholder="Nome do t��cnico"
                           required
                         />
                       </div>
