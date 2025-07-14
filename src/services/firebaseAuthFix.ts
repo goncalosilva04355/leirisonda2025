@@ -169,7 +169,8 @@ class FirebaseAuthFix {
       console.log("🆘 Getting emergency auth instance...");
 
       // Try to get app directly and create new auth
-      const app = firebaseService.getApp();
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
+      const app = getFirebaseApp();
       if (app) {
         const auth = getAuth(app);
         console.log("✅ Emergency auth instance created");
