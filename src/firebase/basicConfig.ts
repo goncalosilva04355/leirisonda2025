@@ -15,14 +15,23 @@ const FORCE_FIREBASE_PRODUCTION =
 let firebaseApp: FirebaseApp | null = null;
 
 // Wrapper para desenvolvimento e detecção do Netlify
+console.log("🔍 Environment Check:");
+console.log("  - LOCAL_MODE (DEV):", LOCAL_MODE);
+console.log("  - NETLIFY:", import.meta.env.NETLIFY);
+console.log("  - VITE_IS_NETLIFY:", import.meta.env.VITE_IS_NETLIFY);
+console.log("  - IS_NETLIFY_BUILD:", IS_NETLIFY_BUILD);
+console.log("  - VITE_FORCE_FIREBASE:", import.meta.env.VITE_FORCE_FIREBASE);
+console.log("  - FORCE_FIREBASE_PRODUCTION:", FORCE_FIREBASE_PRODUCTION);
+
 if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
   console.log("🚫 Firebase DESATIVADO - não está no Netlify");
-  console.log("📝 Use apenas localStorage durante desenvolvimento");
-  console.log("🚀 Firebase será ativo automaticamente após deploy no Netlify");
+  console.log("📝 Usar apenas localStorage durante desenvolvimento");
+  console.log("�� Firebase será ativo automaticamente após deploy no Netlify");
   console.log("🔍 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
 } else {
   console.log("🔥 Firebase ATIVO - rodando no Netlify ou forçado");
   console.log("🌐 Ambiente de produção detectado");
+  console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
 // Inicializar Firebase apenas no Netlify (produção)
