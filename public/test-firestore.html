@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Teste Firestore Direto</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f0f0f0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px;
+        border-radius: 5px;
+      }
+      button:hover {
+        background: #45a049;
+      }
+      .red {
+        background: #f44336;
+      }
+      .red:hover {
+        background: #da190b;
+      }
+      .log {
+        margin: 10px 0;
+        padding: 10px;
+        border-left: 4px solid #ccc;
+        background: #f9f9f9;
+      }
+      .success {
+        border-color: #4caf50;
+        background: #e8f5e8;
+      }
+      .error {
+        border-color: #f44336;
+        background: #fde8e8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔥 Teste Firestore - Leirisonda</h1>
+      <p><strong>URL:</strong> <span id="url"></span></p>
+
+      <button onclick="testeRapido()">🚀 Teste Rápido</button>
+      <button onclick="testeCompleto()">🔍 Teste Completo</button>
+      <button onclick="limpar()" class="red">🗑️ Limpar</button>
+
+      <div id="resultados"></div>
+    </div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+      document.getElementById("url").textContent = window.location.href;
+
+      const config = {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+      };
+
+      function log(msg, tipo = "info") {
+        const div = document.createElement("div");
+        div.className = `log ${tipo}`;
+        div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+        document.getElementById("resultados").appendChild(div);
+        console.log(msg);
+      }
+
+      window.limpar = () => {
+        document.getElementById("resultados").innerHTML = "";
+      };
+
+      window.testeRapido = async () => {
+        try {
+          log("🚀 Iniciando teste rápido...");
+
+          const app = initializeApp(config, "teste-rapido");
+          log("✅ Firebase App criada", "success");
+
+          const db = getFirestore(app);
+          log("✅ Firestore inicializado", "success");
+
+          const doc = await addDoc(collection(db, "testes"), {
+            message: "Teste rápido funcionando!",
+            timestamp: serverTimestamp(),
+            tipo: "teste_rapido",
+          });
+
+          log(`🎉 SUCESSO! Documento criado: ${doc.id}`, "success");
+          log("✅ Firestore está 100% funcional!", "success");
+        } catch (error) {
+          log(`❌ ERRO: ${error.message}`, "error");
+          log(`Código: ${error.code || "N/A"}`, "error");
+        }
+      };
+
+      window.testeCompleto = async () => {
+        try {
+          log("🔍 Iniciando teste completo...");
+
+          // Teste 1: Inicialização
+          log("1. Testando inicialização...");
+          const app = initializeApp(config, "teste-completo");
+          const db = getFirestore(app);
+          log("✅ Inicialização OK", "success");
+
+          // Teste 2: Escrita
+          log("2. Testando escrita...");
+          const doc1 = await addDoc(collection(db, "teste_completo"), {
+            tipo: "addDoc",
+            timestamp: serverTimestamp(),
+            dados: "Teste de escrita automática",
+          });
+          log(`✅ addDoc OK: ${doc1.id}`, "success");
+
+          // Teste 3: Escrita obra
+          log("3. Testando documento obra...");
+          const doc2 = await addDoc(collection(db, "obras"), {
+            nome: "Obra Teste",
+            cliente: "Cliente Teste",
+            endereco: "Rua Teste, 123",
+            status: "Em andamento",
+            timestamp: serverTimestamp(),
+          });
+          log(`✅ Obra OK: ${doc2.id}`, "success");
+
+          log("🎉 TODOS OS TESTES PASSARAM!", "success");
+          log("✅ Firestore está gravando dados perfeitamente!", "success");
+        } catch (error) {
+          log(`❌ FALHA: ${error.message}`, "error");
+          log(`Código: ${error.code || "N/A"}`, "error");
+
+          if (error.code === "permission-denied") {
+            log("💡 Problema: Regras de segurança", "error");
+          } else if (error.code === "unavailable") {
+            log("💡 Problema: Firestore não habilitado", "error");
+          }
+        }
+      };
+    </script>
+  </body>
+</html>
