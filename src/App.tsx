@@ -158,6 +158,9 @@ import {
 } from "./utils/forceLoginFix";
 import { FirestoreGuaranteeButton } from "./components/FirestoreGuaranteeButton";
 
+// Auto-correção do Firestore
+import "./utils/autoFixFirestore";
+
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
 // Detecção inteligente de Firestore
@@ -1141,7 +1144,7 @@ function App() {
         safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
-        console.log("🗑��� Mock and test data cleared");
+        console.log("🗑���� Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -4942,7 +4945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           {(() => {
                             console.log(
-                              "�� TOTAL UTILIZADORES CARREGADOS:",
+                              "���� TOTAL UTILIZADORES CARREGADOS:",
                               users.length,
                               users,
                             );
@@ -5386,7 +5389,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Observa📞ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Observações Específicas do Furo
+                              Observaç��es Específicas do Furo
                             </label>
                             <textarea
                               rows={3}
@@ -6024,7 +6027,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "�� Cliente adicionado com sucesso:",
+                                    "���� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
