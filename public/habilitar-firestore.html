@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🔥 Como Habilitar Firestore - Leirisonda</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: white;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 32px;
+      }
+      h2 {
+        color: #ffd700;
+        margin: 30px 0 15px 0;
+        font-size: 24px;
+      }
+      h3 {
+        color: #90cdf4;
+        margin: 20px 0 10px 0;
+        font-size: 18px;
+      }
+      .step {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 15px;
+        border-left: 5px solid #4caf50;
+      }
+      .step h3 {
+        margin-top: 0;
+        color: #4caf50;
+      }
+      .highlight {
+        background: rgba(255, 193, 7, 0.2);
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #ffd700;
+        font-weight: bold;
+      }
+      .btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #4caf50, #45a049);
+        color: white;
+        padding: 15px 25px;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: bold;
+        margin: 10px 5px;
+        transition: transform 0.2s;
+        text-align: center;
+      }
+      .btn:hover {
+        transform: scale(1.05);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #2196f3, #1976d2);
+      }
+      .btn-warning {
+        background: linear-gradient(135deg, #ff9800, #f57c00);
+      }
+      .warning {
+        background: rgba(255, 152, 0, 0.2);
+        border: 1px solid #ff9800;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+      .success {
+        background: rgba(76, 175, 80, 0.2);
+        border: 1px solid #4caf50;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+      .code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        border-radius: 5px;
+        font-family: monospace;
+        margin: 10px 0;
+        overflow-x: auto;
+      }
+      .screenshot {
+        border: 3px solid #4caf50;
+        border-radius: 10px;
+        margin: 15px 0;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        text-align: center;
+      }
+      .nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+      }
+      ol {
+        padding-left: 20px;
+      }
+      li {
+        margin: 10px 0;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔥 Como Habilitar Firestore</h1>
+      <h2>Projeto: leiria-1cfc9</h2>
+
+      <div class="nav">
+        <a href="#passo1" class="btn">📋 Passo 1</a>
+        <a href="#passo2" class="btn">🔥 Passo 2</a>
+        <a href="#passo3" class="btn">⚙️ Passo 3</a>
+        <a href="#passo4" class="btn">✅ Passo 4</a>
+        <a href="#verificar" class="btn btn-warning">🧪 Verificar</a>
+      </div>
+
+      <div class="warning">
+        <h3>⚠️ Problema Atual:</h3>
+        <p><strong>Erro:</strong> "Service firestore is not available"</p>
+        <p>
+          <strong>Causa:</strong> O Firestore não está habilitado no projeto
+          Firebase
+        </p>
+        <p><strong>Solução:</strong> Seguir os passos abaixo para habilitar</p>
+      </div>
+
+      <div id="passo1" class="step">
+        <h3>📋 Passo 1: Acessar Firebase Console</h3>
+        <p>
+          Clique no link abaixo para ir diretamente ao seu projeto Firebase:
+        </p>
+        <br />
+        <a
+          href="https://console.firebase.google.com/project/leiria-1cfc9"
+          target="_blank"
+          class="btn"
+        >
+          🔗 Abrir Firebase Console
+        </a>
+        <br /><br />
+        <p><strong>URL completa:</strong></p>
+        <div class="code">
+          https://console.firebase.google.com/project/leiria-1cfc9
+        </div>
+        <p>
+          <em>💡 Certifique-se de estar logado com a conta Google correta</em>
+        </p>
+      </div>
+
+      <div id="passo2" class="step">
+        <h3>🔥 Passo 2: Navegar para Firestore</h3>
+        <p>No Firebase Console, no menu lateral esquerdo:</p>
+        <ol>
+          <li>Procure a seção <span class="highlight">"Criação"</span></li>
+          <li>Clique em <span class="highlight">"Firestore Database"</span></li>
+        </ol>
+
+        <div class="screenshot">
+          <p>📱 <strong>Menu lateral:</strong></p>
+          <p>Criação → <strong>Firestore Database</strong></p>
+        </div>
+
+        <p>
+          <em>💡 Se não vir "Firestore Database", role o menu para baixo</em>
+        </p>
+      </div>
+
+      <div id="passo3" class="step">
+        <h3>⚙️ Passo 3: Criar Base de Dados</h3>
+        <p>
+          Verá uma página com o botão
+          <span class="highlight">"Criar base de dados"</span>
+        </p>
+
+        <h4>3.1. Clique em "Criar base de dados"</h4>
+
+        <h4>3.2. Escolher Modo de Segurança:</h4>
+        <ul>
+          <li>
+            <strong>Modo de teste:</strong> ✅
+            <em>Recomendado para desenvolvimento</em>
+          </li>
+          <li>
+            <strong>Modo de produção:</strong> ❌
+            <em>Mais seguro mas requer configuração</em>
+          </li>
+        </ul>
+
+        <div class="warning">
+          <strong>💡 Recomendação:</strong> Escolha
+          <strong>"Modo de teste"</strong> para facilitar o desenvolvimento. As
+          regras podem ser alteradas depois.
+        </div>
+
+        <h4>3.3. Escolher Localização:</h4>
+        <p>Localizações recomendadas para Portugal:</p>
+        <ul>
+          <li><strong>europe-west3</strong> (Frankfurt) - ✅ Recomendado</li>
+          <li><strong>europe-west1</strong> (Bélgica) - ✅ Alternativa</li>
+          <li><strong>europe-west2</strong> (Londres) - ✅ Alternativa</li>
+        </ul>
+      </div>
+
+      <div id="passo4" class="step">
+        <h3>✅ Passo 4: Confirmar Criação</h3>
+        <ol>
+          <li>Revise as configurações selecionadas</li>
+          <li>
+            Clique em <span class="highlight">"Concluído"</span> ou
+            <span class="highlight">"Done"</span>
+          </li>
+          <li>Aguarde a criação da base de dados (pode demorar 1-2 minutos)</li>
+        </ol>
+
+        <div class="success">
+          <strong>🎉 Sucesso!</strong> Quando vir a interface do Firestore com
+          coleções vazias, o processo está completo.
+        </div>
+      </div>
+
+      <div id="verificar" class="step">
+        <h3>🧪 Verificar se Funcionou</h3>
+        <p>Após habilitar o Firestore:</p>
+
+        <ol>
+          <li><strong>Recarregue esta aplicação</strong> (F5 ou Ctrl+R)</li>
+          <li>
+            Os erros "Service firestore is not available" devem desaparecer
+          </li>
+          <li>Os dados começarão a ser salvos no Firestore automaticamente</li>
+        </ol>
+
+        <div class="nav">
+          <a href="/" class="btn btn-primary">🏠 Voltar à App</a>
+          <a href="/test-final.html" class="btn btn-warning"
+            >🧪 Testar Firestore</a
+          >
+          <a href="/fix-firestore-error.html" class="btn">🔧 Debug Firestore</a>
+        </div>
+      </div>
+
+      <h2>🔍 Resolução de Problemas</h2>
+
+      <div class="step">
+        <h3>❓ Não vejo "Firestore Database" no menu</h3>
+        <ul>
+          <li>
+            Certifique-se de estar no projeto correto:
+            <strong>leiria-1cfc9</strong>
+          </li>
+          <li>Role o menu lateral para baixo</li>
+          <li>Procure na seção "Criação" ou "Build"</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>❓ Erro de permissões</h3>
+        <ul>
+          <li>Verifique se está logado com a conta correta do Google</li>
+          <li>Certifique-se de ter permissões de administrador no projeto</li>
+          <li>Contacte o proprietário do projeto se necessário</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h3>❓ Firestore criado mas app ainda não funciona</h3>
+        <ul>
+          <li>Aguarde 2-3 minutos para propagação das alterações</li>
+          <li>Recarregue completamente a aplicação (Ctrl+F5)</li>
+          <li>Limpe o cache do browser se necessário</li>
+        </ul>
+      </div>
+
+      <h2>📞 Próximos Passos</h2>
+
+      <div class="success">
+        <h3>🎉 Após habilitar o Firestore:</h3>
+        <ul>
+          <li>
+            ✅ Todos os dados novos serão salvos automaticamente no Firestore
+          </li>
+          <li>✅ Os dados ficarão sincronizados entre dispositivos</li>
+          <li>✅ Backup automático pelos servidores do Google</li>
+          <li>✅ Acesso aos dados de qualquer lugar</li>
+        </ul>
+      </div>
+
+      <div class="nav" style="margin-top: 30px">
+        <a
+          href="https://console.firebase.google.com/project/leiria-1cfc9"
+          target="_blank"
+          class="btn"
+        >
+          🔗 Ir para Firebase Console
+        </a>
+        <a href="/" class="btn btn-primary">🏠 Voltar à App</a>
+      </div>
+    </div>
+
+    <script>
+      // Smooth scrolling para âncoras
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Log útil
+      console.log("🔥 Guia para habilitar Firestore carregado");
+      console.log("📋 Projeto: leiria-1cfc9");
+      console.log(
+        "🔗 Firebase Console: https://console.firebase.google.com/project/leiria-1cfc9",
+      );
+    </script>
+  </body>
+</html>
