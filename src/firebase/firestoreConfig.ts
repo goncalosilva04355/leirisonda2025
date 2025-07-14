@@ -12,24 +12,42 @@ const LOCAL_MODE = false;
 // Variável para armazenar a instância do Firestore
 let firestoreInstance: Firestore | null = null;
 
+// Função para aguardar Firebase App estar pronto
+async function waitForFirebaseApp(
+  maxAttempts = 10,
+  delay = 1000,
+): Promise<any> {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const apps = getApps();
+    if (apps.length > 0) {
+      const app = getApp();
+      // Verificar se a app tem as propriedades necessárias
+      if (app.options.projectId && app.options.apiKey) {
+        console.log(`✅ Firebase App pronta na tentativa ${attempt}`);
+        return app;
+      }
+    }
+
+    console.log(
+      `⏳ Tentativa ${attempt}/${maxAttempts} - aguardando Firebase App...`,
+    );
+    await new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  throw new Error("Firebase App não inicializou após aguardar");
+}
+
 // Função para inicializar Firestore de forma segura
-function initializeFirestore(): Firestore | null {
+async function initializeFirestore(): Promise<Firestore | null> {
   if (LOCAL_MODE) return null;
 
   try {
     console.log("💾 Tentando inicializar Firestore...");
 
-    // Obter Firebase App diretamente para evitar dependência circular
-    const apps = getApps();
-    console.log("📱 Firebase Apps disponíveis:", apps.length);
+    // Aguardar Firebase App estar pronto
+    const app = await waitForFirebaseApp();
 
-    if (apps.length === 0) {
-      console.warn("⚠️ Nenhuma Firebase App inicializada ainda");
-      return null;
-    }
-
-    const app = getApp(); // Pega a app padrão
-    console.log("🎆 Firebase App obtida:", {
+    console.log("🎆 Firebase App confirmada:", {
       name: app.name,
       projectId: app.options.projectId,
       authDomain: app.options.authDomain,
