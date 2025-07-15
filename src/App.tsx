@@ -2793,187 +2793,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
-                {/* Sistema Técnico - Painel Informativo */}
-                <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-200 mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        Estado do Sistema
-                      </h2>
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Última verificação:{" "}
-                      {new Date().toLocaleTimeString("pt-PT")}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* LocalStorage Status - SEMPRE ATIVO */}
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                          <h3 className="font-medium text-green-800">
-                            LocalStorage
-                          </h3>
-                        </div>
-                        <span className="text-xs text-green-600 font-medium">
-                          ✅ ATIVO
-                        </span>
-                      </div>
-                      <p className="text-xs text-green-700">
-                        💾{" "}
-                        {safeLocalStorage.getItem("app-users")
-                          ? "Dados carregados"
-                          : "Sem dados"}
-                        <br />
-                        🔄 Sempre disponível
-                        <br />
-                        📱 Modo offline garantido
-                      </p>
-                    </div>
-
-                    {/* Firebase Status - VERIFICAÇÃO REAL */}
-                    <div
-                      className={`${isFirebaseReady() ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"} rounded-lg p-3`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <div
-                            className={`w-2 h-2 ${isFirebaseReady() ? "bg-green-500 animate-pulse" : "bg-red-500"} rounded-full mr-2`}
-                          ></div>
-                          <h3
-                            className={`font-medium ${isFirebaseReady() ? "text-green-800" : "text-red-800"}`}
-                          >
-                            Firebase
-                          </h3>
-                        </div>
-                        <span
-                          className={`text-xs font-medium ${isFirebaseReady() ? "text-green-600" : "text-red-600"}`}
-                        >
-                          {isFirebaseReady() ? "✅ ATIVO" : "❌ OFFLINE"}
-                        </span>
-                      </div>
-                      <p
-                        className={`text-xs ${isFirebaseReady() ? "text-green-700" : "text-red-700"}`}
-                      >
-                        🔥 {isFirebaseReady() ? "Conectado" : "Desconectado"}
-                        <br />
-                        🔐{" "}
-                        {isFirebaseReady()
-                          ? "Autenticação OK"
-                          : "Sem autenticação"}
-                        <br />
-                        🌐{" "}
-                        {isFirebaseReady() ? "leiria-1cfc9" : "Projeto offline"}
-                      </p>
-                    </div>
-
-                    {/* Firestore Status - VERIFICAÇÃO REAL */}
-                    <div
-                      className={`${isFirestoreReady() ? "bg-blue-50 border-blue-200" : "bg-yellow-50 border-yellow-200"} rounded-lg p-3`}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <div
-                            className={`w-2 h-2 ${isFirestoreReady() ? "bg-blue-500 animate-pulse" : "bg-yellow-500"} rounded-full mr-2`}
-                          ></div>
-                          <h3
-                            className={`font-medium ${isFirestoreReady() ? "text-blue-800" : "text-yellow-800"}`}
-                          >
-                            Firestore
-                          </h3>
-                        </div>
-                        <span
-                          className={`text-xs font-medium ${isFirestoreReady() ? "text-blue-600" : "text-yellow-600"}`}
-                        >
-                          {isFirestoreReady() ? "✅ ATIVO" : "⚠️ LOCAL"}
-                        </span>
-                      </div>
-                      <p
-                        className={`text-xs ${isFirestoreReady() ? "text-blue-700" : "text-yellow-700"}`}
-                      >
-                        💾{" "}
-                        {isFirestoreReady() ? "Base dados ativa" : "Modo local"}
-                        <br />
-                        📊{" "}
-                        {isFirestoreReady()
-                          ? "Sync tempo real"
-                          : "Sem sincronização"}
-                        <br />
-                        🔒{" "}
-                        {isFirestoreReady()
-                          ? "Segurança ativa"
-                          : "Local apenas"}
-                      </p>
-                    </div>
-
-                    {/* Environment Status */}
-                    <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center">
-                          <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
-                          <h3 className="font-medium text-purple-800">
-                            Ambiente
-                          </h3>
-                        </div>
-                        <span className="text-xs text-purple-600 font-medium">
-                          {import.meta.env.DEV ? "🔧 DEV" : "🚀 PROD"}
-                        </span>
-                      </div>
-                      <p className="text-xs text-purple-700">
-                        🌍{" "}
-                        {import.meta.env.DEV ? "Desenvolvimento" : "Produção"}
-                        <br />
-                        📡{" "}
-                        {window.location.protocol === "https:"
-                          ? "HTTPS ativo"
-                          : "HTTP local"}
-                        <br />⚡ Vite + React 18
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Status Bar em Tempo Real */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center">
-                          <div className="w-1 h-1 bg-green-500 rounded-full mr-1"></div>
-                          <span className="text-gray-600">App: Funcional</span>
-                        </div>
-                        <div className="flex items-center">
-                          <div
-                            className={`w-1 h-1 ${safeLocalStorage.getItem("currentUser") ? "bg-green-500" : "bg-red-500"} rounded-full mr-1`}
-                          ></div>
-                          <span className="text-gray-600">
-                            Auth:{" "}
-                            {safeLocalStorage.getItem("currentUser")
-                              ? "Logado"
-                              : "Sem login"}
-                          </span>
-                        </div>
-                        <div className="flex items-center">
-                          <div
-                            className={`w-1 h-1 ${navigator.onLine ? "bg-green-500" : "bg-red-500"} rounded-full mr-1`}
-                          ></div>
-                          <span className="text-gray-600">
-                            Rede: {navigator.onLine ? "Online" : "Offline"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-gray-500">
-                        Uptime:{" "}
-                        {Math.floor(
-                          (Date.now() - performance.timeOrigin) / 1000,
-                        )}
-                        s
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -4898,7 +4717,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "📞 PARSED USERS:",
+                                  "���� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -5052,7 +4871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Já atribu��do:",
+                                    "| Já atribu���do:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
                                     !alreadyAssigned,
