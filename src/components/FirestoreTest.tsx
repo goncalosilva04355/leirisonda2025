@@ -5,6 +5,7 @@ import {
 } from "../utils/testFirestore";
 import { simpleFirebaseTest } from "../utils/simpleFirebaseTest";
 import EnvDebug from "./EnvDebug";
+import FirestoreInstructions from "./FirestoreInstructions";
 
 interface TestResult {
   success: boolean;
