@@ -2016,7 +2016,7 @@ function App() {
       // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
     } else {
-      // Se j✅ estiver no dashboard, tenta usar o history do browser
+      // Se já estiver no dashboard, tenta usar o history do browser
       if (window.history.length > 1) {
         window.history.back();
       }
