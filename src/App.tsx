@@ -585,7 +585,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
