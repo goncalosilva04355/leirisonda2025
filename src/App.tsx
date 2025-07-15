@@ -1918,7 +1918,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("�� Logout completed successfully - redirected to login");
+      console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -1985,7 +1985,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplica🔥o agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplica🔥o agora est✅ limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2016,7 +2016,7 @@ function App() {
       // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
     } else {
-      // Se j�� estiver no dashboard, tenta usar o history do browser
+      // Se j✅ estiver no dashboard, tenta usar o history do browser
       if (window.history.length > 1) {
         window.history.back();
       }
@@ -2061,18 +2061,18 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenç��es: ${futureMaintenance.length}
+- Futuras Manutenç✅es: ${futureMaintenance.length}
 
-MANUTENÇ��ES REALIZADAS:
+MANUTENÇ✅ES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
 ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
-   Estado: ${maint.status === "completed" ? "Conclu��da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${maint.status === "completed" ? "Conclu✅da" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descri��ão: ${maint.description}
+   Descri✅ão: ${maint.description}
    ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
   )
@@ -2103,7 +2103,7 @@ ${index + 1}. ${work.title}
    Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
-   Data In��cio: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   Data In✅cio: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
@@ -2163,7 +2163,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç��s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -2216,7 +2216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("M��ximo de 20 fotografias permitidas");
+      alert("M✅ximo de 20 fotografias permitidas");
       return;
     }
 
@@ -2421,7 +2421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleDeleteUser = (userId) => {
-    // BACKUP AUTOM��TICO antes de eliminar utilizador
+    // BACKUP AUTOM✅TICO antes de eliminar utilizador
     backupBeforeOperation("delete_user");
 
     // Check if it's the main user
@@ -2709,7 +2709,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result?.success && result?.user) {
-                // console.log("�� Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -2758,7 +2758,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("🎉 Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inv��lidas");
+                setLoginError(result.error || "Credenciais inv✅lidas");
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
@@ -2823,7 +2823,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
+                        Ol✅, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -2862,7 +2862,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               isWorkAssignedToCurrentUser(w);
                             return isPending && isAssignedToUser;
                           });
-                          console.log("�� Dashboard - DEBUG Contadores:", {
+                          console.log("✅ Dashboard - DEBUG Contadores:", {
                             totalObras: works.length,
                             utilizadorAtual: currentUser?.name,
                             obrasPendentesAtribuidas: pendingWorks.length,
@@ -3024,7 +3024,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -3238,7 +3238,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manutenç��endada
+                          Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecerão aqui
@@ -3816,7 +3816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten��ões
+                      Futuras Manuten✅ões
                     </button>
                   </div>
                 </div>
@@ -3973,7 +3973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manuten��ões
+                          Manuten✅ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -4198,7 +4198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manutenç✅es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -4255,7 +4255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2 mx-auto"
                       >
                         <Plus className="h-4 w-4" />
-                        <span>Agendar Manuten��ão</span>
+                        <span>Agendar Manuten✅ão</span>
                       </button>
                     </div>
                   ) : (
@@ -4283,7 +4283,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Conclu��do"}
+                                    : "Conclu✅do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -4361,7 +4361,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa��ões Básicas */}
+                    {/* Informa✅ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -4652,7 +4652,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </label>
                           {(() => {
                             console.log(
-                              "�� TOTAL UTILIZADORES CARREGADOS:",
+                              "✅ TOTAL UTILIZADORES CARREGADOS:",
                               users.length,
                               users,
                             );
@@ -4931,7 +4931,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
 
                         <div className="space-y-6">
-                          {/* Mediç��es do Furo */}
+                          {/* Mediç✅es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
                               Medições do Furo
@@ -5127,7 +5127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç��es sobre a obra..."
+                            placeholder="Observaç✅es sobre a obra..."
                           />
                         </div>
 
@@ -5247,7 +5247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // SECURITY: Check if user has permission to create works
                           if (!hasPermission("obras", "create")) {
                             alert(
-                              "Não tem permiss��o para criar obras. Contacte o administrador.",
+                              "Não tem permiss✅o para criar obras. Contacte o administrador.",
                             );
                             return;
                           }
@@ -5385,7 +5385,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condiç��es do terreno"]',
+                                    'textarea[placeholder*="Condiç✅es do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -5555,13 +5555,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                               if (!hasPermission("clientes", "create")) {
                                 alert(
-                                  "❌ Não tem permiss��o para criar clientes. Contacte o administrador.",
+                                  "❌ Não tem permiss✅o para criar clientes. Contacte o administrador.",
                                 );
                                 return;
                               }
 
                               console.log(
-                                "✅ Mostrando formul��rio de novo cliente",
+                                "✅ Mostrando formul✅rio de novo cliente",
                               );
                               setShowNewClientForm(true);
                             }
@@ -5703,7 +5703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 currentUser?.permissions,
                               );
                               console.log(
-                                "�� hasPermission clientes create:",
+                                "✅ hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -5734,7 +5734,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "�� Cliente adicionado com sucesso:",
+                                    "✅ Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -5799,7 +5799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="residencial">Residencial</option>
                           <option value="comercial">Comercial</option>
                           <option value="hotel">Hotel/Resort</option>
-                          <option value="condominio">Condom��nio</option>
+                          <option value="condominio">Condom✅nio</option>
                           <option value="spa">SPA/Wellness</option>
                         </select>
                       </div>
@@ -5891,10 +5891,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="areia">Filtro de Areia</option>
                           <option value="cartucho">Filtro de Cartucho</option>
                           <option value="diatomaceas">
-                            Terra Diatom��ceas
+                            Terra Diatom✅ceas
                           </option>
                           <option value="uv">Sistema UV</option>
-                          <option value="sal">Eletr��lise de Sal</option>
+                          <option value="sal">Eletr✅lise de Sal</option>
                         </select>
                       </div>
                       <div>
@@ -5917,7 +5917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç��o
+                          Frequência de Manutenç✅o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -5945,7 +5945,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Caracter��sticas especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter✅sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -6102,10 +6102,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten��ão
+                        Nova Manuten✅ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven��ão de manutenção
+                        Registar interven✅ão de manutenção
                       </p>
                     </div>
                   </div>
@@ -6483,7 +6483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa��ões Gerais
+                          Observa✅ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -6546,7 +6546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenç��o
+                          Fotografias da Manutenç✅o
                         </h3>
                       </div>
 
@@ -6761,7 +6761,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>�� Estado e localização</li>
+                                <li>✅ Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
@@ -6799,7 +6799,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔥 Trabalhos realizados</li>
                                 <li>🎉 Técnicos responsáveis</li>
-                                <li>• Datas e duraç��es</li>
+                                <li>• Datas e duraç✅es</li>
                                 <li>• Estados e observações</li>
                               </ul>
                             </div>
@@ -6858,7 +6858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
-                            prefer��ncias.
+                            prefer✅ncias.
                           </p>
                         </div>
 
@@ -6925,7 +6925,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configura��ões Avançadas
+                                      Configura✅ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7216,12 +7216,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                                    ��
+                                    ✅
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
                                       <h4 className="font-medium text-green-900">
-                                        Navega��ão Maps
+                                        Navega✅ão Maps
                                       </h4>
                                       <button
                                         onClick={() =>
@@ -7264,11 +7264,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruç��es
+                                      Instruç✅es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As definiç��es são guardadas
+                                        • As definiç✅es são guardadas
                                         localmente no dispositivo
                                       </li>
                                       <li>
@@ -7376,7 +7376,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="flex items-center mb-4">
                                 <Trash2 className="h-6 w-6 text-red-600 mr-3" />
                                 <h3 className="text-lg font-semibold text-gray-900">
-                                  Gest��o de Dados
+                                  Gest✅o de Dados
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
@@ -7415,7 +7415,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠�� ATENÇÃO: Esta opera��ão é
+                                        ⚠✅ ATENÇÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -7592,7 +7592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven��ões
+                                    Histórico de interven✅ões
                                   </p>
                                 </div>
                               </div>
@@ -7809,7 +7809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construç��es
+                          Projetos e construç✅es
                         </p>
                       </div>
                     </div>
@@ -7854,8 +7854,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
-                        <li>�� Piscinas associadas</li>
-                        <li>🔥 Hist��rico de serviços</li>
+                        <li>✅ Piscinas associadas</li>
+                        <li>🔥 Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -7891,7 +7891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
-                        <li>• An��lise de performance</li>
+                        <li>• An✅lise de performance</li>
                       </ul>
                     </div>
                     <button
@@ -8337,7 +8337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Email Secund��rio
+                            Email Secund✅rio
                           </label>
                           <input
                             type="email"
@@ -8464,7 +8464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Validação básica
                           const name = (
                             form.querySelector(
-                              'input[placeholder="Nome completo ou raz��o social"]',
+                              'input[placeholder="Nome completo ou raz✅o social"]',
                             ) as HTMLInputElement
                           )?.value;
                           const email = (
@@ -8756,7 +8756,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     ? "Em Progresso"
                                     : work.status === "concluida" ||
                                         work.status === "completed"
-                                      ? "Conclu��da"
+                                      ? "Conclu✅da"
                                       : work.status}
                               </span>
                               {!work.folhaGerada && (
@@ -8830,7 +8830,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 ).toLocaleDateString("pt-PT")}
                               </div>
                               <div>
-                                <span className="font-medium">Atribu��:</span>{" "}
+                                <span className="font-medium">Atribu✅:</span>{" "}
                                 {work.assignedUsers &&
                                 work.assignedUsers.length > 0
                                   ? work.assignedUsers
@@ -8841,7 +8841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Or��amento:
+                                    Or✅amento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
@@ -9198,7 +9198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuiç��o de
+                                Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -9294,7 +9294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observa��ões */}
+                    {/* Observa✅ões */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -9746,7 +9746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtra��ão
+                          Sistema de Filtra✅ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -9795,7 +9795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç��es
+                        Observaç✅es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
@@ -9841,7 +9841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalaç��o
+                          ).value; // Data de Instalaç✅o
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
@@ -9900,7 +9900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenç��o
+                        Editar Manutenç✅o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -10239,7 +10239,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h2>
                   <p className="text-gray-500">
-                    Apenas super administradores podem aceder �� área de
+                    Apenas super administradores podem aceder ✅ área de
                     administração.
                   </p>
                   <button
@@ -10269,7 +10269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
               <div className="text-center">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  P��gina não encontrada
+                  P✅gina não encontrada
                 </h1>
                 <p className="text-gray-600">
                   A seç€ solicitada não foi encontrada.
@@ -10443,7 +10443,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>��</span>
+                  <span>✅</span>
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10460,7 +10460,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>🎉</span>
-                  <span>Observaç€s e pr��xima manutenção</span>
+                  <span>Observaç€s e pr✅xima manutenção</span>
                 </div>
               </div>
             </div>
@@ -10626,7 +10626,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("�� Login attempt for:", email);
+            // console.log("✅ Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -10710,7 +10710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError(result.error || "Credenciais inválidas");
               }
             } catch (error: any) {
-              console.error("�� Login error:", error);
+              console.error("✅ Login error:", error);
               setLoginError(
                 "Erro de conexão. Verifique sua internet e tente novamente.",
               );
@@ -10735,7 +10735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p��gina de login */}
+        {/* Admin Page - também funciona na p✅gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -10923,7 +10923,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Localiza��ões - Para super_admin e admin */}
+                {/* Localiza✅ões - Para super_admin e admin */}
                 {(currentUser?.role === "super_admin" ||
                   currentUser?.role === "admin") && (
                   <button
@@ -11335,7 +11335,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </label>
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.flowRate
-                                  ? `${selectedWork.flowRate} m��/h`
+                                  ? `${selectedWork.flowRate} m✅/h`
                                   : "Não especificado"}
                               </p>
                             </div>
@@ -11413,7 +11413,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.description && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Descri��ão
+                          Descri✅ão
                         </label>
                         <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                           {selectedWork.description}
@@ -11557,7 +11557,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações Básicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informações B��sicas
+                        Informações B✅sicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -11592,7 +11592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Localiza��ão
+                            Localiza✅ão
                           </label>
                           <button
                             onClick={() => {
@@ -11658,7 +11658,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificaç��es Técnicas */}
+                    {/* Especificaç✅es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
@@ -11740,7 +11740,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Cria��ão */}
+                    {/* Data de Cria✅ão */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
@@ -11820,7 +11820,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <AlertCircle className="h-8 w-8 text-red-600" />
                         </div>
                         <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderiza��ão
+                          Erro de Renderiza✅ão
                         </h1>
                         <p className="text-gray-600 mb-4">
                           Ocorreu um erro ao carregar a página. Por favor, tente
