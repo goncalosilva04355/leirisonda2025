@@ -39,7 +39,6 @@ import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
-import { isFirestoreReady } from "./firebase/firestoreConfig";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
