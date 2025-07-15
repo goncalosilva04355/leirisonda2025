@@ -255,7 +255,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
+            console.log("✅ Persist��ncia reparada automaticamente");
           } else {
             console.error(
               "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -1922,7 +1922,7 @@ function App() {
         }, 500);
       } else {
         console.warn("❌ Login failed:", result.error);
-        setLoginError(result.error || "Credenciais inválidas");
+        setLoginError("Login incorreto");
       }
     } catch (error) {
       console.error("❌ Login error:", error);
@@ -3083,7 +3083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir conclu��das)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -5325,7 +5325,7 @@ Verifique se:
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa����es e Trabalho
+                          Observa������es e Trabalho
                         </h3>
                       </div>
 
