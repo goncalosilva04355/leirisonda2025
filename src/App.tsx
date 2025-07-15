@@ -320,14 +320,10 @@ function App() {
       // Verificar flags de erro no localStorage
       const hasQuotaIssues =
         safeLocalStorage.getItem("firebase-quota-exceeded") === "true";
-      const hasEmergencyShutdown =
-        safeLocalStorage.getItem("firebase-emergency-shutdown") === "true";
-
       if (
         hasMultipleFirebaseProjects ||
         hasConflictingProjects ||
-        hasQuotaIssues ||
-        hasEmergencyShutdown
+        hasQuotaIssues
       ) {
         console.log("🔥 Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
@@ -2004,7 +2000,7 @@ function App() {
     );
 
     if (advancedPassword === "19867") {
-      alert("✅ Palavra-passe correcta! A abrir configurações...");
+      alert("��� Palavra-passe correcta! A abrir configurações...");
       setAdvancedPasswordError("");
 
       // Usar timeout para garantir que o estado é atualizado
