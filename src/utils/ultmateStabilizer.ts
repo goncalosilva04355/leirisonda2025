@@ -9,19 +9,24 @@
   // IMMEDIATE BLOCKS - Aplicados imediatamente
 
   // 1. RELOADS COMPLETAMENTE BLOQUEADOS
-  Object.defineProperty(window.location, "reload", {
-    value: () => console.log("🚫 RELOAD ULTIMATE BLOCKED"),
-    writable: false,
-    configurable: false,
-  });
+  try {
+    const originalReload = window.location.reload;
+    window.location.reload = (() => {
+      console.log("🚫 RELOAD ULTIMATE BLOCKED");
+    }) as any;
+  } catch (error) {
+    console.log("⚠️ Could not override location.reload:", error);
+  }
 
   // 2. HREF CHANGES BLOQUEADOS
-  const originalHref = window.location.href;
-  Object.defineProperty(window.location, "href", {
-    get: () => originalHref,
-    set: (value) => console.log("🚫 HREF CHANGE BLOCKED:", value),
-    configurable: false,
-  });
+  try {
+    const originalAssign = window.location.assign;
+    window.location.assign = ((url: string) => {
+      console.log("🚫 LOCATION.ASSIGN BLOCKED:", url);
+    }) as any;
+  } catch (error) {
+    console.log("⚠️ Could not override location.assign:", error);
+  }
 
   // 3. TODOS OS INTERVALOS MORTOS IMEDIATAMENTE
   const killAllIntervals = () => {
