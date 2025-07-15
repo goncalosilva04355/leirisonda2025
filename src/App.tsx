@@ -11229,6 +11229,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Settings and Logout buttons */}
                 <div className="flex items-center space-x-2">
+                  <NotificationCenter
+                    currentUser={currentUser}
+                    onNotificationClick={(notification) => {
+                      // Navigate to obra if it's a work notification
+                      if (
+                        notification.data?.type === "obra_assignment" &&
+                        notification.data?.obraId
+                      ) {
+                        navigateToSection("obras");
+                        setSidebarOpen(false);
+                      }
+                    }}
+                  />
+
                   <button
                     onClick={() => {
                       const password = prompt(
