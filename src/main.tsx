@@ -1,3 +1,6 @@
+// ULTIMATE STABILIZER - MUST BE FIRST
+import "./utils/ultmateStabilizer";
+
 // Load polyfills first
 import "./polyfills";
 
