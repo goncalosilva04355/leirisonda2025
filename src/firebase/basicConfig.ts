@@ -113,8 +113,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
 
 // Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return false;
-  return firebaseApp !== null;
+  return true; // SEMPRE pronto - Firebase forçado ativo
 }
 
 // Função para obter db seguro - usar firestoreConfig diretamente
