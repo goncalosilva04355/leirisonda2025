@@ -5147,7 +5147,7 @@ Verifique se:
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
@@ -5923,7 +5923,7 @@ Verifique se:
                             type="button"
                             onClick={() => {
                               console.log(
-                                "€DEBUG: Tentando adicionar cliente...",
+                                "��DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
@@ -6749,7 +6749,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenç��o
+                          Estado da Manutenç���o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -11044,6 +11044,7 @@ Verifique se:
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
           <StableModeIndicator />
+          <EmergencyDiagnostic />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
@@ -11905,7 +11906,7 @@ Verifique se:
                             Email
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.clientEmail || "Não especificado"}
+                            {selectedPool.clientEmail || "N��o especificado"}
                           </p>
                         </div>
                         <div>
