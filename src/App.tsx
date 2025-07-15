@@ -158,6 +158,9 @@ import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 import "./utils/testDirectAuth";
 
+// Página de diagnóstico
+import DiagnosticPage from "./components/DiagnosticPage";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -8266,7 +8269,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   🎉{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endere��o não disponível"}
                                 </button>
                               </div>
                               <div>
@@ -11720,7 +11724,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificaç✅es Técnicas */}
+                    {/* Especifica��✅es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
