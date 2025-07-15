@@ -74,30 +74,11 @@ class DirectAuthService {
         safeLocalStorage.setItem("isAuthenticated", "true");
 
         // SEMPRE guardar no Firestore
-        console.log("🔥 DirectAuth: Tentando guardar no Firestore...");
         try {
-          const saveResult =
-            await simpleForceFirestoreService.saveUser(userProfile);
-          if (saveResult) {
-            console.log(
-              "✅ DirectAuth: Utilizador guardado no Firestore com sucesso",
-            );
-          } else {
-            console.warn(
-              "⚠️ DirectAuth: SaveUser retornou false - dados não foram guardados",
-            );
-          }
-        } catch (firestoreError: any) {
-          console.error(
-            "❌ DirectAuth: Erro detalhado ao guardar no Firestore:",
-            {
-              message: firestoreError.message,
-              code: firestoreError.code,
-              userEmail: userProfile.email,
-              stack: firestoreError.stack,
-            },
-          );
-          console.warn("⚠️ Login continua mesmo com erro no Firestore");
+          await saveUser(userProfile);
+          console.log("✅ DirectAuth: Utilizador guardado no Firestore");
+        } catch (firestoreError) {
+          console.warn("⚠️ DirectAuth: Erro Firestore, mas login continua");
         }
 
         if (rememberMe) {
