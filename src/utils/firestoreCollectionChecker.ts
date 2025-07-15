@@ -15,7 +15,7 @@ interface CollectionStatus {
 }
 
 export class FirestoreCollectionChecker {
-  private db = getFirebaseFirestore();
+  private db: any = null;
 
   // Lista de coleções necessárias
   private requiredCollections = [
@@ -181,7 +181,7 @@ export class FirestoreCollectionChecker {
       }
 
       console.log(
-        "��� Todas as coleções foram inicializadas com dados de exemplo",
+        "✅ Todas as coleções foram inicializadas com dados de exemplo",
       );
     } catch (error) {
       console.error("❌ Erro geral ao criar dados de exemplo:", error);
