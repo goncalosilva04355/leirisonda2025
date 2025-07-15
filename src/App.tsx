@@ -795,7 +795,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se dispon��vel
+          // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
