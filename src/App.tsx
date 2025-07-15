@@ -4272,7 +4272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecer��o aqui quando forem
+                        As futuras manutenções aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -4700,7 +4700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "���� ERRO AO FAZER PARSE DOS USERS:",
+                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
