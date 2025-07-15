@@ -76,34 +76,37 @@ if (typeof window !== "undefined") {
   // Firebase handles data persistence automatically - no localStorage needed
   console.log("🔥 Firebase handles data persistence automatically");
 
-  // Enhanced promise rejection handler for Firebase errors
-  window.addEventListener("unhandledrejection", (event) => {
-    console.warn("Unhandled promise rejection:", event.reason);
+  // Enhanced promise rejection handler DESATIVADO - modo emergência
+  if (false)
+    window.addEventListener("unhandledrejection", (event) => {
+      console.warn("Unhandled promise rejection:", event.reason);
 
-    // Check if it's a Firebase ReadableStream error
-    if (
-      event.reason?.message?.includes("ReadableStream") ||
-      event.reason?.message?.includes(
-        "initializeReadableStreamDefaultReader",
-      ) ||
-      event.reason?.stack?.includes("firebase_firestore.js")
-    ) {
-      console.log("🔧 Handling Firebase ReadableStream error");
-      event.preventDefault(); // Prevent the error from crashing the app
+      // Check if it's a Firebase ReadableStream error
+      if (
+        event.reason?.message?.includes("ReadableStream") ||
+        event.reason?.message?.includes(
+          "initializeReadableStreamDefaultReader",
+        ) ||
+        event.reason?.stack?.includes("firebase_firestore.js")
+      ) {
+        console.log("🔧 Handling Firebase ReadableStream error");
+        event.preventDefault(); // Prevent the error from crashing the app
 
-      // Try to recover by reinitializing Firebase after a delay
-      setTimeout(async () => {
-        try {
-          const { FirebaseErrorFix } = await import("./utils/firebaseErrorFix");
-          await FirebaseErrorFix.safeFirebaseReinitialization();
-        } catch (error) {
-          console.error("Failed to reinitialize Firebase:", error);
-        }
-      }, 1000);
-    } else {
-      event.preventDefault();
-    }
-  });
+        // Try to recover by reinitializing Firebase after a delay
+        setTimeout(async () => {
+          try {
+            const { FirebaseErrorFix } = await import(
+              "./utils/firebaseErrorFix"
+            );
+            await FirebaseErrorFix.safeFirebaseReinitialization();
+          } catch (error) {
+            console.error("Failed to reinitialize Firebase:", error);
+          }
+        }, 1000);
+      } else {
+        event.preventDefault();
+      }
+    });
 
   // Add error event listener for better error handling
   window.addEventListener("error", (event) => {
