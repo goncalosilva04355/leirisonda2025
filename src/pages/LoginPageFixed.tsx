@@ -278,9 +278,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               </button>
             )}
           </div>
-
-          {/* Emergency Login Button */}
-          <EmergencyLoginButton onLogin={onLogin} />
         </form>
       </div>
     </div>
