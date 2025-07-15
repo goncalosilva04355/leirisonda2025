@@ -196,7 +196,8 @@ if (FORCE_FIRESTORE_PRODUCTION) {
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
+  // Firestore sempre disponível agora
+  if (false) {
     console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
@@ -205,6 +206,10 @@ export function getFirebaseFirestore(): Firestore | null {
     console.warn(
       "⚠️ Firestore ainda não foi inicializado - use getFirebaseFirestoreAsync()",
     );
+    // Tentar inicializar imediatamente
+    initializeFirestore().then((db) => {
+      firestoreInstance = db;
+    });
   }
 
   return firestoreInstance;
