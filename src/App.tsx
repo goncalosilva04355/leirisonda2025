@@ -1251,7 +1251,7 @@ function App() {
       //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
-      // Forçar re-render dos dados universais se necess��rio
+      // Forçar re-render dos dados universais se necessário
       if (collection === "obras") {
         // Trigger re-fetch das obras
         window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
