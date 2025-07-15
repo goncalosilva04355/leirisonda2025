@@ -135,6 +135,14 @@ export const FirestoreTest: React.FC = () => {
               </div>
             )}
 
+            {!simpleResult.success &&
+              simpleResult.code === "FIRESTORE_NOT_ENABLED" &&
+              simpleResult.projectId && (
+                <div className="mt-4">
+                  <FirestoreInstructions projectId={simpleResult.projectId} />
+                </div>
+              )}
+
             <details className="mt-3">
               <summary className="cursor-pointer font-medium">
                 📋 Detalhes Técnicos
