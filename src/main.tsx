@@ -17,6 +17,10 @@ console.log("🚀 Inicializando aplicação principal...");
 // Check if root is already rendered
 if (!rootElement.hasAttribute("data-react-root")) {
   rootElement.setAttribute("data-react-root", "true");
-  ReactDOM.createRoot(rootElement).render(<App />);
+  ReactDOM.createRoot(rootElement).render(
+    <ImprovedErrorBoundary>
+      <App />
+    </ImprovedErrorBoundary>,
+  );
   console.log("✅ Aplicação principal renderizada com sucesso!");
 }
