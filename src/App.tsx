@@ -40,6 +40,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import FirebaseStatusTest from "./components/FirebaseStatusTest";
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
@@ -1881,7 +1882,7 @@ function App() {
               }, 3000);
             }
           } catch (error) {
-            console.error("❌ Erro na verificação de auto sync:", error);
+            console.error("❌ Erro na verificaç��o de auto sync:", error);
           }
         }, 500);
       } else {
