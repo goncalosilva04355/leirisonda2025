@@ -209,6 +209,52 @@ const initialUsers = [
 ];
 
 function App() {
+  // DEBUG: Verificação de sanidade
+  const [hasError, setHasError] = useState(false);
+
+  // Verificar se houve erro crítico no carregamento
+  useEffect(() => {
+    const checkSanity = () => {
+      try {
+        // Verificar se elementos básicos estão disponíveis
+        if (!window || !document || !localStorage) {
+          throw new Error("Elementos básicos não disponíveis");
+        }
+
+        // Verificar se há muitos erros Firebase
+        const recentErrors = localStorage.getItem("recent_firebase_errors");
+        if (recentErrors) {
+          const errors = JSON.parse(recentErrors);
+          const blockingErrors = errors.filter(
+            (e: any) =>
+              e.message?.includes("TOO_MANY_ATTEMPTS") ||
+              e.message?.includes("WEAK_PASSWORD"),
+          );
+
+          if (blockingErrors.length > 5) {
+            console.warn(
+              "🚨 Muitos erros Firebase detectados, ativando modo debug",
+            );
+            setHasError(true);
+            return;
+          }
+        }
+
+        console.log("✅ Verificação de sanidade passou");
+      } catch (error) {
+        console.error("❌ Falha na verificação de sanidade:", error);
+        setHasError(true);
+      }
+    };
+
+    checkSanity();
+  }, []);
+
+  // Se há erro crítico, mostrar fallback
+  if (hasError) {
+    return <DebugFallback />;
+  }
+
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
