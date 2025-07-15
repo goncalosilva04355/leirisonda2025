@@ -2062,7 +2062,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenções: ${futureMaintenance.length}
+- Futuras Manuten��ões: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -7416,7 +7416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ��✅ ATENÇÃO: Esta opera✅ão é
+                                        ⚠✅ ATENÇÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8266,7 +8266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente �� base de dados
+                        Adicionar cliente à base de dados
                       </p>
                     </div>
                   </div>
@@ -9693,7 +9693,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç€da piscina"
+                          placeholder="Localizaç��da piscina"
                           required
                         />
                       </div>
@@ -11883,9 +11883,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
-
-        {/* Debug Info - Development only */}
-        {import.meta.env.DEV && <DebugInfo />}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
