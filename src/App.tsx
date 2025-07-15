@@ -253,7 +253,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
     };
 
@@ -1882,7 +1882,7 @@ function App() {
               }, 3000);
             }
           } catch (error) {
-            console.error("❌ Erro na verificaç��o de auto sync:", error);
+            console.error("❌ Erro na verificação de auto sync:", error);
           }
         }, 500);
       } else {
@@ -2780,7 +2780,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produ🔥ão */}
+                {/* Firebase Status Display - Apenas em produção */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -3146,7 +3146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  🎉abalho:
+                                  ����abalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
@@ -6675,7 +6675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configura🎉ões
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
+                        Configura��ões do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
