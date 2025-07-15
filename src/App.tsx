@@ -133,6 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
+import "./utils/syncSummary"; // Resumo final da sincronização implementada
 import "./utils/syncStatusChecker"; // Verificador de status da sincronização
 import "./utils/simpleFirestoreTest"; // Teste simples para verificar se Firestore funciona
 import "./utils/debugUserSave"; // Debug específico para problema de utilizadores
@@ -2249,7 +2250,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -11023,7 +11024,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("✅ Login error:", error);
+              console.error("��� Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
@@ -11031,7 +11032,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb���m funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -11998,7 +11999,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Dimens��es
+                            Dimensões
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.dimensions || "Não especificado"}
