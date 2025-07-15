@@ -1,3 +1,6 @@
+// PARAGEM DE EMERGÊNCIA TOTAL - PRIMEIRA LINHA
+import "./utils/emergencyStopAll";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -568,7 +571,7 @@ function App() {
       const firestoreId = await offlineFirstService.createWork(data);
 
       if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
+        console.log("�� Obra criada no Firestore:", firestoreId);
 
         // Backup automático desativado temporariamente
 
