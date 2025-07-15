@@ -1489,6 +1489,28 @@ function App() {
               });
           });
 
+        // Initialize push notification service
+        setTimeout(async () => {
+          try {
+            const { pushNotificationService } = await import(
+              "./services/pushNotificationService"
+            );
+            await pushNotificationService.startNotificationService();
+
+            // Save device token for current user if authenticated
+            if (currentUser?.id || currentUser?.email) {
+              await pushNotificationService.saveDeviceToken(
+                currentUser.id || currentUser.email,
+              );
+            }
+          } catch (error) {
+            console.warn(
+              "⚠️ Erro ao inicializar serviço de notificações:",
+              error,
+            );
+          }
+        }, 3000);
+
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
