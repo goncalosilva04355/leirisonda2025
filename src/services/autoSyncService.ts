@@ -76,13 +76,6 @@ export class AutoSyncService {
     collectionName: string,
     localStorageKey: string,
   ): Promise<void> {
-    if (isSystemDisabled("DISABLE_AUTO_SYNC")) {
-      console.log(
-        "⚙️ Observer Firebase desativado por configuração do sistema",
-      );
-      return;
-    }
-
     if (!this.db) return;
 
     try {
