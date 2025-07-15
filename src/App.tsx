@@ -310,7 +310,7 @@ function App() {
         hasQuotaIssues ||
         hasEmergencyShutdown
       ) {
-        console.log("���� Firebase conflict detected on mobile device");
+        console.log("🔥 Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -414,7 +414,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR�����TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CR🔥�TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -579,7 +579,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("���� Manutenção criada no Firestore:", firestoreId);
+        console.log("🔥 Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -599,7 +599,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("����� addClient iniciado com Firestore ativo");
+      console.log("🔥� addClient iniciado com Firestore ativo");
 
       const firestoreId = await offlineFirstService.createClient(data);
 
@@ -718,7 +718,7 @@ function App() {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         if (isFirestoreReady()) {
-          console.log("���� Carregando utilizadores do Firestore...");
+          console.log("🔥 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
           const firestoreUsers = await firestoreService.getUtilizadores();
@@ -1073,7 +1073,7 @@ function App() {
         safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
-        console.log("🗑���� Mock and test data cleared");
+        console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -1456,7 +1456,7 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("���� Notification clicked, navigating...", event.data);
+            console.log("🔥 Notification clicked, navigating...", event.data);
 
             const { data } = event.data;
 
@@ -1797,7 +1797,7 @@ function App() {
     }
 
     try {
-      console.log("���� Attempting login for:", loginForm.email);
+      console.log("🔥 Attempting login for:", loginForm.email);
       console.log("🔐 Email:", loginForm.email);
       console.log("🔐 Password length:", loginForm.password?.length || 0);
 
@@ -1807,7 +1807,7 @@ function App() {
         false, // rememberMe será gerido pelo LoginPageFixed
       );
 
-      console.log("���� Auth result:", result);
+      console.log("🔥 Auth result:", result);
 
       if (result.success && result.user) {
         console.log("��� Login successful for:", result.user.email);
@@ -1985,7 +1985,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplica����o agora est�� limpa.");
+        alert("Dados eliminados com sucesso! Aplica🔥o agora est�� limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2073,7 +2073,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descri��ão: ${maint.description}
-   ${maint.notes ? `Observa📞����ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -2533,7 +2533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("����� Erro ao salvar utilizador:", error);
+      console.error("🔥� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -2700,7 +2700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 );
 
                 if (fallbackResult.success) {
-                  console.log("���� AuthService fallback bem-sucedido");
+                  console.log("🔥 AuthService fallback bem-sucedido");
                   (result as any).success = true;
                   (result as any).user = fallbackResult.user;
                 }
@@ -2779,7 +2779,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produ����ão */}
+                {/* Firebase Status Display - Apenas em produ🔥ão */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -2849,7 +2849,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenç����o
+                          Obras necessitam atenç🔥o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -3089,7 +3089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���� Morada:
+                                  🔥 Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -3781,7 +3781,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest����o de piscinas no sistema
+                          Gest🔥o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -3908,7 +3908,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr����xima manutenção:{" "}
+                                Pr🔥xima manutenção:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -4669,7 +4669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "���� PARSED USERS:",
+                                  "🔥 PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -4817,7 +4817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "�����ILTRO UTILIZADOR:",
+                                    "🔥�ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -5549,7 +5549,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "���� hasPermission clientes create:",
+                                "🔥 hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -6046,7 +6046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten����ão Programada",
+                                type: "Manuten🔥ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -6797,7 +6797,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 manutenções registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>���� Trabalhos realizados</li>
+                                <li>🔥 Trabalhos realizados</li>
                                 <li>��� Técnicos responsáveis</li>
                                 <li>• Datas e duraç��es</li>
                                 <li>• Estados e observações</li>
@@ -7251,7 +7251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "����� Ativo"
+                                        ? "🔥� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -7298,7 +7298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
-                              Configura����es protegidas por palavra-passe para
+                              Configura🔥es protegidas por palavra-passe para
                               administradores
                             </p>
 
@@ -7514,7 +7514,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica����ão ou conexão.
+                                    autentica🔥ão ou conexão.
                                   </p>
                                 </div>
 
@@ -7649,7 +7649,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gest����o de Utilizadores
+                              Gest🔥o de Utilizadores
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Criar, editar e gerir utilizadores do sistema.
@@ -7785,7 +7785,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
-                        <li>• Datas e dura����es</li>
+                        <li>• Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -7855,7 +7855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>�� Piscinas associadas</li>
-                        <li>���� Hist��rico de serviços</li>
+                        <li>🔥 Hist��rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -8430,7 +8430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��������es
+                            Notas e Observaç🔥🔥es
                           </label>
                           <textarea
                             rows={4}
@@ -8795,7 +8795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {work.contact}
+                                        🔥 {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -8979,7 +8979,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 : activeWorkFilter === "in_progress"
                                   ? "Em Progresso"
                                   : activeWorkFilter === "completed"
-                                    ? "Conclu����das"
+                                    ? "Conclu🔥das"
                                     : activeWorkFilter === "no_sheet"
                                       ? "Sem Folha de Obra"
                                       : activeWorkFilter
@@ -9038,7 +9038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa����ões Básicas
+                          Informa🔥ões Básicas
                         </h3>
                       </div>
 
@@ -9473,7 +9473,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da �����gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da 🔥�gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -9525,7 +9525,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa����es
+                          ).value; // Observa🔥es
 
                           // Prepare update data
                           let updateData: any = {
@@ -10080,7 +10080,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // T����cnico
+                            .value; // T🔥cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
@@ -10495,7 +10495,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon������alo Fonseca",
+  //       name: "Gon🔥��alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11081,7 +11081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ����� {selectedWork.contact}
+                            🔥� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -11427,7 +11427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Orçamento
                         </label>
                         <p className="text-gray-900">
-                          ������{selectedWork.budget}
+                          🔥��{selectedWork.budget}
                         </p>
                       </div>
                     )}
@@ -11607,7 +11607,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ������� {selectedPool.location}
+                            🔥��� {selectedPool.location}
                           </button>
                         </div>
                       </div>
