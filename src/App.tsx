@@ -133,6 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR
+import "./utils/testForceFirestore"; // Teste que força funcionamento
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -1277,7 +1278,7 @@ function App() {
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
 
           // Force enable real-time sync for editing
-          console.log("🔥 FIRESTORE ATIVO PARA EDIÇÕES!");
+          console.log("�� FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
           console.error("❌ Erro ao iniciar sincronização automática:", error);
           // Try again if it fails
@@ -9803,7 +9804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa🔥es
+                          ).value; // Observa���es
 
                           // Prepare update data
                           let updateData: any = {
