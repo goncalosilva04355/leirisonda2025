@@ -406,10 +406,16 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  // const firebaseAutoFix = useAutoFirebaseFix();
+  const firebaseAutoFix = {
+    checkOnUserAction: async () => {
+      console.log("Firebase auto-fix disabled");
+    },
+  };
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  // const userMigration = useAutoUserMigration();
+  const userMigration = {
+    status: { completed: false, migrated: 0 },
+  };
 
   // Log migration status changes
   // useEffect(() => {
@@ -446,7 +452,7 @@ function App() {
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
-      "🛡️ Data protection initialized (checks disabled for performance)",
+      "🛡�� Data protection initialized (checks disabled for performance)",
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
@@ -664,9 +670,12 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  // const autoSyncData = useAutoSyncSimple();
-  // const { syncStatus: autoSyncStatus } = autoSyncData;
-  // const autoSyncLastSync = autoSyncData.lastSync;
+  const autoSyncData = {
+    syncStatus: "disabled",
+    lastSync: null,
+  };
+  const autoSyncStatus = autoSyncData.syncStatus;
+  const autoSyncLastSync = autoSyncData.lastSync;
 
   // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
   const isWorkAssignedToCurrentUser = (work: any) => {
@@ -1100,7 +1109,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("�� Erro na inicialização:", error);
+        console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -2044,7 +2053,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç��o agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -10190,7 +10199,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manuten��ão</option>
+                          <option value="Manutenç€o">Manutenção</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
@@ -10554,7 +10563,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte��o. Por favor, tente
+              Ocorreu um erro ao carregar o conte🎉o. Por favor, tente
               novamente.
             </p>
             <button
@@ -10983,7 +10992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("✅ Login error:", error);
+              console.error("�� Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
@@ -12105,8 +12114,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Erro de Renderiza✅ão
                         </h1>
                         <p className="text-gray-600 mb-4">
-                          Ocorreu um erro ao carregar a p��gina. Por favor,
-                          tente novamente.
+                          Ocorreu um erro ao carregar a página. Por favor, tente
+                          novamente.
                         </p>
                         <div className="space-y-2">
                           <button
