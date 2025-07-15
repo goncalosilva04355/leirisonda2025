@@ -560,16 +560,11 @@ function App() {
       const firestoreId = await offlineFirstService.createWork(data);
 
       if (firestoreId) {
-        console.log("�� Obra criada no Firestore:", firestoreId);
+        console.log("✅ Obra criada no Firestore:", firestoreId);
 
         // Backup automático desativado temporariamente
-
-        // Sincronizar com sistema universal também
-        try {
-          await addObra(data);
-        } catch (syncError) {
-          console.warn("€🎉 Erro na sincronização universal:", syncError);
-        }
+        // NOTE: Não chamar addObra() aqui para evitar duplicação
+        // O hook universalSync já sincroniza automaticamente com Firestore
 
         return firestoreId;
       } else {
@@ -10647,7 +10642,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>€</span>
+                  <span>���</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
