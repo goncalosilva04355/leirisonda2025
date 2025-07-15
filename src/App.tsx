@@ -1889,7 +1889,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("🔄 Verificando auto sync após login...");
+            console.log("�� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -5113,16 +5113,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar diâmetro</option>
-                                  <option value="1">1 polegada</option>
-                                  <option value="1.25">1¼ polegadas</option>
-                                  <option value="1.5">1½ polegadas</option>
-                                  <option value="2">2 polegadas</option>
-                                  <option value="2.5">2½ polegadas</option>
-                                  <option value="3">3 polegadas</option>
-                                  <option value="4">4 polegadas</option>
-                                  <option value="5">5 polegadas</option>
-                                  <option value="6">6 polegadas</option>
+                                  <option key="select-diameter" value="">
+                                    Selecionar diâmetro
+                                  </option>
+                                  <option key="1" value="1">
+                                    1 polegada
+                                  </option>
+                                  <option key="1.25" value="1.25">
+                                    1¼ polegadas
+                                  </option>
+                                  <option key="1.5" value="1.5">
+                                    1½ polegadas
+                                  </option>
+                                  <option key="2" value="2">
+                                    2 polegadas
+                                  </option>
+                                  <option key="2.5" value="2.5">
+                                    2½ polegadas
+                                  </option>
+                                  <option key="3" value="3">
+                                    3 polegadas
+                                  </option>
+                                  <option key="4" value="4">
+                                    4 polegadas
+                                  </option>
+                                  <option key="5" value="5">
+                                    5 polegadas
+                                  </option>
+                                  <option key="6" value="6">
+                                    6 polegadas
+                                  </option>
                                 </select>
                               </div>
                             </div>
@@ -11875,7 +11895,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observações */}
+                    {/* Observa��ões */}
                     {selectedPool.observations && (
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
