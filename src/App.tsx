@@ -77,7 +77,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
-// import "./utils/protectedLocalStorage"; // Ativar proteção automática
+// import "./utils/protectedLocalStorage"; // Ativar proteção autom��tica
 
 import { fcmService } from "./services/fcmService";
 import NotificationCenter from "./components/NotificationCenter";
@@ -133,10 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
-// import "./utils/syncSummary"; // Resumo final da sincronização implementada
-// import "./utils/syncStatusChecker"; // Verificador de status da sincronização
-// import "./utils/simpleFirestoreTest"; // Teste simples para verificar se Firestore funciona
-// import "./utils/debugUserSave"; // Debug específico para problema de utilizadores
+import "./utils/finalSystemCheck"; // Verificação final - sistema funcional
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -511,7 +508,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -9477,7 +9474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. Vá à Área de
+                                ��hum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
