@@ -48,7 +48,13 @@ class HybridAuthService {
     if (this.useFirebase) {
       try {
         const auth = getFirebaseAuth();
-        if (auth) {
+        if (
+          auth &&
+          !(
+            typeof window !== "undefined" &&
+            (window as any).EMERGENCY_MODE_ACTIVE
+          )
+        ) {
           console.log("🔥 Tentando login Firebase...");
           const userCredential = await signInWithEmailAndPassword(
             auth,
