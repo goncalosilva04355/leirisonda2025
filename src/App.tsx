@@ -7522,7 +7522,7 @@ Verifique se:
                                         localmente no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç€ automática funciona melhor
+                                        ��� A marcaç€ automática funciona melhor
                                         em dispositivos móveis
                                       </li>
                                       <li>
@@ -8103,7 +8103,7 @@ Verifique se:
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>�� Hist✅rico de serviços</li>
+                        <li>🔥 Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -10847,7 +10847,7 @@ Verifique se:
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura📞ções avançadas
+                Insira a palavra-passe para aceder ��s configura📞ções avançadas
               </p>
             </div>
 
@@ -10931,7 +10931,7 @@ Verifique se:
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("��� Login successful for:", result.user.email);
+                // console.log("✅ Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -11044,7 +11044,6 @@ Verifique se:
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
           <StableModeIndicator />
-          <EmergencyDiagnostic />
           <SimpleFirestoreStatus />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
@@ -11443,7 +11442,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In€io
+                          Data de In��io
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
