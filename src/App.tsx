@@ -326,7 +326,7 @@ function App() {
         hasConflictingProjects ||
         hasQuotaIssues
       ) {
-        console.log("🔥 Firebase conflict detected on mobile device");
+        console.log("��� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -5643,7 +5643,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const { pushNotificationService } =
                                   await import(
-                                    "../services/pushNotificationService"
+                                    "./services/pushNotificationService"
                                   );
 
                                 for (const userId of workData.assignedUsers) {
@@ -6879,7 +6879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura����ões
+                        Configura�����ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7044,7 +7044,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>🎉 Equipas atribuídas</li>
+                                <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
