@@ -46,7 +46,11 @@ setTimeout(async () => {
       console.warn("⚠️ Dados não foram encontrados");
     }
   } catch (error: any) {
-    console.error("❌ FORÇA FIRESTORE: Teste falhou:", error.message);
+    console.error(
+      "❌ FORÇA FIRESTORE: Teste falhou:",
+      error?.message || String(error),
+    );
+    console.error("🔍 Erro detalhado:", error);
     console.error(
       "🔍 Verifique se o Firestore está REALMENTE ativo no projeto Firebase",
     );
