@@ -4775,7 +4775,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && usersLoaded && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠️ Nenhum utilizador encontrado.
+                                ⚠�� Nenhum utilizador encontrado.
                               </p>
                               <p className="text-xs text-yellow-700 mt-1">
                                 Debug: localStorage tem{" "}
@@ -4888,7 +4888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                              <option value="">
+                              <option key="select-user" value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
                                   : "Nenhum utilizador disponível"}
@@ -9324,7 +9324,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                               className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
-                              <option value="">
+                              <option key="select-user" value="">
                                 {users.length > 0
                                   ? "Selecionar usuário..."
                                   : "Nenhum utilizador disponível"}
