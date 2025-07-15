@@ -133,6 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/directFirebaseFix"; // Fix direto para Firebase/Firestore
+import "./utils/testFirestoreFixed"; // Teste das correções do Firestore
 import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
 import "./utils/finalSystemCheck"; // Verificação final - sistema funcional
 // import "./utils/testDataPersistence";
@@ -858,7 +859,7 @@ function App() {
 
           setUsers(parsedUsers);
 
-          // Sincronizar com Firestore se dispon��vel
+          // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
               "🔄 Sincronizando utilizadores locais para Firestore...",
@@ -1117,7 +1118,7 @@ function App() {
             console.log("✅ Session restored successfully");
             return; // Don't clear the session
           } catch (parseError) {
-            console.warn("���️ Error parsing saved user, clearing session");
+            console.warn("⚠️ Error parsing saved user, clearing session");
           }
         }
 
@@ -1815,7 +1816,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log("�� Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       // await firebaseAutoFix.checkOnUserAction();
