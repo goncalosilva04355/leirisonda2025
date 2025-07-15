@@ -2842,6 +2842,43 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </div>
 
+                  {/* Firebase, Firestore & AutoSync Status LEDs - Bottom Right Corner */}
+                  
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isFirebaseReady() ? "bg-green-500" : "bg-red-500"
+                        }`}
+                        title={
+                          isFirebaseReady()
+                            ? "Firebase Ativo"
+                            : "Firebase Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          isFirestoreReady() ? "bg-blue-500" : "bg-orange-500"
+                        }`}
+                        title={
+                          isFirestoreReady()
+                            ? "Firestore Ativo"
+                            : "Firestore Inativo"
+                        }
+                      ></div>
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          autoSyncActive
+                            ? "bg-purple-500 animate-pulse"
+                            : "bg-gray-400"
+                        }`}
+                        title={
+                          autoSyncActive
+                            ? "Sincronização Autom����tica Ativa"
+                            : "Sincronização Automática Inativa"
+                        }
+                      ></div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Status Cards */}
                 <div className="space-y-3">
