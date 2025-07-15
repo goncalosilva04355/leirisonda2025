@@ -1105,20 +1105,8 @@ function App() {
         const isAuthenticatedStored =
           safeLocalStorage.getItem("isAuthenticated");
 
-        if (savedUser && isAuthenticatedStored === "true") {
-          try {
-            const userProfile = JSON.parse(savedUser);
-            console.log("✅ Found existing valid session:", userProfile.email);
-
-            // Restore authentication state
-            setCurrentUser(userProfile);
-            setIsAuthenticated(true);
-            console.log("✅ Session restored successfully");
-            return; // Don't clear the session
-          } catch (parseError) {
-            console.warn("⚠️ Error parsing saved user, clearing session");
-          }
-        }
+        // DISABLED: Auto-login sempre desabilitado
+        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
@@ -2170,7 +2158,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa���🔥ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -10476,7 +10464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h1>
                   <p className="text-gray-600 mb-4">
                     Apenas administradores podem aceder às funcionalidades de
-                    localização.
+                    localiza��ão.
                   </p>
                   <button
                     onClick={() => navigateToSection("dashboard")}
