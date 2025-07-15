@@ -2163,7 +2163,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Conclu€: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
