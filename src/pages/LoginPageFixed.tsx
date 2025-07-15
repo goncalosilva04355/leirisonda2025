@@ -75,7 +75,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("�� Error in LoginPage useEffect:", error);
+      console.error("❌ Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
