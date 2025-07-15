@@ -1306,7 +1306,7 @@ function App() {
 
           if (autoSyncStarted) {
             setAutoSyncActive(true);
-            console.log("✅ Auto sync garantido ap��s login!");
+            console.log("✅ Auto sync garantido após login!");
           } else {
             console.warn("🎉�� Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
@@ -10006,7 +10006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura��ão Real (horas)
+                          Dura���ão Real (horas)
                         </label>
                         <input
                           type="number"
