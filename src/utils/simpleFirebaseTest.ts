@@ -30,9 +30,32 @@ export async function simpleFirebaseTest() {
 
     // Passo 2: Tentar inicializar Firestore
     console.log("💾 Passo 2: Inicializar Firestore...");
-    const db = getFirestore(app);
-    console.log("✅ Firestore inicializado:", typeof db);
-    console.log("✅ Firestore app:", db.app.name);
+    let db;
+    try {
+      db = getFirestore(app);
+      console.log("✅ Firestore inicializado:", typeof db);
+      console.log("✅ Firestore app:", db.app.name);
+    } catch (firestoreError: any) {
+      console.error("❌ Erro específico do Firestore:", firestoreError);
+
+      // Verificar se é erro de Firestore não habilitado
+      if (
+        firestoreError.code === "firestore/unavailable" ||
+        firestoreError.message.includes("getImmediate") ||
+        firestoreError.message.includes("Service firestore is not available")
+      ) {
+        return {
+          success: false,
+          message: "Firestore não está habilitado no projeto Firebase",
+          code: "FIRESTORE_NOT_ENABLED",
+          projectId: app.options.projectId,
+          solution: `Vá para https://console.firebase.google.com/project/${app.options.projectId}/firestore e crie a base de dados Firestore`,
+          error: firestoreError.message,
+        };
+      }
+
+      throw firestoreError; // Re-throw se for outro tipo de erro
+    }
 
     return {
       success: true,
