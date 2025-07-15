@@ -2072,7 +2072,7 @@ ${index + 1}. ${maint.poolName}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
-   Descri✅ão: ${maint.description}
+   Descrição: ${maint.description}
    ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
   )
@@ -11413,7 +11413,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {selectedWork.description && (
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Descri✅ão
+                          Descrição
                         </label>
                         <p className="text-gray-900 bg-gray-50 p-3 rounded-md">
                           {selectedWork.description}
