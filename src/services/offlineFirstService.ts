@@ -1,5 +1,7 @@
 // Serviço offline-first - funciona sem Firebase
-// O Firebase é opcional e será usado quando disponível
+// ATUALIZADO: Agora usa ForceFirestore como principal
+
+import { forceFirestoreService } from "./forceFirestoreService";
 
 class OfflineFirstService {
   private useFirebase = false;
@@ -32,22 +34,28 @@ class OfflineFirstService {
     }
   }
 
-  // Método principal para criar obra
+  // Método principal para criar obra - AGORA USA FIRESTORE
   async createWork(workData: any): Promise<string> {
     const id = Date.now().toString();
     const work = {
       ...workData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
-      // 1. Sempre salvar no localStorage primeiro (garantia)
+      console.log("🔥 OfflineFirst: Guardando obra no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.saveWork(work);
+      console.log("✅ Obra guardada no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       existingWorks.push(work);
       localStorage.setItem("works", JSON.stringify(existingWorks));
-      console.log("✅ Obra salva no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
       // 2. Tentar Firebase se disponível (opcional)
       if (this.firebaseAvailable) {
