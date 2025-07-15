@@ -15,14 +15,6 @@ import {
 import { getDB } from "../firebase/basicConfig";
 import { syncManager } from "../utils/syncManager";
 
-// Verificar modo emergência
-function isEmergencyMode(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    (window as any).EMERGENCY_MODE_ACTIVE === true
-  );
-}
-
 // Get Firestore instance
 const getFirestore = () => {
   const db = getDB();
