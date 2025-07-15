@@ -252,31 +252,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
-
-            {loginError && loginError.includes("incorreto") && (
-              <button
-                type="button"
-                onClick={async () => {
-                  try {
-                    const { emergencyAuthService } = await import(
-                      "../services/emergencyAuthService"
-                    );
-                    const result = await emergencyAuthService.emergencyLogin(
-                      email,
-                      password,
-                    );
-                    if (result.success && result.user) {
-                      await onLogin(email, password);
-                    }
-                  } catch (error) {
-                    console.error("❌ Modo emergência falhou:", error);
-                  }
-                }}
-                className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-200 transition-colors text-sm"
-              >
-                🚨 Modo Emergência (sem Firebase)
-              </button>
-            )}
           </div>
         </form>
       </div>
