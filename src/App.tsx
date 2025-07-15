@@ -3824,6 +3824,54 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Botões de Teste Firestore */}
                 <div className="mt-6 space-y-3">
                   <button
+                    onClick={async () => {
+                      try {
+                        const { testFirestoreAPI } = await import(
+                          "./utils/directFirestoreAPI"
+                        );
+                        const result = await testFirestoreAPI();
+
+                        if (result.success) {
+                          alert(`🎉 SUCESSO! FIRESTORE FUNCIONANDO!
+
+${result.message}
+
+✅ Confirmado: O Firestore está ativo e funcionando.
+🔧 O problema era o SDK Firebase, não o Firestore.
+💾 Os dados podem ser guardados normalmente!`);
+
+                          localStorage.setItem("FIRESTORE_WORKING", "true");
+                        } else {
+                          alert(`❌ ${result.message}
+
+Verifique se:
+1. Firestore está realmente ativo em leiria-1cfc9
+2. Regras de segurança permitem leitura/escrita
+3. API Key tem permissões corretas`);
+                        }
+
+                        console.log("🔍 Resultado REST API:", result);
+                      } catch (error: any) {
+                        alert(`❌ Erro: ${error.message}`);
+                      }
+                    }}
+                    className="w-full bg-purple-50 border-4 border-purple-500 rounded-lg p-6 hover:bg-purple-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Database className="h-6 w-6 text-purple-600" />
+                      <span className="text-purple-700 font-bold text-lg">
+                        🚀 CONTORNAR SDK - TESTE REST API
+                      </span>
+                    </div>
+                    <p className="text-purple-600 font-medium mt-2">
+                      Acede Firestore diretamente (contorna SDK problemático)
+                    </p>
+                    <p className="text-purple-500 text-sm mt-1 font-bold">
+                      Se Firestore estiver ativo, esta VAI funcionar!
+                    </p>
+                  </button>
+
+                  <button
                     onClick={() =>
                       setActiveSection("definitive-firestore-solution")
                     }
