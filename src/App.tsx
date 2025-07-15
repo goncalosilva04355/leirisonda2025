@@ -131,6 +131,11 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
+import { useForceFirestore } from "./hooks/useForceFirestore";
+import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
+import "./utils/syncStatusChecker"; // Verificador de status da sincronização
+import "./utils/simpleFirestoreTest"; // Teste simples para verificar se Firestore funciona
+import "./utils/debugUserSave"; // Debug específico para problema de utilizadores
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -213,6 +218,23 @@ function App() {
 
   // Mobile Firebase conflict detection
   const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
+
+  // Forçar TODOS os dados a serem guardados no Firestore
+  const {
+    isInitialized: firestoreInitialized,
+    status: firestoreStatus,
+    refreshStatus,
+  } = useForceFirestore();
+
+  // Log status do Firestore
+  useEffect(() => {
+    if (firestoreInitialized) {
+      console.log(
+        "🔥 ForceFirestore inicializado - todos os dados vão para Firestore:",
+        firestoreStatus,
+      );
+    }
+  }, [firestoreInitialized, firestoreStatus]);
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
@@ -2227,7 +2249,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -7996,7 +8018,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>���� Informa��ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -11009,7 +11031,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb��m funciona na página de login */}
+        {/* Admin Login Modal - tamb���m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -11976,7 +11998,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Dimensões
+                            Dimens��es
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.dimensions || "Não especificado"}
