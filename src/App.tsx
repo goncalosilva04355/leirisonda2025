@@ -605,7 +605,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("🔥 Manutenção criada no Firestore:", firestoreId);
+        console.log("���� Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -3810,7 +3810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </p>
                                   <p className="text-gray-400 text-xs mt-1">
                                     Tente pesquisar por cliente, obra, piscina,
-                                    data ou técnico
+                                    data ou t��cnico
                                   </p>
                                 </div>
                               )}
@@ -3821,9 +3821,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Botão de Teste Firestore - apenas no modo de desenvolvimento */}
-                {import.meta.env.DEV && (
-                  <div className="mt-6">
+                {/* Botão de Teste Firestore DIRETO */}
+                <div className="mt-6 space-y-3">
+                  <button
+                    onClick={async () => {
+                      const { testDirectWrite } = await import(
+                        "../utils/directFirestoreTest"
+                      );
+                      const result = await testDirectWrite();
+                      alert(
+                        result.success
+                          ? `✅ ${result.message}`
+                          : `❌ ${result.message}`,
+                      );
+                    }}
+                    className="w-full bg-green-50 border-2 border-green-200 rounded-lg p-4 hover:bg-green-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Database className="h-5 w-5 text-green-600" />
+                      <span className="text-green-700 font-medium">
+                        🚀 Teste DIRETO Firestore
+                      </span>
+                    </div>
+                    <p className="text-green-600 text-sm mt-1">
+                      Teste simples e direto de escrita/leitura
+                    </p>
+                  </button>
+
+                  {import.meta.env.DEV && (
                     <button
                       onClick={() => setActiveSection("teste-firestore")}
                       className="w-full bg-red-50 border-2 border-red-200 rounded-lg p-4 hover:bg-red-100 transition-colors"
@@ -3831,15 +3856,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="flex items-center justify-center space-x-2">
                         <Database className="h-5 w-5 text-red-600" />
                         <span className="text-red-700 font-medium">
-                          🔥 Teste Conectividade Firestore
+                          🔧 Diagnóstico Avançado
                         </span>
                       </div>
                       <p className="text-red-600 text-sm mt-1">
-                        Diagnosticar problemas de armazenamento de dados
+                        Se o teste direto falhar
                       </p>
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           );
@@ -5985,7 +6010,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência El��trica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a G🎉s</option>
                         </select>
