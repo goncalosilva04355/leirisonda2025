@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 // Basic imports first
-import App from "./App-debug";
+import App from "./App-minimal";
 import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 
 // Ensure single root creation
