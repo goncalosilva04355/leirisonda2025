@@ -14,8 +14,8 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
-// Firebase Service Worker registration com fallback (skip in private browsing)
-if ("serviceWorker" in navigator && !isPrivateBrowsing()) {
+// Firebase Service Worker DESATIVADO - modo emergência
+if (false && "serviceWorker" in navigator && !isPrivateBrowsing()) {
   // Tentar registrar Firebase messaging service worker
   navigator.serviceWorker
     .register("/firebase-messaging-sw.js")
