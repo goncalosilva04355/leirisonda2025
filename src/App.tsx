@@ -396,7 +396,7 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇ��O UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
+  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
   //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
