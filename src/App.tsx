@@ -422,7 +422,7 @@ function App() {
 
     // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionar📞 normalmente sem verificações constantes
-    // Sistema funcionar�� normalmente sem verificações autom📞ticas
+    // Sistema funcionar normalmente sem verificações autom📞ticas
   }, []);
 
   // Sincronizar configurações entre componentes
