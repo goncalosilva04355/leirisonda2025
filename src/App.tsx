@@ -1688,7 +1688,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manuten����o anterior",
+          notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5639,7 +5639,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className={`px-6 py-2 ${isCreatingWork ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"} text-white rounded-md transition-colors flex items-center space-x-2`}
                       >
                         <Building2 className="h-4 w-4" />
-                        <span>Criar Obra</span>
+                        <span>
+                          {isCreatingWork ? "Criando..." : "Criar Obra"}
+                        </span>
                       </button>
                     </div>
                   </form>
@@ -10267,7 +10269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
                             .value; // T🔥cnico
-                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenç��o
+                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
@@ -11463,7 +11465,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç��s Detalhadas
+                          Informaç€s Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
@@ -12044,7 +12046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P��gina
+                            Recarregar P���gina
                           </button>
                           <button
                             onClick={() => {
