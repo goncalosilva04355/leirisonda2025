@@ -96,8 +96,6 @@ import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
-import ProductionSyncStatus from "./components/ProductionSyncStatus";
-
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { directAuthService as authService } from "./services/directAuthService";
@@ -648,7 +646,7 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
-  // Função auxiliar para verificar se uma obra est�� atribuída ao utilizador atual
+  // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
   const isWorkAssignedToCurrentUser = (work: any) => {
     if (!currentUser) return false;
 
@@ -1079,7 +1077,7 @@ function App() {
         safeLocalStorage.removeItem("sample-data");
 
         console.log("✅ App initialization completed");
-        console.log("🗑��� Mock and test data cleared");
+        console.log("🗑���� Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -4078,7 +4076,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu��do"
+                                      ? "Conclu���do"
                                       : maint.status}
                               </span>
                             </div>
