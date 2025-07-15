@@ -182,7 +182,7 @@ export class FirestoreService {
       );
       return documents;
     } catch (error) {
-      console.error("��� Erro ao buscar coleção no Firestore:", error);
+      console.error("❌ Erro ao buscar coleção no Firestore:", error);
       return this.getCollectionFromLocalStorage(collectionName);
     }
   }
