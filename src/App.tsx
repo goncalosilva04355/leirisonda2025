@@ -7,8 +7,8 @@ import "./utils/realTimeMonitor";
 // VERIFICADOR DE COLEÇÕES FIRESTORE
 import "./utils/firestoreCollectionChecker";
 
-// FORÇAR INICIALIZAÇÃO FIREBASE
-import "./utils/forceFirebaseInit";
+// FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
+import "./utils/simpleFirebaseInit";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -4437,7 +4437,7 @@ Verifique se:
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç€es agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5975,7 +5975,7 @@ Verifique se:
                                   );
                                 } catch (error) {
                                   console.error(
-                                    "€ Erro ao adicionar cliente:",
+                                    "��� Erro ao adicionar cliente:",
                                     error,
                                   );
                                   alert(
@@ -7069,7 +7069,7 @@ Verifique se:
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>��� Equipas atribuídas</li>
+                                <li>🎉 Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -11650,7 +11650,7 @@ Verifique se:
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
                                   ? `${selectedWork.columnDiameter}"`
-                                  : "N��o especificado"}
+                                  : "Não especificado"}
                               </p>
                             </div>
                             <div>
