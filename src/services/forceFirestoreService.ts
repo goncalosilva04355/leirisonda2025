@@ -11,6 +11,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfig";
+import {
+  directFirebaseInit,
+  getDirectFirestore,
+} from "../utils/directFirebaseFix";
 
 /**
  * Serviço que força TODOS os dados a serem guardados no Firestore
@@ -22,14 +26,36 @@ class ForceFirestoreService {
   private async getDB() {
     if (!this.db) {
       try {
-        console.log("🔄 ForceFirestore: Inicializando Firestore...");
+        console.log("🔄 ForceFirestore: Tentando inicialização direta...");
+
+        // 1. Tentar direct firebase primeiro
+        const directDB = getDirectFirestore();
+        if (directDB) {
+          console.log(
+            "✅ ForceFirestore: Usando Firestore direto já inicializado",
+          );
+          this.db = directDB;
+          return this.db;
+        }
+
+        // 2. Tentar inicializar diretamente
+        console.log("🚀 ForceFirestore: Executando inicialização direta...");
+        const initResult = await directFirebaseInit();
+        if (initResult.ready && initResult.db) {
+          console.log("✅ ForceFirestore: Inicialização direta bem-sucedida");
+          this.db = initResult.db;
+          return this.db;
+        }
+
+        // 3. Fallback para método original
+        console.log("🔄 ForceFirestore: Fallback para método original...");
         this.db = await getFirebaseFirestoreAsync();
         if (this.db) {
-          console.log("✅ ForceFirestore: Firestore inicializado com sucesso");
-        } else {
-          console.warn(
-            "⚠️ ForceFirestore: Firestore não está disponível ainda",
+          console.log(
+            "✅ ForceFirestore: Firestore inicializado com sucesso (fallback)",
           );
+        } else {
+          console.warn("⚠️ ForceFirestore: Firestore não está disponível");
         }
       } catch (error: any) {
         console.error(
