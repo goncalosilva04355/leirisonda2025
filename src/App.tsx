@@ -991,7 +991,7 @@ function App() {
         if (savedPhoneDialer !== null) {
           setEnablePhoneDialer(JSON.parse(savedPhoneDialer));
           console.log(
-            "✅ Configura��ão Phone Dialer carregada:",
+            "✅ Configuração Phone Dialer carregada:",
             JSON.parse(savedPhoneDialer),
           );
         }
