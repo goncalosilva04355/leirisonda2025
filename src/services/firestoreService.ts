@@ -410,6 +410,102 @@ export class FirestoreService {
       return [];
     }
   }
+
+  // Métodos específicos para manutenções
+  async addManutencao(manutencaoData: any): Promise<string | null> {
+    try {
+      console.log(
+        "🔧 Criando manutenção:",
+        manutencaoData.title || manutencaoData.description,
+      );
+
+      const result = await this.addDocument("manutencoes", manutencaoData);
+
+      if (result) {
+        console.log("✅ Manutenção criada com sucesso:", result);
+        return result;
+      } else {
+        console.error("❌ Falha ao criar manutenção");
+        return null;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao criar manutenção:", error);
+      return null;
+    }
+  }
+
+  async getManutencoes(): Promise<FirestoreDocument[]> {
+    try {
+      return await this.getCollection("manutencoes");
+    } catch (error) {
+      console.error("❌ Erro ao obter manutenções:", error);
+      return [];
+    }
+  }
+
+  // Métodos específicos para clientes
+  async addCliente(clienteData: any): Promise<string | null> {
+    try {
+      console.log(
+        "👤 Criando cliente:",
+        clienteData.name || clienteData.company,
+      );
+
+      const result = await this.addDocument("clientes", clienteData);
+
+      if (result) {
+        console.log("✅ Cliente criado com sucesso:", result);
+        return result;
+      } else {
+        console.error("❌ Falha ao criar cliente");
+        return null;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao criar cliente:", error);
+      return null;
+    }
+  }
+
+  async getClientes(): Promise<FirestoreDocument[]> {
+    try {
+      return await this.getCollection("clientes");
+    } catch (error) {
+      console.error("❌ Erro ao obter clientes:", error);
+      return [];
+    }
+  }
+
+  // Métodos específicos para piscinas
+  async addPiscina(piscinaData: any): Promise<string | null> {
+    try {
+      console.log(
+        "🏊 Criando piscina:",
+        piscinaData.name || piscinaData.location,
+      );
+
+      const result = await this.addDocument("piscinas", piscinaData);
+
+      if (result) {
+        console.log("✅ Piscina criada com sucesso:", result);
+        return result;
+      } else {
+        console.error("❌ Falha ao criar piscina");
+        return null;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao criar piscina:", error);
+      return null;
+    }
+  }
+
+  async getPiscinas(): Promise<FirestoreDocument[]> {
+    try {
+      return await this.getCollection("piscinas");
+    } catch (error) {
+      console.error("❌ Erro ao obter piscinas:", error);
+      return [];
+    }
+  }
 }
 
 // Instância singleton
