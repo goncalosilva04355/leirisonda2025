@@ -79,8 +79,6 @@ import { StableModeIndicator } from "./components/StableModeIndicator";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
-import "./config/emergencyMode"; // Ativar modo emergência total
-import "./utils/loginLoopReport"; // Verificação de loops de login
 
 import { fcmService } from "./services/fcmService";
 
@@ -260,7 +258,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
+          console.warn("€ Problema de persist��ncia detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -3968,7 +3966,7 @@ Verifique se:
                     <div className="flex items-center justify-center space-x-2">
                       <Database className="h-5 w-5 text-green-600" />
                       <span className="text-green-700 font-medium">
-                        ����� Teste DIRETO Firestore
+                        ���� Teste DIRETO Firestore
                       </span>
                     </div>
                     <p className="text-green-600 text-sm mt-1">
@@ -7651,7 +7649,7 @@ Verifique se:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          �� Todas as obras ({works.length}{" "}
+                                          📞 Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -7767,7 +7765,7 @@ Verifique se:
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica���ão ou conexão.
+                                    autentica🔥ão ou conexão.
                                   </p>
                                 </div>
 
@@ -10152,7 +10150,7 @@ Verifique se:
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manutenç✅o
+                        Editar Manuten��✅o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -10193,7 +10191,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manuten��ão
+                          Tipo de Manutenção
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
@@ -10729,7 +10727,7 @@ Verifique se:
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>����</span>
+                  <span>📞</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11339,7 +11337,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T📞tulo
+                          T���tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
