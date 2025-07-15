@@ -599,7 +599,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("🔥� addClient iniciado com Firestore ativo");
+      console.log("🔥 addClient iniciado com Firestore ativo");
 
       const firestoreId = await offlineFirstService.createClient(data);
 
@@ -2533,7 +2533,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("🔥� Erro ao salvar utilizador:", error);
+      console.error("🔥 Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -4817,7 +4817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                   console.log(
-                                    "🔥�ILTRO UTILIZADOR:",
+                                    "🔥ILTRO UTILIZADOR:",
                                     user.name,
                                     "| Role:",
                                     user.role,
@@ -7251,7 +7251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "🔥� Ativo"
+                                        ? "🔥 Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -9473,7 +9473,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           rows={3}
                           defaultValue={editingWork?.boreObservations}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                          placeholder="Condições do terreno, qualidade da 🔥�gua, dificuldades encontradas, etc..."
+                          placeholder="Condições do terreno, qualidade da 🔥gua, dificuldades encontradas, etc..."
                         />
                       </div>
                     </div>
@@ -10495,7 +10495,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   //   if (!currentUser) {
   //     const testUser = {
   //       id: 1,
-  //       name: "Gon🔥��alo Fonseca",
+  //       name: "Gon🔥�alo Fonseca",
   //       email: "gongonsilva@gmail.com",
   //       role: "super_admin",
   //       permissions: {
@@ -11081,7 +11081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            🔥� {selectedWork.contact}
+                            🔥 {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -11427,7 +11427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Orçamento
                         </label>
                         <p className="text-gray-900">
-                          🔥��{selectedWork.budget}
+                          🔥�{selectedWork.budget}
                         </p>
                       </div>
                     )}
