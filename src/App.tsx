@@ -5378,6 +5378,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={async (e) => {
                           e.preventDefault();
 
+                          // Prevent double submission
+                          if (isCreatingWork) return;
+                          setIsCreatingWork(true);
+
                           // SECURITY: Check if user has permission to create works
                           if (!hasPermission("obras", "create")) {
                             alert(
@@ -7008,7 +7012,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
-                            Gerir configurações da aplicação, notificações e
+                            Gerir configurações da aplicação, notificaç��es e
                             prefer✅ncias.
                           </p>
                         </div>
@@ -8966,7 +8970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        🔥 {work.contact}
+                                        �� {work.contact}
                                       </button>
                                     </div>
                                   )}
