@@ -69,6 +69,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 import { StableModeIndicator } from "./components/StableModeIndicator";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
+import "./config/emergencyMode"; // Ativar modo emergência total
 
 import { fcmService } from "./services/fcmService";
 
@@ -1229,7 +1230,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização automática APÓS LOGIN...");
+        console.log("��� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -3804,7 +3805,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">��� </div>
+                                  <div className="text-gray-400 mb-2">€ </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
