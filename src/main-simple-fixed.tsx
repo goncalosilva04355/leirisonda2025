@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
+import "./index-simple.css";
 
 // Simple loading component
 function LoadingScreen() {
@@ -30,12 +30,6 @@ function LoadingScreen() {
         <h2 style={{ color: "#0891b2", margin: "0 0 10px" }}>Leirisonda</h2>
         <p style={{ color: "#666", margin: 0 }}>A carregar aplicação...</p>
       </div>
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }
@@ -104,25 +98,23 @@ try {
   // First, show loading screen
   ReactDOM.createRoot(root).render(<LoadingScreen />);
 
-  // Then load the simple app
-  import("./AppSimple")
-    .then((AppModule) => {
-      const AppSimple = AppModule.default;
+  // Then load the simple app after a short delay
+  setTimeout(() => {
+    import("./AppSimple")
+      .then((AppModule) => {
+        const AppSimple = AppModule.default;
 
-      ReactDOM.createRoot(root).render(
-        <React.StrictMode>
-          <AppSimple />
-        </React.StrictMode>,
-      );
+        ReactDOM.createRoot(root).render(<AppSimple />);
 
-      console.log("✅ Leirisonda carregada com sucesso");
-    })
-    .catch((error) => {
-      console.error("❌ Erro ao carregar aplicação:", error);
+        console.log("✅ Leirisonda carregada com sucesso");
+      })
+      .catch((error) => {
+        console.error("❌ Erro ao carregar aplicação:", error);
 
-      // Show error screen
-      ReactDOM.createRoot(root).render(<ErrorDisplay error={error} />);
-    });
+        // Show error screen
+        ReactDOM.createRoot(root).render(<ErrorDisplay error={error} />);
+      });
+  }, 1000);
 } catch (error) {
   console.error("❌ Erro crítico ao inicializar:", error);
 
