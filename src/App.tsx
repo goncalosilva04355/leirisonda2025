@@ -10163,7 +10163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
                           const completedDate = (inputs[8] as HTMLInputElement)
-                            .value; // Data de Conclusão
+                            .value; // Data de Conclus��o
                           const materialsUsed = (inputs[9] as HTMLInputElement)
                             .value; // Materiais Utilizados
                           const observations = (inputs[10] as HTMLInputElement)
@@ -10687,6 +10687,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         </div>
       );
+    }
+
+    // Check for diagnostic mode
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("diagnostic") === "true") {
+      return <DiagnosticPage />;
     }
 
     return (
