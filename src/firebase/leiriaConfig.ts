@@ -64,17 +64,17 @@ function initializeLeiria(): boolean {
 
 // Getters públicos
 export function getFirebaseApp(): FirebaseApp | null {
-  if (!app) initializeLeiria();
+  if (!app && FORCE_FIREBASE_PRODUCTION) initializeLeiria();
   return app;
 }
 
 export function getFirebaseFirestore(): Firestore | null {
-  if (!db) initializeLeiria();
+  if (!db && FORCE_FIREBASE_PRODUCTION) initializeLeiria();
   return db;
 }
 
 export function getFirebaseAuth(): Auth | null {
-  if (!auth) initializeLeiria();
+  if (!auth && FORCE_FIREBASE_PRODUCTION) initializeLeiria();
   return auth;
 }
 
