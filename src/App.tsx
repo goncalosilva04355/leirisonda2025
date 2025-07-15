@@ -40,6 +40,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import DebugInfo from "./components/DebugInfo";
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
@@ -1053,7 +1054,7 @@ function App() {
             console.log("✅ Session restored successfully");
             return; // Don't clear the session
           } catch (parseError) {
-            console.warn("⚠��� Error parsing saved user, clearing session");
+            console.warn("⚠️ Error parsing saved user, clearing session");
           }
         }
 
@@ -6787,7 +6788,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>✅ Estado e localização</li>
                                 <li>• Informações de clientes</li>
-                                <li>• Histórico de manuten��ões</li>
+                                <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
                               </ul>
                             </div>
@@ -7842,7 +7843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Orçamentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -11278,7 +11279,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.budget
-                                ? `���${selectedWork.budget.toLocaleString("pt-PT")}`
+                                ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
                           </div>
