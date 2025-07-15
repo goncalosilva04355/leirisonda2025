@@ -16,7 +16,7 @@ export function StableModeIndicator() {
     return {
       bg: "bg-blue-100 border border-blue-300 text-blue-800",
       dot: "bg-blue-500",
-      text: "🔥 Firebase Ativo",
+      text: "✅ Sistema Ativo",
     };
   };
 
