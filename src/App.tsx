@@ -1,7 +1,7 @@
-// PARAGEM DE EMERGÊNCIA TOTAL - PRIMEIRA LINHA
-import "./utils/emergencyStopAll";
+// PARAGEM DE EMERGÊNCIA TOTAL - TEMPORARIAMENTE DESATIVADO PARA REATIVAR FIREBASE
+// import "./utils/emergencyStopAll";
 
-// MONITOR EM TEMPO REAL - Para detectar exatamente o que causa refreshs
+// MONITOR EM TEMPO REAL - MANTIDO ATIVO
 import "./utils/realTimeMonitor";
 
 import React, { useState, useEffect } from "react";
@@ -2126,7 +2126,7 @@ ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
-   Técnico: ${maint.technician}
+   T��cnico: ${maint.technician}
    Descrição: ${maint.description}
    ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
@@ -5147,7 +5147,7 @@ Verifique se:
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de ��gua - Conditional */}
+                    {/* Detalhes do Furo de Água - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
@@ -5923,7 +5923,7 @@ Verifique se:
                             type="button"
                             onClick={() => {
                               console.log(
-                                "��DEBUG: Tentando adicionar cliente...",
+                                "€DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
@@ -6749,7 +6749,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenç���o
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -11906,7 +11906,7 @@ Verifique se:
                             Email
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.clientEmail || "N��o especificado"}
+                            {selectedPool.clientEmail || "Não especificado"}
                           </p>
                         </div>
                         <div>
