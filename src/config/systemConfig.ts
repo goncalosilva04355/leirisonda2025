@@ -3,30 +3,30 @@
  */
 
 export const SystemConfig = {
-  // REATIVAR auto-sync para Firebase
-  DISABLE_AUTO_SYNC: false,
+  // REATIVAR modo emergência devido a TOO_MANY_ATTEMPTS
+  DISABLE_AUTO_SYNC: true,
 
-  // REATIVAR auto-login para Firebase
-  DISABLE_AUTO_LOGIN: false,
+  // DESATIVAR auto-login que está a causar loops
+  DISABLE_AUTO_LOGIN: true,
 
-  // Permitir intervalos controlados
-  DISABLE_EXCESSIVE_INTERVALS: false,
+  // Desativar intervalos excessivos
+  DISABLE_EXCESSIVE_INTERVALS: true,
 
-  // Permitir reloads quando necessário
-  DISABLE_AUTO_RELOAD: false,
+  // Desativar reloads que podem causar loops
+  DISABLE_AUTO_RELOAD: true,
 
-  // Configurações normais de retry
-  MAX_RETRIES: 3,
-  RETRY_DELAY: 5000, // 5 segundos
+  // Configurações conservadoras
+  MAX_RETRIES: 1,
+  RETRY_DELAY: 30000, // 30 segundos
 
-  // Configurações normais para Firebase sync
-  SYNC_INTERVAL: 30000, // 30 segundos
-  STATUS_CHECK_INTERVAL: 10000, // 10 segundos
+  // Intervalos conservadores
+  SYNC_INTERVAL: 300000, // 5 minutos
+  STATUS_CHECK_INTERVAL: 60000, // 1 minuto
 
-  // DESATIVAR modo emergência para permitir Firebase
-  FORCE_EMERGENCY_MODE: false,
+  // REATIVAR modo emergência temporariamente
+  FORCE_EMERGENCY_MODE: true,
 
-  // Novas configurações para Firebase
+  // Manter Firebase disponível mas controlado
   ENABLE_FIREBASE_DEV: true,
   ENABLE_FIREBASE_PROD: true,
 };
