@@ -149,7 +149,7 @@ import "./utils/emergencyUserInit";
 import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
-import { FirestoreTest } from "./components/FirestoreTest";
+
 
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
@@ -1817,7 +1817,7 @@ function App() {
       console.log("���� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("���� Login successful for:", result.user.email);
+        console.log("��� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -2786,7 +2786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produ��ão */}
+                {/* Firebase Status Display - Apenas em produ����ão */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -3827,7 +3827,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest📞o de piscinas no sistema
+                          Gest����o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -6810,7 +6810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Pr���ximas intervenções</li>
+                                <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -6845,7 +6845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>���� Trabalhos realizados</li>
                                 <li>��� Técnicos responsáveis</li>
-                                <li>• Datas e durações</li>
+                                <li>• Datas e duraç��es</li>
                                 <li>• Estados e observações</li>
                               </ul>
                             </div>
