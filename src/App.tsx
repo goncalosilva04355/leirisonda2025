@@ -2787,9 +2787,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
-                {/* Firebase Status Test - Temporary */}
-                <FirebaseStatusTest />
-
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -9997,7 +9994,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (���)
                         </label>
                         <input
                           type="number"
@@ -11705,7 +11702,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Última Manutenção
+                            Última Manuten��ão
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.lastMaintenance
