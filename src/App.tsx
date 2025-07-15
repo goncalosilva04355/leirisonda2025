@@ -840,7 +840,7 @@ function App() {
           }
         } else {
           console.log(
-            "���� No saved users found, initializing with default users",
+            "📝 No saved users found, initializing with default users",
           );
 
           // Initialize with default admin user
@@ -1958,7 +1958,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("�� Logout completed successfully - redirected to login");
+      console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -4310,7 +4310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenç��es aparecerão aqui quando forem
+                        As futuras manutenções aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -4561,10 +4561,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             name="status"
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="pending">Pendente</option>
-                            <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
-                            <option value="cancelled">Cancelada</option>
+                            <option key="pending" value="pending">
+                              Pendente
+                            </option>
+                            <option key="in_progress" value="in_progress">
+                              Em Progresso
+                            </option>
+                            <option key="completed" value="completed">
+                              Concluída
+                            </option>
+                            <option key="cancelled" value="cancelled">
+                              Cancelada
+                            </option>
                           </select>
                         </div>
 
@@ -5029,7 +5037,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N€vel da Água (m) *
+                                  N���vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -6502,7 +6510,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom��tico",
+                          "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7769,7 +7777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <div className="grid gap-3">
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Vers��o</span>
+                          <span className="text-gray-600">Versão</span>
                           <span className="font-medium">1.0.0</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7875,7 +7883,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten����
+                        <strong>{maintenance.length}</strong> manuten��
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -9249,10 +9257,18 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.status}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="pending">Pendente</option>
-                            <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
-                            <option value="cancelled">Cancelada</option>
+                            <option key="pending" value="pending">
+                              Pendente
+                            </option>
+                            <option key="in_progress" value="in_progress">
+                              Em Progresso
+                            </option>
+                            <option key="completed" value="completed">
+                              Concluída
+                            </option>
+                            <option key="cancelled" value="cancelled">
+                              Cancelada
+                            </option>
                           </select>
                         </div>
 
