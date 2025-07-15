@@ -406,22 +406,22 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  // const firebaseAutoFix = useAutoFirebaseFix();
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  // const userMigration = useAutoUserMigration();
 
   // Log migration status changes
-  useEffect(() => {
-    if (userMigration.status.completed && userMigration.status.migrated > 0) {
-      console.log(
-        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
-      );
-      console.log(
-        "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
-      );
-    }
-  }, [userMigration.status.completed, userMigration.status.migrated]);
+  // useEffect(() => {
+  //   if (userMigration.status.completed && userMigration.status.migrated > 0) {
+  //     console.log(
+  //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+  //     );
+  //     console.log(
+  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //     );
+  //   }
+  // }, [userMigration.status.completed, userMigration.status.migrated]);
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -1153,7 +1153,7 @@ function App() {
               const docSnap = await getDoc(testDoc);
               if (docSnap.exists()) {
                 console.log(
-                  "��� Passo 3: Dados lidos do Firestore:",
+                  "���� Passo 3: Dados lidos do Firestore:",
                   docSnap.data(),
                 );
                 console.log(
@@ -5546,7 +5546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condiç✅es do terreno"]',
+                                    'textarea[placeholder*="Condiç��es do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -10222,7 +10222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura��ão Real (horas)
+                          Dura����ão Real (horas)
                         </label>
                         <input
                           type="number"
@@ -10480,7 +10480,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h2>
                   <p className="text-gray-500">
-                    Apenas super administradores podem aceder ✅ área de
+                    Apenas super administradores podem aceder ✅ ��rea de
                     administração.
                   </p>
                   <button
