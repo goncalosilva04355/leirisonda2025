@@ -268,14 +268,6 @@ class FirebaseAuthService {
 
   onAuthStateChanged(callback: (user: User | null) => void): () => void {
     // Verificar modo emergência
-    if (
-      typeof window !== "undefined" &&
-      (window as any).EMERGENCY_MODE_ACTIVE
-    ) {
-      console.log("🚨 onAuthStateChanged bloqueado - modo emergência");
-      return () => {};
-    }
-
     if (!this.auth || !this.initialized) {
       console.log("⚠️ Firebase Auth não inicializado - sem listener");
       return () => {};
