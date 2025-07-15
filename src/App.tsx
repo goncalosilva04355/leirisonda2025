@@ -43,7 +43,6 @@ import jsPDF from "jspdf";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
 // UserPermissionsManager removido - consolidado no UserManager do painel admin
-import { EmergencyLogoutManager } from "./components/EmergencyLogoutManager";
 
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
@@ -258,7 +257,7 @@ function App() {
         const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         if (!status.working) {
-          console.warn("€ Problema de persist��ncia detectado:", status);
+          console.warn("€ Problema de persistência detectado:", status);
           setPersistenceIssueDetected(true);
 
           // Tentar reparar automaticamente
@@ -4716,7 +4715,7 @@ Verifique se:
                           >
                             <option value="pending">Pendente</option>
                             <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Concluída</option>
+                            <option value="completed">Conclu��da</option>
                             <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
@@ -7332,7 +7331,7 @@ Verifique se:
                         >
                           <div className="flex items-center space-x-2">
                             <Settings className="h-4 w-4" />
-                            <span>Configurações</span>
+                            <span>Configura��ões</span>
                           </div>
                         </button>
                         <button
@@ -10150,7 +10149,7 @@ Verifique se:
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Editar Manuten��✅o
+                        Editar Manutenç✅o
                       </h1>
                       <p className="text-gray-600 text-sm">
                         {editingMaintenance?.poolName} -{" "}
@@ -11337,7 +11336,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          T���tulo
+                          T📞tulo
                         </label>
                         <p className="text-gray-900">{selectedWork.title}</p>
                       </div>
