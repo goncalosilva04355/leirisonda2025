@@ -414,7 +414,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CR🔥�TICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
