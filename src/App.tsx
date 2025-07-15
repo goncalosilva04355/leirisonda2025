@@ -4,6 +4,9 @@
 // MONITOR EM TEMPO REAL - MANTIDO ATIVO
 import "./utils/realTimeMonitor";
 
+// VERIFICADOR DE COLEÇÕES FIRESTORE
+import "./utils/firestoreCollectionChecker";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -2144,7 +2147,7 @@ ${index + 1}. ${maint.poolName}
 
   const generateWorksPDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO DE OBRAS
+LEIRISONDA - RELATÓRIO DE OBRAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
