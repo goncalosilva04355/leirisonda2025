@@ -664,9 +664,9 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
-  const { syncStatus: autoSyncStatus } = autoSyncData;
-  const autoSyncLastSync = autoSyncData.lastSync;
+  // const autoSyncData = useAutoSyncSimple();
+  // const { syncStatus: autoSyncStatus } = autoSyncData;
+  // const autoSyncLastSync = autoSyncData.lastSync;
 
   // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
   const isWorkAssignedToCurrentUser = (work: any) => {
@@ -1100,7 +1100,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicialização:", error);
+        console.error("�� Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -1153,7 +1153,7 @@ function App() {
               const docSnap = await getDoc(testDoc);
               if (docSnap.exists()) {
                 console.log(
-                  "���� Passo 3: Dados lidos do Firestore:",
+                  "��� Passo 3: Dados lidos do Firestore:",
                   docSnap.data(),
                 );
                 console.log(
@@ -1779,7 +1779,7 @@ function App() {
       console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
-      await firebaseAutoFix.checkOnUserAction();
+      // await firebaseAutoFix.checkOnUserAction();
 
       const result = await authService.login(email, password, rememberMe);
 
@@ -5546,7 +5546,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               boreObservations:
                                 (
                                   form.querySelector(
-                                    'textarea[placeholder*="Condiç��es do terreno"]',
+                                    'textarea[placeholder*="Condiç✅es do terreno"]',
                                   ) as HTMLTextAreaElement
                                 )?.value || "",
                             };
@@ -10190,7 +10190,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manutenção</option>
+                          <option value="Manutenç€o">Manuten��ão</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
@@ -10222,7 +10222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura����ão Real (horas)
+                          Dura��ão Real (horas)
                         </label>
                         <input
                           type="number"
@@ -10480,7 +10480,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h2>
                   <p className="text-gray-500">
-                    Apenas super administradores podem aceder ✅ ��rea de
+                    Apenas super administradores podem aceder ✅ área de
                     administração.
                   </p>
                   <button
@@ -10554,7 +10554,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte🎉o. Por favor, tente
+              Ocorreu um erro ao carregar o conte��o. Por favor, tente
               novamente.
             </p>
             <button
@@ -12105,8 +12105,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Erro de Renderiza✅ão
                         </h1>
                         <p className="text-gray-600 mb-4">
-                          Ocorreu um erro ao carregar a página. Por favor, tente
-                          novamente.
+                          Ocorreu um erro ao carregar a p��gina. Por favor,
+                          tente novamente.
                         </p>
                         <div className="space-y-2">
                           <button
