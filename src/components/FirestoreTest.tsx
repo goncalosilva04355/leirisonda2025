@@ -3,6 +3,7 @@ import {
   testFirestoreConnection,
   testFirestoreQuota,
 } from "../utils/testFirestore";
+import EnvDebug from "./EnvDebug";
 
 interface TestResult {
   success: boolean;
