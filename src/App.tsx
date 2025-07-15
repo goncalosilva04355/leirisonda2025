@@ -161,6 +161,9 @@ import "./utils/testDirectAuth";
 // Página de diagnóstico
 import DiagnosticPage from "./components/DiagnosticPage";
 
+// Diagnóstico de autenticação
+import "./utils/authDiagnostic";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -397,7 +400,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migraç��o automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -6102,7 +6105,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criação da piscina",
+                                  "Manutennção programada durante criaç��o da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6615,7 +6618,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenç€
+                          manutenç��
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -9268,7 +9271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. Vá à Área de
+                                ���hum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -10163,7 +10166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
                           const completedDate = (inputs[8] as HTMLInputElement)
-                            .value; // Data de Conclus��o
+                            .value; // Data de Conclusão
                           const materialsUsed = (inputs[9] as HTMLInputElement)
                             .value; // Materiais Utilizados
                           const observations = (inputs[10] as HTMLInputElement)
