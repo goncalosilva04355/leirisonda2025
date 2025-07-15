@@ -2063,7 +2063,7 @@ RESUMO:
 - Total de Manutenções: ${maintenance.length}
 - Futuras Manutenções: ${futureMaintenance.length}
 
-MANUTENÇ✅ES REALIZADAS:
+MANUTENÇÕES REALIZADAS:
 ${maintenance
   .map(
     (maint, index) => `
