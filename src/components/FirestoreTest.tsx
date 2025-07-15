@@ -3,6 +3,7 @@ import {
   testFirestoreConnection,
   testFirestoreQuota,
 } from "../utils/testFirestore";
+import { simpleFirebaseTest } from "../utils/simpleFirebaseTest";
 import EnvDebug from "./EnvDebug";
 
 interface TestResult {
