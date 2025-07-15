@@ -1219,7 +1219,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
+        console.log("🔄 Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -4411,7 +4411,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa✅ões B��sicas */}
+                    {/* Informa���ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5784,7 +5784,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "✅ Cliente adicionado com sucesso:",
+                                    "��� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -7761,9 +7761,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex justify-between py-2">
                           <span className="text-gray-600">Modo de Dados</span>
-                          <span className="font-medium">
-                            Armazenamento Local
-                          </span>
+                          <span className="font-medium">{getDataMode()}</span>
                         </div>
                       </div>
                     </div>
@@ -7856,7 +7854,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>���� Datas e dura🔥es</li>
+                        <li>��� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -7959,7 +7957,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>������� Resumo executivo</li>
+                        <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
                         <li>• An✅lise de performance</li>
