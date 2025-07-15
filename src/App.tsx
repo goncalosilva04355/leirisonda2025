@@ -253,7 +253,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persist��ncia:", error);
+        console.error("❌ Erro na monitorização de persistência:", error);
       }
     };
 
@@ -3146,7 +3146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                                    ��� Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
