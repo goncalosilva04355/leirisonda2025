@@ -5600,7 +5600,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           try {
                             const newWork = await addWork(workData);
 
-                            // Success - no notification needed
+                            // Force refresh universal sync data to prevent duplication
+                            if (forceSyncAll) {
+                              await forceSyncAll();
+                            }
+
+                            // Trigger custom event to refresh works
+                            window.dispatchEvent(
+                              new CustomEvent("forceRefreshWorks"),
+                            );
+
+                            console.log("✅ Obra criada com sucesso:", newWork);
                           } catch (error) {
                             console.error("❌ Error creating work:", error);
                             alert(
