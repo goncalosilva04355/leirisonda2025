@@ -598,7 +598,7 @@ class UniversalDataSyncService {
    */
   async addManutencao(manutencaoData: any): Promise<string> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase n��o disponível");
+      throw new Error("Firebase não disponível");
     }
 
     const id = manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
