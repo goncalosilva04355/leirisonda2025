@@ -813,7 +813,7 @@ function App() {
           }
         } else {
           console.log(
-            "📝 No saved users found, initializing with default users",
+            "�� No saved users found, initializing with default users",
           );
 
           // Initialize with default admin user
@@ -2130,7 +2130,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -2848,7 +2848,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Ol✅, {currentUser?.name || "Gonçalo Fonseca"}
+                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -2874,7 +2874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenç🔥o
+                          Obras necessitam atenção
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -4977,7 +4977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N€vel da Água (m) *
+                                  N��vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
