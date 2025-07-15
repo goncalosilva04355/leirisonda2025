@@ -137,10 +137,6 @@ import DataInputTutorial from "./components/DataInputTutorial";
 
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
-import FirebaseFixButton from "./components/FirebaseFixButton";
-import FirebaseQuotaRecoveryComponent from "./components/FirebaseQuotaRecovery";
-import QuickFirebaseReset from "./components/QuickFirebaseReset";
-import AutoFirebaseQuotaFix from "./components/AutoFirebaseQuotaFix";
 
 // Inicialização de emergência de utilizadores
 import "./utils/emergencyUserInit";
@@ -400,7 +396,7 @@ function App() {
 
   // Backup and complex initialization temporarily disabled for stability
 
-  // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
+  // SINCRONIZAÇ��O UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
   //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
@@ -1301,7 +1297,7 @@ function App() {
                 console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
-                  "❌ Erro ao garantir auto sync ap��s aguardar:",
+                  "❌ Erro ao garantir auto sync após aguardar:",
                   error,
                 );
                 setAutoSyncActive(false);
@@ -5131,7 +5127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observa����es sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -5921,7 +5917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenção
+                          Frequência de Manutenç��o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
@@ -7739,7 +7735,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Piscinas
+                          Relatório de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
@@ -7790,7 +7786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e dura����es</li>
-                        <li>• Estados e observa��ões</li>
+                        <li>• Estados e observações</li>
                       </ul>
                     </div>
                     <button
@@ -9412,7 +9408,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar diâmetro</option>
                             <option value="1">1 polegada</option>
-                            <option value="1.25">1�� polegadas</option>
+                            <option value="1.25">1¼ polegadas</option>
                             <option value="1.5">1½ polegadas</option>
                             <option value="2">2 polegadas</option>
                             <option value="2.5">2½ polegadas</option>
@@ -10089,7 +10085,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Duraç��o Estimada
+                          ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
