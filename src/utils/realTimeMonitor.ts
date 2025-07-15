@@ -15,8 +15,8 @@ class RealTimeMonitor {
       "🔍 MONITOR EM TEMPO REAL INICIADO - Detectando atividade problemática",
     );
 
-    // 1. MONITOR DE RELOADS E NAVIGATION
-    this.monitorNavigation();
+    // 1. MONITOR DE RELOADS E NAVIGATION - TEMPORARIAMENTE DESATIVADO
+    // this.monitorNavigation();
 
     // 2. MONITOR DE MEMORY USAGE
     this.monitorMemory();
