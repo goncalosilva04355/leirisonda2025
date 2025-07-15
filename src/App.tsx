@@ -1308,7 +1308,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido ap��s login!");
           } else {
-            console.warn("🎉️ Falha ao garantir auto sync ap��s login");
+            console.warn("🎉�� Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
           }
         } else {
@@ -1742,7 +1742,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("🔐 Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log("��� Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       await firebaseAutoFix.checkOnUserAction();
@@ -4729,7 +4729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {!usersLoaded && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-blue-800">
-                                🔄 Carregando utilizadores...
+                                ���� Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -5847,7 +5847,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenç��o</option>
+                          <option value="manutencao">Em Manutenção</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -7146,7 +7146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informações do Sistema
+                              Informaç��es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7809,7 +7809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
-                        <li>📞 Técnicos responsáveis</li>
+                        <li>�� Técnicos responsáveis</li>
                         <li>• Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -10006,7 +10006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Real (horas)
+                          Dura��ão Real (horas)
                         </label>
                         <input
                           type="number"
@@ -10484,7 +10484,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>🎉</span>
+                  <span>����</span>
                   <span>Observaç€s e pr✅xima manutenção</span>
                 </div>
               </div>
