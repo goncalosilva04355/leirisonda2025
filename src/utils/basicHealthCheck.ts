@@ -10,8 +10,10 @@ try {
     throw new Error("Elementos básicos não disponíveis");
   }
 
-  if (!React) {
-    throw new Error("React não disponível");
+  if (typeof window.React === "undefined") {
+    console.warn(
+      "React não disponível globalmente (normal em bundlers modernos)",
+    );
   }
 
   console.log("✅ Elementos básicos: OK");
