@@ -1,6 +1,6 @@
 // Teste DIRETO de escrita no Firestore
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { firestoreDB } from "../firebase/simpleFirestore";
+import { getFirestoreDB } from "../firebase/simpleFirestore";
 
 export async function testDirectWrite(): Promise<{
   success: boolean;
@@ -9,10 +9,14 @@ export async function testDirectWrite(): Promise<{
 }> {
   console.log("🧪 Teste direto de escrita no Firestore...");
 
+  // Obter instância do Firestore assincronamente
+  const firestoreDB = await getFirestoreDB();
+
   if (!firestoreDB) {
     return {
       success: false,
-      message: "Firestore não está disponível",
+      message:
+        "Firestore não conseguiu ser inicializado - verifique se está habilitado no Firebase Console",
     };
   }
 
