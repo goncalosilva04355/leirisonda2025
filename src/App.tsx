@@ -156,22 +156,22 @@ import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Diagnóstico Firebase
-import "./utils/firebaseDiagnostic";
+// import "./utils/firebaseDiagnostic";
 // Detecção inteligente de Firestore
-import "./utils/smartFirestoreDetection";
+// import "./utils/smartFirestoreDetection";
 
 // Teste de login
-import "./utils/testLogin";
+// import "./utils/testLogin";
 // Força atualização de utilizadores
-import "./utils/forceUserUpdate";
+// import "./utils/forceUserUpdate";
 // Teste direto de autenticação
-import "./utils/testDirectAuth";
+// import "./utils/testDirectAuth";
 
 // Página de diagnóstico
 import DiagnosticPage from "./components/DiagnosticPage";
 
 // Diagnóstico de autenticação
-import "./utils/authDiagnostic";
+// import "./utils/authDiagnostic";
 
 // Indicador de status da aplicação
 import AppStatusIndicator from "./components/AppStatusIndicator";
@@ -1706,7 +1706,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manutenção Programada",
+          type: "Manutenç��o Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -1908,7 +1908,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("���� Verificando auto sync após login...");
+            console.log("��� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -3990,7 +3990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr���xima manuten��ão:{" "}
+                                Pr🔥xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -7980,7 +7980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>���� Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
-                        <li>• Próximas interven��ões</li>
+                        <li>• Próximas intervenções</li>
                       </ul>
                     </div>
                     <button
@@ -10362,7 +10362,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             observations,
                           });
 
-                          alert("Manuten��ão atualizada com sucesso!");
+                          alert("Manutenção atualizada com sucesso!");
                           setEditingMaintenance(null);
                           setActiveSection("manutencoes");
                         }}
@@ -11681,7 +11681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observações Específicas do Furo
+                                Observaç��es Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
