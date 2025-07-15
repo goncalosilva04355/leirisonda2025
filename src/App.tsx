@@ -399,7 +399,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZA��ÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -701,7 +701,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados cr��ticos - NUNCA PERDER DADOS
+  // Proteção de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -1051,7 +1051,7 @@ function App() {
             // Restore authentication state
             setCurrentUser(userProfile);
             setIsAuthenticated(true);
-            console.log("��� Session restored successfully");
+            console.log("✅ Session restored successfully");
             return; // Don't clear the session
           } catch (parseError) {
             console.warn("⚠️ Error parsing saved user, clearing session");
@@ -1312,7 +1312,7 @@ function App() {
             setAutoSyncActive(false);
           }
         } else {
-          console.log("⏳ Firestore n��o pronto, tentando novamente...");
+          console.log("⏳ Firestore não pronto, tentando novamente...");
           setTimeout(async () => {
             if (isFirestoreReady()) {
               try {
@@ -1960,7 +1960,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "����Forced logout state clear completed - redirected to login",
+        "🎉Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -5118,7 +5118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa📞ç��es Específicas do Furo */}
+                          {/* Observa📞ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
