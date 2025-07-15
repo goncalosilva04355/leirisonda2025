@@ -42,6 +42,15 @@ class FirebaseAuthFix {
         // Set persistence safely
         await this.setSafePersistence(auth, rememberMe);
 
+        // Verificar modo emergência
+        if (
+          typeof window !== "undefined" &&
+          (window as any).EMERGENCY_MODE_ACTIVE
+        ) {
+          console.log("🚨 firebaseAuthFix bloqueado - modo emergência");
+          throw new Error("Firebase desativado temporariamente");
+        }
+
         // Attempt sign in
         console.log("🔐 Attempting signInWithEmailAndPassword...");
         const userCredential = await signInWithEmailAndPassword(

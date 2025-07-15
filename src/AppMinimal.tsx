@@ -32,11 +32,11 @@ function AppMinimal() {
         setIsAuthenticated(true);
         console.log("✅ Login successful:", result.user);
       } else {
-        setLoginError(result.error || "Credenciais inválidas");
+        setLoginError("Login incorreto");
       }
     } catch (error) {
       console.error("❌ Login error:", error);
-      setLoginError("Erro de sistema. Tente novamente.");
+      setLoginError("Login incorreto");
     }
   };
 

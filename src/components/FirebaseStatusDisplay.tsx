@@ -68,7 +68,7 @@ export const FirebaseStatusDisplay: React.FC<FirebaseStatusDisplayProps> = ({
       return {
         status: "excellent",
         colorClass: "bg-green-500",
-        text: "Tudo Operacional",
+        text: "Sistema Ativo",
       };
     } else if (firebaseReady && connectionStatus === "online") {
       return {

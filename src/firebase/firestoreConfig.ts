@@ -13,8 +13,7 @@ const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIRESTORE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
+const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO - DEV E PROD
 
 // Flag para controlar se já verificamos a disponibilidade do Firestore
 let firestoreAvailabilityChecked = false;
@@ -94,10 +93,7 @@ async function initializeFirestore(
   retryCount = 0,
   maxRetries = 2,
 ): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("💾 Firestore não inicializado - aguardando deploy no Netlify");
-    return null;
-  }
+  // Firestore sempre ativo - sem condições de bloqueio
 
   try {
     console.log(
@@ -126,7 +122,7 @@ async function initializeFirestore(
 
     console.log("💾 Chamando getFirestore()...");
     const db = getFirestore(app);
-    console.log("✅ Firestore inicializado com sucesso", typeof db);
+    console.log("�� Firestore inicializado com sucesso", typeof db);
 
     // Teste rápido para verificar se realmente funciona
     console.log("🧪 Testando conectividade Firestore...");
@@ -196,15 +192,16 @@ if (FORCE_FIRESTORE_PRODUCTION) {
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
-    console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // Firestore sempre disponível - sem condições de bloqueio
 
   if (!firestoreInstance) {
     console.warn(
       "⚠️ Firestore ainda não foi inicializado - use getFirebaseFirestoreAsync()",
     );
+    // Tentar inicializar imediatamente
+    initializeFirestore().then((db) => {
+      firestoreInstance = db;
+    });
   }
 
   return firestoreInstance;
@@ -212,7 +209,7 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("�� Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
@@ -238,13 +235,14 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return false;
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true")
+    return false;
   return firestoreInstance !== null;
 }
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore teste: aguardando deploy no Netlify");
     return false;
   }
@@ -270,7 +268,7 @@ export async function testFirestore(): Promise<boolean> {
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore forçado: aguardando deploy no Netlify");
     return false;
   }
@@ -294,7 +292,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
 
 // Função para limpar instância
 export function clearFirestoreInstance(): void {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("🧹 Firestore limpo: aguardando deploy no Netlify");
     return;
   }
@@ -309,6 +307,6 @@ export function enableLocalMode(): void {
   console.log("🔥 Firebase/Firestore totalmente funcionais");
 }
 
-// Exportações
+// Exportaç��es
 export { firestoreInstance };
 export default firestoreInstance;

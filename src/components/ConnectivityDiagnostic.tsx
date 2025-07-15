@@ -15,7 +15,6 @@ import {
   Play,
 } from "lucide-react";
 import { FirebaseConnectivityFix } from "../utils/firebaseConnectivityFix";
-import { EmergencyConnectivityFix } from "../utils/emergencyConnectivityFix";
 
 interface ConnectivityDiagnosticProps {
   onClose?: () => void;

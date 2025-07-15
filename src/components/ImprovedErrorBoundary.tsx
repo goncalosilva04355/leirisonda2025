@@ -103,8 +103,10 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
         retryCount: prevState.retryCount + 1,
       }));
     } else {
-      // After max retries, reload the page
-      window.location.reload();
+      // Não forçar reload - deixar utilizador decidir
+      console.log(
+        "❌ Máximo de tentativas atingido - reload automático desativado",
+      );
     }
   };
 

@@ -1,3 +1,16 @@
+// ULTIMATE STABILIZER - TEMPORARIAMENTE DESATIVADO PARA REATIVAR FIREBASE
+// import "./utils/ultmateStabilizer";
+
+// BUILDER.IO SPECIFIC STABILIZER - TEMPORARIAMENTE DESATIVADO
+// import "./utils/builderIoStabilizer";
+
+// Force Firebase always active first
+import "./utils/forceFirebaseAlways";
+
+// Block Builder.io first
+import { builderIoBlocker } from "./utils/builderIoBlocker";
+builderIoBlocker.blockBuilderIo();
+
 // Load polyfills first
 import "./polyfills";
 
@@ -11,18 +24,36 @@ import "./index.css";
 // Restauração imediata de utilizadores
 import "./utils/immediateUserRestore";
 
-// Firebase Service Worker registration (skip in private browsing)
+// Firebase Service Worker registration com fallback (skip in private browsing)
 if ("serviceWorker" in navigator && !isPrivateBrowsing()) {
+  // Tentar registrar Firebase messaging service worker
   navigator.serviceWorker
     .register("/firebase-messaging-sw.js")
     .then((registration) => {
       console.log("✅ Firebase SW registered:", registration);
     })
     .catch((error) => {
-      console.warn("⚠️ Firebase SW registration failed:", error);
+      console.warn(
+        "❌ Firebase Messaging Service Worker registration failed:",
+        error,
+      );
+
+      // Fallback para service worker básico
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then((registration) => {
+          console.log("✅ Fallback SW registered:", registration);
+        })
+        .catch((fallbackError) => {
+          console.warn(
+            "❌ Fallback Service Worker registration also failed:",
+            fallbackError,
+          );
+          // Aplicação continua funcionando normalmente mesmo sem SW
+        });
     });
 } else if (isPrivateBrowsing()) {
-  console.log("🔒 Modo privado: Service Worker desabilitado");
+  console.log("�� Modo privado: Service Worker desabilitado");
 }
 
 // ReadableStream polyfill is handled by ./polyfills.ts

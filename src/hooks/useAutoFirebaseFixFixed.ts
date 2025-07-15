@@ -169,10 +169,10 @@ export const useAutoFirebaseFixFixed = () => {
     // Initial check immediately
     monitorAndFix();
 
-    // Then check every 30 seconds
-    intervalRef.current = setInterval(() => {
-      monitorAndFix();
-    }, 30000);
+    // DESATIVADO: Sistema a causar loops e refreshs constantes
+    // intervalRef.current = setInterval(() => {
+    //   monitorAndFix();
+    // }, 30000);
 
     // Cleanup on unmount
     return () => {

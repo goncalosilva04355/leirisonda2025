@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { getFirebaseFirestore } from "../firebase/firestoreConfig";
 import { firestoreService } from "./firestoreService";
+import { SystemConfig, isSystemDisabled } from "../config/systemConfig";
 
 export interface SyncObserver {
   collection: string;
@@ -36,7 +37,7 @@ export class AutoSyncService {
     console.log("✅ Sincronização automática ativa!");
   }
 
-  // Parar sincronização automática
+  // Parar sincronizaç��o automática
   stopAutoSync(): void {
     console.log("⏹️ Parando sincronização automática...");
 
@@ -176,7 +177,7 @@ export class AutoSyncService {
 
   // Sincronizar todas as coleções manualmente
   async syncAllCollections(): Promise<void> {
-    console.log("🔄 Sincronização manual completa iniciada...");
+    console.log("��� Sincronização manual completa iniciada...");
 
     const collections = [
       { name: "obras", localKey: "works" },

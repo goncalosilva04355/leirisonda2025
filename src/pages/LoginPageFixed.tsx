@@ -252,15 +252,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
-
-            {/* Diagnostic Button */}
-            <button
-              type="button"
-              onClick={() => (window.location.href = "?diagnostic=true")}
-              className="w-full bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors text-sm"
-            >
-              🔍 Diagnóstico do Sistema
-            </button>
           </div>
         </form>
       </div>

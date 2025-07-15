@@ -1,145 +1,144 @@
-/**
- * Guia para configurar Firestore no Firebase Console
- */
+import React from "react";
 
-import React, { useState, useEffect } from "react";
+interface FirestoreSetupGuideProps {
+  projectId: string;
+  onClose: () => void;
+}
 
-export function FirestoreSetupGuide() {
-  const [showGuide, setShowGuide] = useState(false);
-  const [hasStorageIssues, setHasStorageIssues] = useState(false);
-
-  useEffect(() => {
-    const handleStorageTest = (event: any) => {
-      const { storageTest } = event.detail;
-      const hasIssues = !storageTest.canRead || !storageTest.canWrite;
-      setHasStorageIssues(hasIssues);
-
-      // Mostrar guia automaticamente se houver problemas
-      if (hasIssues) {
-        setTimeout(() => setShowGuide(true), 2000);
-      }
-    };
-
-    window.addEventListener("firebaseStorageTest", handleStorageTest);
-
-    return () => {
-      window.removeEventListener("firebaseStorageTest", handleStorageTest);
-    };
-  }, []);
-
-  if (!hasStorageIssues || !showGuide) return null;
+export const FirestoreSetupGuide: React.FC<FirestoreSetupGuideProps> = ({
+  projectId,
+  onClose,
+}) => {
+  const consoleUrl = `https://console.firebase.google.com/project/${projectId}/firestore`;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-96 overflow-y-auto">
-        <div className="text-center mb-4">
-          <div className="text-3xl mb-2">🔧</div>
-          <h3 className="text-lg font-semibold">Configurar Firestore</h3>
-          <p className="text-sm text-gray-600 mt-2">
-            O Firestore precisa ser ativado no Firebase Console
-          </p>
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-red-700">
+            🚨 Firestore Não Está Habilitado
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
         </div>
 
-        <div className="space-y-4 text-sm">
-          <div>
-            <div className="font-medium text-blue-600 mb-2">
-              📋 Passos para ativar:
-            </div>
+        <div className="space-y-6">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <h3 className="font-bold text-red-800 mb-2">
+              Problema Identificado:
+            </h3>
+            <p className="text-red-700">
+              O serviço Firestore não existe no projeto{" "}
+              <code className="bg-red-100 px-2 py-1 rounded">{projectId}</code>.
+              Por isso, a aplicação não consegue guardar dados.
+            </p>
+          </div>
 
-            <div className="space-y-3">
-              <div className="border-l-4 border-blue-500 pl-3">
-                <div className="font-medium">1. Abrir Firebase Console</div>
-                <div className="text-gray-600">
-                  Ir para{" "}
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 className="font-bold text-green-800 mb-4">
+              Solução (5 passos simples):
+            </h3>
+
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <div className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  1
+                </div>
+                <div>
+                  <p className="font-medium">Abra o Firebase Console</p>
                   <a
-                    href="https://console.firebase.google.com"
+                    href={consoleUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 underline"
+                    className="inline-flex items-center mt-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    console.firebase.google.com
+                    🚀 Abrir Firebase Console
                   </a>
                 </div>
               </div>
 
-              <div className="border-l-4 border-green-500 pl-3">
-                <div className="font-medium">2. Selecionar Projeto</div>
-                <div className="text-gray-600">
-                  Escolher o projeto "leirisonda-16f8b"
+              <div className="flex items-start space-x-3">
+                <div className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  2
+                </div>
+                <div>
+                  <p className="font-medium">Clique em "Create database"</p>
+                  <p className="text-sm text-gray-600">
+                    Vai aparecer um botão azul com este texto
+                  </p>
                 </div>
               </div>
 
-              <div className="border-l-4 border-yellow-500 pl-3">
-                <div className="font-medium">3. Ativar Firestore</div>
-                <div className="text-gray-600">
-                  • Ir para "Firestore Database"
-                  <br />
-                  • Clicar "Create database"
-                  <br />
-                  • Escolher "Start in test mode"
-                  <br />• Selecionar localização (europe-west)
+              <div className="flex items-start space-x-3">
+                <div className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  3
+                </div>
+                <div>
+                  <p className="font-medium">Escolha "Start in test mode"</p>
+                  <p className="text-sm text-gray-600">
+                    Para permitir leitura/escrita durante desenvolvimento
+                  </p>
                 </div>
               </div>
 
-              <div className="border-l-4 border-purple-500 pl-3">
-                <div className="font-medium">4. Configurar Regras</div>
-                <div className="text-gray-600">
-                  • Ir para "Rules"
-                  <br />
-                  • Usar regras abertas para desenvolvimento:
-                  <br />
-                  <code className="text-xs bg-gray-100 p-1 rounded block mt-1">
-                    allow read, write: if true;
-                  </code>
+              <div className="flex items-start space-x-3">
+                <div className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  4
+                </div>
+                <div>
+                  <p className="font-medium">Selecione localização</p>
+                  <p className="text-sm text-gray-600">
+                    Recomendado:{" "}
+                    <code className="bg-gray-100 px-2 py-1 rounded">
+                      europe-west3 (Frankfurt)
+                    </code>
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <div className="bg-green-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                  5
+                </div>
+                <div>
+                  <p className="font-medium">Aguarde criação</p>
+                  <p className="text-sm text-gray-600">
+                    Pode demorar 1-2 minutos. Depois volte aqui e teste
+                    novamente.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-            <div className="font-medium text-yellow-800">⚠️ Importante:</div>
-            <div className="text-yellow-700 text-xs mt-1">
-              As regras abertas são apenas para desenvolvimento. Em produção,
-              usar regras de segurança adequadas.
-            </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <h3 className="font-bold text-blue-800 mb-2">
+              💡 Depois de criar o Firestore:
+            </h3>
+            <ul className="text-blue-700 text-sm space-y-1">
+              <li>• A aplicação irá funcionar automaticamente</li>
+              <li>• Todos os dados serão guardados na nuvem</li>
+              <li>• O sincronismo entre dispositivos vai funcionar</li>
+              <li>• Os dados ficarão seguros e com backup automático</li>
+            </ul>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded p-3">
-            <div className="font-medium text-blue-800">
-              💡 Depois da configuração:
-            </div>
-            <div className="text-blue-700 text-xs mt-1">
-              Recarregar esta página para testar a conexão.
-            </div>
+          <div className="text-center">
+            <button
+              onClick={onClose}
+              className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            >
+              Fechar Instruções
+            </button>
           </div>
-        </div>
-
-        <div className="mt-6 flex space-x-3">
-          <button
-            onClick={() =>
-              window.open("https://console.firebase.google.com", "_blank")
-            }
-            className="flex-1 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            🚀 Abrir Console
-          </button>
-          <button
-            onClick={() => setShowGuide(false)}
-            className="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
-          >
-            Fechar
-          </button>
-        </div>
-
-        <div className="mt-4 text-center">
-          <button
-            onClick={() => window.location.reload()}
-            className="text-sm text-blue-500 underline"
-          >
-            🔄 Recarregar página para testar
-          </button>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default FirestoreSetupGuide;
