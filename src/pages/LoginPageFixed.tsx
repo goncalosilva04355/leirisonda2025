@@ -271,9 +271,6 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
           </div>
-
-          {/* Login Helper with credentials */}
-          <LoginHelper />
         </form>
       </div>
     </div>
