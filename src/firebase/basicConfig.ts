@@ -33,8 +33,8 @@ if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
-// Inicializar Firebase apenas no Netlify (produção)
-if (FORCE_FIREBASE_PRODUCTION) {
+// Inicializar Firebase SEMPRE (desenvolvimento e produção)
+if (true) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
     const config = getFirebaseConfig();
