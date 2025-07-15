@@ -2143,7 +2143,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Respons���vel: ${work.assignedTo}
+   Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -3830,14 +3830,24 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       );
                       const result = await smartFirebaseTest();
 
-                      let alertMessage = result.success
-                        ? `✅ ${result.message}`
-                        : `❌ ${result.message}`;
-                      if (result.solution) {
-                        alertMessage += `\n\n🔧 ${result.solution}`;
+                      if (
+                        !result.success &&
+                        result.data?.errorType ===
+                          "getImmediate - serviço não existe"
+                      ) {
+                        // Mostrar guia visual específico para Firestore não habilitado
+                        setActiveSection("firestore-setup-guide");
+                      } else {
+                        // Para outros casos, mostrar alert normal
+                        let alertMessage = result.success
+                          ? `✅ ${result.message}`
+                          : `❌ ${result.message}`;
+                        if (result.solution) {
+                          alertMessage += `\n\n🔧 ${result.solution}`;
+                        }
+                        alert(alertMessage);
                       }
 
-                      alert(alertMessage);
                       console.log("🔍 Resultado completo:", result);
                     }}
                     className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors"
@@ -7276,7 +7286,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç��es do Sistema
+                              Informaç����es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
