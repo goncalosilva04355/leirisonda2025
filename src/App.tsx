@@ -40,7 +40,6 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
-import FirebaseStatusTest from "./components/FirebaseStatusTest";
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
@@ -9994,7 +9993,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (���)
+                          Custo (€)
                         </label>
                         <input
                           type="number"
@@ -11702,7 +11701,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Última Manuten��ão
+                            Última Manutenção
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.lastMaintenance
