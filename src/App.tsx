@@ -1671,7 +1671,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPr��xima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -6764,7 +6764,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Pr��ximas intervenções</li>
+                                <li>• Próximas intervenções</li>
                               </ul>
                             </div>
                             <button
