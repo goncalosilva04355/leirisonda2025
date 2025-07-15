@@ -65,7 +65,7 @@ export function getFirebaseConfig() {
     console.log("⚠️ Firebase: usando variáveis mas não no Netlify");
     console.log("🔄 Projeto:", config.projectId);
   } else {
-    console.log("🔄 Firebase: usando fallback local (Leiria25)");
+    console.log("🔄 Firebase: usando fallback local (leiria-1cfc9)");
     console.log("📝 Deploy no Netlify usará as suas variáveis VITE_FIREBASE_*");
     console.log("🎯 Projeto fallback:", config.projectId);
   }
