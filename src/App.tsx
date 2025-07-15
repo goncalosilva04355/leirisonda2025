@@ -362,6 +362,20 @@ function App() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
+
+  // Função para determinar o modo de dados atual
+  const getDataMode = (): string => {
+    const isNetlifyBuild =
+      import.meta.env.NETLIFY === "true" ||
+      import.meta.env.VITE_IS_NETLIFY === "true";
+    const isFirebaseForced = import.meta.env.VITE_FORCE_FIREBASE === "true";
+    const isFirestoreActive = isFirestoreReady();
+
+    if (isFirestoreActive || isFirebaseForced || isNetlifyBuild) {
+      return "Firebase/Firestore";
+    }
+    return "Armazenamento Local";
+  };
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
 
@@ -4441,7 +4455,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="piscina">Piscina</option>
                             <option value="manutencao">Manutenção</option>
                             <option value="instalacao">Instalaç€</option>
-                            <option value="reparacao">Reparação</option>
+                            <option value="reparacao">Reparaç��o</option>
                             <option value="limpeza">Limpeza</option>
                             <option value="furo">Furo de Água</option>
                           </select>
