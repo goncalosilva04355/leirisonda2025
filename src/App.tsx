@@ -11427,7 +11427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Orçamento
                         </label>
                         <p className="text-gray-900">
-                          🔥�{selectedWork.budget}
+                          €{selectedWork.budget}
                         </p>
                       </div>
                     )}
