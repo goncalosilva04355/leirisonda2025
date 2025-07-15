@@ -91,7 +91,7 @@ import {
 } from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
-import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
+import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
@@ -132,10 +132,7 @@ import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator"
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
-import "./utils/simpleFirestoreFix"; // Fix SIMPLES e robusto para Firestore
-import "./utils/testSimpleFirestore"; // Teste simples do Firestore
-import "./utils/finalErrorsFix"; // Resumo das correções finais
-import "./utils/finalSystemCheck"; // Verificação final - sistema funcional
+import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - SEMPRE FUNCIONA
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -575,8 +572,8 @@ function App() {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
-      // Usar serviço offline-first
-      const firestoreId = await offlineFirstService.createPool(data);
+      // Usar serviço ultra-simples
+      const firestoreId = await ultraSimpleOfflineService.createPool(data);
       if (firestoreId) {
         console.log("✅ Piscina criada:", firestoreId);
       }
@@ -1154,7 +1151,7 @@ function App() {
   /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("���� Passo 3: Iniciando teste completo do Firestore...");
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -1880,7 +1877,7 @@ function App() {
         return result;
       }
     } catch (error) {
-      console.error("��� Login error:", error);
+      console.error("❌ Login error:", error);
       throw error;
     }
   };
@@ -2260,7 +2257,7 @@ RESUMO EXECUTIVO:
 - Clientes Ativos: ${clients.length}
 - Utilizadores do Sistema: ${users.length}
 
-ESTAT���STICAS:
+ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
 - Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
@@ -4350,7 +4347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -9476,7 +9473,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. Vá à Área de
+                                €hum utilizador encontrado. V�� à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -11683,7 +11680,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di���metro da Coluna
+                                Di�����metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
@@ -12142,7 +12139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <AlertCircle className="h-8 w-8 text-red-600" />
                         </div>
                         <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderiza��ão
+                          Erro de Renderiza✅ão
                         </h1>
                         <p className="text-gray-600 mb-4">
                           Ocorreu um erro ao carregar a página. Por favor, tente
