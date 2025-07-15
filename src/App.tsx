@@ -2223,7 +2223,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN��ÕES RECENTES ===
+=== MANUTENÇÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -3437,7 +3437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         maintenance.length === 0 &&
                         clients.length === 0 ? (
                           <div className="text-center py-8">
-                            <div className="text-gray-400 mb-2">��</div>
+                            <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
                               Não há dados para pesquisar
                             </p>
@@ -3830,22 +3830,21 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       );
                       const result = await advancedFirestoreTest();
 
-                      if (
-                        !result.success &&
-                        result.data?.errorType ===
-                          "getImmediate - serviço não existe"
-                      ) {
-                        // Mostrar guia visual específico para Firestore não habilitado
-                        setActiveSection("firestore-setup-guide");
-                      } else {
-                        // Para outros casos, mostrar alert normal
-                        let alertMessage = result.success
-                          ? `✅ ${result.message}`
-                          : `❌ ${result.message}`;
-                        if (result.solution) {
-                          alertMessage += `\n\n🔧 ${result.solution}`;
+                      if (!result.success) {
+                        if (result.action === "MANUAL_CHECK") {
+                          // Abrir diagnóstico avançado para casos que precisam investigação
+                          setActiveSection("advanced-firestore-diagnostic");
+                        } else {
+                          // Mostrar alert para outros casos
+                          let alertMessage = `❌ ${result.message}`;
+                          if (result.canRetry) {
+                            alertMessage +=
+                              "\n\n🔄 Pode tentar novamente em alguns minutos.";
+                          }
+                          alert(alertMessage);
                         }
-                        alert(alertMessage);
+                      } else {
+                        alert(`✅ ${result.message}`);
                       }
 
                       console.log("🔍 Resultado completo:", result);
@@ -6061,7 +6060,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Frequência de Manutenç���o
+                          Frequência de Manutenç✅o
                         </label>
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="semanal">Semanal</option>
