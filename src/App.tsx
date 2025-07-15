@@ -10764,9 +10764,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          {/* Firebase Quota Recovery */}
-          <FirebaseQuotaRecoveryComponent />
-
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
