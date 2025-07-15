@@ -369,7 +369,7 @@ export const poolService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Piscina ${poolId} atualizada - sincronização autom��tica ativada`,
+      `✅ Piscina ${poolId} atualizada - sincronização automática ativada`,
     );
     await syncService.triggerAutoSync("update", "pools", poolId);
   },
