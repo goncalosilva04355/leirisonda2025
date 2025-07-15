@@ -4,6 +4,9 @@
 // BUILDER.IO SPECIFIC STABILIZER - TEMPORARIAMENTE DESATIVADO
 // import "./utils/builderIoStabilizer";
 
+// Force Firebase always active first
+import "./utils/forceFirebaseAlways";
+
 // Block Builder.io first
 import { builderIoBlocker } from "./utils/builderIoBlocker";
 builderIoBlocker.blockBuilderIo();
