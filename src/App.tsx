@@ -158,6 +158,15 @@ import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 import "./utils/testDirectAuth";
 
+// Página de diagnóstico
+import DiagnosticPage from "./components/DiagnosticPage";
+
+// Diagnóstico de autenticação
+import "./utils/authDiagnostic";
+
+// Indicador de status da aplicação
+import AppStatusIndicator from "./components/AppStatusIndicator";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -247,7 +256,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
+              "⚠️ N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -361,6 +370,19 @@ function App() {
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [advancedPassword, setAdvancedPassword] = useState("");
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
+
+  // Função para determinar o modo de dados atual
+  const getDataMode = (): string => {
+    try {
+      const isFirestoreActive = isFirestoreReady();
+      if (isFirestoreActive) {
+        return "Firebase/Firestore";
+      }
+      return "Armazenamento Local";
+    } catch (error) {
+      return "Armazenamento Local";
+    }
+  };
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
 
@@ -1058,7 +1080,7 @@ function App() {
         }
 
         // If no valid session, start fresh
-        console.log("🔒 No valid session found, starting fresh");
+        console.log("���� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -3943,7 +3965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr🔥xima manutenção:{" "}
+                                Pr🔥xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -4396,7 +4418,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa✅ões Básicas */}
+                    {/* Informa���ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5150,7 +5172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observaç��es e Trabalho
+                          Observa����es e Trabalho
                         </h3>
                       </div>
 
@@ -5769,7 +5791,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "✅ Cliente adicionado com sucesso:",
+                                    "��� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -6869,7 +6891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>🎉 Equipas atribuídas</li>
-                                <li>• Prazos e orçamentos</li>
+                                <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
@@ -7042,7 +7064,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="flex justify-between py-2">
                         <span className="text-gray-600">Modo de Dados</span>
-                        <span className="font-medium">Armazenamento Local</span>
+                        <span className="font-medium">{getDataMode()}</span>
                       </div>
                     </div>
                   </div>
@@ -7746,9 +7768,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div className="flex justify-between py-2">
                           <span className="text-gray-600">Modo de Dados</span>
-                          <span className="font-medium">
-                            Armazenamento Local
-                          </span>
+                          <span className="font-medium">{getDataMode()}</span>
                         </div>
                       </div>
                     </div>
@@ -8255,7 +8275,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }
                                 >
                                   🎉{" "}
-                                  {client?.address || "Endereço não disponível"}
+                                  {client?.address ||
+                                    "Endere��o não disponível"}
                                 </button>
                               </div>
                               <div>
@@ -10674,6 +10695,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       );
     }
 
+    // Check for diagnostic mode
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.get("diagnostic") === "true") {
+      return <DiagnosticPage />;
+    }
+
     return (
       <div>
         <LoginPage
@@ -11709,7 +11736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especificaç✅es Técnicas */}
+                    {/* Especifica��✅es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
@@ -11938,6 +11965,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
+
+        {/* App Status Indicator */}
+        <AppStatusIndicator />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
