@@ -99,7 +99,7 @@ import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { directAuthService as authService } from "./services/directAuthService";
+import { authServiceWrapper as authService } from "./services/authServiceWrapper";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -3116,7 +3116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   👤 Cliente:
                                 </span>
                                 <span className="text-sm text-gray-900">
-                                  {work.client || "Não especificado"}
+                                  {work.client || "N��o especificado"}
                                 </span>
                               </div>
                               {work.contact && (
@@ -4670,7 +4670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "🔥 PARSED USERS:",
+                                  "�� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -6762,7 +6762,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localização</li>
+                                <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
