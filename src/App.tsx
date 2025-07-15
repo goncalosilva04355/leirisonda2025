@@ -2592,7 +2592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("�� Erro ao salvar utilizador:", error);
+      console.error("🔥 Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -3823,6 +3823,37 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Botões de Teste Firestore */}
                 <div className="mt-6 space-y-3">
+                  <button
+                    onClick={async () => {
+                      const { testCorrectFirestore } = await import(
+                        "./firebase/correctConfig"
+                      );
+                      const result = await testCorrectFirestore();
+
+                      if (result.success) {
+                        alert(
+                          `🎉 SUCESSO! ${result.message}\n\nOs dados estão a ser guardados corretamente no Firestore!`,
+                        );
+                      } else {
+                        alert(
+                          `❌ ${result.message}\n\nVerifique os detalhes no console.`,
+                        );
+                      }
+
+                      console.log("🔍 Resultado teste final:", result);
+                    }}
+                    className="w-full bg-green-50 border-4 border-green-500 rounded-lg p-6 hover:bg-green-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Database className="h-6 w-6 text-green-600" />
+                      <span className="text-green-700 font-bold text-lg">
+                        🎯 TESTE FINAL - Configuração Correta
+                      </span>
+                    </div>
+                    <p className="text-green-600 font-medium mt-2">
+                      Usa a configuração exata do projeto leiria-1cfc9
+                    </p>
+                  </button>
                   <button
                     onClick={async () => {
                       const { advancedFirestoreTest } = await import(
@@ -7574,7 +7605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          ��� Dados do Firebase e armazenamento
+                                          🔥 Dados do Firebase e armazenamento
                                           local
                                         </li>
                                       </ul>
@@ -7783,7 +7814,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Obras
+                                    Relatório de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
