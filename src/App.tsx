@@ -648,7 +648,7 @@ function App() {
   const { syncStatus: autoSyncStatus } = autoSyncData;
   const autoSyncLastSync = autoSyncData.lastSync;
 
-  // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
+  // Função auxiliar para verificar se uma obra est�� atribuída ao utilizador atual
   const isWorkAssignedToCurrentUser = (work: any) => {
     if (!currentUser) return false;
 
@@ -10774,9 +10774,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         <AutoFirebaseQuotaFix />
 
         <div className="min-h-screen bg-gray-50">
-          {/* Status da sincronização automática */}
-          <ProductionSyncStatus />
-
           {/* Firebase Quota Recovery */}
           <FirebaseQuotaRecoveryComponent />
 
