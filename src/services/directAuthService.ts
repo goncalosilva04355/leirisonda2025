@@ -1,6 +1,7 @@
 // Serviço de autenticação direto que sempre aceita os emails do Gonçalo
 import { UserProfile } from "./localAuthService";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
+import { simpleForceFirestoreService } from "./simpleForceFirestore";
 
 class DirectAuthService {
   // Lista fixa de emails autorizados (hardcoded para garantir que funciona)
@@ -66,10 +67,38 @@ class DirectAuthService {
         createdAt: new Date().toISOString(),
       };
 
-      // Persistir dados
+      // Persistir dados no localStorage E no Firestore
       try {
+        // Guardar localmente para sessão
         safeLocalStorage.setItem("currentUser", JSON.stringify(userProfile));
         safeLocalStorage.setItem("isAuthenticated", "true");
+
+        // SEMPRE guardar no Firestore
+        console.log("🔥 DirectAuth: Tentando guardar no Firestore...");
+        try {
+          const saveResult =
+            await simpleForceFirestoreService.saveUser(userProfile);
+          if (saveResult) {
+            console.log(
+              "✅ DirectAuth: Utilizador guardado no Firestore com sucesso",
+            );
+          } else {
+            console.warn(
+              "⚠️ DirectAuth: SaveUser retornou false - dados não foram guardados",
+            );
+          }
+        } catch (firestoreError: any) {
+          console.error(
+            "❌ DirectAuth: Erro detalhado ao guardar no Firestore:",
+            {
+              message: firestoreError.message,
+              code: firestoreError.code,
+              userEmail: userProfile.email,
+              stack: firestoreError.stack,
+            },
+          );
+          console.warn("⚠️ Login continua mesmo com erro no Firestore");
+        }
 
         if (rememberMe) {
           safeLocalStorage.setItem("rememberMe", "true");
