@@ -81,6 +81,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { EmergencyDiagnostic } from "./components/EmergencyDiagnostic";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
+import { DebugFallback } from "./components/DebugFallback";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
@@ -736,7 +737,7 @@ function App() {
       return true;
     }
 
-    // Se não h�� utilizadores atribuídos, mostrar para super admin
+    // Se não há utilizadores atribuídos, mostrar para super admin
     if (
       !work.assignedTo &&
       (!work.assignedUsers || work.assignedUsers.length === 0) &&
@@ -1908,7 +1909,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est�� ativo após login
+        // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
             console.log("🔄 Verificando auto sync após login...");
@@ -1919,7 +1920,7 @@ function App() {
               setAutoSyncActive(autoSyncStarted);
 
               if (autoSyncStarted) {
-                console.log("✅ Auto sync garantido após login!");
+                console.log("�� Auto sync garantido após login!");
               } else {
                 console.warn("��️ Falha ao garantir auto sync após login");
               }
