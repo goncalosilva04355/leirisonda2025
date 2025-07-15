@@ -204,15 +204,6 @@ export class AutoSyncService {
   // Verificar e iniciar auto sync após login (método específico)
   async ensureAutoSyncAfterLogin(): Promise<boolean> {
     try {
-      // Verificar modo emergência
-      if (
-        typeof window !== "undefined" &&
-        (window as any).EMERGENCY_MODE_ACTIVE
-      ) {
-        console.log("🚨 ensureAutoSyncAfterLogin bloqueado - modo emergência");
-        return false;
-      }
-
       console.log("🔑 Verificando auto sync após login...");
 
       if (!this.db) {
