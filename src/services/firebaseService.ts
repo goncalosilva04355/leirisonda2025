@@ -548,7 +548,7 @@ export const workService = {
       })) as Work[];
 
       console.log(
-        `���� OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
+        `✅ OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
       );
       callback(works);
     });
