@@ -7,6 +7,9 @@ import "./utils/realTimeMonitor";
 // VERIFICADOR DE COLEÇÕES FIRESTORE
 import "./utils/firestoreCollectionChecker";
 
+// FORÇAR INICIALIZAÇÃO FIREBASE
+import "./utils/forceFirebaseInit";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -7066,7 +7069,7 @@ Verifique se:
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>🎉 Equipas atribuídas</li>
+                                <li>��� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -11647,7 +11650,7 @@ Verifique se:
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
                                   ? `${selectedWork.columnDiameter}"`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
