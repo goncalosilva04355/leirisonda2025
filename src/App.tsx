@@ -1422,7 +1422,7 @@ function App() {
         event.reason.toString().includes("messaging")
       ) {
         console.warn(
-          "🔥 Firebase messaging error caught and handled:",
+          "��� Firebase messaging error caught and handled:",
           event.reason,
         );
         event.preventDefault(); // Prevent the error from being logged as unhandled
@@ -1907,7 +1907,7 @@ function App() {
                       await autoSyncService.ensureAutoSyncAfterLogin();
                     setAutoSyncActive(autoSyncStarted);
                     console.log(
-                      "✅ Auto sync garantido após aguardar Firestore!",
+                      "��� Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
                     console.error("❌ Erro ao garantir auto sync:", error);
@@ -6522,7 +6522,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <input
                               type="text"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                              placeholder="Ex: Cloro líquido"
+                              placeholder="Ex: Cloro l��quido"
                             />
                           </div>
                           <div>
@@ -7286,7 +7286,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç����es do Sistema
+                              Informaç��es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -10430,6 +10430,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         case "teste-firestore":
           return <FirestoreTest />;
+
+        case "firestore-setup-guide":
+          const FirestoreSetupGuide = React.lazy(
+            () => import("./components/FirestoreSetupGuide"),
+          );
+          return (
+            <React.Suspense fallback={<div>Carregando...</div>}>
+              <FirestoreSetupGuide
+                projectId="leiria25"
+                onClose={() => setActiveSection("dashboard")}
+              />
+            </React.Suspense>
+          );
 
         default:
           return (
