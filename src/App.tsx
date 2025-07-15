@@ -2138,7 +2138,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -2817,7 +2817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("🎉 Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inv✅lidas");
+                setLoginError("Login incorreto");
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
@@ -7850,7 +7850,7 @@ Verifique se:
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Obras
+                                    Relatório de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
@@ -7999,7 +7999,7 @@ Verifique se:
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenções
+                          Relatório de Manutenç��es
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
@@ -8008,7 +8008,7 @@ Verifique se:
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten��
+                        <strong>{maintenance.length}</strong> manuten€
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -11502,7 +11502,7 @@ Verifique se:
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Se��ões Expandidas */}
+                    {/* Detalhes Completos - Seções Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
@@ -11909,7 +11909,7 @@ Verifique se:
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            �� {selectedPool.clientPhone || "Não especificado"}
+                            📞 {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
@@ -11936,7 +11936,7 @@ Verifique se:
                             Dimensões
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.dimensions || "N��o especificado"}
+                            {selectedPool.dimensions || "Não especificado"}
                           </p>
                         </div>
                         <div>
