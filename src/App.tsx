@@ -150,7 +150,6 @@ import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
-
 // Diagnóstico Firebase
 import "./utils/firebaseDiagnostic";
 // Detecção inteligente de Firestore
@@ -2841,7 +2840,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                     </div>
                   </div>
-
+                </div>
 
                 {/* Status Cards */}
                 <div className="space-y-3">
@@ -2856,7 +2855,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenç��o
+                          Obras necessitam atenç����o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -3768,8 +3767,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
                 </div>
-
-                
               </div>
             </div>
           );
@@ -10960,8 +10957,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <span>Localizações</span>
                   </button>
                 )}
-
-                
               </nav>
 
               {/* User Section */}
@@ -11841,7 +11836,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <AlertCircle className="h-8 w-8 text-red-600" />
                         </div>
                         <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderização
+                          Erro de Renderiza��ão
                         </h1>
                         <p className="text-gray-600 mb-4">
                           Ocorreu um erro ao carregar a página. Por favor, tente
