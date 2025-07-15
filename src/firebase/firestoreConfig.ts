@@ -75,7 +75,7 @@ async function checkFirestoreAvailability(app: any): Promise<boolean> {
         `⚠️ Firestore não habilitado no projeto ${app.options.projectId}`,
       );
       console.info(
-        "💡 Para habilitar: Firebase Console → Firestore Database → Criar base de dados",
+        "�� Para habilitar: Firebase Console → Firestore Database → Criar base de dados",
       );
       console.info(
         `🔗 https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
@@ -117,7 +117,7 @@ async function initializeFirestore(
       return null;
     }
 
-    // Aguardar um pouco mais para garantir que os serviços estão prontos
+    // Aguardar um pouco mais para garantir que os servi��os estão prontos
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     console.log("💾 Chamando getFirestore()...");
@@ -209,10 +209,8 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("�� Firestore indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // Remover bloqueio - Firestore sempre disponível
+  console.log("🔥 Inicializando Firestore...");
 
   // Tentar inicializar se ainda não foi feito
   if (!firestoreInstance) {
@@ -235,17 +233,14 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true")
-    return false;
+  // Remover bloqueio - verificar apenas se instância existe
   return firestoreInstance !== null;
 }
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("💾 Firestore teste: aguardando deploy no Netlify");
-    return false;
-  }
+  // Remover bloqueio - sempre testar Firestore
+  console.log("🧪 Testando Firestore...");
 
   try {
     const db = getFirebaseFirestore();
@@ -268,10 +263,8 @@ export async function testFirestore(): Promise<boolean> {
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("💾 Firestore forçado: aguardando deploy no Netlify");
-    return false;
-  }
+  // Remover bloqueio - sempre permitir inicialização forçada
+  console.log("🔄 Forçando inicialização...");
 
   try {
     console.log("🔄 Forçando inicialização Firestore...");
@@ -292,11 +285,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
 
 // Função para limpar instância
 export function clearFirestoreInstance(): void {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("🧹 Firestore limpo: aguardando deploy no Netlify");
-    return;
-  }
-
+  // Remover bloqueio - sempre permitir limpeza
   firestoreInstance = null;
   console.log("🧹 Instância Firestore limpa");
 }

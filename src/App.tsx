@@ -80,6 +80,7 @@ import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 import { fcmService } from "./services/fcmService";
+import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -325,7 +326,7 @@ function App() {
         hasConflictingProjects ||
         hasQuotaIssues
       ) {
-        console.log("🔥 Firebase conflict detected on mobile device");
+        console.log("��� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -1488,6 +1489,28 @@ function App() {
                 );
               });
           });
+
+        // Initialize push notification service
+        setTimeout(async () => {
+          try {
+            const { pushNotificationService } = await import(
+              "./services/pushNotificationService"
+            );
+            await pushNotificationService.startNotificationService();
+
+            // Save device token for current user if authenticated
+            if (currentUser?.id || currentUser?.email) {
+              await pushNotificationService.saveDeviceToken(
+                currentUser.id || currentUser.email,
+              );
+            }
+          } catch (error) {
+            console.warn(
+              "⚠️ Erro ao inicializar serviço de notificações:",
+              error,
+            );
+          }
+        }, 3000);
 
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
@@ -5611,6 +5634,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
 
                             console.log("✅ Obra criada com sucesso:", newWork);
+
+                            // Send push notifications to assigned users
+                            if (
+                              workData.assignedUsers &&
+                              workData.assignedUsers.length > 0
+                            ) {
+                              try {
+                                const { pushNotificationService } =
+                                  await import(
+                                    "./services/pushNotificationService"
+                                  );
+
+                                for (const userId of workData.assignedUsers) {
+                                  await pushNotificationService.notifyObraAssignment(
+                                    workData,
+                                    userId,
+                                  );
+                                  console.log(
+                                    "📢 Notificação enviada para utilizador:",
+                                    userId,
+                                  );
+                                }
+                              } catch (notificationError) {
+                                console.warn(
+                                  "⚠️ Erro ao enviar notificações:",
+                                  notificationError,
+                                );
+                                // Não bloquear a criação da obra por falha de notificação
+                              }
+                            }
                           } catch (error) {
                             console.error("❌ Error creating work:", error);
                             alert(
@@ -6826,7 +6879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura����ões
+                        Configura�����ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -6991,7 +7044,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>🎉 Equipas atribuídas</li>
+                                <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -11176,6 +11229,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 {/* Settings and Logout buttons */}
                 <div className="flex items-center space-x-2">
+                  <NotificationCenter
+                    currentUser={currentUser}
+                    onNotificationClick={(notification) => {
+                      // Navigate to obra if it's a work notification
+                      if (
+                        notification.data?.type === "obra_assignment" &&
+                        notification.data?.obraId
+                      ) {
+                        navigateToSection("obras");
+                        setSidebarOpen(false);
+                      }
+                    }}
+                  />
+
                   <button
                     onClick={() => {
                       const password = prompt(
