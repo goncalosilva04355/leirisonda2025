@@ -192,11 +192,7 @@ if (FORCE_FIRESTORE_PRODUCTION) {
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  // Firestore sempre disponível agora
-  if (false) {
-    console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // Firestore sempre disponível - sem condições de bloqueio
 
   if (!firestoreInstance) {
     console.warn(
@@ -311,6 +307,6 @@ export function enableLocalMode(): void {
   console.log("🔥 Firebase/Firestore totalmente funcionais");
 }
 
-// Exportações
+// Exportaç��es
 export { firestoreInstance };
 export default firestoreInstance;
