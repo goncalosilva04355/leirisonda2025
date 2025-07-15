@@ -9,12 +9,13 @@ export const EMERGENCY_STOP_ALL = (() => {
   let stopped = false;
 
   return () => {
-    if (stopped) return;
-    stopped = true;
+    try {
+      if (stopped) return;
+      stopped = true;
 
-    console.log(
-      "🛑 PARAGEM EMERGÊNCIA TOTAL - Desativando TODOS os sistemas problemáticos",
-    );
+      console.log(
+        "🛑 PARAGEM EMERGÊNCIA TOTAL - Desativando TODOS os sistemas problemáticos",
+      );
 
     // 1. BLOQUEAR TODOS OS RELOADS
     const originalReload = window.location.reload;
