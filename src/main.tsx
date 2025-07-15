@@ -4,6 +4,10 @@
 // BUILDER.IO SPECIFIC STABILIZER - TEMPORARIAMENTE DESATIVADO
 // import "./utils/builderIoStabilizer";
 
+// Block Builder.io first
+import { builderIoBlocker } from "./utils/builderIoBlocker";
+builderIoBlocker.blockBuilderIo();
+
 // Load polyfills first
 import "./polyfills";
 
