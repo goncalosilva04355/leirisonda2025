@@ -153,7 +153,7 @@ import "./utils/smartFirestoreDetection";
 
 // Teste de login
 import "./utils/testLogin";
-// Força atualização de utilizadores
+// For��a atualização de utilizadores
 import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 import "./utils/testDirectAuth";
@@ -710,16 +710,14 @@ function App() {
   const [users, setUsers] = useState(initialUsers);
   const [usersLoaded, setUsersLoaded] = useState(false);
 
-  // Load users from Firestore and localStorage on app start
+  // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from Firestore + localStorage...");
+      console.log("🔄 Loading users from localStorage...");
 
       try {
-        // Aguardar Firestore estar pronto
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (isFirestoreReady()) {
+        // SÓ carregar do Firestore se estiver autenticado
+        if (isAuthenticated && isFirestoreReady()) {
           console.log("🔥 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
@@ -821,7 +819,7 @@ function App() {
           const defaultUsers = [
             {
               id: 1,
-              name: "Gonçalo Fonseca",
+              name: "Gon��alo Fonseca",
               email: "gongonsilva@gmail.com",
               active: true,
               role: "super_admin",
@@ -2051,7 +2049,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç€: ${pool.location}
+   Localiza��€: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3126,7 +3124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  🔥 Morada:
+                                  ���� Morada:
                                 </span>
                                 {work.location ? (
                                   <button
