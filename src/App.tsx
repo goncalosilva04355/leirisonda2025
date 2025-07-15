@@ -11965,6 +11965,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
+
+        {/* App Status Indicator */}
+        <AppStatusIndicator />
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
