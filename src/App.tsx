@@ -1194,14 +1194,19 @@ function App() {
     syncAllData();
   }, [isAuthenticated]); // Só executa quando faz login
 
-  // Inicializar sincronização automática em tempo real
+  // Inicializar sincronização automática em tempo real - SÓ APÓS LOGIN
   useEffect(() => {
+    if (!isAuthenticated) {
+      console.log("🔄 AutoSync desativado - aguardando login");
+      return;
+    }
+
     const initAutoSync = async () => {
-      // Aguardar Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 4000));
+      // Aguardar Firestore estar pronto APÓS LOGIN
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização automática em tempo real...");
+        console.log("🔄 Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1228,7 +1233,7 @@ function App() {
         }
       } else {
         console.log(
-          "🎉️ Firestore não disponível, tentando novamente em 10 segundos...",
+          "🔄 Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -1250,7 +1255,7 @@ function App() {
     return () => {
       autoSyncService.stopAutoSync();
     };
-  }, []);
+  }, [isAuthenticated]); // Só executa quando faz login
 
   // Listeners para atualizações automáticas da UI
   useEffect(() => {
@@ -2217,7 +2222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
   };
 
@@ -7211,7 +7216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Settings className="h-6 w-6 text-blue-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Interaç��o Mobile
+                                Interação Mobile
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
