@@ -532,7 +532,7 @@ function App() {
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
   );
 
-  // Funções de compatibilidade simplificadas
+  // Funç��es de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -953,6 +953,7 @@ function App() {
     Array<{ id: string; name: string }>
   >([]);
   const [currentEditAssignedUser, setCurrentEditAssignedUser] = useState("");
+  const [isCreatingWork, setIsCreatingWork] = useState(false);
 
   // Edit and view states
   const [editingWork, setEditingWork] = useState(null);
@@ -1081,7 +1082,7 @@ function App() {
         }
 
         // If no valid session, start fresh
-        console.log("���� No valid session found, starting fresh");
+        console.log("����� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -1884,7 +1885,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("🔄 Verificando auto sync após login...");
+            console.log("��� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -3357,7 +3358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>🕒</span>
+                                      <span>���</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -8022,7 +8023,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>• Informações contratuais</li>
+                        <li>��� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
