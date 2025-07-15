@@ -65,10 +65,12 @@ export const forceInitFirestore = async (): Promise<any> => {
     isReady = true;
     return db;
   } catch (error: any) {
-    console.error("❌ FORÇA FIRESTORE: Erro:", {
-      message: error.message,
-      code: error.code,
-      name: error.name,
+    console.error("❌ FORÇA FIRESTORE: Erro:", error?.message || String(error));
+    console.error("🔍 Detalhes do erro:", {
+      message: error?.message || "Mensagem não disponível",
+      code: error?.code || "Código não disponível",
+      name: error?.name || "Nome não disponível",
+      toString: String(error),
     });
 
     // Se der erro, tentar uma segunda vez com delay maior
@@ -84,7 +86,11 @@ export const forceInitFirestore = async (): Promise<any> => {
       console.log("✅ Segunda tentativa bem-sucedida");
       return db;
     } catch (error2: any) {
-      console.error("❌ Segunda tentativa falhou:", error2.message);
+      console.error(
+        "❌ Segunda tentativa falhou:",
+        error2?.message || String(error2),
+      );
+      console.error("🔍 Error detalhado:", error2);
       throw error2;
     }
   }
@@ -104,7 +110,11 @@ export const saveUser = async (user: any): Promise<boolean> => {
     console.log("✅ Utilizador guardado no Firestore:", user.email);
     return true;
   } catch (error: any) {
-    console.error("❌ Erro ao guardar utilizador:", error.message);
+    console.error(
+      "❌ Erro ao guardar utilizador:",
+      error?.message || String(error),
+    );
+    console.error("🔍 Detalhes:", error);
     return false;
   }
 };
@@ -158,7 +168,11 @@ setTimeout(async () => {
       isReady: () => isReady,
     };
   } catch (error: any) {
-    console.error("❌ FORÇA FIRESTORE: Falha na inicialização:", error.message);
+    console.error(
+      "❌ FORÇA FIRESTORE: Falha na inicialização:",
+      error?.message || String(error),
+    );
+    console.error("🔍 Erro completo:", error);
   }
 }, 500);
 
