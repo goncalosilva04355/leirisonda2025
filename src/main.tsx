@@ -1,6 +1,9 @@
 // ULTIMATE STABILIZER - MUST BE FIRST
 import "./utils/ultmateStabilizer";
 
+// BUILDER.IO SPECIFIC STABILIZER
+import "./utils/builderIoStabilizer";
+
 // Load polyfills first
 import "./polyfills";
 
