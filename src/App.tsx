@@ -245,7 +245,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "⚠️ N��o foi possível reparar a persistência automaticamente",
+              "⚠️ Não foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -3380,7 +3380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <div className="text-center py-8">
                             <div className="text-gray-400 mb-2">📊</div>
                             <p className="text-gray-500 text-sm font-medium">
-                              N��o há dados para pesquisar
+                              Não há dados para pesquisar
                             </p>
                             <p className="text-gray-400 text-xs mt-1">
                               Adicione obras, piscinas, manutenções ou clientes
@@ -8973,7 +8973,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <p className="text-gray-500 mb-4">
                         {activeWorkFilter === "all"
                           ? "Não há obras registadas no sistema."
-                          : `N��o há obras com o filtro "${
+                          : `Não há obras com o filtro "${
                               activeWorkFilter === "pending"
                                 ? "Pendentes"
                                 : activeWorkFilter === "in_progress"
@@ -11722,7 +11722,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               ? new Date(
                                   selectedPool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")
-                              : "N��o especificado"}
+                              : "Não especificado"}
                           </p>
                         </div>
                       </div>
