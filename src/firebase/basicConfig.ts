@@ -136,10 +136,7 @@ export const db = null;
 
 // Função para obter auth seguro
 export function getAuth() {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("🔐 Auth indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // SEMPRE disponível - Firebase forçado ativo
 
   try {
     if (!firebaseApp) {
@@ -153,7 +150,7 @@ export function getAuth() {
   }
 }
 
-// Export auth como função (sempre null)
+// Export auth como funç��o (sempre null)
 export const auth = null;
 
 // Status Firebase sempre em modo local
