@@ -47,7 +47,7 @@ import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
 
-// Firebase Quota Recovery - recuperar operações bloqueadas
+// Firebase Quota Recovery - recuperar opera��ões bloqueadas
 import {
   autoRecoverOnInit,
   FirebaseQuotaRecovery,
@@ -1308,7 +1308,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("🎉️ Falha ao garantir auto sync após login");
+            console.warn("🎉️ Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
           }
         } else {
@@ -3167,7 +3167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ����abalho:
+                                  Trabalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
@@ -4700,7 +4700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "🎉 ERRO AO FAZER PARSE DOS USERS:",
+                                  "���� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -5140,7 +5140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações e Trabalho
+                          Observaç��es e Trabalho
                         </h3>
                       </div>
 
