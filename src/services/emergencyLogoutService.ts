@@ -66,7 +66,7 @@ class EmergencyLogoutService {
 
       console.log("🏁 Emergency logout completed successfully");
     } catch (error: any) {
-      console.error("�� Critical error in emergency logout:", error);
+      console.error("❌ Critical error in emergency logout:", error);
       result.success = false;
       result.message = `❌ Emergency logout failed: ${error.message}`;
       result.details.errors.push(`Critical error: ${error.message}`);
@@ -154,7 +154,7 @@ class EmergencyLogoutService {
                 deleteReq.onsuccess = () => resolve(true);
                 deleteReq.onerror = () => reject(deleteReq.error);
               });
-              console.log(`🗃️ Cleared Firebase IndexedDB: ${db.name}`);
+              console.log(`���️ Cleared Firebase IndexedDB: ${db.name}`);
             }
           }
         }
