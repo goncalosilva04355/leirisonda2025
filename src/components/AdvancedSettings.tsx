@@ -256,7 +256,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       setSyncTest({
         status: "error",
         message: "Erro ao ativar sincronização",
-        details: ["❌ Verifique a configuraç��o Firebase"],
+        details: ["❌ Verifique a configuração Firebase"],
       });
     }
   };
