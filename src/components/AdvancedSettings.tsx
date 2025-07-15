@@ -501,7 +501,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 </h3>
                 <p className="text-gray-600 mb-6">
                   Verifique o funcionamento das funcionalidades de
-                  sincronizaç��o
+                  sincronização
                 </p>
               </div>
 
