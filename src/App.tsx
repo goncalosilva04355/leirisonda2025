@@ -133,6 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - SEMPRE FUNCIONA
+import "./utils/confirmWorking"; // Confirma que está funcionando
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -483,7 +484,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verificações automáticas desabilitadas para resolver instabilidade
+    // Verifica��ões automáticas desabilitadas para resolver instabilidade
     // Sistema funcionarnormalmente sem verificações constantes
     // Sistema funcionar normalmente sem verificações automáticas
   }, []);
@@ -1199,7 +1200,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "���€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -4347,7 +4348,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manuten��ões
+                      Manutenções
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -9473,7 +9474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. V�� à Área de
+                                €hum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
@@ -11680,7 +11681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di�����metro da Coluna
+                                Di���metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
