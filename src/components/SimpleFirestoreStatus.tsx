@@ -56,7 +56,7 @@ export function SimpleFirestoreStatus() {
       {isOpen && (
         <div className="fixed bottom-4 right-4 bg-white border border-gray-300 rounded-lg shadow-xl z-50 p-4 max-w-sm">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="font-bold text-gray-900">🔥 Firebase Status</h3>
+            <h3 className="font-bold text-gray-900">📊 Sistema Status</h3>
             <button
               onClick={() => setIsOpen(false)}
               className="text-gray-500 hover:text-gray-700"
