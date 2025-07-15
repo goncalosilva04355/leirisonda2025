@@ -100,7 +100,7 @@ import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { authServiceWrapper as authService } from "./services/authServiceWrapper";
+import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -1435,7 +1435,7 @@ function App() {
           })
           .catch((error) => {
             console.error(
-              "�� Firebase Messaging Service Worker registration failed:",
+              "❌ Firebase Messaging Service Worker registration failed:",
               error,
             );
             // Fallback: try to register a basic service worker
@@ -2104,7 +2104,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -4223,7 +4223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenções
+                          Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
