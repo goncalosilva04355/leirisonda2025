@@ -421,7 +421,7 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionar📞 normalmente sem verificações constantes
+    // Sistema funcionarnormalmente sem verificações constantes
     // Sistema funcionar normalmente sem verificações automáticas
   }, []);
 
