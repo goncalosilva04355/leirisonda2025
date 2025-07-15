@@ -2214,6 +2214,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
+  // Função generateReport para compatibilidade com UnifiedAdminPage
+  const generateReport = (type: string) => {
+    switch (type) {
+      case "piscinas":
+        generatePoolsPDF();
+        break;
+      case "obras":
+        generateWorksPDF();
+        break;
+      case "manutencoes":
+        generateMaintenancePDF();
+        break;
+      case "clientes":
+        generateClientsPDF();
+        break;
+      case "geral":
+        generateCompletePDF();
+        break;
+      default:
+        console.warn("Tipo de relatório não reconhecido:", type);
+    }
+  };
+
   // Photo management functions
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -4128,7 +4151,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    ���� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7416,7 +7439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminará permanentemente:
+                                        Esta ação eliminar�� permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
