@@ -364,16 +364,22 @@ function App() {
 
   // Função para determinar o modo de dados atual
   const getDataMode = (): string => {
-    const isNetlifyBuild =
-      import.meta.env.NETLIFY === "true" ||
-      import.meta.env.VITE_IS_NETLIFY === "true";
-    const isFirebaseForced = import.meta.env.VITE_FORCE_FIREBASE === "true";
-    const isFirestoreActive = isFirestoreReady();
+    try {
+      const isNetlifyBuild =
+        (import.meta.env as any)?.NETLIFY === "true" ||
+        (import.meta.env as any)?.VITE_IS_NETLIFY === "true";
+      const isFirebaseForced =
+        (import.meta.env as any)?.VITE_FORCE_FIREBASE === "true";
+      const isFirestoreActive = isFirestoreReady();
 
-    if (isFirestoreActive || isFirebaseForced || isNetlifyBuild) {
-      return "Firebase/Firestore";
+      if (isFirestoreActive || isFirebaseForced || isNetlifyBuild) {
+        return "Firebase/Firestore";
+      }
+      return "Armazenamento Local";
+    } catch (error) {
+      console.warn("Erro ao verificar modo de dados:", error);
+      return "Armazenamento Local";
     }
-    return "Armazenamento Local";
   };
   const [isAdvancedUnlocked, setIsAdvancedUnlocked] = useState(false);
   const [showDataCleanup, setShowDataCleanup] = useState(false);
@@ -2131,7 +2137,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
