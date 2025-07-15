@@ -1301,7 +1301,7 @@ function App() {
                 console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
-                  "❌ Erro ao garantir auto sync após aguardar:",
+                  "❌ Erro ao garantir auto sync ap��s aguardar:",
                   error,
                 );
                 setAutoSyncActive(false);
@@ -5131,7 +5131,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç��es sobre a obra..."
+                            placeholder="Observa����es sobre a obra..."
                           />
                         </div>
 
@@ -7515,7 +7515,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <h4 className="font-medium text-blue-900">
                                       Correção Firebase
                                     </h4>
-                                    <FirebaseFixButton />
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
@@ -7740,7 +7739,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Piscinas
+                          Relat��rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
@@ -7791,7 +7790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>📞 Trabalhos realizados</li>
                         <li>📞 Técnicos responsáveis</li>
                         <li>• Datas e dura����es</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observa��ões</li>
                       </ul>
                     </div>
                     <button
@@ -9413,7 +9412,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           >
                             <option value="">Selecionar diâmetro</option>
                             <option value="1">1 polegada</option>
-                            <option value="1.25">1¼ polegadas</option>
+                            <option value="1.25">1�� polegadas</option>
                             <option value="1.5">1½ polegadas</option>
                             <option value="2">2 polegadas</option>
                             <option value="2.5">2½ polegadas</option>
@@ -10090,7 +10089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
-                          ).value; // Duração Estimada
+                          ).value; // Duraç��o Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
                             .value; // Duração Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
