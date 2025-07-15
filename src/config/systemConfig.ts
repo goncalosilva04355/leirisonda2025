@@ -3,28 +3,32 @@
  */
 
 export const SystemConfig = {
-  // Desativar auto-sync para evitar loops
-  DISABLE_AUTO_SYNC: true,
+  // REATIVAR auto-sync para Firebase
+  DISABLE_AUTO_SYNC: false,
 
-  // Desativar auto-login para evitar loops de autenticação
-  DISABLE_AUTO_LOGIN: true,
+  // REATIVAR auto-login para Firebase
+  DISABLE_AUTO_LOGIN: false,
 
-  // Desativar setInterval excessivos
-  DISABLE_EXCESSIVE_INTERVALS: true,
+  // Permitir intervalos controlados
+  DISABLE_EXCESSIVE_INTERVALS: false,
 
-  // Desativar window.location.reload automático
-  DISABLE_AUTO_RELOAD: true,
+  // Permitir reloads quando necessário
+  DISABLE_AUTO_RELOAD: false,
 
-  // Configurações de retry mais conservadoras
-  MAX_RETRIES: 2,
-  RETRY_DELAY: 30000, // 30 segundos em vez de 3-5
+  // Configurações normais de retry
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 5000, // 5 segundos
 
-  // Configurações de polling menos agressivas
-  SYNC_INTERVAL: 300000, // 5 minutos em vez de 5-10 segundos
-  STATUS_CHECK_INTERVAL: 60000, // 1 minuto em vez de 5-10 segundos
+  // Configurações normais para Firebase sync
+  SYNC_INTERVAL: 30000, // 30 segundos
+  STATUS_CHECK_INTERVAL: 10000, // 10 segundos
 
-  // Modo emergência sempre ativo para evitar problemas Firebase
-  FORCE_EMERGENCY_MODE: true,
+  // DESATIVAR modo emergência para permitir Firebase
+  FORCE_EMERGENCY_MODE: false,
+
+  // Novas configurações para Firebase
+  ENABLE_FIREBASE_DEV: true,
+  ENABLE_FIREBASE_PROD: true,
 };
 
 // Função para verificar se um sistema deve ser desativado
