@@ -90,13 +90,16 @@ function ErrorDisplay({ error }: { error: Error }) {
 console.log("🚀 Inicializando Leirisonda (versão simplificada)...");
 
 try {
-  const root = document.getElementById("root");
-  if (!root) {
+  const rootElement = document.getElementById("root");
+  if (!rootElement) {
     throw new Error("Elemento root não encontrado no HTML");
   }
 
+  // Create root only once
+  const root = ReactDOM.createRoot(rootElement);
+
   // First, show loading screen
-  ReactDOM.createRoot(root).render(<LoadingScreen />);
+  root.render(<LoadingScreen />);
 
   // Then load the simple app after a short delay
   setTimeout(() => {
@@ -104,24 +107,25 @@ try {
       .then((AppModule) => {
         const AppSimple = AppModule.default;
 
-        ReactDOM.createRoot(root).render(<AppSimple />);
+        // Use the same root to render the app
+        root.render(<AppSimple />);
 
         console.log("✅ Leirisonda carregada com sucesso");
       })
       .catch((error) => {
         console.error("❌ Erro ao carregar aplicação:", error);
 
-        // Show error screen
-        ReactDOM.createRoot(root).render(<ErrorDisplay error={error} />);
+        // Use the same root to show error
+        root.render(<ErrorDisplay error={error} />);
       });
   }, 1000);
 } catch (error) {
   console.error("❌ Erro crítico ao inicializar:", error);
 
   // Fallback manual sem React
-  const root = document.getElementById("root");
-  if (root) {
-    root.innerHTML = `
+  const rootElement = document.getElementById("root");
+  if (rootElement) {
+    rootElement.innerHTML = `
       <div style="padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; color: #333; text-align: center; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
         <h1 style="color: #dc3545; margin-bottom: 20px;">❌ Erro Crítico</h1>
         <p style="margin-bottom: 10px;">Não foi possível inicializar a aplicação Leirisonda.</p>
