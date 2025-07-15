@@ -4083,7 +4083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>Todas as piscinas</option>
+                      <option key="all-pools">Todas as piscinas</option>
                     </select>
                     <input
                       type="month"
@@ -6168,7 +6168,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten✅ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven✅ão de manutenção
+                        Registar interven✅��o de manutenção
                       </p>
                     </div>
                   </div>
