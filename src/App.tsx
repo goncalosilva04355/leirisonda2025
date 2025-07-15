@@ -1885,7 +1885,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("���� Verificando auto sync após login...");
+            console.log("🔄 Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -2138,7 +2138,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -3358,7 +3358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>����</span>
+                                      <span>🕒</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -6116,7 +6116,7 @@ Verifique se:
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resist��ncia Elétrica
+                            Resistência Elétrica
                           </option>
                           <option value="gas">Aquecimento a G🎉s</option>
                         </select>
@@ -8012,7 +8012,7 @@ Verifique se:
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>📞 Trabalhos realizados</li>
+                        <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
                         <li>��� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
@@ -10973,9 +10973,7 @@ Verifique se:
               }
             } catch (error: any) {
               console.error("✅ Login error:", error);
-              setLoginError(
-                "Erro de conexão. Verifique sua internet e tente novamente.",
-              );
+              setLoginError("Login incorreto");
             }
           }}
           loginError={loginError}
