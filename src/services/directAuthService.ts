@@ -1,7 +1,7 @@
 // Serviço de autenticação direto que sempre aceita os emails do Gonçalo
 import { UserProfile } from "./localAuthService";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
-import { saveUser } from "../utils/hybridStorage";
+import { saveUser } from "../utils/forceFirestore";
 
 class DirectAuthService {
   // Lista fixa de emails autorizados (hardcoded para garantir que funciona)
@@ -122,7 +122,7 @@ class DirectAuthService {
 
   async logout(): Promise<void> {
     try {
-      console.log("��� DirectAuth: Logging out...");
+      console.log("🚪 DirectAuth: Logging out...");
 
       safeLocalStorage.removeItem("currentUser");
       safeLocalStorage.removeItem("isAuthenticated");
