@@ -8,8 +8,7 @@ const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true" || true; // FORÇA FIREBASE ATIVO
+const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - REATIVADO PARA DEV E PROD
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
@@ -26,7 +25,7 @@ console.log("  - FORCE_FIREBASE_PRODUCTION:", FORCE_FIREBASE_PRODUCTION);
 if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("🚫 Firebase DESATIVADO - não está no Netlify");
   console.log("📝 Usar apenas localStorage durante desenvolvimento");
-  console.log("�� Firebase será ativo automaticamente após deploy no Netlify");
+  console.log("��� Firebase será ativo automaticamente após deploy no Netlify");
   console.log("🔍 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
 } else {
   console.log("🔥 Firebase ATIVO - rodando no Netlify ou forçado");
