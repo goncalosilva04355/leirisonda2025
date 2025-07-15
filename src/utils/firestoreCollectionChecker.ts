@@ -3,7 +3,7 @@
  * Verifica se as coleções necessárias existem e têm dados
  */
 
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfig";
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 
 interface CollectionStatus {
@@ -181,7 +181,7 @@ export class FirestoreCollectionChecker {
       }
 
       console.log(
-        "✅ Todas as coleções foram inicializadas com dados de exemplo",
+        "��� Todas as coleções foram inicializadas com dados de exemplo",
       );
     } catch (error) {
       console.error("❌ Erro geral ao criar dados de exemplo:", error);
