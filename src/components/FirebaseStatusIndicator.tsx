@@ -30,8 +30,9 @@ export function FirebaseStatusIndicator() {
 
     checkStatus();
 
-    // Verificar status a cada 10 segundos (menos frequente no mobile)
-    const interval = setInterval(checkStatus, mobile ? 10000 : 5000);
+    // Usar intervalo seguro para evitar overhead
+    const safeInterval = getSafeInterval("status");
+    const interval = setInterval(checkStatus, safeInterval);
 
     // Escutar eventos específicos do mobile
     const handleMobileReady = () => {
