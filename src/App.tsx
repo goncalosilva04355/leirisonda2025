@@ -13,6 +13,9 @@ import "./utils/simpleFirebaseInit";
 // RASTREAMENTO DE ERROS FIREBASE
 import "./utils/firebaseErrorTracker";
 
+// SISTEMA DE LOGIN DE EMERGÊNCIA
+import "./utils/emergencyLogin";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -482,7 +485,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "�� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -1360,7 +1363,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1949,7 +1952,7 @@ function App() {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
-            console.log("���� Navigating to hash section:", hash);
+            console.log("🔄 Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
@@ -11056,7 +11059,7 @@ Verifique se:
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb��m funciona na página de login */}
+        {/* Admin Login Modal - tamb����m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
