@@ -80,7 +80,7 @@ import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { EmergencyDiagnostic } from "./components/EmergencyDiagnostic";
-import { FirestoreCollectionStatus } from "./components/FirestoreCollectionStatus";
+import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
@@ -775,7 +775,7 @@ function App() {
 
           if (firestoreUsers.length > 0) {
             console.log(
-              "�� Utilizadores carregados do Firestore:",
+              "✅ Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
             setUsers(firestoreUsers);
