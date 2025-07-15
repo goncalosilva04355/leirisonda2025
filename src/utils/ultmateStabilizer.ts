@@ -39,8 +39,7 @@
   };
   killAllIntervals();
 
-  // Re-executar limpeza a cada segundo
-  setInterval(killAllIntervals, 1000);
+  // Não usar setInterval aqui pois vamos bloquear ele logo abaixo
 
   // 4. BLOQUEAR setInterval GLOBALMENTE
   const originalSetInterval = window.setInterval;
