@@ -276,7 +276,7 @@ function App() {
   useEffect(() => {
     console.log("€ Firebase handles auth state automatically");
 
-    // Detectar conflitos Firebase em dispositivos m��veis
+    // Detectar conflitos Firebase em dispositivos móveis
     const detectFirebaseConflicts = () => {
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       if (!isMobile) return;
