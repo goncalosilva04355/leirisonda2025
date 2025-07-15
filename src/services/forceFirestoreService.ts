@@ -68,43 +68,70 @@ class ForceFirestoreService {
     return this.db;
   }
 
-  // Função para garantir que a DB está pronta com retry
-  private async ensureDB(retries = 3): Promise<any> {
+  // Função para garantir que a DB está pronta com retry robusto
+  private async ensureDB(retries = 5): Promise<any> {
     console.log(
-      `🔄 EnsureDB: Tentando obter Firestore (máx ${retries} tentativas)`,
+      `🔄 EnsureDB: Garantindo Firestore está pronto (máx ${retries} tentativas)`,
     );
 
+    // 1. Primeiro tentar método rápido
+    let db = await this.getDB();
+    if (db) {
+      console.log("✅ EnsureDB: Firestore já estava pronto");
+      return db;
+    }
+
+    // 2. Usar método robusto de espera
+    console.log("🔍 EnsureDB: Usando método robusto de espera...");
+    try {
+      db = await waitForFirestore(retries, 2000);
+      if (db) {
+        console.log("✅ EnsureDB: Firestore obtido via waitForFirestore");
+        this.db = db; // Cache para próximas chamadas
+        return db;
+      }
+    } catch (waitError: any) {
+      console.error("❌ EnsureDB: waitForFirestore falhou:", waitError.message);
+    }
+
+    // 3. Última tentativa com getDB tradicional
+    console.log("🔄 EnsureDB: Última tentativa com método tradicional...");
     for (let i = 0; i < retries; i++) {
       try {
-        console.log(`🔍 Tentativa ${i + 1}/${retries} - chamando getDB()...`);
-        const db = await this.getDB();
+        console.log(`🔍 Tentativa final ${i + 1}/${retries}...`);
+        db = await this.getDB();
 
         if (db) {
-          console.log(`✅ EnsureDB: Firestore obtido na tentativa ${i + 1}`);
+          console.log(
+            `✅ EnsureDB: Firestore obtido na tentativa final ${i + 1}`,
+          );
           return db;
         }
 
-        console.warn(
-          `⚠️ EnsureDB: Tentativa ${i + 1}/${retries} falhou - Firestore retornou null`,
-        );
+        if (i < retries - 1) {
+          const delay = 2000 * (i + 1);
+          console.log(
+            `⏳ Aguardando ${delay}ms antes da próxima tentativa final...`,
+          );
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
       } catch (error: any) {
         console.error(
-          `❌ EnsureDB: Erro na tentativa ${i + 1}:`,
+          `❌ EnsureDB: Erro na tentativa final ${i + 1}:`,
           error.message,
         );
-      }
-
-      if (i < retries - 1) {
-        const delay = 1000 * (i + 1);
-        console.log(`⏳ Aguardando ${delay}ms antes da próxima tentativa...`);
-        await new Promise((resolve) => setTimeout(resolve, delay));
       }
     }
 
     const error = new Error(
-      `Firestore não está disponível após ${retries} tentativas`,
+      `Firestore definitivamente não está disponível após todas as tentativas`,
     );
-    console.error("❌ EnsureDB: Falha final:", error.message);
+    console.error("❌ EnsureDB: FALHA FINAL:", error.message);
+    console.error("📝 EnsureDB: Verifique:");
+    console.error("  1. Configuração do Firebase");
+    console.error("  2. Variáveis de ambiente VITE_FIREBASE_*");
+    console.error("  3. Firebase Console - Firestore habilitado?");
+    console.error("  4. Rede/conectividade");
     throw error;
   }
 
