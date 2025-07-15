@@ -6,25 +6,11 @@ import React from "react";
 import { SystemConfig } from "../config/systemConfig";
 
 export function StableModeIndicator() {
-  const isUltraStabilized =
-    typeof window !== "undefined" && (window as any).ULTRA_STABILIZED;
-  const isEmergencyMode =
-    typeof window !== "undefined" && (window as any).EMERGENCY_MODE_ACTIVE;
   const isFirebaseReactivated =
     !SystemConfig.FORCE_EMERGENCY_MODE && SystemConfig.ENABLE_FIREBASE_DEV;
-  const isStableMode =
-    SystemConfig.DISABLE_AUTO_SYNC &&
-    SystemConfig.DISABLE_AUTO_LOGIN &&
-    SystemConfig.FORCE_EMERGENCY_MODE;
 
-  // Sempre mostrar se Firebase foi reativado
-  if (
-    !isStableMode &&
-    !isEmergencyMode &&
-    !isUltraStabilized &&
-    !isFirebaseReactivated
-  )
-    return null;
+  // Mostrar se Firebase foi reativado
+  if (!isFirebaseReactivated) return null;
 
   const getConfig = () => {
     if (isFirebaseReactivated) {
