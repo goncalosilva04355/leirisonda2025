@@ -48,7 +48,7 @@ export function SimpleFirestoreStatus() {
           className="fixed bottom-20 right-4 bg-blue-500 text-white p-3 rounded-full shadow-lg z-50 hover:bg-blue-600 transition-colors"
           title="Status Firebase Simples"
         >
-          🔥
+          🗄️
         </button>
       )}
 
