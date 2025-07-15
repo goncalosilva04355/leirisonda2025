@@ -10,23 +10,23 @@ function isPlaceholder(value: string | undefined): boolean {
   );
 }
 
-// Configuração Firebase inteligente - Projeto ativo: leiria-1cfc9
+// Configuração Firebase inteligente - Projeto ativo: Leiria25
 export const LEIRIA_FIREBASE_CONFIG = {
   apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
     ? import.meta.env.VITE_FIREBASE_API_KEY!
-    : "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw", // API Key REAL do projeto leiria-1cfc9
+    : "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw", // API Key REAL do projeto Leiria25
   authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
     ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
-    : "leiria-1cfc9.firebaseapp.com",
+    : "leiria25.firebaseapp.com",
   databaseURL:
     import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
     ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
-    : "leiria-1cfc9",
+    : "Leiria25",
   storageBucket: !isPlaceholder(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET)
     ? import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!
-    : "leiria-1cfc9.firebasestorage.app",
+    : "leiria25.firebasestorage.app",
   messagingSenderId: !isPlaceholder(
     import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   )
@@ -65,7 +65,7 @@ export function getFirebaseConfig() {
     console.log("⚠️ Firebase: usando variáveis mas não no Netlify");
     console.log("🔄 Projeto:", config.projectId);
   } else {
-    console.log("🔄 Firebase: usando fallback local (Leirisonda)");
+    console.log("🔄 Firebase: usando fallback local (Leiria25)");
     console.log("📝 Deploy no Netlify usará as suas variáveis VITE_FIREBASE_*");
     console.log("🎯 Projeto fallback:", config.projectId);
   }
