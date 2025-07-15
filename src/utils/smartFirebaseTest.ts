@@ -62,21 +62,31 @@ export async function smartFirebaseTest(): Promise<{
       // Analisar o tipo de erro específico
       const errorMessage = firestoreError.message || "";
       const errorCode = firestoreError.code || "";
+      const stackTrace = firestoreError.stack || "";
 
+      // Detectar erro getImmediate (Firestore não habilitado)
       if (
+        stackTrace.includes("getImmediate") ||
         errorMessage.includes("getImmediate") ||
         errorMessage.includes("Service firestore is not available") ||
         errorCode === "firestore/unavailable"
       ) {
         return {
           success: false,
-          message: "Firestore NÃO está habilitado no projeto Firebase",
+          message:
+            "🚨 CONFIRMADO: Firestore NÃO está habilitado no projeto Firebase!",
           data: {
-            error: errorCode,
-            message: errorMessage,
             projectId: app.options.projectId,
+            errorType: "getImmediate - serviço não existe",
+            diagnosis: "O serviço Firestore não foi criado no projeto Firebase",
           },
-          solution: `SOLUÇÃO: Aceda a https://console.firebase.google.com/project/${app.options.projectId}/firestore e clique em "Criar base de dados"`,
+          solution: `🔧 SOLUÇÃO OBRIGATÓRIA:
+1. Aceda a: https://console.firebase.google.com/project/${app.options.projectId}/firestore
+2. Clique em "Create database"
+3. Escolha "Start in test mode"
+4. Selecione localização: europe-west3 (Frankfurt)
+5. Aguarde criação da base de dados
+6. Volte aqui e teste novamente`,
         };
       } else if (
         errorMessage.includes("permission") ||
