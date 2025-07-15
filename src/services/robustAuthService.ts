@@ -39,7 +39,7 @@ class RobustAuthService {
         };
       }
 
-      // Validação de senha - aceitar múltiplas passwords válidas
+      // Validação de senha - aceitar múltiplas passwords v��lidas
       const normalizedEmail = email.toLowerCase().trim();
       const isGoncaloEmail =
         normalizedEmail === "gongonsilva@gmail.com" ||
@@ -139,6 +139,41 @@ class RobustAuthService {
 
   isAuthenticated(): boolean {
     return !!this.getCurrentUser();
+  }
+
+  /**
+   * Detecta se o Firebase está bloqueado ou com problemas
+   */
+  private detectFirebaseBlock(): boolean {
+    try {
+      // Verificar últimos erros no localStorage
+      const recentErrors = safeLocalStorage.getItem("recent_firebase_errors");
+      if (recentErrors) {
+        const errors = JSON.parse(recentErrors);
+        const now = Date.now();
+
+        // Se houve erro nos últimos 5 minutos, considerar bloqueado
+        const recentBlockErrors = errors.filter((error: any) => {
+          const errorAge = now - error.timestamp;
+          const isRecent = errorAge < 5 * 60 * 1000; // 5 minutos
+          const isBlockError =
+            error.message?.includes("TOO_MANY_ATTEMPTS") ||
+            error.message?.includes("INVALID_LOGIN_CREDENTIALS") ||
+            error.code === "auth/too-many-requests";
+          return isRecent && isBlockError;
+        });
+
+        if (recentBlockErrors.length > 0) {
+          console.log("🚨 Detectado bloqueio Firebase recente");
+          return true;
+        }
+      }
+
+      return false;
+    } catch (error) {
+      console.warn("⚠️ Erro ao detectar bloqueio Firebase:", error);
+      return false;
+    }
   }
 
   // Função para testar credenciais rapidamente
