@@ -1885,7 +1885,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("🔄 Verificando auto sync após login...");
+            console.log("���� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -2821,7 +2821,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               }
             } catch (error: any) {
               console.error("❌ Login error:", error);
-              setLoginError("Erro de sistema. Por favor, tente novamente.");
+              setLoginError("Login incorreto");
             }
           }}
           loginError={loginError}
@@ -6032,7 +6032,7 @@ Verifique se:
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenção</option>
+                          <option value="manutencao">Em Manuten��ão</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -7999,7 +7999,7 @@ Verifique se:
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Manutenç��es
+                          Relatório de Manutenções
                         </h3>
                         <p className="text-sm text-gray-600">
                           Histórico de intervenções
