@@ -1075,30 +1075,6 @@ function App() {
 
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
-
-        // Development bypass - auto login for quick testing
-        if (import.meta.env.DEV && import.meta.env.VITE_AUTO_LOGIN === "true") {
-          console.log("🚀 Development mode: Auto-logging in...");
-          setTimeout(() => {
-            const defaultUser = {
-              uid: "dev_auto_login",
-              email: "gongonsilva@gmail.com",
-              name: "Gonçalo Fonseca",
-              role: "super_admin",
-              active: true,
-              createdAt: new Date().toISOString(),
-            };
-
-            setCurrentUser(defaultUser);
-            setIsAuthenticated(true);
-            safeLocalStorage.setItem(
-              "currentUser",
-              JSON.stringify(defaultUser),
-            );
-            safeLocalStorage.setItem("isAuthenticated", "true");
-            console.log("✅ Development auto-login successful");
-          }, 1000);
-        }
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -2507,7 +2483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           createdAt: new Date().toISOString(),
         };
 
-        console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
+        console.log(`��� Criando utilizador ${userForm.name} no Firestore...`);
 
         // Criar no Firestore primeiro
         const firestoreId = await firestoreService.createUtilizador(newUser);
@@ -6513,7 +6489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observações, recomendações, pr��xima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -10994,7 +10970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configurações"
+                    title="Configuraç��es"
                   >
                     <Settings className="h-5 w-5" />
                   </button>
@@ -11801,7 +11777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta aç��o não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deletePool(selectedPool.id);
