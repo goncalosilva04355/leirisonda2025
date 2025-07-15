@@ -1,8 +1,8 @@
-// ULTIMATE STABILIZER - MUST BE FIRST
-import "./utils/ultmateStabilizer";
+// ULTIMATE STABILIZER - TEMPORARIAMENTE DESATIVADO PARA REATIVAR FIREBASE
+// import "./utils/ultmateStabilizer";
 
-// BUILDER.IO SPECIFIC STABILIZER
-import "./utils/builderIoStabilizer";
+// BUILDER.IO SPECIFIC STABILIZER - TEMPORARIAMENTE DESATIVADO
+// import "./utils/builderIoStabilizer";
 
 // Load polyfills first
 import "./polyfills";
