@@ -55,7 +55,7 @@ export const FirestoreVerification: React.FC = () => {
         const testCollection = collection(db, "users");
         await getDocs(testCollection);
         canRead = true;
-        console.log("�� Leitura: OK");
+        console.log("✅ Leitura: OK");
       } catch (readError: any) {
         console.warn("⚠️ Leitura falhou:", readError.message);
         canRead = false;
