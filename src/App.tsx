@@ -2216,7 +2216,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("M✅ximo de 20 fotografias permitidas");
+      alert("Máximo de 20 fotografias permitidas");
       return;
     }
 
