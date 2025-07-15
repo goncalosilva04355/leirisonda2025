@@ -261,7 +261,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persistência reparada automaticamente");
+            console.log("��� Persistência reparada automaticamente");
           } else {
             console.error(
               "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -407,7 +407,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração autom��tica para Firestore
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -7250,7 +7250,7 @@ Verifique se:
           return (
             <div className="min-h-screen bg-gray-50">
               <div className="px-4 py-4 space-y-6">
-                <EmergencyLogoutManager />
+                {/* Emergency logout removido */}
               </div>
             </div>
           );
@@ -11622,7 +11622,7 @@ Verifique se:
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di📞metro da Coluna
+                                Di���metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
