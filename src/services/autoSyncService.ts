@@ -26,6 +26,11 @@ export class AutoSyncService {
 
   // Inicializar sincronização automática
   async startAutoSync(): Promise<void> {
+    if (isSystemDisabled("DISABLE_AUTO_SYNC")) {
+      console.log("⚙️ Auto-sync desativado por configuração do sistema");
+      return;
+    }
+
     if (!this.db || this.isActive) return;
 
     console.log("🔄 Iniciando sincronização automática em tempo real...");
@@ -37,7 +42,7 @@ export class AutoSyncService {
     console.log("✅ Sincronização automática ativa!");
   }
 
-  // Parar sincronização automática
+  // Parar sincronizaç��o automática
   stopAutoSync(): void {
     console.log("⏹️ Parando sincronização automática...");
 
