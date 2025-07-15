@@ -87,6 +87,7 @@ import { productionAutoSync } from "./services/productionAutoSync"; // Sincroniz
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
+import "./utils/autoActivateFirestoreREST"; // Ativação automática do sistema REST API
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
@@ -2816,7 +2817,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("��� Login failed:", result.error);
+                console.warn("🎉 Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inv✅lidas");
               }
             } catch (error: any) {
@@ -5353,7 +5354,7 @@ A aplicação está agora funcionando normalmente com persistência na nuvem.`);
                             </div>
                           </div>
 
-                          {/* Observa📞ções Específicas do Furo */}
+                          {/* Observa📞��ões Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -9478,7 +9479,7 @@ A aplicação está agora funcionando normalmente com persistência na nuvem.`);
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administra��ão → "🔧 Correção de Atribuiç✅o de
+                                Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
@@ -9594,7 +9595,7 @@ A aplicação está agora funcionando normalmente com persistência na nuvem.`);
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descri��ão do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -10127,7 +10128,7 @@ A aplicação está agora funcionando normalmente com persistência na nuvem.`);
                           const clientEmail = (inputs[10] as HTMLInputElement)
                             .value; // Email do Cliente
                           const observations = (inputs[11] as HTMLInputElement)
-                            .value; // Observações
+                            .value; // Observaç��es
 
                           dataSync.updatePool(editingPool.id, {
                             name,
