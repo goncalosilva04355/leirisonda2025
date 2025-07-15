@@ -3824,34 +3824,22 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Botões de Teste Firestore */}
                 <div className="mt-6 space-y-3">
                   <button
-                    onClick={async () => {
-                      const { testCorrectFirestore } = await import(
-                        "./firebase/correctConfig"
-                      );
-                      const result = await testCorrectFirestore();
-
-                      if (result.success) {
-                        alert(
-                          `🎉 SUCESSO! ${result.message}\n\nOs dados estão a ser guardados corretamente no Firestore!`,
-                        );
-                      } else {
-                        alert(
-                          `❌ ${result.message}\n\nVerifique os detalhes no console.`,
-                        );
-                      }
-
-                      console.log("🔍 Resultado teste final:", result);
-                    }}
-                    className="w-full bg-green-50 border-4 border-green-500 rounded-lg p-6 hover:bg-green-100 transition-colors"
+                    onClick={() =>
+                      setActiveSection("definitive-firestore-solution")
+                    }
+                    className="w-full bg-red-50 border-4 border-red-500 rounded-lg p-6 hover:bg-red-100 transition-colors"
                   >
                     <div className="flex items-center justify-center space-x-2">
-                      <Database className="h-6 w-6 text-green-600" />
-                      <span className="text-green-700 font-bold text-lg">
-                        🎯 TESTE FINAL - Configuração Correta
+                      <Database className="h-6 w-6 text-red-600" />
+                      <span className="text-red-700 font-bold text-lg">
+                        🚨 SOLUÇÃO DEFINITIVA
                       </span>
                     </div>
-                    <p className="text-green-600 font-medium mt-2">
-                      Usa a configuração exata do projeto leiria-1cfc9
+                    <p className="text-red-600 font-medium mt-2">
+                      Teste final + instruções para habilitar Firestore
+                    </p>
+                    <p className="text-red-500 text-sm mt-1 font-bold">
+                      Projeto leiria-1cfc9 - Configuração 100% correta
                     </p>
                   </button>
                   <button
@@ -7610,7 +7598,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠✅ ATENÇÃO: Esta opera✅ão é
+                                        ���✅ ATENÇÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
