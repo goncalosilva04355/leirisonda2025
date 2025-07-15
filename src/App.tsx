@@ -132,8 +132,7 @@ import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator"
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
-import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - SEMPRE FUNCIONA
-import "./utils/confirmWorking"; // Confirma que está funcionando
+import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -484,7 +483,7 @@ function App() {
       "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
-    // Verifica��ões automáticas desabilitadas para resolver instabilidade
+    // Verificações automáticas desabilitadas para resolver instabilidade
     // Sistema funcionarnormalmente sem verificações constantes
     // Sistema funcionar normalmente sem verificações automáticas
   }, []);
@@ -1200,7 +1199,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "���€ Passo 3: Erro nas operaç€es Firestore:",
+                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
