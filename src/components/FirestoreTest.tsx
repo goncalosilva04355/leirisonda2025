@@ -20,6 +20,25 @@ export const FirestoreTest: React.FC = () => {
   const [quotaResult, setQuotaResult] = useState<any>(null);
   const [simpleResult, setSimpleResult] = useState<any>(null);
 
+  const runSimpleTest = async () => {
+    setTesting(true);
+    setSimpleResult(null);
+
+    try {
+      console.log("🧪 Executando teste Firebase simplificado...");
+      const result = await simpleFirebaseTest();
+      setSimpleResult(result);
+    } catch (error: any) {
+      setSimpleResult({
+        success: false,
+        message: `Erro: ${error.message}`,
+        error: error.message,
+      });
+    } finally {
+      setTesting(false);
+    }
+  };
+
   const runTests = async () => {
     setTesting(true);
     setConnectionResult(null);
