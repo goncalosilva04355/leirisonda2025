@@ -2592,7 +2592,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       setShowUserForm(false);
     } catch (error) {
-      console.error("🔥 Erro ao salvar utilizador:", error);
+      console.error("�� Erro ao salvar utilizador:", error);
       alert("Erro ao salvar utilizador. Tente novamente.");
     }
   };
@@ -3854,11 +3854,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-2">
                       <Database className="h-5 w-5 text-blue-600" />
                       <span className="text-blue-700 font-medium">
-                        🧠 Teste INTELIGENTE
+                        🔬 Teste AVANÇADO com Retry
                       </span>
                     </div>
                     <p className="text-blue-600 text-sm mt-1">
-                      Detecta exatamente qual é o problema
+                      Tenta várias vezes e aguarda provisionamento
                     </p>
                   </button>
 
@@ -7574,7 +7574,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          🔥 Dados do Firebase e armazenamento
+                                          ��� Dados do Firebase e armazenamento
                                           local
                                         </li>
                                       </ul>
@@ -7783,7 +7783,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Obras
+                                    Relat��rio de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
