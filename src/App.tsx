@@ -4253,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
                       Futuras Manutenções
@@ -5736,7 +5736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "🎉 Não tem permiss��o para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -11907,6 +11907,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {showMobileFirebaseFix && <MobileFirebaseFix />}
+
+        {/* Debug Info - Development only */}
+        {import.meta.env.DEV && <DebugInfo />}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
