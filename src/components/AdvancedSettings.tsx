@@ -890,7 +890,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
                     • Quando uma obra é criada e atribuída a um utilizador, ele
-                    recebe uma notificaç��o push
+                    recebe uma notificação push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
