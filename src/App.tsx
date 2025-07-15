@@ -2144,7 +2144,7 @@ ${index + 1}. ${maint.poolName}
 
   const generateWorksPDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE OBRAS
+LEIRISONDA - RELAT��RIO DE OBRAS
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -3061,7 +3061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas n��o geradas
+                          Folhas não geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -11046,6 +11046,7 @@ Verifique se:
         <div className="min-h-screen bg-gray-50">
           <StableModeIndicator />
           <EmergencyDiagnostic />
+          <FirestoreCollectionStatus />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
