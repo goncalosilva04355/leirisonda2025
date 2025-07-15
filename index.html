@@ -49,6 +49,9 @@
     <!-- Debug Chrome -->
     <script src="/debug-chrome.js"></script>
 
+    <!-- Debug App Loading -->
+    <script src="/debug-app.js"></script>
+
     <!-- Service Worker Registration -->
     <script>
       if ("serviceWorker" in navigator) {
@@ -79,6 +82,6 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main-optimized.tsx"></script>
   </body>
 </html>
