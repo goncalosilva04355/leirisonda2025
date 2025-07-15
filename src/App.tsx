@@ -407,7 +407,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração autom��tica para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -456,13 +456,6 @@ function App() {
   // Sincronizar configurações entre componentes
   useEffect(() => {
     // Verificar modo emergência
-    if (
-      typeof window !== "undefined" &&
-      (window as any).EMERGENCY_MODE_ACTIVE
-    ) {
-      console.log("⚠️ useEffect desativado - modo emergência");
-      return;
-    }
 
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
@@ -2000,7 +1993,7 @@ function App() {
     );
 
     if (advancedPassword === "19867") {
-      alert("��� Palavra-passe correcta! A abrir configurações...");
+      alert("✅ Palavra-passe correcta! A abrir configurações...");
       setAdvancedPasswordError("");
 
       // Usar timeout para garantir que o estado é atualizado
