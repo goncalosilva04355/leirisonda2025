@@ -1,6 +1,9 @@
 // PARAGEM DE EMERGÊNCIA TOTAL - PRIMEIRA LINHA
 import "./utils/emergencyStopAll";
 
+// MONITOR EM TEMPO REAL - Para detectar exatamente o que causa refreshs
+import "./utils/realTimeMonitor";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -1722,7 +1725,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -10924,7 +10927,7 @@ Verifique se:
                 rememberMe,
               );
 
-              // console.log("🔐 Auth result:", result);
+              // console.log("�� Auth result:", result);
 
               if (result.success && result.user) {
                 // console.log("✅ Login successful for:", result.user.email);
