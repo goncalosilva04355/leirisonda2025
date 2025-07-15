@@ -17,11 +17,11 @@ class RobustAuthService {
       const forceEmergency = SystemConfig.FORCE_EMERGENCY_MODE;
       const isFirebaseBlocked = this.detectFirebaseBlock();
 
+      // Sistema de emergência removido - login normal apenas
       if (forceEmergency || isFirebaseBlocked) {
         console.log(
-          "🚨 Usando modo emergência (configuração ou bloqueio Firebase)",
+          "⚠️ Configuração de emergência detectada mas sistema foi removido",
         );
-        return await emergencyAuthService.emergencyLogin(email, password);
       }
 
       // Validação básica
