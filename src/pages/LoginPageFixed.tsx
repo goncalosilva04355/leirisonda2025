@@ -155,7 +155,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           sessionStorage.removeItem("savedLoginCredentials");
         }
 
-        console.log("�� LoginPage: Calling onLogin function...");
+        console.log("���� LoginPage: Calling onLogin function...");
         await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
         console.log("✅ LoginPage: onLogin completed");
       } catch (error) {
