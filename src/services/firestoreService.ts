@@ -40,7 +40,7 @@ export class FirestoreService {
       this.db = await getFirebaseFirestoreAsync();
       if (!this.db) {
         console.warn(
-          "Firestore n��o está disponível - usando fallback localStorage",
+          "Firestore não está disponível - usando fallback localStorage",
         );
         return null;
       }
