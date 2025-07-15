@@ -725,7 +725,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteç��o de dados críticos - NUNCA PERDER DADOS
+  // Proteç���o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -1254,7 +1254,7 @@ function App() {
         }
       } else {
         console.log(
-          "🔄 Firestore não disponível, tentando novamente em 10 segundos...",
+          "�� Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -2185,7 +2185,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -5526,7 +5526,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Create complete work data object (matching Work interface)
                           const workData = {
-                            id: Date.now().toString(),
+                            id: `work_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
@@ -6815,7 +6815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura🎉ões
+                        Configura����ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
