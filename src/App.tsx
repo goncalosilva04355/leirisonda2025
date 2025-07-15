@@ -1113,7 +1113,7 @@ function App() {
     initializeAuth();
   }, []);
 
-  // Passo 3: Teste completo do Firestore com operações reais - COMENTADO para evitar erros
+  // Passo 3: Teste completo do Firestore com operaç��es reais - COMENTADO para evitar erros
   /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
@@ -3406,7 +3406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">���</span>
+                      <span className="text-blue-600">����</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -5091,9 +5091,16 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar tipo</option>
-                                  <option value="PEAD">PEAD</option>
-                                  <option value="HIDROROSCADO">
+                                  <option key="select-pipe-type" value="">
+                                    Selecionar tipo
+                                  </option>
+                                  <option key="pead" value="PEAD">
+                                    PEAD
+                                  </option>
+                                  <option
+                                    key="hidroroscado"
+                                    value="HIDROROSCADO"
+                                  >
                                     HIDROROSCADO
                                   </option>
                                 </select>
