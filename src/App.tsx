@@ -1985,7 +1985,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora est✅ limpa.");
+        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
