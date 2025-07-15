@@ -2,6 +2,7 @@
 import { UserProfile } from "./localAuthService";
 import { getAuthorizedUser } from "../config/authorizedUsers";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
+import { emergencyAuthService } from "./emergencyAuthService";
 
 class RobustAuthService {
   async login(
