@@ -2061,7 +2061,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manutenç✅es: ${futureMaintenance.length}
+- Futuras Manutenções: ${futureMaintenance.length}
 
 MANUTENÇ✅ES REALIZADAS:
 ${maintenance
@@ -4198,7 +4198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç✅es
+                          Futuras Manutenções
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
