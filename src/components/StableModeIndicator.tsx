@@ -32,16 +32,9 @@ export function StableModeIndicator() {
         ></span>
         <span>{config.text}</span>
       </div>
-      {isFirebaseReactivated && (
-        <div className="text-xs mt-1 opacity-75">
-          Auto-sync ativo em dev e produção
-        </div>
-      )}
-      {isUltraStabilized && (
-        <div className="text-xs mt-1 opacity-75">
-          Todos os sistemas problemáticos desativados
-        </div>
-      )}
+      <div className="text-xs mt-1 opacity-75">
+        Auto-sync ativo em dev e produção
+      </div>
     </div>
   );
 }
