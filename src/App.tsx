@@ -8866,7 +8866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Or✅amento:
+                                    Orçamento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
