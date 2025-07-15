@@ -630,7 +630,7 @@ export const syncService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    console.log("�� Inicializando dados do Firebase...");
+    console.log("📦 Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
     console.log("✅ Dados inicializados com sucesso");
   },
