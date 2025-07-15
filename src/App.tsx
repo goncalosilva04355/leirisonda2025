@@ -73,9 +73,7 @@ import {
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import { StableModeIndicator } from "./components/StableModeIndicator";
-import { EmergencyDiagnostic } from "./components/EmergencyDiagnostic";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
-import { DebugFallback } from "./components/DebugFallback";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
@@ -889,7 +887,7 @@ function App() {
           // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
-              "��� Sincronizando utilizadores locais para Firestore...",
+              "🔄 Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!(user as any).firestoreId) {
@@ -984,7 +982,7 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
-            "✅ Users reloaded after update:",
+            "��� Users reloaded after update:",
             parsedUsers.length,
             parsedUsers,
           );
@@ -1149,7 +1147,7 @@ function App() {
         }
 
         // If no valid session, start fresh
-        console.log("������ No valid session found, starting fresh");
+        console.log("���� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -1232,7 +1230,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+                "���� Firestore conectado mas pode haver problema nas regras de segurança",
               );
             }
           }
@@ -1962,7 +1960,7 @@ function App() {
               if (autoSyncStarted) {
                 console.log("�� Auto sync garantido após login!");
               } else {
-                console.warn("��️ Falha ao garantir auto sync após login");
+                console.warn("����️ Falha ao garantir auto sync após login");
               }
             } else {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
@@ -2266,7 +2264,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manuten��✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -4478,7 +4476,7 @@ Verifique se:
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç€es agendadas e programadas
+                          Manuten��€es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -12106,7 +12104,7 @@ Verifique se:
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação n��o pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deletePool(selectedPool.id);
