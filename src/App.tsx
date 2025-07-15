@@ -10341,6 +10341,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "diagnostic":
           return <FirestoreDiagnostic />;
 
+        case "teste-firestore":
+          return <FirestoreTest />;
+
         default:
           return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
