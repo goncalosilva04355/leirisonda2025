@@ -45,7 +45,11 @@ export const directFirebaseInit = async () => {
         const testRef = doc(firestoreDB, "test", "connectivity");
         console.log("✅ Firestore test ref criada:", !!testRef);
       } catch (testError: any) {
-        console.warn("⚠️ Teste Firestore falhou:", testError.message);
+        console.warn(
+          "⚠️ Teste Firestore falhou:",
+          testError?.message || String(testError),
+        );
+        console.warn("🔍 Detalhes do teste:", testError);
       }
     }
 
@@ -55,10 +59,16 @@ export const directFirebaseInit = async () => {
       ready: true,
     };
   } catch (error: any) {
-    console.error("❌ Erro no Direct Firebase Init:", {
-      message: error.message,
-      code: error.code,
-      stack: error.stack,
+    console.error(
+      "❌ Erro no Direct Firebase Init:",
+      error?.message || String(error),
+    );
+    console.error("🔍 Detalhes do erro:", {
+      message: error?.message || "Mensagem não disponível",
+      code: error?.code || "Código não disponível",
+      name: error?.name || "Nome não disponível",
+      stack: error?.stack || "Stack não disponível",
+      toString: String(error),
     });
 
     return {
