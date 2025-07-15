@@ -736,7 +736,7 @@ function App() {
       return true;
     }
 
-    // Se não há utilizadores atribuídos, mostrar para super admin
+    // Se não h�� utilizadores atribuídos, mostrar para super admin
     if (
       !work.assignedTo &&
       (!work.assignedUsers || work.assignedUsers.length === 0) &&
@@ -1908,7 +1908,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync está ativo após login
+        // Garantir que auto sync est�� ativo após login
         setTimeout(async () => {
           try {
             console.log("🔄 Verificando auto sync após login...");
@@ -11052,7 +11052,7 @@ Verifique se:
         <div className="min-h-screen bg-gray-50">
           <StableModeIndicator />
           <EmergencyDiagnostic />
-          <FirestoreCollectionStatus />
+          <SimpleFirestoreStatus />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
