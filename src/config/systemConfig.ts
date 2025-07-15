@@ -3,30 +3,24 @@
  */
 
 export const SystemConfig = {
-  // REATIVAR modo emergência devido a TOO_MANY_ATTEMPTS
-  DISABLE_AUTO_SYNC: true,
+  // Configurações normais
+  DISABLE_AUTO_SYNC: false,
+  DISABLE_AUTO_LOGIN: false,
+  DISABLE_EXCESSIVE_INTERVALS: false,
+  DISABLE_AUTO_RELOAD: false,
 
-  // DESATIVAR auto-login que está a causar loops
-  DISABLE_AUTO_LOGIN: true,
+  // Configurações padrão
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 5000, // 5 segundos
 
-  // Desativar intervalos excessivos
-  DISABLE_EXCESSIVE_INTERVALS: true,
+  // Intervalos normais
+  SYNC_INTERVAL: 30000, // 30 segundos
+  STATUS_CHECK_INTERVAL: 10000, // 10 segundos
 
-  // Desativar reloads que podem causar loops
-  DISABLE_AUTO_RELOAD: true,
+  // Modo normal
+  FORCE_EMERGENCY_MODE: false,
 
-  // Configurações conservadoras
-  MAX_RETRIES: 1,
-  RETRY_DELAY: 30000, // 30 segundos
-
-  // Intervalos conservadores
-  SYNC_INTERVAL: 300000, // 5 minutos
-  STATUS_CHECK_INTERVAL: 60000, // 1 minuto
-
-  // REATIVAR modo emergência temporariamente
-  FORCE_EMERGENCY_MODE: true,
-
-  // Manter Firebase disponível mas controlado
+  // Firebase ativo
   ENABLE_FIREBASE_DEV: true,
   ENABLE_FIREBASE_PROD: true,
 };
