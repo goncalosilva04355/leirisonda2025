@@ -3,7 +3,7 @@
  * Verifica se as coleções necessárias existem e têm dados
  */
 
-import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfig";
+// Import removido temporariamente para evitar problemas
 import { collection, getDocs, doc, setDoc } from "firebase/firestore";
 
 interface CollectionStatus {
