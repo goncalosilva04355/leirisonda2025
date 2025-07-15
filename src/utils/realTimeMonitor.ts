@@ -50,9 +50,13 @@ class RealTimeMonitor {
       this.logs = this.logs.slice(-100);
     }
 
-    // Log crítico
+    // Log crítico com melhor formatação
     if (type.includes("CRITICAL")) {
-      console.error(`🚨 ${type}:`, details);
+      try {
+        console.error(`🚨 ${type}:`, JSON.stringify(details, null, 2));
+      } catch (e) {
+        console.error(`🚨 ${type}:`, details);
+      }
     }
   }
 
