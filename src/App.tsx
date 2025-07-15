@@ -1,11 +1,11 @@
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
-import "./utils/simpleFirestoreChecker";
+// import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
-import "./utils/simpleFirebaseInit";
+// import "./utils/simpleFirebaseInit";
 
 // VERIFICAÇÃO BÁSICA DE SAÚDE
-import "./utils/basicHealthCheck";
+// import "./utils/basicHealthCheck";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -54,7 +54,7 @@ import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
+// import "./utils/clearModalStates";
 
 // Firebase Quota Recovery - recuperar operações bloqueadas
 import {
@@ -77,7 +77,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
-import "./utils/protectedLocalStorage"; // Ativar proteção automática
+// import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 import { fcmService } from "./services/fcmService";
 import NotificationCenter from "./components/NotificationCenter";
@@ -1206,7 +1206,7 @@ function App() {
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização com Firebase Leiria:", error);
-          console.log("📱 Aplicação continua funcional em modo offline");
+          console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
