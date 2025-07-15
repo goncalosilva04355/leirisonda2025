@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect } from "react";
-import FirestoreCollectionChecker from "../utils/firestoreCollectionChecker";
+import { SimpleFirestoreChecker } from "../utils/simpleFirestoreChecker";
 
 interface CollectionStatus {
   name: string;
