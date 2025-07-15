@@ -1688,7 +1688,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenç��o anterior",
+          notes: "Agendada automaticamente após manuten����o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5635,7 +5635,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           setCurrentAssignedUser("");
                           setActiveSection("dashboard");
                         }}
-                        className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+                        disabled={isCreatingWork}
+                        className={`px-6 py-2 ${isCreatingWork ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"} text-white rounded-md transition-colors flex items-center space-x-2`}
                       >
                         <Building2 className="h-4 w-4" />
                         <span>Criar Obra</span>
@@ -7012,7 +7013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
-                            Gerir configurações da aplicação, notificaç��es e
+                            Gerir configurações da aplicação, notificações e
                             prefer✅ncias.
                           </p>
                         </div>
@@ -8970,7 +8971,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        �� {work.contact}
+                                        🔥 {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -10266,7 +10267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
                             .value; // T🔥cnico
-                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
+                          const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenç��o
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
                             inputs[4] as HTMLInputElement
@@ -11462,7 +11463,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {/* Informações Adicionais */}
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                          Informaç€s Detalhadas
+                          Informaç��s Detalhadas
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
