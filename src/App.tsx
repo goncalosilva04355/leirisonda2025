@@ -3146,7 +3146,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    ��� Contacto:
+                                    📞 Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -4272,7 +4272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manutenções aparecer��o aqui quando forem
                         agendadas
                       </p>
                       <button
