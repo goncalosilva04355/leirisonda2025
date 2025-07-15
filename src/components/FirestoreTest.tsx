@@ -18,6 +18,7 @@ export const FirestoreTest: React.FC = () => {
     null,
   );
   const [quotaResult, setQuotaResult] = useState<any>(null);
+  const [simpleResult, setSimpleResult] = useState<any>(null);
 
   const runTests = async () => {
     setTesting(true);
