@@ -1,6 +1,6 @@
 // Configuração Firebase que prioriza Netlify mas funciona localmente
 
-// Função para verificar se uma variável �� um placeholder
+// Função para verificar se uma variável é um placeholder
 function isPlaceholder(value: string | undefined): boolean {
   return (
     !value ||
@@ -20,7 +20,7 @@ export const LEIRIA_FIREBASE_CONFIG = {
     : "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
     ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
     : "leiria-1cfc9",
