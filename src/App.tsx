@@ -605,7 +605,7 @@ function App() {
       const firestoreId = await offlineFirstService.createMaintenance(data);
 
       if (firestoreId) {
-        console.log("���� Manutenção criada no Firestore:", firestoreId);
+        console.log("🔥 Manutenção criada no Firestore:", firestoreId);
 
         // Sincronizar com sistema universal
         try {
@@ -3810,7 +3810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </p>
                                   <p className="text-gray-400 text-xs mt-1">
                                     Tente pesquisar por cliente, obra, piscina,
-                                    data ou t��cnico
+                                    data ou técnico
                                   </p>
                                 </div>
                               )}
@@ -3826,7 +3826,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <button
                     onClick={async () => {
                       const { testDirectWrite } = await import(
-                        "../utils/directFirestoreTest"
+                        "./utils/directFirestoreTest"
                       );
                       const result = await testDirectWrite();
                       alert(
@@ -3840,7 +3840,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-2">
                       <Database className="h-5 w-5 text-green-600" />
                       <span className="text-green-700 font-medium">
-                        🚀 Teste DIRETO Firestore
+                        ���� Teste DIRETO Firestore
                       </span>
                     </div>
                     <p className="text-green-600 text-sm mt-1">
@@ -10918,7 +10918,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Furos e Captações de Água
+                        Furos e Capta��ões de Água
                       </p>
                     </div>
                   </div>
