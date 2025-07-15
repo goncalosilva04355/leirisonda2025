@@ -4,6 +4,7 @@ import "./index.css";
 
 // Basic imports first
 import App from "./App";
+import ImprovedErrorBoundary from "./components/ImprovedErrorBoundary";
 
 // Ensure single root creation
 const rootElement = document.getElementById("root");
