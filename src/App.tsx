@@ -96,7 +96,7 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-import UnifiedAdminPage from "./components/UnifiedAdminPage";
+import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
@@ -965,7 +965,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("��️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1783,7 +1783,7 @@ function App() {
         return result;
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       throw error;
     }
   };
@@ -4151,7 +4151,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ���� {maint.location}
+                                    📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -4815,7 +4815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                🔄 Recarregar Utilizadores
+                                ��� Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -6879,7 +6879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Configurações do Sistema
+                            Configuraç��es do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
@@ -7439,7 +7439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminar�� permanentemente:
+                                        Esta ação eliminará permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
