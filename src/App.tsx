@@ -707,7 +707,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteç��o de dados críticos - NUNCA PERDER DADOS
+  // Prote����o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -2873,11 +2873,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         title={
                           autoSyncActive
                             ? "Sincronização Autom����tica Ativa"
-                            : "Sincronização Automática Inativa"
-                        }
-                      ></div>
-                    </div>
-                  </div>
+                            
                 </div>
 
                 {/* Status Cards */}
@@ -6917,7 +6913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-4">
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Autom���tica
+                                  Sincronização Autom�����tica
                                 </span>
                                 <button
                                   onClick={() =>
