@@ -389,7 +389,7 @@ function App() {
         `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
       );
       console.log(
-        "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+        "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
       );
     }
   }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -538,13 +538,13 @@ function App() {
         try {
           await addObra(data);
         } catch (syncError) {
-          console.warn("€��� Erro na sincronização universal:", syncError);
+          console.warn("€🎉 Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
       } else {
         // Fallback para sistema atual se Firestore falhar
-        console.warn("��� Firestore não disponível, usando sistema atual");
+        console.warn("🎉 Firestore não disponível, usando sistema atual");
         const result = await addObra(data);
 
         return result;
@@ -887,7 +887,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("��� Users updated event received, reloading...");
+      console.log("🎉 Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -1219,7 +1219,7 @@ function App() {
         }
       } else {
         console.log(
-          "���️ Firestore não disponível, tentando novamente em 10 segundos...",
+          "🎉️ Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -1283,7 +1283,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("���️ Falha ao garantir auto sync após login");
+            console.warn("🎉️ Falha ao garantir auto sync após login");
             setAutoSyncActive(false);
           }
         } else {
@@ -1810,7 +1810,7 @@ function App() {
       console.log("🔥 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("��� Login successful for:", result.user.email);
+        console.log("🎉 Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -1841,7 +1841,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("��� Navigating to dashboard");
+            console.log("🎉 Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -1935,7 +1935,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "���Forced logout state clear completed - redirected to login",
+        "🎉Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -2406,7 +2406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
       try {
         window.open(mapsUrl, "_blank");
-        console.log("��� Google Maps opened successfully");
+        console.log("🎉 Google Maps opened successfully");
       } catch (error) {
         console.error("📞 Error opening Google Maps:", error);
       }
@@ -2451,7 +2451,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       if (editingUser) {
         // Update existing user
         console.log(
-          `��� Atualizando utilizador ${userForm.name} no Firestore...`,
+          `🎉 Atualizando utilizador ${userForm.name} no Firestore...`,
         );
 
         const updatedUser = {
@@ -2757,7 +2757,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("��� Login failed:", result.error);
+                console.warn("🎉 Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inv��lidas");
               }
             } catch (error: any) {
@@ -3106,7 +3106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </button>
                                 ) : (
                                   <span className="text-sm text-gray-500">
-                                    N���o especificada
+                                    N🎉o especificada
                                   </span>
                                 )}
                               </div>
@@ -3142,7 +3142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               )}
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���abalho:
+                                  🎉abalho:
                                 </span>
                                 <span className="text-sm text-gray-900">
                                   {work.workPerformed ||
@@ -3273,7 +3273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh���";
+                            timeText = "Amanh🎉";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -4072,7 +4072,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu���do"
+                                      ? "Conclu🎉do"
                                       : maint.status}
                               </span>
                             </div>
@@ -4104,7 +4104,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ��� {maint.clientContact}
+                                        🎉 {maint.clientContact}
                                       </button>
                                     </div>
                                   )}
@@ -4210,7 +4210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Agendar Manutenç���</span>
+                      <span>Agendar Manutenç🎉</span>
                     </button>
                   </div>
                 </div>
@@ -4661,7 +4661,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               safeLocalStorage.getItem("app-users");
                             console.log(
-                              "��� USERS NO LOCALSTORAGE (app-users):",
+                              "🎉 USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -4675,7 +4675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "��� ERRO AO FAZER PARSE DOS USERS:",
+                                  "🎉 ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -4726,7 +4726,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         JSON.parse(savedUsers);
                                       setUsers(parsedUsers);
                                       alert(
-                                        `��� ${parsedUsers.length} utilizadores carregados!`,
+                                        `🎉 ${parsedUsers.length} utilizadores carregados!`,
                                       );
                                     } catch (error) {
                                       console.error("Erro:", error);
@@ -4823,7 +4823,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Já atribu���do:",
+                                    "| Já atribu🎉do:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
                                     !alreadyAssigned,
@@ -5697,7 +5697,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 "€DEBUG: Tentando adicionar cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
-                              console.log("��� User Role:", currentUser?.role);
+                              console.log("🎉 User Role:", currentUser?.role);
                               console.log(
                                 "🔍 User Permissions:",
                                 currentUser?.permissions,
@@ -5711,7 +5711,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -5908,7 +5908,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="resistencia">
                             Resistência Elétrica
                           </option>
-                          <option value="gas">Aquecimento a G���s</option>
+                          <option value="gas">Aquecimento a G🎉s</option>
                         </select>
                       </div>
                     </div>
@@ -6193,7 +6193,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons���vel *
+                          Técnico Respons🎉vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6668,7 +6668,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura���ões
+                        Configura🎉ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -6703,7 +6703,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       >
                         <div className="flex items-center space-x-2">
                           <Settings className="h-4 w-4" />
-                          <span>Configura���ões</span>
+                          <span>Configura🎉ões</span>
                         </div>
                       </button>
                       {(currentUser?.role === "super_admin" ||
@@ -6798,7 +6798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔥 Trabalhos realizados</li>
-                                <li>��� Técnicos responsáveis</li>
+                                <li>🎉 Técnicos responsáveis</li>
                                 <li>• Datas e duraç��es</li>
                                 <li>• Estados e observações</li>
                               </ul>
@@ -6833,7 +6833,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
-                                <li>��� Equipas atribuídas</li>
+                                <li>🎉 Equipas atribuídas</li>
                                 <li>• Prazos e orçamentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
@@ -6871,7 +6871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-4">
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-medium text-gray-700">
-                                  Sincronização Autom���tica
+                                  Sincronização Autom🎉tica
                                 </span>
                                 <button
                                   onClick={() =>
@@ -6992,7 +6992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </h3>
                     <div className="grid gap-3">
                       <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers���o</span>
+                        <span className="text-gray-600">Vers🎉o</span>
                         <span className="font-medium">1.0.0</span>
                       </div>
                       <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7748,7 +7748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>��� Informações de clientes</li>
+                        <li>🎉 Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -7890,7 +7890,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>��� Dados consolidados</li>
+                        <li>🎉 Dados consolidados</li>
                         <li>• An��lise de performance</li>
                       </ul>
                     </div>
@@ -7937,7 +7937,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç���es</span>
+                          <span className="text-xs">Manutenç🎉es</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8198,7 +8198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  ���{" "}
+                                  🎉{" "}
                                   {client?.address || "Endereço não disponível"}
                                 </button>
                               </div>
@@ -8377,7 +8377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            C���digo Postal *
+                            C🎉digo Postal *
                           </label>
                           <input
                             type="text"
@@ -9334,7 +9334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        ���etalhes do Furo de Água
+                        🎉etalhes do Furo de Água
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -9950,7 +9950,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manutenção</option>
-                          <option value="Reparaç���">Reparação</option>
+                          <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -10167,7 +10167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    ��� Voltar aos Utilizadores
+                    🎉 Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
@@ -10287,7 +10287,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               Erro de Sistema
             </h1>
             <p className="text-gray-600 mb-4">
-              Ocorreu um erro ao carregar o conte���o. Por favor, tente
+              Ocorreu um erro ao carregar o conte🎉o. Por favor, tente
               novamente.
             </p>
             <button
@@ -10374,7 +10374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relat���rio
+                  Escolha como pretende partilhar o relat🎉rio
                 </p>
               </div>
             </div>
@@ -10459,7 +10459,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Fotografias</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>🎉</span>
                   <span>Observaç€s e pr��xima manutenção</span>
                 </div>
               </div>
@@ -10518,7 +10518,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Show login form if not authenticated
   if (!isAuthenticated) {
     console.log(
-      "🛡��� SECURITY: Blocking access - isAuthenticated:",
+      "🛡🎉 SECURITY: Blocking access - isAuthenticated:",
       isAuthenticated,
       "currentUser:",
       !!currentUser,
@@ -11607,7 +11607,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            🔥��� {selectedPool.location}
+                            🔥🎉 {selectedPool.location}
                           </button>
                         </div>
                       </div>
@@ -11616,7 +11616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa���ões do Cliente
+                        Informa🎉ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -11698,7 +11698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç���es
+                        Manutenç🎉es
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
