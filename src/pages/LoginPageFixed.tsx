@@ -7,6 +7,7 @@ import {
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 import { LoginHints } from "../components/LoginHints";
 import NetlifyEnvChecker from "../components/NetlifyEnvChecker";
+import LoginHelper from "../components/LoginHelper";
 
 interface LoginPageProps {
   onLogin: (
