@@ -76,17 +76,31 @@ export const FirestoreTest: React.FC = () => {
           🔥 Teste de Conectividade Firestore
         </h2>
 
-        <button
-          onClick={runTests}
-          disabled={testing}
-          className={`w-full py-3 px-4 rounded-lg font-medium ${
-            testing
-              ? "bg-gray-400 cursor-not-allowed text-gray-600"
-              : "bg-blue-600 hover:bg-blue-700 text-white"
-          }`}
-        >
-          {testing ? "🔄 Testando..." : "🧪 Executar Testes"}
-        </button>
+        <div className="space-y-3">
+          <button
+            onClick={runSimpleTest}
+            disabled={testing}
+            className={`w-full py-3 px-4 rounded-lg font-medium ${
+              testing
+                ? "bg-gray-400 cursor-not-allowed text-gray-600"
+                : "bg-yellow-600 hover:bg-yellow-700 text-white"
+            }`}
+          >
+            {testing ? "🔄 Testando..." : "🔧 Teste Simplificado (Recomendado)"}
+          </button>
+
+          <button
+            onClick={runTests}
+            disabled={testing}
+            className={`w-full py-3 px-4 rounded-lg font-medium ${
+              testing
+                ? "bg-gray-400 cursor-not-allowed text-gray-600"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
+          >
+            {testing ? "🔄 Testando..." : "🧪 Teste Completo"}
+          </button>
+        </div>
 
         {/* Resultado da Conectividade */}
         {connectionResult && (
