@@ -293,7 +293,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("€ Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
 
     // Detectar conflitos Firebase em dispositivos móveis
     const detectFirebaseConflicts = () => {
@@ -1306,7 +1306,7 @@ function App() {
     const handleUserLoggedIn = async (event: CustomEvent) => {
       const { user, timestamp } = event.detail;
       console.log(
-        "🔑 Utilizador fez login, verificando auto sync:",
+        "��� Utilizador fez login, verificando auto sync:",
         user.email,
       );
 
@@ -1496,7 +1496,7 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("🔥 Notification clicked, navigating...", event.data);
+            console.log("���� Notification clicked, navigating...", event.data);
 
             const { data } = event.data;
 
@@ -1889,7 +1889,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("�� Verificando auto sync após login...");
+            console.log("🔄 Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -5173,18 +5173,42 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar potência</option>
-                                  <option value="0.5">0.5 HP</option>
-                                  <option value="0.75">0.75 HP</option>
-                                  <option value="1">1 HP</option>
-                                  <option value="1.5">1.5 HP</option>
-                                  <option value="2">2 HP</option>
-                                  <option value="3">3 HP</option>
-                                  <option value="5">5 HP</option>
-                                  <option value="7.5">7.5 HP</option>
-                                  <option value="10">10 HP</option>
-                                  <option value="15">15 HP</option>
-                                  <option value="20">20 HP</option>
+                                  <option key="select-power" value="">
+                                    Selecionar potência
+                                  </option>
+                                  <option key="0.5hp" value="0.5">
+                                    0.5 HP
+                                  </option>
+                                  <option key="0.75hp" value="0.75">
+                                    0.75 HP
+                                  </option>
+                                  <option key="1hp" value="1">
+                                    1 HP
+                                  </option>
+                                  <option key="1.5hp" value="1.5">
+                                    1.5 HP
+                                  </option>
+                                  <option key="2hp" value="2">
+                                    2 HP
+                                  </option>
+                                  <option key="3hp" value="3">
+                                    3 HP
+                                  </option>
+                                  <option key="5hp" value="5">
+                                    5 HP
+                                  </option>
+                                  <option key="7.5hp" value="7.5">
+                                    7.5 HP
+                                  </option>
+                                  <option key="10hp" value="10">
+                                    10 HP
+                                  </option>
+                                  <option key="15hp" value="15">
+                                    15 HP
+                                  </option>
+                                  <option key="20hp" value="20">
+                                    20 HP
+                                  </option>
                                 </select>
                               </div>
                               <div>
@@ -11895,7 +11919,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observa��ões */}
+                    {/* Observações */}
                     {selectedPool.observations && (
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
