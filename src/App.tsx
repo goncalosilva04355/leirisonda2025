@@ -1053,7 +1053,7 @@ function App() {
             console.log("✅ Session restored successfully");
             return; // Don't clear the session
           } catch (parseError) {
-            console.warn("⚠️ Error parsing saved user, clearing session");
+            console.warn("⚠��� Error parsing saved user, clearing session");
           }
         }
 
@@ -1074,6 +1074,30 @@ function App() {
 
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
+
+        // Development bypass - auto login for quick testing
+        if (import.meta.env.DEV && import.meta.env.VITE_AUTO_LOGIN === "true") {
+          console.log("🚀 Development mode: Auto-logging in...");
+          setTimeout(() => {
+            const defaultUser = {
+              uid: "dev_auto_login",
+              email: "gongonsilva@gmail.com",
+              name: "Gonçalo Fonseca",
+              role: "super_admin",
+              active: true,
+              createdAt: new Date().toISOString(),
+            };
+
+            setCurrentUser(defaultUser);
+            setIsAuthenticated(true);
+            safeLocalStorage.setItem(
+              "currentUser",
+              JSON.stringify(defaultUser),
+            );
+            safeLocalStorage.setItem("isAuthenticated", "true");
+            console.log("✅ Development auto-login successful");
+          }, 1000);
+        }
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
         // Em caso de erro, forçar logout completo
@@ -6763,7 +6787,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>✅ Estado e localização</li>
                                 <li>• Informações de clientes</li>
-                                <li>• Histórico de manutenções</li>
+                                <li>• Histórico de manuten��ões</li>
                                 <li>• Próximas intervenções</li>
                               </ul>
                             </div>
@@ -7818,7 +7842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Orçamentos e custos</li>
+                        <li>��� Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -11254,7 +11278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.budget
-                                ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
+                                ? `���${selectedWork.budget.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
                           </div>
