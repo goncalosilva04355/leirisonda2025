@@ -965,7 +965,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("��️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1435,7 +1435,7 @@ function App() {
           })
           .catch((error) => {
             console.error(
-              "❌ Firebase Messaging Service Worker registration failed:",
+              "�� Firebase Messaging Service Worker registration failed:",
               error,
             );
             // Fallback: try to register a basic service worker
@@ -1783,7 +1783,7 @@ function App() {
         return result;
       }
     } catch (error) {
-      console.error("�� Login error:", error);
+      console.error("❌ Login error:", error);
       throw error;
     }
   };
@@ -4815,7 +4815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                ��� Recarregar Utilizadores
+                                🔄 Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -6879,7 +6879,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Configuraç��es do Sistema
+                            Configurações do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
@@ -7068,7 +7068,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         case "configuracoes":
           return (
-            <UnifiedAdminPage
+            <UnifiedAdminPageSimple
               currentUser={currentUser}
               onBack={() => navigateToSection("dashboard")}
               pools={pools}
@@ -7083,6 +7083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               handleDataCleanup={handleDataCleanup}
               cleanupLoading={cleanupLoading}
               cleanupError={cleanupError}
+              generateReport={generateReport}
             />
           );
 
