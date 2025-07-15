@@ -1185,7 +1185,7 @@ function App() {
     syncAllData();
   }, []);
 
-  // Inicializar sincronização autom��tica em tempo real
+  // Inicializar sincronização automática em tempo real
   useEffect(() => {
     const initAutoSync = async () => {
       // Aguardar Firestore estar pronto
