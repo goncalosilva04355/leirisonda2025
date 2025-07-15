@@ -126,7 +126,7 @@ class FullSyncService {
         };
       }
 
-      details.push(`�� Erro na sincronização: ${error.message}`);
+      details.push(`❌ Erro na sincronização: ${error.message}`);
       return {
         success: false,
         message: "Erro durante sincronização",
