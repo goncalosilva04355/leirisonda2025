@@ -44,7 +44,7 @@ class LocalAuthService {
     try {
       localStorage.setItem("currentUser", JSON.stringify(user));
       localStorage.setItem("isAuthenticated", "true");
-      console.log("�� User saved to localStorage");
+      console.log("💾 User saved to localStorage");
     } catch (error) {
       console.warn("⚠️ Error saving user to localStorage:", error);
     }
