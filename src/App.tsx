@@ -326,7 +326,7 @@ function App() {
         hasEmergencyShutdown
       ) {
         console.log("🔥 Firebase conflict detected on mobile device");
-        setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
+        setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para n��o interferir com carregamento
       }
     };
 
@@ -455,6 +455,15 @@ function App() {
 
   // Sincronizar configurações entre componentes
   useEffect(() => {
+    // Verificar modo emergência
+    if (
+      typeof window !== "undefined" &&
+      (window as any).EMERGENCY_MODE_ACTIVE
+    ) {
+      console.log("⚠️ useEffect desativado - modo emergência");
+      return;
+    }
+
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
       safeLocalStorage.setItem(
