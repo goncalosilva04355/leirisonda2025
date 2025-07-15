@@ -174,14 +174,6 @@ const safeFirebaseOperation = async <T>(
 export const userService = {
   // Listen to real-time changes
   subscribeToUsers(callback: (users: User[]) => void) {
-    // Verificar modo emergência primeiro
-    if (isEmergencyMode()) {
-      console.log("🚨 Firebase subscribeToUsers bloqueado - modo emergência");
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      callback(users);
-      return () => {};
-    }
-
     if (!db) {
       // Fallback to localStorage if Firebase not available
       const users = JSON.parse(localStorage.getItem("users") || "[]");
