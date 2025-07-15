@@ -26,11 +26,6 @@ export class AutoSyncService {
 
   // Inicializar sincronização automática
   async startAutoSync(): Promise<void> {
-    if (isSystemDisabled("DISABLE_AUTO_SYNC")) {
-      console.log("⚙️ Auto-sync desativado por configuração do sistema");
-      return;
-    }
-
     if (!this.db || this.isActive) return;
 
     console.log("🔄 Iniciando sincronização automática em tempo real...");
@@ -189,7 +184,7 @@ export class AutoSyncService {
 
   // Sincronizar todas as coleções manualmente
   async syncAllCollections(): Promise<void> {
-    console.log("🔄 Sincronização manual completa iniciada...");
+    console.log("��� Sincronização manual completa iniciada...");
 
     const collections = [
       { name: "obras", localKey: "works" },
