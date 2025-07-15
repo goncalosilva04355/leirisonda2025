@@ -93,7 +93,8 @@ async function initializeFirestore(
   retryCount = 0,
   maxRetries = 2,
 ): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
+  // Firestore sempre ativo agora
+  if (false) {
     console.log("💾 Firestore não inicializado - aguardando deploy no Netlify");
     return null;
   }
