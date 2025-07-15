@@ -23,6 +23,9 @@ export const SystemConfig = {
   // Firebase ativo
   ENABLE_FIREBASE_DEV: true,
   ENABLE_FIREBASE_PROD: true,
+
+  // Força Firebase sempre ativo (ignora condições de dev/prod)
+  FORCE_FIREBASE_ALWAYS: true,
 };
 
 // Função para verificar se um sistema deve ser desativado
