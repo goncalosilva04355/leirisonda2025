@@ -132,7 +132,7 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
           recommendedAction: "MIGRATE_TO_REALTIME",
         };
       } else if (hasRealtimeData) {
-        console.log("✅ Situa��ão: Partilha ativa");
+        console.log("✅ Situação: Partilha ativa");
         sharingStatus = {
           isWorking: true,
           recommendedAction: "WORKING",

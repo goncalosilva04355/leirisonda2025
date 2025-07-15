@@ -222,7 +222,14 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
     console.log("🔄 Inicializando Firestore assincronamente...");
     firestoreInstance = await initializeFirestore();
     if (!firestoreInstance) {
-      console.error("❌ Firestore não conseguiu ser inicializado");
+      // Only log as warning in development to avoid confusion
+      if (import.meta.env.DEV) {
+        console.warn(
+          "⚠️ Firestore não disponível em modo de desenvolvimento - aplicação funciona com localStorage",
+        );
+      } else {
+        console.error("❌ Firestore não conseguiu ser inicializado");
+      }
     }
   }
 

@@ -369,7 +369,7 @@ export const poolService = {
 
     // Trigger automatic synchronization
     console.log(
-      `✅ Piscina ${poolId} atualizada - sincronização autom��tica ativada`,
+      `✅ Piscina ${poolId} atualizada - sincronização automática ativada`,
     );
     await syncService.triggerAutoSync("update", "pools", poolId);
   },
@@ -548,7 +548,7 @@ export const workService = {
       })) as Work[];
 
       console.log(
-        `���� OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
+        `✅ OBRAS SINCRONIZADAS: ${works.length} obras agora visíveis para todos os utilizadores`,
       );
       callback(works);
     });
@@ -630,7 +630,7 @@ export const syncService = {
       return; // Skip initialization if Firebase not configured
     }
 
-    console.log("�� Inicializando dados do Firebase...");
+    console.log("📦 Inicializando dados do Firebase...");
     await userService.initializeDefaultUsers();
     console.log("✅ Dados inicializados com sucesso");
   },

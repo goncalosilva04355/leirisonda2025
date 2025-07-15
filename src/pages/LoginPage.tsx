@@ -53,7 +53,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           console.log("⚠️ Incomplete saved credentials, skipping auto-login");
         }
       } catch (error) {
-        console.error("��� Error loading saved credentials:", error);
+        console.error("❌ Error loading saved credentials:", error);
         sessionStorage.removeItem("savedLoginCredentials");
       }
     } else {
@@ -76,7 +76,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
 
     // Save credentials if remember me is checked (using sessionStorage + Firebase persistence)
     if (rememberMe) {
-      console.log("��� Saving credentials for auto-login");
+      console.log("💾 Saving credentials for auto-login");
       sessionStorage.setItem(
         "savedLoginCredentials",
         JSON.stringify({

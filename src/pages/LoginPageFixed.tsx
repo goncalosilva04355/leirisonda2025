@@ -74,7 +74,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("�� Error in LoginPage useEffect:", error);
+      console.error("❌ Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
@@ -154,7 +154,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           sessionStorage.removeItem("savedLoginCredentials");
         }
 
-        console.log("�� LoginPage: Calling onLogin function...");
+        console.log("���� LoginPage: Calling onLogin function...");
         await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
         console.log("✅ LoginPage: onLogin completed");
       } catch (error) {

@@ -68,7 +68,7 @@ export const QuickFirebaseReset: React.FC = () => {
     alert(
       hasBlockingFlags
         ? "⚠️ Flags de bloqueio encontradas! Verifique o console para detalhes."
-        : "��� Firebase não está bloqueado por quota",
+        : "✅ Firebase não está bloqueado por quota",
     );
   };
 

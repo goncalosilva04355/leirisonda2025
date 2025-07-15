@@ -315,7 +315,7 @@ export const CrossDeviceUserManager: React.FC = () => {
                               ? "Super Admin"
                               : user.role === "manager"
                                 ? "Gestor"
-                                : "T��cnico"}
+                                : "Técnico"}
                           </p>
                         </div>
                       </div>
