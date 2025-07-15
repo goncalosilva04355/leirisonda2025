@@ -1161,7 +1161,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "⚠��� Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -3821,8 +3821,34 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Botão de Teste Firestore DIRETO */}
+                {/* Botões de Teste Firestore */}
                 <div className="mt-6 space-y-3">
+                  <button
+                    onClick={async () => {
+                      const { ultraSimpleFirebaseTest } = await import(
+                        "./utils/ultraSimpleTest"
+                      );
+                      const result = await ultraSimpleFirebaseTest();
+                      alert(
+                        result.success
+                          ? `✅ ${result.message}`
+                          : `❌ ${result.message}`,
+                      );
+                      console.log("🔍 Resultado completo:", result);
+                    }}
+                    className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Database className="h-5 w-5 text-blue-600" />
+                      <span className="text-blue-700 font-medium">
+                        🧪 Teste ULTRA SIMPLES
+                      </span>
+                    </div>
+                    <p className="text-blue-600 text-sm mt-1">
+                      Verificar se Firestore existe no projeto
+                    </p>
+                  </button>
+
                   <button
                     onClick={async () => {
                       const { testDirectWrite } = await import(
