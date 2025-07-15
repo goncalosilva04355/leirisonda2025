@@ -81,7 +81,7 @@ import { firestoreService } from "./services/firestoreService";
 import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronizaç��o automática para produção
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
