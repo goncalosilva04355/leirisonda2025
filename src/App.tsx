@@ -74,6 +74,7 @@ import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { EmergencyDiagnostic } from "./components/EmergencyDiagnostic";
+import { FirestoreCollectionStatus } from "./components/FirestoreCollectionStatus";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
@@ -2126,7 +2127,7 @@ ${index + 1}. ${maint.poolName}
    Tipo: ${maint.type}
    Estado: ${maint.status === "completed" ? "Concluída" : maint.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
-   T��cnico: ${maint.technician}
+   Técnico: ${maint.technician}
    Descrição: ${maint.description}
    ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
@@ -3060,7 +3061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Falta de Folhas de Obra
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Folhas não geradas
+                          Folhas n��o geradas
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
