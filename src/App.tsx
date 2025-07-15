@@ -1130,7 +1130,7 @@ function App() {
               const docSnap = await getDoc(testDoc);
               if (docSnap.exists()) {
                 console.log(
-                  "📖 Passo 3: Dados lidos do Firestore:",
+                  "��� Passo 3: Dados lidos do Firestore:",
                   docSnap.data(),
                 );
                 console.log(
@@ -7044,6 +7044,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "configuracoes":
+          return (
+            <UnifiedAdminPage
+              currentUser={currentUser}
+              onBack={() => navigateToSection("dashboard")}
+              pools={pools}
+              works={works}
+              maintenance={maintenance}
+              clients={clients}
+              users={users}
+              enablePhoneDialer={enablePhoneDialer}
+              enableMapsRedirect={enableMapsRedirect}
+              togglePhoneDialer={togglePhoneDialer}
+              toggleMapsRedirect={toggleMapsRedirect}
+              handleDataCleanup={handleDataCleanup}
+              cleanupLoading={cleanupLoading}
+              cleanupError={cleanupError}
+            />
+          );
+
+        case "configuracoes_old":
           // Safety check for activeAdminTab
           const safeActiveConfigTab = activeAdminTab || "configuracoes";
 
