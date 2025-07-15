@@ -101,7 +101,7 @@ import { productionAutoSync } from "./services/productionAutoSync"; // Sincroniz
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
-// import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
+// import "./firebase/initializationHelper"; // Helper robusto para inicializa��ão completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -134,6 +134,7 @@ import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR
 import "./utils/testForceFirestore"; // Teste que força funcionamento
+import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -2158,7 +2159,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa���🔥ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -5284,7 +5285,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condiç��es do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -10464,7 +10465,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h1>
                   <p className="text-gray-600 mb-4">
                     Apenas administradores podem aceder às funcionalidades de
-                    localiza��ão.
+                    localização.
                   </p>
                   <button
                     onClick={() => navigateToSection("dashboard")}
