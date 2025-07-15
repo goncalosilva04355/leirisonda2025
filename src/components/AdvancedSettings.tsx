@@ -142,7 +142,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
       // Test 5: Simulate data operation
       tests.push("✅ Estrutura de dados validada");
-      tests.push("✅ Permissões b��sicas verificadas");
+      tests.push("✅ Permissões básicas verificadas");
 
       setSyncTest({
         status: "success",
