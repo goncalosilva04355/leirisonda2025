@@ -1817,7 +1817,7 @@ function App() {
       console.log("���� Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("��� Login successful for:", result.user.email);
+        console.log("���� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -6810,7 +6810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>�� Estado e localização</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Pr��ximas intervenções</li>
+                                <li>• Pr���ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -10998,16 +10998,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </button>
                 )}
 
-                {/* Administração - Para super_admin apenas */}
-                {currentUser?.role === "super_admin" && (
-                  <>
-                    <div className="border-t border-gray-200 my-4"></div>
-                    <AdminSidebar
-                      currentUser={currentUser}
-                      onClose={() => setSidebarOpen(false)}
-                    />
-                  </>
-                )}
+                
               </nav>
 
               {/* User Section */}
