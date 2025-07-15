@@ -108,16 +108,19 @@ if (typeof window !== "undefined") {
       }
     });
 
-  // Add error event listener for better error handling
-  window.addEventListener("error", (event) => {
-    if (
-      event.error?.message?.includes("ReadableStream") ||
-      event.error?.stack?.includes("firebase_firestore.js")
-    ) {
-      console.log("🔧 Handling Firebase ReadableStream error via error event");
-      event.preventDefault();
-    }
-  });
+  // Add error event listener DESATIVADO - modo emergência
+  if (false)
+    window.addEventListener("error", (event) => {
+      if (
+        event.error?.message?.includes("ReadableStream") ||
+        event.error?.stack?.includes("firebase_firestore.js")
+      ) {
+        console.log(
+          "🔧 Handling Firebase ReadableStream error via error event",
+        );
+        event.preventDefault();
+      }
+    });
 }
 
 // Ensure single root creation
