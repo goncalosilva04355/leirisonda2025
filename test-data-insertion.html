@@ -178,6 +178,15 @@
             async addObra(obraData) {
               return await this.addDocument("obras", obraData);
             },
+            async addManutencao(manutencaoData) {
+              return await this.addDocument("manutencoes", manutencaoData);
+            },
+            async addCliente(clienteData) {
+              return await this.addDocument("clientes", clienteData);
+            },
+            async addPiscina(piscinaData) {
+              return await this.addDocument("piscinas", piscinaData);
+            },
           };
 
           return true;
