@@ -950,7 +950,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuraç��o Phone Dialer atualizada:", enabled);
+    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
