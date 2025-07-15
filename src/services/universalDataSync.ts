@@ -968,7 +968,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Verificar se o servi��o está pronto
+   * Verificar se o serviço está pronto
    */
   isReady(): boolean {
     return this.isInitialized && isFirebaseReady();
