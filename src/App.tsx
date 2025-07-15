@@ -66,6 +66,7 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
+import { StableModeIndicator } from "./components/StableModeIndicator";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
@@ -3914,7 +3915,7 @@ Verifique se:
                         alert(`✅ ${result.message}`);
                       }
 
-                      console.log("🔍 Resultado completo:", result);
+                      console.log("��� Resultado completo:", result);
                     }}
                     className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors"
                   >
@@ -6635,7 +6636,7 @@ Verifique se:
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento automático",
+                          "Enchimento autom��tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
