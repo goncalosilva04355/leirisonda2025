@@ -27,7 +27,13 @@ export function StableModeIndicator() {
     return null;
 
   const getConfig = () => {
-    if (isUltraStabilized) {
+    if (isFirebaseReactivated) {
+      return {
+        bg: "bg-blue-100 border border-blue-300 text-blue-800",
+        dot: "bg-blue-500",
+        text: "🔥 Firebase Reativado",
+      };
+    } else if (isUltraStabilized) {
       return {
         bg: "bg-purple-100 border border-purple-300 text-purple-800",
         dot: "bg-purple-500",
