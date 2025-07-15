@@ -4,6 +4,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getFirebaseStatus } from "../firebase/config";
+import { SystemConfig, getSafeInterval } from "../config/systemConfig";
 
 export function FirebaseStatusIndicator() {
   const [status, setStatus] = useState<any>(null);
