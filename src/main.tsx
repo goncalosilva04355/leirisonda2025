@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 // Basic imports first
-import App from "./App";
+import App from "./App-simple";
 
 // Ensure single root creation
 const rootElement = document.getElementById("root");
