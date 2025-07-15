@@ -2,56 +2,30 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// Componente simples para testar se o React está funcionando
 function SimpleApp() {
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1 style={{ color: "#0891b2" }}>✅ Leirisonda - Aplicação Carregada</h1>
-      <p>
-        Se está a ver esta mensagem, o React está a funcionar correctamente.
-      </p>
-      <p>A aplicação está a ser carregada...</p>
-      <button
-        onClick={() => (location.href = location.href)}
-        style={{
-          padding: "10px 20px",
-          background: "#0891b2",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Recarregar
-      </button>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          Teste de Funcionamento
+        </h1>
+        <p className="text-gray-600">
+          Se conseguir ver esta mensagem, a aplicação está a funcionar.
+        </p>
+        <button
+          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          onClick={() => alert("Botão funciona!")}
+        >
+          Testar interação
+        </button>
+      </div>
     </div>
   );
 }
 
-console.log("🔧 Main-simple.tsx carregado - inicializando React...");
-
-try {
-  const root = document.getElementById("root");
-  if (!root) {
-    throw new Error("Elemento root não encontrado");
-  }
-
-  ReactDOM.createRoot(root).render(<SimpleApp />);
-  console.log("✅ React inicializado com sucesso");
-} catch (error) {
-  console.error("❌ Erro ao inicializar React:", error);
-
-  // Fallback sem React
-  const root = document.getElementById("root");
-  if (root) {
-    root.innerHTML = `
-      <div style="padding: 20px; font-family: Arial, sans-serif; background: #f8f9fa; color: #333;">
-        <h1 style="color: #dc3545;">❌ Erro ao carregar React</h1>
-        <p>Erro: ${error.message}</p>
-        <button onclick="location.reload()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-          Tentar Novamente
-        </button>
-      </div>
-    `;
-  }
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("Root element not found");
 }
+
+ReactDOM.createRoot(rootElement).render(<SimpleApp />);
