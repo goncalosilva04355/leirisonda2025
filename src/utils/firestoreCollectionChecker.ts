@@ -33,8 +33,14 @@ export class FirestoreCollectionChecker {
   async checkAllCollections(): Promise<CollectionStatus[]> {
     console.log("🔍 Verificando coleções Firestore...");
 
+    // Inicializar Firestore se ainda não foi feito
     if (!this.db) {
-      console.error("❌ Firestore não está disponível");
+      console.log("🔄 Inicializando Firestore...");
+      this.db = await getFirebaseFirestoreAsync();
+    }
+
+    if (!this.db) {
+      console.error("❌ Firestore não está disponível após inicialização");
       return [];
     }
 
