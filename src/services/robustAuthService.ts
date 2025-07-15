@@ -14,10 +14,14 @@ class RobustAuthService {
     console.log("🔐 RobustAuth: Attempting login for:", email);
 
     try {
-      // Verificar se há bloqueio Firebase ou problemas de conectividade
+      // Verificar se deve forçar modo emergência ou se há bloqueio Firebase
+      const forceEmergency = SystemConfig.FORCE_EMERGENCY_MODE;
       const isFirebaseBlocked = this.detectFirebaseBlock();
-      if (isFirebaseBlocked) {
-        console.log("🚨 Firebase bloqueado - usando modo emergência");
+
+      if (forceEmergency || isFirebaseBlocked) {
+        console.log(
+          "🚨 Usando modo emergência (configuração ou bloqueio Firebase)",
+        );
         return await emergencyAuthService.emergencyLogin(email, password);
       }
 
