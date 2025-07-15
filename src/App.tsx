@@ -197,6 +197,15 @@ const initialUsers = [
   },
 ];
 
+// Função showNotification temporária
+const showNotification = (
+  title: string,
+  message: string,
+  type: string = "info",
+) => {
+  console.log(`${type.toUpperCase()}: ${title} - ${message}`);
+};
+
 function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -452,7 +461,7 @@ function App() {
   // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
-      "🛡�� Data protection initialized (checks disabled for performance)",
+      "🛡️ Data protection initialized (checks disabled for performance)",
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
@@ -2053,7 +2062,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicaç��o agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -10992,7 +11001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("�� Login error:", error);
+              console.error("✅ Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
