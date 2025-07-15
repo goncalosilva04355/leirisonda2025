@@ -164,6 +164,9 @@ import DiagnosticPage from "./components/DiagnosticPage";
 // Diagnóstico de autenticação
 import "./utils/authDiagnostic";
 
+// Indicador de status da aplicação
+import AppStatusIndicator from "./components/AppStatusIndicator";
+
 // Production users - only real admin account
 const initialUsers = [
   {
@@ -253,7 +256,7 @@ function App() {
             console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
-              "⚠️ Não foi possível reparar a persistência automaticamente",
+              "⚠️ N��o foi possível reparar a persistência automaticamente",
             );
           }
         } else {
@@ -400,7 +403,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migraç��o automática para Firestore
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
@@ -1077,7 +1080,7 @@ function App() {
         }
 
         // If no valid session, start fresh
-        console.log("🔒 No valid session found, starting fresh");
+        console.log("���� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -3962,7 +3965,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr🔥xima manutenção:{" "}
+                                Pr🔥xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -6105,7 +6108,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
                                 description:
-                                  "Manutennção programada durante criaç��o da piscina",
+                                  "Manutennção programada durante criação da piscina",
                                 notes:
                                   "Agendada automaticamente na criação da piscina",
                                 clientName: poolData.client,
@@ -6618,7 +6621,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenç��
+                          manutenç€
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -6888,7 +6891,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>🎉 Equipas atribuídas</li>
-                                <li>• Prazos e orçamentos</li>
+                                <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
@@ -9271,7 +9274,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ���hum utilizador encontrado. Vá à Área de
+                                €hum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
