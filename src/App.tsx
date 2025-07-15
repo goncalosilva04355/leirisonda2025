@@ -3358,7 +3358,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>🕒</span>
+                                      <span>����</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -6032,7 +6032,7 @@ Verifique se:
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manuten��ão</option>
+                          <option value="manutencao">Em Manutenção</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -6116,7 +6116,7 @@ Verifique se:
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência Elétrica
+                            Resist��ncia Elétrica
                           </option>
                           <option value="gas">Aquecimento a G🎉s</option>
                         </select>
@@ -10969,7 +10969,7 @@ Verifique se:
                 // console.log("✅ Login state updated successfully");
               } else {
                 console.warn("❌ Login failed:", result.error);
-                setLoginError(result.error || "Credenciais inválidas");
+                setLoginError("Login incorreto");
               }
             } catch (error: any) {
               console.error("✅ Login error:", error);
