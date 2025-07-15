@@ -13,8 +13,7 @@ const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIRESTORE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
+const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO
 
 // Flag para controlar se já verificamos a disponibilidade do Firestore
 let firestoreAvailabilityChecked = false;
