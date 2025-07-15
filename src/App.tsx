@@ -1742,7 +1742,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("��� Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       await firebaseAutoFix.checkOnUserAction();
@@ -2132,7 +2132,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Responsável: ${work.assignedTo}
+   Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -4700,7 +4700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "����� ERRO AO FAZER PARSE DOS USERS:",
+                                  "���� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -7810,7 +7810,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>• Datas e dura🔥es</li>
+                        <li>�� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -7913,7 +7913,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Resumo executivo</li>
+                        <li>��� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
                         <li>• An✅lise de performance</li>
