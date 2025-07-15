@@ -4,8 +4,8 @@
 // MONITOR EM TEMPO REAL - MANTIDO ATIVO
 import "./utils/realTimeMonitor";
 
-// VERIFICADOR DE COLEÇÕES FIRESTORE
-import "./utils/firestoreCollectionChecker";
+// VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
+import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
 import "./utils/simpleFirebaseInit";
@@ -775,7 +775,7 @@ function App() {
 
           if (firestoreUsers.length > 0) {
             console.log(
-              "✅ Utilizadores carregados do Firestore:",
+              "�� Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
             setUsers(firestoreUsers);
@@ -4437,7 +4437,7 @@ Verifique se:
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç��es agendadas e programadas
+                          Manutenç€es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -5975,7 +5975,7 @@ Verifique se:
                                   );
                                 } catch (error) {
                                   console.error(
-                                    "��� Erro ao adicionar cliente:",
+                                    "€ Erro ao adicionar cliente:",
                                     error,
                                   );
                                   alert(
