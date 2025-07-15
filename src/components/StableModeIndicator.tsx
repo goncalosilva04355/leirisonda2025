@@ -13,31 +13,11 @@ export function StableModeIndicator() {
   if (!isFirebaseReactivated) return null;
 
   const getConfig = () => {
-    if (isFirebaseReactivated) {
-      return {
-        bg: "bg-blue-100 border border-blue-300 text-blue-800",
-        dot: "bg-blue-500",
-        text: "🔥 Firebase Reativado",
-      };
-    } else if (isUltraStabilized) {
-      return {
-        bg: "bg-purple-100 border border-purple-300 text-purple-800",
-        dot: "bg-purple-500",
-        text: "🛡️ Sistema Ultra-Estabilizado",
-      };
-    } else if (isEmergencyMode) {
-      return {
-        bg: "bg-red-100 border border-red-300 text-red-800",
-        dot: "bg-red-500",
-        text: "🚨 Modo Emergência Total",
-      };
-    } else {
-      return {
-        bg: "bg-green-100 border border-green-300 text-green-800",
-        dot: "bg-green-500",
-        text: "Modo Estável Ativo",
-      };
-    }
+    return {
+      bg: "bg-blue-100 border border-blue-300 text-blue-800",
+      dot: "bg-blue-500",
+      text: "🔥 Firebase Ativo",
+    };
   };
 
   const config = getConfig();
