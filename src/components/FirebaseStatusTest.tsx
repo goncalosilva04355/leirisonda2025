@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import React, { useState, useEffect } from "react";
-
 export const FirebaseStatusTest: React.FC = () => {
   const [firebaseStatus, setFirebaseStatus] = useState<{
     firebase: boolean;
