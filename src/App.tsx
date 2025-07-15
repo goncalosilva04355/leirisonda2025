@@ -43,6 +43,7 @@ import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
+import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
