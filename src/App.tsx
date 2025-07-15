@@ -840,7 +840,7 @@ function App() {
           }
         } else {
           console.log(
-            "📝 No saved users found, initializing with default users",
+            "���� No saved users found, initializing with default users",
           );
 
           // Initialize with default admin user
@@ -1958,7 +1958,7 @@ function App() {
       // Perform actual logout
       await authService.logout();
 
-      console.log("✅ Logout completed successfully - redirected to login");
+      console.log("�� Logout completed successfully - redirected to login");
     } catch (error) {
       console.error("❌ Error during logout:", error);
 
@@ -4310,7 +4310,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manutenç��es aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -4464,13 +4464,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }
                             value={selectedWorkType}
                           >
-                            <option value="">Selecionar tipo</option>
-                            <option value="piscina">Piscina</option>
-                            <option value="manutencao">Manutenção</option>
-                            <option value="instalacao">Instalaç€</option>
-                            <option value="reparacao">Reparação</option>
-                            <option value="limpeza">Limpeza</option>
-                            <option value="furo">Furo de Água</option>
+                            <option key="select-type" value="">
+                              Selecionar tipo
+                            </option>
+                            <option key="piscina" value="piscina">
+                              Piscina
+                            </option>
+                            <option key="manutencao" value="manutencao">
+                              Manutenção
+                            </option>
+                            <option key="instalacao" value="instalacao">
+                              Instalaç€
+                            </option>
+                            <option key="reparacao" value="reparacao">
+                              Reparação
+                            </option>
+                            <option key="limpeza" value="limpeza">
+                              Limpeza
+                            </option>
+                            <option key="furo" value="furo">
+                              Furo de Água
+                            </option>
                           </select>
                         </div>
 
@@ -7755,7 +7769,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </h3>
                       <div className="grid gap-3">
                         <div className="flex justify-between py-2 border-b border-gray-100">
-                          <span className="text-gray-600">Versão</span>
+                          <span className="text-gray-600">Vers��o</span>
                           <span className="font-medium">1.0.0</span>
                         </div>
                         <div className="flex justify-between py-2 border-b border-gray-100">
@@ -7861,7 +7875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten��
+                        <strong>{maintenance.length}</strong> manuten����
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
