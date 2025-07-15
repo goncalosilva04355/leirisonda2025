@@ -4205,7 +4205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manutenç€es agendadas e programadas
+                          Manutenç��es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -8800,7 +8800,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         }`}
                                         disabled={!enablePhoneDialer}
                                       >
-                                        ���� {work.contact}
+                                        ������ {work.contact}
                                       </button>
                                     </div>
                                   )}
@@ -10379,7 +10379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relat���rio
+                  Escolha como pretende partilhar o relat����rio
                 </p>
               </div>
             </div>
@@ -10768,9 +10768,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       showNotifications={false}
     >
       <InstantSyncManagerSafe>
-        {/* Auto-fix Firebase quota issues */}
-        <AutoFirebaseQuotaFix />
-
         <div className="min-h-screen bg-gray-50">
           {/* Firebase Quota Recovery */}
           <FirebaseQuotaRecoveryComponent />
@@ -11092,7 +11089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ����� {selectedWork.contact}
+                            ������� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -11751,7 +11748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Cria��ão */}
+                    {/* Data de Cria����ão */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
