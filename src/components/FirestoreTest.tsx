@@ -102,6 +102,49 @@ export const FirestoreTest: React.FC = () => {
           </button>
         </div>
 
+        {/* Resultado do Teste Simples */}
+        {simpleResult && (
+          <div
+            className={`mt-6 p-4 rounded-lg ${
+              simpleResult.success
+                ? "bg-green-50 border border-green-200"
+                : "bg-red-50 border border-red-200"
+            }`}
+          >
+            <h3
+              className={`font-bold text-lg ${
+                simpleResult.success ? "text-green-800" : "text-red-800"
+              }`}
+            >
+              {simpleResult.success ? "✅ Inicialização" : "❌ Inicialização"}
+            </h3>
+            <p
+              className={`mt-2 ${
+                simpleResult.success ? "text-green-700" : "text-red-700"
+              }`}
+            >
+              {simpleResult.message}
+            </p>
+
+            {simpleResult.success && (
+              <div className="mt-2 text-green-700 text-sm">
+                <p>• App: {simpleResult.app}</p>
+                <p>• Projeto: {simpleResult.projectId}</p>
+                <p>• Firestore: {simpleResult.firestoreType}</p>
+              </div>
+            )}
+
+            <details className="mt-3">
+              <summary className="cursor-pointer font-medium">
+                📋 Detalhes Técnicos
+              </summary>
+              <pre className="mt-2 bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+                {JSON.stringify(simpleResult, null, 2)}
+              </pre>
+            </details>
+          </div>
+        )}
+
         {/* Resultado da Conectividade */}
         {connectionResult && (
           <div
