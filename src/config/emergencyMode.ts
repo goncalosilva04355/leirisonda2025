@@ -3,31 +3,31 @@
  * Desativa todos os sistemas que podem causar loops, refreshs ou instabilidade
  */
 
-// Configuração de emergência ultra-conservadora
+// Configuração reativada para permitir Firebase
 export const EMERGENCY_MODE = {
-  // Desativar TODOS os sistemas automáticos
-  DISABLE_ALL_AUTO_SYSTEMS: true,
+  // REATIVAR sistemas automáticos
+  DISABLE_ALL_AUTO_SYSTEMS: false,
 
-  // Desativar Firebase completamente
-  DISABLE_FIREBASE_COMPLETELY: true,
+  // REATIVAR Firebase
+  DISABLE_FIREBASE_COMPLETELY: false,
 
-  // Desativar todos os intervalos
-  DISABLE_ALL_INTERVALS: true,
+  // Permitir intervalos controlados
+  DISABLE_ALL_INTERVALS: false,
 
-  // Desativar todos os listeners
-  DISABLE_ALL_LISTENERS: true,
+  // Permitir listeners controlados
+  DISABLE_ALL_LISTENERS: false,
 
-  // Desativar auto-sync
-  DISABLE_AUTO_SYNC: true,
+  // REATIVAR auto-sync
+  DISABLE_AUTO_SYNC: false,
 
-  // Desativar auto-login
-  DISABLE_AUTO_LOGIN: true,
+  // REATIVAR auto-login
+  DISABLE_AUTO_LOGIN: false,
 
-  // Desativar monitoring
-  DISABLE_MONITORING: true,
+  // Permitir monitoring
+  DISABLE_MONITORING: false,
 
-  // Só localStorage
-  FORCE_LOCALSTORAGE_ONLY: true,
+  // Usar Firebase + localStorage
+  FORCE_LOCALSTORAGE_ONLY: false,
 };
 
 // Função para verificar se estamos em modo emergência total
