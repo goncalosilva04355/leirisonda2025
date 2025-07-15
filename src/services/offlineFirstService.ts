@@ -143,22 +143,29 @@ class OfflineFirstService {
       ...clientData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
+      console.log("🔥 OfflineFirst: Guardando cliente no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.saveClient(client);
+      console.log("✅ Cliente guardado no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existing = JSON.parse(localStorage.getItem("clients") || "[]");
       existing.push(client);
       localStorage.setItem("clients", JSON.stringify(existing));
-      console.log("✅ Cliente salvo no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
-      if (this.firebaseAvailable) {
-        this.tryFirebaseSave("clientes", client);
-      }
-
-      return id;
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro ao criar cliente:", error);
+      // Fallback para localStorage se Firestore falhar
+      const existing = JSON.parse(localStorage.getItem("clients") || "[]");
+      existing.push({ ...client, source: "localStorage-fallback" });
+      localStorage.setItem("clients", JSON.stringify(existing));
       return id;
     }
   }
