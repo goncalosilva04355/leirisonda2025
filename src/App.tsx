@@ -242,7 +242,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persist��ncia reparada automaticamente");
+            console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
               "⚠️ N��o foi possível reparar a persistência automaticamente",
