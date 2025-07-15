@@ -4,6 +4,9 @@ import "./utils/simpleFirestoreChecker";
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
 import "./utils/simpleFirebaseInit";
 
+// VERIFICAÇÃO BÁSICA DE SAÚDE
+import "./utils/basicHealthCheck";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -3965,7 +3968,7 @@ Verifique se:
                     <div className="flex items-center justify-center space-x-2">
                       <Database className="h-5 w-5 text-green-600" />
                       <span className="text-green-700 font-medium">
-                        ���� Teste DIRETO Firestore
+                        ����� Teste DIRETO Firestore
                       </span>
                     </div>
                     <p className="text-green-600 text-sm mt-1">
@@ -7522,7 +7525,7 @@ Verifique se:
                                         localmente no dispositivo
                                       </li>
                                       <li>
-                                        ��� A marcaç€ automática funciona melhor
+                                        • A marcaç€ automática funciona melhor
                                         em dispositivos móveis
                                       </li>
                                       <li>
@@ -7648,7 +7651,7 @@ Verifique se:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          📞 Todas as obras ({works.length}{" "}
+                                          �� Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -7764,7 +7767,7 @@ Verifique se:
                                   </div>
                                   <p className="text-blue-700 text-sm">
                                     Use este botão se encontrar problemas de
-                                    autentica🔥ão ou conexão.
+                                    autentica���ão ou conexão.
                                   </p>
                                 </div>
 
@@ -10190,7 +10193,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenção
+                          Tipo de Manuten��ão
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
@@ -10726,7 +10729,7 @@ Verifique se:
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>📞</span>
+                  <span>����</span>
                   <span>Trabalho realizado</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -10847,7 +10850,7 @@ Verifique se:
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder ��s configura📞ções avançadas
+                Insira a palavra-passe para aceder às configura📞ções avançadas
               </p>
             </div>
 
@@ -11442,7 +11445,7 @@ Verifique se:
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
-                          Data de In��io
+                          Data de In€io
                         </label>
                         <p className="text-gray-900">
                           {new Date(selectedWork.startDate).toLocaleDateString(
