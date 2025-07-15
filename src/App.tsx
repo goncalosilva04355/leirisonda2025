@@ -136,10 +136,10 @@ import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import "./utils/completeDataSync";
 // import "./utils/fullSyncStatus";
 
-import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
-import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
-import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
+// import { useDataCleanup } from "./hooks/useDataCleanup";
+// import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
+// import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
+// import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
@@ -1706,7 +1706,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manutenç��o Programada",
+          type: "Manutenção Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -1869,7 +1869,7 @@ function App() {
       console.log("🔥 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("🎉 Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
@@ -11681,7 +11681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observaç��es Específicas do Furo
+                                Observações Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
