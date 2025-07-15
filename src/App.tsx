@@ -5612,7 +5612,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
+                            setIsCreatingWork(false);
                             return;
+                          } finally {
+                            setIsCreatingWork(false);
                           }
 
                           // Complex processing removed to prevent instability
