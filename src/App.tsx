@@ -40,7 +40,7 @@ import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
-import DebugInfo from "./components/DebugInfo";
+
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 
@@ -2483,7 +2483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           createdAt: new Date().toISOString(),
         };
 
-        console.log(`��� Criando utilizador ${userForm.name} no Firestore...`);
+        console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
 
         // Criar no Firestore primeiro
         const firestoreId = await firestoreService.createUtilizador(newUser);
@@ -6489,7 +6489,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, pr��xima manutenção..."
+                          placeholder="Observações, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7416,7 +7416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ⚠✅ ATENÇÃO: Esta opera✅ão é
+                                        ��✅ ATENÇÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8266,7 +8266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Novo Cliente
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Adicionar cliente à base de dados
+                        Adicionar cliente �� base de dados
                       </p>
                     </div>
                   </div>
@@ -10970,7 +10970,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configuraç��es"
+                    title="Configurações"
                   >
                     <Settings className="h-5 w-5" />
                   </button>
@@ -11777,7 +11777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta aç��o não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deletePool(selectedPool.id);
