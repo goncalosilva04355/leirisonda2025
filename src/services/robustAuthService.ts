@@ -2,7 +2,6 @@
 import { UserProfile } from "./localAuthService";
 import { getAuthorizedUser } from "../config/authorizedUsers";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
-import { emergencyAuthService } from "./emergencyAuthService";
 import { SystemConfig } from "../config/systemConfig";
 
 class RobustAuthService {
