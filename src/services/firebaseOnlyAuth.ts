@@ -149,6 +149,15 @@ export class FirebaseOnlyAuth {
         }
       }
 
+      // Verificar modo emergência
+      if (
+        typeof window !== "undefined" &&
+        (window as any).EMERGENCY_MODE_ACTIVE
+      ) {
+        console.log("🚨 firebaseOnlyAuth bloqueado - modo emergência");
+        throw new Error("Firebase desativado temporariamente");
+      }
+
       console.log("🔐 Tentando login:", email);
 
       const userCredential = await signInWithEmailAndPassword(
