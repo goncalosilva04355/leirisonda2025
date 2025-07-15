@@ -7929,7 +7929,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>�� Informações de clientes</li>
+                        <li>�� Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -10456,9 +10456,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           return (
             <React.Suspense fallback={<div>Carregando...</div>}>
               <FirestoreSetupGuide
-                projectId="leiria25"
+                projectId="leiria-1cfc9"
                 onClose={() => setActiveSection("dashboard")}
               />
+            </React.Suspense>
+          );
+
+        case "definitive-firestore-solution":
+          const DefinitiveFirestoreSolution = React.lazy(
+            () => import("./components/DefinitiveFirestoreSolution"),
+          );
+          return (
+            <React.Suspense fallback={<div>Carregando...</div>}>
+              <DefinitiveFirestoreSolution />
             </React.Suspense>
           );
 
