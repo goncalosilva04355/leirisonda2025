@@ -239,10 +239,8 @@ export function isFirestoreReady(): boolean {
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("💾 Firestore teste: aguardando deploy no Netlify");
-    return false;
-  }
+  // Remover bloqueio - sempre testar Firestore
+  console.log("🧪 Testando Firestore...");
 
   try {
     const db = getFirebaseFirestore();
