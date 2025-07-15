@@ -255,7 +255,7 @@ function App() {
 
           if (repaired) {
             setPersistenceIssueDetected(false);
-            console.log("✅ Persist��ncia reparada automaticamente");
+            console.log("✅ Persistência reparada automaticamente");
           } else {
             console.error(
               "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -1926,7 +1926,7 @@ function App() {
       }
     } catch (error) {
       console.error("❌ Login error:", error);
-      setLoginError("Erro de sistema. Por favor, tente novamente.");
+      setLoginError("Login incorreto");
     }
   };
 
@@ -3083,7 +3083,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir conclu��das)
+                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -5325,7 +5325,7 @@ Verifique se:
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa������es e Trabalho
+                          Observa����es e Trabalho
                         </h3>
                       </div>
 
@@ -7850,7 +7850,7 @@ Verifique se:
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Obras
+                                    Relat��rio de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
@@ -8008,7 +8008,7 @@ Verifique se:
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€
+                        <strong>{maintenance.length}</strong> manuten��
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -11502,7 +11502,7 @@ Verifique se:
                         )}
                     </div>
 
-                    {/* Detalhes Completos - Seções Expandidas */}
+                    {/* Detalhes Completos - Se��ões Expandidas */}
                     <div className="mt-6 space-y-6">
                       {/* Informações Adicionais */}
                       <div>
@@ -11909,7 +11909,7 @@ Verifique se:
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            📞 {selectedPool.clientPhone || "Não especificado"}
+                            �� {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
@@ -11936,7 +11936,7 @@ Verifique se:
                             Dimensões
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.dimensions || "Não especificado"}
+                            {selectedPool.dimensions || "N��o especificado"}
                           </p>
                         </div>
                         <div>
