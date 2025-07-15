@@ -233,8 +233,7 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true")
-    return false;
+  // Remover bloqueio - verificar apenas se instância existe
   return firestoreInstance !== null;
 }
 
