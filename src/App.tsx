@@ -6696,7 +6696,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configura🎉ões
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configura��ões do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
