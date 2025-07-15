@@ -128,16 +128,6 @@ class RobustAuthService {
 
   getCurrentUser(): UserProfile | null {
     try {
-      // Verificar primeiro sessão de emergência
-      const emergencySession = emergencyAuthService.getEmergencySession();
-      if (emergencySession) {
-        console.log(
-          "🚨 RobustAuth: Usando sessão de emergência:",
-          emergencySession.email,
-        );
-        return emergencySession;
-      }
-
       const savedUser = safeLocalStorage.getItem("currentUser");
       const isAuthenticated = safeLocalStorage.getItem("isAuthenticated");
 
