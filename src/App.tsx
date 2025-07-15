@@ -73,6 +73,7 @@ import {
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 import { StableModeIndicator } from "./components/StableModeIndicator";
+import { EmergencyDiagnostic } from "./components/EmergencyDiagnostic";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
@@ -1725,7 +1726,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -3420,7 +3421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">📞</span>
+                      <span className="text-blue-600">���</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -5548,7 +5549,7 @@ Verifique se:
                           const budget =
                             (
                               form.querySelector(
-                                'input[placeholder*="Orçamento"]',
+                                'input[placeholder*="Or��amento"]',
                               ) as HTMLInputElement
                             )?.value || "";
 
@@ -7868,7 +7869,7 @@ Verifique se:
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Obras
+                                    Relat��rio de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
@@ -8026,7 +8027,7 @@ Verifique se:
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten€
+                        <strong>{maintenance.length}</strong> manuten��
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -9066,7 +9067,7 @@ Verifique se:
                                   }`}
                                   disabled={!enableMapsRedirect}
                                 >
-                                  € {work.address || work.location}
+                                  �� {work.address || work.location}
                                 </button>
                               </div>
                               <div>
@@ -10335,7 +10336,7 @@ Verifique se:
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Duração Real
+                            .value; // Dura��ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
@@ -10927,7 +10928,7 @@ Verifique se:
                 rememberMe,
               );
 
-              // console.log("�� Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
                 // console.log("✅ Login successful for:", result.user.email);
