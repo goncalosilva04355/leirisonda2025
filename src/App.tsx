@@ -3824,7 +3824,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
                 </div>
-
               </div>
             </div>
           );
@@ -3894,10 +3893,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <select className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                      <option>Todos os estados</option>
-                      <option>Ativa</option>
-                      <option>Inativa</option>
-                      <option>Em Manutenção</option>
+                      <option key="all">Todos os estados</option>
+                      <option key="active">Ativa</option>
+                      <option key="inactive">Inativa</option>
+                      <option key="maintenance">Em Manutenção</option>
                     </select>
                   </div>
                 </div>
@@ -6851,7 +6850,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenç��es
+                                  Hist📞rico de intervenç����es
                                 </p>
                               </div>
                             </div>
@@ -8504,7 +8503,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic€el)
+                            Pessoa de Contacto (se aplic���el)
                           </label>
                           <input
                             type="text"
@@ -11942,7 +11941,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar Página
+                            Recarregar P��gina
                           </button>
                           <button
                             onClick={() => {
