@@ -91,10 +91,7 @@ export function getFirebaseApp(): FirebaseApp | null {
 
 // Função assíncrona para obter a app Firebase
 export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("📱 Firebase App indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // SEMPRE disponível - Firebase forçado ativo
 
   // Tentar inicializar se ainda não foi feito
   if (!firebaseApp) {
