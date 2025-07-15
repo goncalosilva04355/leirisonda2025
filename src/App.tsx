@@ -201,52 +201,6 @@ const initialUsers = [
 ];
 
 function App() {
-  // DEBUG: Verificação de sanidade
-  const [hasError, setHasError] = useState(false);
-
-  // Verificar se houve erro crítico no carregamento
-  useEffect(() => {
-    const checkSanity = () => {
-      try {
-        // Verificar se elementos básicos estão disponíveis
-        if (!window || !document || !localStorage) {
-          throw new Error("Elementos básicos não disponíveis");
-        }
-
-        // Verificar se há muitos erros Firebase
-        const recentErrors = localStorage.getItem("recent_firebase_errors");
-        if (recentErrors) {
-          const errors = JSON.parse(recentErrors);
-          const blockingErrors = errors.filter(
-            (e: any) =>
-              e.message?.includes("TOO_MANY_ATTEMPTS") ||
-              e.message?.includes("WEAK_PASSWORD"),
-          );
-
-          if (blockingErrors.length > 5) {
-            console.warn(
-              "🚨 Muitos erros Firebase detectados, ativando modo debug",
-            );
-            setHasError(true);
-            return;
-          }
-        }
-
-        console.log("✅ Verificação de sanidade passou");
-      } catch (error) {
-        console.error("❌ Falha na verificação de sanidade:", error);
-        setHasError(true);
-      }
-    };
-
-    checkSanity();
-  }, []);
-
-  // Se há erro crítico, mostrar fallback
-  if (hasError) {
-    return <DebugFallback />;
-  }
-
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -982,7 +936,7 @@ function App() {
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
           console.log(
-            "��� Users reloaded after update:",
+            "✅ Users reloaded after update:",
             parsedUsers.length,
             parsedUsers,
           );
@@ -1230,7 +1184,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "���� Firestore conectado mas pode haver problema nas regras de segurança",
+                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
               );
             }
           }
@@ -1960,7 +1914,7 @@ function App() {
               if (autoSyncStarted) {
                 console.log("�� Auto sync garantido após login!");
               } else {
-                console.warn("����️ Falha ao garantir auto sync após login");
+                console.warn("��️ Falha ao garantir auto sync após login");
               }
             } else {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
@@ -2264,7 +2218,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manuten��✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -4476,7 +4430,7 @@ Verifique se:
                           Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Manuten��€es agendadas e programadas
+                          Manutenç€es agendadas e programadas
                         </p>
                       </div>
                     </div>
@@ -8149,7 +8103,7 @@ Verifique se:
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>🔥 Hist✅rico de serviços</li>
+                        <li>�� Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -10977,7 +10931,7 @@ Verifique se:
               // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
-                // console.log("✅ Login successful for:", result.user.email);
+                // console.log("��� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
