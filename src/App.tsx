@@ -2786,6 +2786,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <FirebaseStatusDisplay compact={true} expandable={true} />
                 )}
 
+                {/* Firebase Status Test - Temporary */}
+                <FirebaseStatusTest />
+
                 {/* Simple Welcome Header */}
                 <div
                   className="rounded-lg p-4 shadow-sm relative overflow-hidden"
@@ -5822,7 +5825,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                           <option value="ativa">Ativa</option>
                           <option value="inativa">Inativa</option>
-                          <option value="manutencao">Em Manutenção</option>
+                          <option value="manutencao">Em Manutenç��o</option>
                           <option value="construcao">Em Construção</option>
                         </select>
                       </div>
@@ -11426,9 +11429,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <label className="block text-sm font-medium text-gray-700">
                           Orçamento
                         </label>
-                        <p className="text-gray-900">
-                          €{selectedWork.budget}
-                        </p>
+                        <p className="text-gray-900">€{selectedWork.budget}</p>
                       </div>
                     )}
 
