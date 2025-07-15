@@ -700,7 +700,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteç��o de dados críticos - NUNCA PERDER DADOS
+  // Proteção de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
