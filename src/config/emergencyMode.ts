@@ -71,6 +71,9 @@ export function disableProblematicSystems() {
     return originalSetTimeout(callback, delay, ...args);
   };
 
+  // Marcar modo emergência como ativo globalmente
+  (window as any).EMERGENCY_MODE_ACTIVE = true;
+
   console.log("🛡️ Sistemas problemáticos desativados com sucesso");
 }
 
