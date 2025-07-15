@@ -9,7 +9,7 @@ const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true" || true; // FORÇA FIREBASE ATIVO
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
