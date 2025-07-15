@@ -365,19 +365,12 @@ function App() {
   // Função para determinar o modo de dados atual
   const getDataMode = (): string => {
     try {
-      const isNetlifyBuild =
-        (import.meta.env as any)?.NETLIFY === "true" ||
-        (import.meta.env as any)?.VITE_IS_NETLIFY === "true";
-      const isFirebaseForced =
-        (import.meta.env as any)?.VITE_FORCE_FIREBASE === "true";
       const isFirestoreActive = isFirestoreReady();
-
-      if (isFirestoreActive || isFirebaseForced || isNetlifyBuild) {
+      if (isFirestoreActive) {
         return "Firebase/Firestore";
       }
       return "Armazenamento Local";
     } catch (error) {
-      console.warn("Erro ao verificar modo de dados:", error);
       return "Armazenamento Local";
     }
   };
@@ -2137,7 +2130,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
@@ -5170,7 +5163,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observaç��es e Trabalho
+                          Observa����es e Trabalho
                         </h3>
                       </div>
 
