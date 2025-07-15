@@ -75,7 +75,7 @@ async function checkFirestoreAvailability(app: any): Promise<boolean> {
         `⚠️ Firestore não habilitado no projeto ${app.options.projectId}`,
       );
       console.info(
-        "💡 Para habilitar: Firebase Console → Firestore Database → Criar base de dados",
+        "�� Para habilitar: Firebase Console → Firestore Database → Criar base de dados",
       );
       console.info(
         `🔗 https://console.firebase.google.com/project/${app.options.projectId}/firestore`,
@@ -285,11 +285,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
 
 // Função para limpar instância
 export function clearFirestoreInstance(): void {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("🧹 Firestore limpo: aguardando deploy no Netlify");
-    return;
-  }
-
+  // Remover bloqueio - sempre permitir limpeza
   firestoreInstance = null;
   console.log("🧹 Instância Firestore limpa");
 }
