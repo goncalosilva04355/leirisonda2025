@@ -1306,7 +1306,7 @@ function App() {
 
           if (autoSyncStarted) {
             setAutoSyncActive(true);
-            console.log("✅ Auto sync garantido após login!");
+            console.log("✅ Auto sync garantido ap��s login!");
           } else {
             console.warn("🎉️ Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
@@ -5736,7 +5736,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "🎉 Não tem permiss��o para criar clientes. Contacte o administrador.",
+                                    "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
