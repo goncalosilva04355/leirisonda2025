@@ -1,9 +1,6 @@
-import React, { useState } from "react";
-import {
-  testFirestoreConnection,
-  testFirestoreQuota,
-} from "../utils/testFirestore";
-import EnvDebug from "./EnvDebug";
+import React, { useState } from 'react';
+import { testFirestoreConnection, testFirestoreQuota } from '../utils/testFirestore';
+import EnvDebug from './EnvDebug';
 
 interface TestResult {
   success: boolean;
@@ -13,9 +10,7 @@ interface TestResult {
 
 export const FirestoreTest: React.FC = () => {
   const [testing, setTesting] = useState(false);
-  const [connectionResult, setConnectionResult] = useState<TestResult | null>(
-    null,
-  );
+  const [connectionResult, setConnectionResult] = useState<TestResult | null>(null);
   const [quotaResult, setQuotaResult] = useState<any>(null);
 
   const runTests = async () => {
@@ -24,70 +19,66 @@ export const FirestoreTest: React.FC = () => {
     setQuotaResult(null);
 
     try {
-      console.log("🚀 Iniciando testes do Firestore...");
-
+      console.log('🚀 Iniciando testes do Firestore...');
+      
       // Teste de conectividade
       const connResult = await testFirestoreConnection();
       setConnectionResult(connResult);
-
+      
       if (connResult.success) {
         // Se conectividade OK, testar quota
         const quotaRes = await testFirestoreQuota();
         setQuotaResult(quotaRes);
       }
+      
     } catch (error: any) {
       setConnectionResult({
         success: false,
         message: `Erro inesperado: ${error.message}`,
-        details: { error: error.message },
+        details: { error: error.message }
       });
     } finally {
       setTesting(false);
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-gray-800">
-        🔥 Teste de Conectividade Firestore
-      </h2>
+    return (
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <EnvDebug />
 
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          🔥 Teste de Conectividade Firestore
+        </h2>
+      
       <button
         onClick={runTests}
         disabled={testing}
         className={`w-full py-3 px-4 rounded-lg font-medium ${
-          testing
-            ? "bg-gray-400 cursor-not-allowed text-gray-600"
-            : "bg-blue-600 hover:bg-blue-700 text-white"
+          testing 
+            ? 'bg-gray-400 cursor-not-allowed text-gray-600' 
+            : 'bg-blue-600 hover:bg-blue-700 text-white'
         }`}
       >
-        {testing ? "🔄 Testando..." : "🧪 Executar Testes"}
+        {testing ? '🔄 Testando...' : '🧪 Executar Testes'}
       </button>
 
       {/* Resultado da Conectividade */}
       {connectionResult && (
-        <div
-          className={`mt-6 p-4 rounded-lg ${
-            connectionResult.success
-              ? "bg-green-50 border border-green-200"
-              : "bg-red-50 border border-red-200"
-          }`}
-        >
-          <h3
-            className={`font-bold text-lg ${
-              connectionResult.success ? "text-green-800" : "text-red-800"
-            }`}
-          >
-            {connectionResult.success ? "✅ Conectividade" : "❌ Conectividade"}
+        <div className={`mt-6 p-4 rounded-lg ${
+          connectionResult.success ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+        }`}>
+          <h3 className={`font-bold text-lg ${
+            connectionResult.success ? 'text-green-800' : 'text-red-800'
+          }`}>
+            {connectionResult.success ? '✅ Conectividade' : '❌ Conectividade'}
           </h3>
-          <p
-            className={`mt-2 ${
-              connectionResult.success ? "text-green-700" : "text-red-700"
-            }`}
-          >
+          <p className={`mt-2 ${
+            connectionResult.success ? 'text-green-700' : 'text-red-700'
+          }`}>
             {connectionResult.message}
           </p>
-
+          
           {connectionResult.details && (
             <details className="mt-3">
               <summary className="cursor-pointer font-medium">
@@ -103,28 +94,20 @@ export const FirestoreTest: React.FC = () => {
 
       {/* Resultado da Quota */}
       {quotaResult && (
-        <div
-          className={`mt-4 p-4 rounded-lg ${
-            quotaResult.hasQuota
-              ? "bg-green-50 border border-green-200"
-              : "bg-yellow-50 border border-yellow-200"
-          }`}
-        >
-          <h3
-            className={`font-bold text-lg ${
-              quotaResult.hasQuota ? "text-green-800" : "text-yellow-800"
-            }`}
-          >
-            {quotaResult.hasQuota ? "✅ Quota" : "⚠️ Quota"}
+        <div className={`mt-4 p-4 rounded-lg ${
+          quotaResult.hasQuota ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'
+        }`}>
+          <h3 className={`font-bold text-lg ${
+            quotaResult.hasQuota ? 'text-green-800' : 'text-yellow-800'
+          }`}>
+            {quotaResult.hasQuota ? '✅ Quota' : '⚠️ Quota'}
           </h3>
-          <p
-            className={`mt-2 ${
-              quotaResult.hasQuota ? "text-green-700" : "text-yellow-700"
-            }`}
-          >
+          <p className={`mt-2 ${
+            quotaResult.hasQuota ? 'text-green-700' : 'text-yellow-700'
+          }`}>
             {quotaResult.message}
           </p>
-
+          
           {quotaResult.details && (
             <details className="mt-3">
               <summary className="cursor-pointer font-medium">
@@ -145,9 +128,7 @@ export const FirestoreTest: React.FC = () => {
           <li>• Verifique o console do browser (F12) para logs detalhados</li>
           <li>• Se a conectividade falhar, verifique as regras do Firestore</li>
           <li>• Se a quota estiver excedida, aguarde algumas horas</li>
-          <li>
-            • Certifique-se que o projeto Firebase tem Firestore habilitado
-          </li>
+          <li>• Certifique-se que o projeto Firebase tem Firestore habilitado</li>
         </ul>
       </div>
     </div>
