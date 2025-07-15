@@ -1161,7 +1161,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠��� Passo 3: Erro nas operaç€es Firestore:",
+                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -2143,7 +2143,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Respons��vel: ${work.assignedTo}
+   Respons���vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -3825,15 +3825,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="mt-6 space-y-3">
                   <button
                     onClick={async () => {
-                      const { ultraSimpleFirebaseTest } = await import(
-                        "./utils/ultraSimpleTest"
+                      const { smartFirebaseTest } = await import(
+                        "./utils/smartFirebaseTest"
                       );
-                      const result = await ultraSimpleFirebaseTest();
-                      alert(
-                        result.success
-                          ? `✅ ${result.message}`
-                          : `❌ ${result.message}`,
-                      );
+                      const result = await smartFirebaseTest();
+
+                      let alertMessage = result.success
+                        ? `✅ ${result.message}`
+                        : `❌ ${result.message}`;
+                      if (result.solution) {
+                        alertMessage += `\n\n🔧 ${result.solution}`;
+                      }
+
+                      alert(alertMessage);
                       console.log("🔍 Resultado completo:", result);
                     }}
                     className="w-full bg-blue-50 border-2 border-blue-200 rounded-lg p-4 hover:bg-blue-100 transition-colors"
@@ -3841,11 +3845,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="flex items-center justify-center space-x-2">
                       <Database className="h-5 w-5 text-blue-600" />
                       <span className="text-blue-700 font-medium">
-                        🧪 Teste ULTRA SIMPLES
+                        🧠 Teste INTELIGENTE
                       </span>
                     </div>
                     <p className="text-blue-600 text-sm mt-1">
-                      Verificar se Firestore existe no projeto
+                      Detecta exatamente qual é o problema
                     </p>
                   </button>
 
