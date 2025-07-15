@@ -151,9 +151,6 @@ import DataInputTutorial from "./components/DataInputTutorial";
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
 
-// Inicialização de emergência de utilizadores
-import "./utils/emergencyUserInit";
-import "./utils/forceUserInit";
 import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
@@ -1440,7 +1437,7 @@ function App() {
         event.reason.toString().includes("messaging")
       ) {
         console.warn(
-          "����� Firebase messaging error caught and handled:",
+          "��� Firebase messaging error caught and handled:",
           event.reason,
         );
         event.preventDefault(); // Prevent the error from being logged as unhandled
@@ -1706,7 +1703,7 @@ function App() {
           technician: interventionData.technician,
           status: "scheduled" as const,
           description: "Manutenção programada automaticamente",
-          notes: "Agendada automaticamente após manutenção anterior",
+          notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
           location: selectedPool ? selectedPool.location : "",
@@ -5313,7 +5310,7 @@ Verifique se:
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof���sico)
+                                    230V (monof📞sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5321,7 +5318,7 @@ Verifique se:
                             </div>
                           </div>
 
-                          {/* Observa📞ções Específicas do Furo */}
+                          {/* Observa����ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -5942,7 +5939,7 @@ Verifique se:
                                     "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISS���O NEGADA: clientes.create",
+                                    "❌ PERMISS📞O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
@@ -7015,7 +7012,7 @@ Verifique se:
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenções
+                                  Hist📞rico de intervenç��es
                                 </p>
                               </div>
                             </div>
@@ -8100,7 +8097,7 @@ Verifique se:
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>�� Dados de contacto</li>
+                        <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>🔥 Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
@@ -9582,7 +9579,7 @@ Verifique se:
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        🎉etalhes do Furo de Água
+                        🎉etalhes do Furo de ��gua
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
@@ -11990,7 +11987,7 @@ Verifique se:
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manutenção
+                            Próxima Manutenç��o
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.nextMaintenance
