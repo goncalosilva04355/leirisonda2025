@@ -115,7 +115,6 @@ import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUn
 import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
-import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
 
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // Firebase works silently in background - no diagnostics or UI needed
@@ -1441,7 +1440,7 @@ function App() {
         event.reason.toString().includes("messaging")
       ) {
         console.warn(
-          "��� Firebase messaging error caught and handled:",
+          "����� Firebase messaging error caught and handled:",
           event.reason,
         );
         event.preventDefault(); // Prevent the error from being logged as unhandled
@@ -4715,7 +4714,7 @@ Verifique se:
                           >
                             <option value="pending">Pendente</option>
                             <option value="in_progress">Em Progresso</option>
-                            <option value="completed">Conclu��da</option>
+                            <option value="completed">Concluída</option>
                             <option value="cancelled">Cancelada</option>
                           </select>
                         </div>
@@ -5314,7 +5313,7 @@ Verifique se:
                                 >
                                   <option value="">Selecionar voltagem</option>
                                   <option value="230V">
-                                    230V (monof📞sico)
+                                    230V (monof���sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5943,7 +5942,7 @@ Verifique se:
                                     "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
-                                    "❌ PERMISS📞O NEGADA: clientes.create",
+                                    "❌ PERMISS���O NEGADA: clientes.create",
                                   );
                                   return;
                                 }
@@ -7331,7 +7330,7 @@ Verifique se:
                         >
                           <div className="flex items-center space-x-2">
                             <Settings className="h-4 w-4" />
-                            <span>Configura��ões</span>
+                            <span>Configurações</span>
                           </div>
                         </button>
                         <button
@@ -8101,7 +8100,7 @@ Verifique se:
                         <strong>{clients.length}</strong> clientes registados
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Dados de contacto</li>
+                        <li>�� Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>🔥 Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
