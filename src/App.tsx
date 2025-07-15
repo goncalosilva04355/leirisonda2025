@@ -133,10 +133,10 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
-import "./utils/syncSummary"; // Resumo final da sincronização implementada
-import "./utils/syncStatusChecker"; // Verificador de status da sincronização
-import "./utils/simpleFirestoreTest"; // Teste simples para verificar se Firestore funciona
-import "./utils/debugUserSave"; // Debug específico para problema de utilizadores
+// import "./utils/syncSummary"; // Resumo final da sincronização implementada
+// import "./utils/syncStatusChecker"; // Verificador de status da sincronização
+// import "./utils/simpleFirestoreTest"; // Teste simples para verificar se Firestore funciona
+// import "./utils/debugUserSave"; // Debug específico para problema de utilizadores
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -11024,7 +11024,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("��� Login error:", error);
+              console.error("✅ Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
