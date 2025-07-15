@@ -86,8 +86,10 @@ export function isFirestoreReady(): boolean {
   return db !== null;
 }
 
-// Inicializar automaticamente
-initializeLeiria();
+// Inicializar apenas em produção ou quando forçado
+if (FORCE_FIREBASE_PRODUCTION) {
+  initializeLeiria();
+}
 
 // Exportações
 export { app, db, auth };
