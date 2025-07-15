@@ -5219,7 +5219,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                   required
                                 >
-                                  <option value="">Selecionar voltagem</option>
+                                  <option key="select-voltage" value="">
+                                    Selecionar voltagem
+                                  </option>
                                   <option value="230V">
                                     230V (monof📞sico)
                                   </option>
@@ -5703,13 +5705,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }
                           }}
                         >
-                          <option value="">Selecionar cliente</option>
+                          <option key="select-client" value="">
+                            Selecionar cliente
+                          </option>
                           {clients.map((client) => (
                             <option key={client.id} value={client.id}>
                               {client.name}
                             </option>
                           ))}
-                          <option value="novo">+ Adicionar Novo Cliente</option>
+                          <option key="add-client" value="novo">
+                            + Adicionar Novo Cliente
+                          </option>
                         </select>
                       </div>
                     </div>
@@ -5879,7 +5885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     error,
                                   );
                                   alert(
-                                    "❌ Erro ao adicionar cliente: " + error,
+                                    "��� Erro ao adicionar cliente: " + error,
                                   );
                                   return;
                                 }
@@ -7903,7 +7909,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>�� Informa��ões de clientes</li>
+                        <li>���� Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -8010,7 +8016,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>🔥 Hist✅rico de serviços</li>
+                        <li>���� Hist✅rico de serviços</li>
                         <li>• Informações contratuais</li>
                       </ul>
                     </div>
@@ -9623,7 +9629,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.pumpVoltage}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
                           >
-                            <option value="">Selecionar voltagem</option>
+                            <option key="select-voltage" value="">
+                              Selecionar voltagem
+                            </option>
                             <option value="230V">230V (monofásico)</option>
                             <option value="400V">400V (trif📞sico)</option>
                           </select>
