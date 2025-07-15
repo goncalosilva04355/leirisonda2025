@@ -1,238 +1,156 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import React, { useState } from "react";
 import {
-  firestoreService,
   testFirestoreConnection,
-} from "../services/firestoreDataService";
-import { smartFirestore } from "../utils/smartFirestoreDetection";
+  testFirestoreQuota,
+} from "../utils/testFirestore";
 
-export function FirestoreTest() {
-  const [testResult, setTestResult] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [firebaseStatus, setFirebaseStatus] = useState<string>("");
-  const [firestoreStatus, setFirestoreStatus] = useState<any>(null);
+interface TestResult {
+  success: boolean;
+  message: string;
+  details?: any;
+}
 
-  useEffect(() => {
-    // Verificar status do Firebase ao carregar
-    checkFirebaseStatus();
+export const FirestoreTest: React.FC = () => {
+  const [testing, setTesting] = useState(false);
+  const [connectionResult, setConnectionResult] = useState<TestResult | null>(
+    null,
+  );
+  const [quotaResult, setQuotaResult] = useState<any>(null);
 
-    // Verificar status do Firestore
-    checkFirestoreStatus();
-  }, []);
-
-  const checkFirestoreStatus = async () => {
-    const status = await smartFirestore.checkFirestoreAvailability();
-    setFirestoreStatus(status);
-  };
-
-  const checkFirebaseStatus = () => {
-    const envVars = {
-      VITE_FORCE_FIREBASE: import.meta.env.VITE_FORCE_FIREBASE,
-      NETLIFY: import.meta.env.NETLIFY,
-      VITE_IS_NETLIFY: import.meta.env.VITE_IS_NETLIFY,
-      DEV: import.meta.env.DEV,
-      VITE_FIREBASE_PROJECT_ID: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    };
-
-    setFirebaseStatus(JSON.stringify(envVars, null, 2));
-  };
-
-  const testConnection = async () => {
-    setIsLoading(true);
-    setTestResult("Testando conexão...");
+  const runTests = async () => {
+    setTesting(true);
+    setConnectionResult(null);
+    setQuotaResult(null);
 
     try {
-      const result = await testFirestoreConnection();
+      console.log("🚀 Iniciando testes do Firestore...");
 
-      if (result) {
-        setTestResult("✅ Firestore está funcionando corretamente!");
-      } else {
-        setTestResult(
-          `❌ Firestore não disponível\n\nPossíveis causas:\n1. Firestore não está habilitado no projeto Firebase\n2. Configuração Firebase incorreta\n3. Regras de segurança muito restritivas\n\n💡 A aplicação continua funcional com localStorage`,
-        );
+      // Teste de conectividade
+      const connResult = await testFirestoreConnection();
+      setConnectionResult(connResult);
+
+      if (connResult.success) {
+        // Se conectividade OK, testar quota
+        const quotaRes = await testFirestoreQuota();
+        setQuotaResult(quotaRes);
       }
     } catch (error: any) {
-      let errorMsg = `❌ Erro: ${error.message}`;
-
-      if (error.message.includes("Service firestore is not available")) {
-        errorMsg += `\n\n💡 Solução: Habilite Firestore no Firebase Console:\nhttps://console.firebase.google.com/project/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/firestore`;
-      }
-
-      setTestResult(errorMsg);
-      console.error("Erro no teste:", error);
+      setConnectionResult({
+        success: false,
+        message: `Erro inesperado: ${error.message}`,
+        details: { error: error.message },
+      });
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const testSaveData = async () => {
-    setIsLoading(true);
-    setTestResult("Testando gravação de dados...");
-
-    try {
-      const testData = {
-        nome: "Teste de Obra",
-        localizacao: "Local de Teste",
-        tipo: "Piscina",
-        status: "Em Progresso",
-        dataInicio: new Date().toISOString(),
-        responsavel: "Teste Utilizador",
-        descricao: "Obra de teste para verificar funcionamento do Firestore",
-      };
-
-      const docId = await firestoreService.saveFormData("obras", testData);
-
-      if (docId) {
-        setTestResult(`✅ Dados gravados com sucesso! ID: ${docId}`);
-        console.log("Documento criado com ID:", docId);
-      } else {
-        setTestResult(
-          `❌ Firestore não disponível para gravação\n\n💾 Os dados foram salvos no localStorage como fallback\n💡 Para usar Firestore, habilite-o no Firebase Console`,
-        );
-      }
-    } catch (error: any) {
-      let errorMsg = `❌ Erro ao gravar: ${error.message}`;
-
-      if (error.message.includes("Service firestore is not available")) {
-        errorMsg += `\n\n💾 Fallback: dados serão salvos no localStorage\n💡 Para usar Firestore, habilite-o no projeto Firebase`;
-      }
-
-      setTestResult(errorMsg);
-      console.error("Erro na gravação:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const testReadData = async () => {
-    setIsLoading(true);
-    setTestResult("Lendo dados...");
-
-    try {
-      const obras = await firestoreService.getCollection("obras");
-
-      if (obras && obras.length > 0) {
-        setTestResult(
-          `✅ ${obras.length} documentos encontrados na coleção 'obras':\n${JSON.stringify(obras, null, 2)}`,
-        );
-      } else {
-        setTestResult("📭 Nenhum documento encontrado na coleção obras");
-      }
-    } catch (error: any) {
-      setTestResult(`❌ Erro ao ler: ${error.message}`);
-      console.error("Erro na leitura:", error);
-    } finally {
-      setIsLoading(false);
+      setTesting(false);
     }
   };
 
   return (
-    <Card className="max-w-4xl mx-auto m-4">
-      <CardHeader>
-        <CardTitle>Teste do Firestore</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          <Button
-            onClick={testConnection}
-            disabled={isLoading}
-            variant="outline"
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-2xl font-bold mb-4 text-gray-800">
+        🔥 Teste de Conectividade Firestore
+      </h2>
+
+      <button
+        onClick={runTests}
+        disabled={testing}
+        className={`w-full py-3 px-4 rounded-lg font-medium ${
+          testing
+            ? "bg-gray-400 cursor-not-allowed text-gray-600"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+        }`}
+      >
+        {testing ? "🔄 Testando..." : "🧪 Executar Testes"}
+      </button>
+
+      {/* Resultado da Conectividade */}
+      {connectionResult && (
+        <div
+          className={`mt-6 p-4 rounded-lg ${
+            connectionResult.success
+              ? "bg-green-50 border border-green-200"
+              : "bg-red-50 border border-red-200"
+          }`}
+        >
+          <h3
+            className={`font-bold text-lg ${
+              connectionResult.success ? "text-green-800" : "text-red-800"
+            }`}
           >
-            {isLoading ? "Testando..." : "Testar Conexão"}
-          </Button>
+            {connectionResult.success ? "✅ Conectividade" : "❌ Conectividade"}
+          </h3>
+          <p
+            className={`mt-2 ${
+              connectionResult.success ? "text-green-700" : "text-red-700"
+            }`}
+          >
+            {connectionResult.message}
+          </p>
 
-          <Button onClick={testSaveData} disabled={isLoading} variant="outline">
-            {isLoading ? "Gravando..." : "Testar Gravação"}
-          </Button>
-
-          <Button onClick={testReadData} disabled={isLoading} variant="outline">
-            {isLoading ? "Lendo..." : "Testar Leitura"}
-          </Button>
+          {connectionResult.details && (
+            <details className="mt-3">
+              <summary className="cursor-pointer font-medium">
+                📋 Detalhes Técnicos
+              </summary>
+              <pre className="mt-2 bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+                {JSON.stringify(connectionResult.details, null, 2)}
+              </pre>
+            </details>
+          )}
         </div>
+      )}
 
-        {/* Status do Firestore */}
-        {firestoreStatus && (
-          <div
-            className={`p-4 rounded-lg ${firestoreStatus.available ? "bg-green-50 border border-green-200" : "bg-blue-50 border border-blue-200"}`}
+      {/* Resultado da Quota */}
+      {quotaResult && (
+        <div
+          className={`mt-4 p-4 rounded-lg ${
+            quotaResult.hasQuota
+              ? "bg-green-50 border border-green-200"
+              : "bg-yellow-50 border border-yellow-200"
+          }`}
+        >
+          <h3
+            className={`font-bold text-lg ${
+              quotaResult.hasQuota ? "text-green-800" : "text-yellow-800"
+            }`}
           >
-            <h3 className="font-semibold mb-2 flex items-center">
-              {firestoreStatus.available ? "✅" : "📱"} Status do Firestore
-            </h3>
+            {quotaResult.hasQuota ? "✅ Quota" : "⚠️ Quota"}
+          </h3>
+          <p
+            className={`mt-2 ${
+              quotaResult.hasQuota ? "text-green-700" : "text-yellow-700"
+            }`}
+          >
+            {quotaResult.message}
+          </p>
 
-            <div className="space-y-2">
-              <div>
-                <strong>Status:</strong>{" "}
-                {firestoreStatus.available ? "Disponível" : "Não habilitado"}
-              </div>
+          {quotaResult.details && (
+            <details className="mt-3">
+              <summary className="cursor-pointer font-medium">
+                📋 Detalhes da Quota
+              </summary>
+              <pre className="mt-2 bg-gray-100 p-3 rounded text-sm overflow-x-auto">
+                {JSON.stringify(quotaResult.details, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
 
-              {firestoreStatus.projectId && (
-                <div>
-                  <strong>Projeto:</strong> {firestoreStatus.projectId}
-                </div>
-              )}
-
-              {firestoreStatus.error && (
-                <div>
-                  <strong>Informação:</strong> {firestoreStatus.error}
-                </div>
-              )}
-            </div>
-
-            {/* Recomendações */}
-            <div className="mt-3">
-              <strong>Recomendações:</strong>
-              <ul className="mt-1 text-sm space-y-1">
-                {smartFirestore.getRecommendations().map((rec, index) => (
-                  <li key={index} className="text-gray-700">
-                    {rec}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {!firestoreStatus.available && (
-              <div className="mt-3 p-3 bg-white rounded border">
-                <strong>🔧 Como habilitar Firestore:</strong>
-                <ol className="mt-2 text-sm space-y-1 list-decimal list-inside">
-                  <li>
-                    Acesse{" "}
-                    <a
-                      href={`https://console.firebase.google.com/project/${import.meta.env.VITE_FIREBASE_PROJECT_ID}/firestore`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 underline"
-                    >
-                      Firebase Console
-                    </a>
-                  </li>
-                  <li>Clique em "Firestore Database"</li>
-                  <li>Clique em "Criar base de dados"</li>
-                  <li>Escolha "Modo de teste"</li>
-                  <li>Selecione uma localização (ex: eur3)</li>
-                  <li>Recarregue esta página</li>
-                </ol>
-              </div>
-            )}
-          </div>
-        )}
-
-        {testResult && (
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <h3 className="font-semibold mb-2">Resultado:</h3>
-            <pre className="whitespace-pre-wrap text-sm">{testResult}</pre>
-          </div>
-        )}
-
-        <details className="mt-4">
-          <summary className="cursor-pointer font-semibold">
-            Status das Variáveis de Ambiente
-          </summary>
-          <pre className="bg-gray-100 p-4 rounded-lg mt-2 text-sm overflow-auto">
-            {firebaseStatus}
-          </pre>
-        </details>
-      </CardContent>
-    </Card>
+      {/* Dicas */}
+      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h4 className="font-bold text-blue-800">💡 Dicas de Diagnóstico</h4>
+        <ul className="mt-2 text-blue-700 text-sm space-y-1">
+          <li>• Verifique o console do browser (F12) para logs detalhados</li>
+          <li>• Se a conectividade falhar, verifique as regras do Firestore</li>
+          <li>• Se a quota estiver excedida, aguarde algumas horas</li>
+          <li>
+            • Certifique-se que o projeto Firebase tem Firestore habilitado
+          </li>
+        </ul>
+      </div>
+    </div>
   );
-}
+};
+
+export default FirestoreTest;
