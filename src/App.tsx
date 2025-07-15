@@ -133,9 +133,7 @@ import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
 import "./utils/simpleFirestoreFix"; // Fix SIMPLES e robusto para Firestore
-// import "./utils/directFirebaseFix"; // Fix direto para Firebase/Firestore
-// import "./utils/testFirestoreFixed"; // Teste das correções do Firestore
-// import "./utils/forceFirestoreInit"; // Forçar inicialização do Firestore logo no início
+import "./utils/testSimpleFirestore"; // Teste simples do Firestore
 import "./utils/finalSystemCheck"; // Verificação final - sistema funcional
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
@@ -3933,7 +3931,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Manutenções
+                      Manutenç��es
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
