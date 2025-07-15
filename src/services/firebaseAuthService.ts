@@ -67,6 +67,15 @@ class FirebaseAuthService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<AuthResult> {
+    // Verificar modo emergência
+    if (
+      typeof window !== "undefined" &&
+      (window as any).EMERGENCY_MODE_ACTIVE
+    ) {
+      console.log("🚨 Firebase signIn bloqueado - modo emergência");
+      return { success: false, error: "Firebase desativado temporariamente" };
+    }
+
     console.log("🔐 Tentando login Firebase...");
 
     try {
