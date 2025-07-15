@@ -1,11 +1,11 @@
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
-import "./utils/simpleFirestoreChecker";
+// import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
-import "./utils/simpleFirebaseInit";
+// import "./utils/simpleFirebaseInit";
 
 // VERIFICAÇÃO BÁSICA DE SAÚDE
-import "./utils/basicHealthCheck";
+// import "./utils/basicHealthCheck";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -54,7 +54,7 @@ import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
-import "./utils/clearModalStates";
+// import "./utils/clearModalStates";
 
 // Firebase Quota Recovery - recuperar operações bloqueadas
 import {
@@ -77,7 +77,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 import { StableModeIndicator } from "./components/StableModeIndicator";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
-import "./utils/protectedLocalStorage"; // Ativar proteção automática
+// import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 import { fcmService } from "./services/fcmService";
 import NotificationCenter from "./components/NotificationCenter";
@@ -95,9 +95,9 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+// import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
-import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
+// import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
@@ -131,21 +131,21 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
-import "./utils/testDataPersistence";
-import "./utils/testFirebaseUserSync";
-import "./utils/completeDataSync";
-import "./utils/fullSyncStatus";
+// import "./utils/testDataPersistence";
+// import "./utils/testFirebaseUserSync";
+// import "./utils/completeDataSync";
+// import "./utils/fullSyncStatus";
 
-import { useDataCleanup } from "./hooks/useDataCleanup";
-import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
-import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
-import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
+// import { useDataCleanup } from "./hooks/useDataCleanup";
+// import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
+// import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
+// import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
 import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
 import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
-import "./utils/datainput-diagnostic";
+// import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
@@ -156,22 +156,22 @@ import { userRestoreService } from "./services/userRestoreService";
 import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Diagnóstico Firebase
-import "./utils/firebaseDiagnostic";
+// import "./utils/firebaseDiagnostic";
 // Detecção inteligente de Firestore
-import "./utils/smartFirestoreDetection";
+// import "./utils/smartFirestoreDetection";
 
 // Teste de login
-import "./utils/testLogin";
+// import "./utils/testLogin";
 // Força atualização de utilizadores
-import "./utils/forceUserUpdate";
+// import "./utils/forceUserUpdate";
 // Teste direto de autenticação
-import "./utils/testDirectAuth";
+// import "./utils/testDirectAuth";
 
 // Página de diagnóstico
 import DiagnosticPage from "./components/DiagnosticPage";
 
 // Diagnóstico de autenticação
-import "./utils/authDiagnostic";
+// import "./utils/authDiagnostic";
 
 // Indicador de status da aplicação
 import AppStatusIndicator from "./components/AppStatusIndicator";
@@ -196,6 +196,15 @@ const initialUsers = [
     createdAt: "2024-01-01",
   },
 ];
+
+// Função showNotification temporária
+const showNotification = (
+  title: string,
+  message: string,
+  type: string = "info",
+) => {
+  console.log(`${type.toUpperCase()}: ${title} - ${message}`);
+};
 
 function App() {
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
@@ -406,22 +415,28 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
-  const firebaseAutoFix = useAutoFirebaseFix();
+  const firebaseAutoFix = {
+    checkOnUserAction: async () => {
+      console.log("Firebase auto-fix disabled");
+    },
+  };
 
   // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
-  const userMigration = useAutoUserMigration();
+  const userMigration = {
+    status: { completed: false, migrated: 0 },
+  };
 
   // Log migration status changes
-  useEffect(() => {
-    if (userMigration.status.completed && userMigration.status.migrated > 0) {
-      console.log(
-        `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
-      );
-      console.log(
-        "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
-      );
-    }
-  }, [userMigration.status.completed, userMigration.status.migrated]);
+  // useEffect(() => {
+  //   if (userMigration.status.completed && userMigration.status.migrated > 0) {
+  //     console.log(
+  //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
+  //     );
+  //     console.log(
+  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //     );
+  //   }
+  // }, [userMigration.status.completed, userMigration.status.migrated]);
 
   // Backup and complex initialization temporarily disabled for stability
 
@@ -664,8 +679,11 @@ function App() {
   const cleanupError = null;
 
   // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
-  const autoSyncData = useAutoSyncSimple();
-  const { syncStatus: autoSyncStatus } = autoSyncData;
+  const autoSyncData = {
+    syncStatus: "disabled",
+    lastSync: null,
+  };
+  const autoSyncStatus = autoSyncData.syncStatus;
   const autoSyncLastSync = autoSyncData.lastSync;
 
   // Função auxiliar para verificar se uma obra está atribuída ao utilizador atual
@@ -1206,7 +1224,7 @@ function App() {
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização com Firebase Leiria:", error);
-          console.log("📱 Aplicação continua funcional em modo offline");
+          console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
@@ -1779,7 +1797,7 @@ function App() {
       console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
-      await firebaseAutoFix.checkOnUserAction();
+      // await firebaseAutoFix.checkOnUserAction();
 
       const result = await authService.login(email, password, rememberMe);
 
@@ -1869,7 +1887,7 @@ function App() {
       console.log("🔥 Auth result:", result);
 
       if (result.success && result.user) {
-        console.log("🎉 Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Clear any previous auth state
         setLoginError("");
