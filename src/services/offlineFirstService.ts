@@ -76,22 +76,29 @@ class OfflineFirstService {
       ...poolData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
+      console.log("🔥 OfflineFirst: Guardando piscina no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.savePool(pool);
+      console.log("✅ Piscina guardada no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existingPools = JSON.parse(localStorage.getItem("pools") || "[]");
       existingPools.push(pool);
       localStorage.setItem("pools", JSON.stringify(existingPools));
-      console.log("✅ Piscina salva no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
-      if (this.firebaseAvailable) {
-        this.tryFirebaseSave("piscinas", pool);
-      }
-
-      return id;
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro ao criar piscina:", error);
+      // Fallback para localStorage se Firestore falhar
+      const existingPools = JSON.parse(localStorage.getItem("pools") || "[]");
+      existingPools.push({ ...pool, source: "localStorage-fallback" });
+      localStorage.setItem("pools", JSON.stringify(existingPools));
       return id;
     }
   }
