@@ -1273,7 +1273,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `🔄 UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1884,7 +1884,7 @@ function App() {
               if (autoSyncStarted) {
                 console.log("✅ Auto sync garantido após login!");
               } else {
-                console.warn("⚠️ Falha ao garantir auto sync após login");
+                console.warn("��️ Falha ao garantir auto sync após login");
               }
             } else {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
@@ -4729,7 +4729,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {!usersLoaded && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-blue-800">
-                                ���� Carregando utilizadores...
+                                🔄 Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -7773,7 +7773,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>🎉 Informações de clientes</li>
+                        <li>�� Informações de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -9326,7 +9326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observações
+                          Observa��ões
                         </h3>
                       </div>
 
