@@ -379,7 +379,7 @@ function App() {
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = useAutoFirebaseFix();
 
-  // AUTO-MIGRA��ÃO DE UTILIZADORES - Migração automática para Firestore
+  // AUTO-MIGRAÇÃO DE UTILIZADORES - Migração automática para Firestore
   const userMigration = useAutoUserMigration();
 
   // Log migration status changes
