@@ -1161,14 +1161,21 @@ function App() {
   }, []);
   */
 
-  // Sincronização inicial de todos os dados com Firestore
+  // Sincronização inicial de todos os dados com Firestore - SÓ APÓS LOGIN
   useEffect(() => {
+    if (!isAuthenticated) {
+      console.log("📱 Firestore desativado - aguardando login");
+      return;
+    }
+
     const syncAllData = async () => {
-      // Aguardar um pouco para o Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Aguardar um pouco para o Firestore estar pronto APÓS LOGIN
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (isFirestoreReady()) {
-        console.log("🔥 Iniciando sincronização com Firebase Leiria...");
+        console.log(
+          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+        );
         console.log("✅ Firebase Leiria pronto para uso");
 
         try {
@@ -1185,7 +1192,7 @@ function App() {
     };
 
     syncAllData();
-  }, []);
+  }, [isAuthenticated]); // Só executa quando faz login
 
   // Inicializar sincronização automática em tempo real
   useEffect(() => {
@@ -2210,7 +2217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pr��-definidos por agora.",
     );
   };
 
@@ -7204,7 +7211,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Settings className="h-6 w-6 text-blue-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Interação Mobile
+                                Interaç��o Mobile
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
