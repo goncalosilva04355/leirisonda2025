@@ -94,7 +94,7 @@ async function initializeFirestore(
   retryCount = 0,
   maxRetries = 2,
 ): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore não inicializado - aguardando deploy no Netlify");
     return null;
   }
@@ -196,7 +196,7 @@ if (FORCE_FIRESTORE_PRODUCTION) {
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
@@ -212,7 +212,7 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("�� Firestore indisponível - aguardando deploy no Netlify");
     return null;
   }
@@ -238,13 +238,14 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
 
 // Função para verificar se Firestore está pronto
 export function isFirestoreReady(): boolean {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return false;
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true")
+    return false;
   return firestoreInstance !== null;
 }
 
 // Função de teste simples para Firestore
 export async function testFirestore(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore teste: aguardando deploy no Netlify");
     return false;
   }
@@ -270,7 +271,7 @@ export async function testFirestore(): Promise<boolean> {
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("💾 Firestore forçado: aguardando deploy no Netlify");
     return false;
   }
@@ -294,7 +295,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
 
 // Função para limpar instância
 export function clearFirestoreInstance(): void {
-  if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) {
+  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
     console.log("🧹 Firestore limpo: aguardando deploy no Netlify");
     return;
   }
