@@ -78,28 +78,10 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
     }
   }, [onLogin]);
 
-  // Check Firestore connection status
+  // Firestore só ativa após login - não verificar na página de login
   useEffect(() => {
-    const checkFirestore = async () => {
-      console.log("🔄 Verificando conexão com Firestore...");
-      try {
-        const isConnected = await testFirestoreConnection();
-        if (isConnected) {
-          setFirestoreStatus("ready");
-          console.log("✅ Firestore pronto para gravação de dados");
-        } else {
-          setFirestoreStatus("error");
-          console.warn(
-            "⚠️ Firestore não disponível - dados serão salvos localmente",
-          );
-        }
-      } catch (error) {
-        console.error("❌ Erro ao verificar Firestore:", error);
-        setFirestoreStatus("error");
-      }
-    };
-
-    checkFirestore();
+    console.log("📱 LoginPage: Firestore desativado - só ativa após login");
+    setFirestoreStatus("error"); // Assumir que não está disponível inicialmente
   }, []);
 
   const handleLogin = useCallback(

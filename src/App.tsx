@@ -96,10 +96,11 @@ import { AdminLogin } from "./admin/AdminLogin";
 import { AdminPage } from "./admin/AdminPage";
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { directAuthService as authService } from "./services/directAuthService";
+import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
 import { UserProfile } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 import { EmergencyDataRecovery } from "./utils/emergencyDataRecovery";
@@ -709,16 +710,14 @@ function App() {
   const [users, setUsers] = useState(initialUsers);
   const [usersLoaded, setUsersLoaded] = useState(false);
 
-  // Load users from Firestore and localStorage on app start
+  // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from Firestore + localStorage...");
+      console.log("🔄 Loading users from localStorage...");
 
       try {
-        // Aguardar Firestore estar pronto
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        if (isFirestoreReady()) {
+        // SÓ carregar do Firestore se estiver autenticado
+        if (isAuthenticated && isFirestoreReady()) {
           console.log("🔥 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
@@ -907,7 +906,7 @@ function App() {
 
     window.addEventListener("usersUpdated", handleUsersUpdated);
     return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
-  }, []);
+  }, [isAuthenticated]); // Recarregar quando faz login
 
   // Firebase handles user updates automatically via real-time listeners
   const [selectedWorkType, setSelectedWorkType] = useState("");
@@ -1129,7 +1128,7 @@ function App() {
               const docSnap = await getDoc(testDoc);
               if (docSnap.exists()) {
                 console.log(
-                  "📖 Passo 3: Dados lidos do Firestore:",
+                  "��� Passo 3: Dados lidos do Firestore:",
                   docSnap.data(),
                 );
                 console.log(
@@ -1160,14 +1159,21 @@ function App() {
   }, []);
   */
 
-  // Sincronização inicial de todos os dados com Firestore
+  // Sincronização inicial de todos os dados com Firestore - SÓ APÓS LOGIN
   useEffect(() => {
+    if (!isAuthenticated) {
+      console.log("📱 Firestore desativado - aguardando login");
+      return;
+    }
+
     const syncAllData = async () => {
-      // Aguardar um pouco para o Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      // Aguardar um pouco para o Firestore estar pronto APÓS LOGIN
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (isFirestoreReady()) {
-        console.log("🔥 Iniciando sincronização com Firebase Leiria...");
+        console.log(
+          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+        );
         console.log("✅ Firebase Leiria pronto para uso");
 
         try {
@@ -1184,16 +1190,21 @@ function App() {
     };
 
     syncAllData();
-  }, []);
+  }, [isAuthenticated]); // Só executa quando faz login
 
-  // Inicializar sincronização automática em tempo real
+  // Inicializar sincronização automática em tempo real - SÓ APÓS LOGIN
   useEffect(() => {
+    if (!isAuthenticated) {
+      console.log("🔄 AutoSync desativado - aguardando login");
+      return;
+    }
+
     const initAutoSync = async () => {
-      // Aguardar Firestore estar pronto
-      await new Promise((resolve) => setTimeout(resolve, 4000));
+      // Aguardar Firestore estar pronto APÓS LOGIN
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("🔄 Iniciando sincronização automática em tempo real...");
+        console.log("🔄 Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1220,7 +1231,7 @@ function App() {
         }
       } else {
         console.log(
-          "🎉️ Firestore não disponível, tentando novamente em 10 segundos...",
+          "🔄 Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -1242,7 +1253,7 @@ function App() {
     return () => {
       autoSyncService.stopAutoSync();
     };
-  }, []);
+  }, [isAuthenticated]); // Só executa quando faz login
 
   // Listeners para atualizações automáticas da UI
   useEffect(() => {
@@ -2103,7 +2114,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -2211,6 +2222,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     alert(
       "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
+  };
+
+  // Função generateReport para compatibilidade com UnifiedAdminPage
+  const generateReport = (type: string) => {
+    switch (type) {
+      case "piscinas":
+        generatePoolsPDF();
+        break;
+      case "obras":
+        generateWorksPDF();
+        break;
+      case "manutencoes":
+        generateMaintenancePDF();
+        break;
+      case "clientes":
+        generateClientsPDF();
+        break;
+      case "geral":
+        generateCompletePDF();
+        break;
+      default:
+        console.warn("Tipo de relatório não reconhecido:", type);
+    }
   };
 
   // Photo management functions
@@ -3116,7 +3150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   👤 Cliente:
                                 </span>
                                 <span className="text-sm text-gray-900">
-                                  {work.client || "Não especificado"}
+                                  {work.client || "N��o especificado"}
                                 </span>
                               </div>
                               {work.contact && (
@@ -4199,7 +4233,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenções
+                          Futuras Manutenç��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -4670,7 +4704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               try {
                                 const parsed = JSON.parse(localStorageUsers);
                                 console.log(
-                                  "🔥 PARSED USERS:",
+                                  "�� PARSED USERS:",
                                   parsed.length,
                                   parsed,
                                 );
@@ -6489,7 +6523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observações, recomendações, próxima manutenção..."
+                          placeholder="Observaç��es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6521,7 +6555,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenção
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -6762,7 +6796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localização</li>
+                                <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
@@ -7043,6 +7077,27 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           );
 
         case "configuracoes":
+          return (
+            <UnifiedAdminPageSimple
+              currentUser={currentUser}
+              onBack={() => navigateToSection("dashboard")}
+              pools={pools}
+              works={works}
+              maintenance={maintenance}
+              clients={clients}
+              users={users}
+              enablePhoneDialer={enablePhoneDialer}
+              enableMapsRedirect={enableMapsRedirect}
+              togglePhoneDialer={togglePhoneDialer}
+              toggleMapsRedirect={toggleMapsRedirect}
+              handleDataCleanup={handleDataCleanup}
+              cleanupLoading={cleanupLoading}
+              cleanupError={cleanupError}
+              generateReport={generateReport}
+            />
+          );
+
+        case "configuracoes_old":
           // Safety check for activeAdminTab
           const safeActiveConfigTab = activeAdminTab || "configuracoes";
 
@@ -7786,7 +7841,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>📞 Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>�� Datas e dura🔥es</li>
+                        <li>��� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -7889,7 +7944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Resumo executivo</li>
+                        <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
                         <li>• An✅lise de performance</li>
@@ -10168,7 +10223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    🎉 Voltar aos Utilizadores
+                    �� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
@@ -10721,7 +10776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb€m funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
