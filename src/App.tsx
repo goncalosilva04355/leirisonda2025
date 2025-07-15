@@ -1308,7 +1308,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("🎉�� Falha ao garantir auto sync ap��s login");
+            console.warn("⚠️ Falha ao garantir auto sync após login");
             setAutoSyncActive(false);
           }
         } else {
@@ -4700,7 +4700,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "���� ERRO AO FAZER PARSE DOS USERS:",
+                                  "����� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -10006,7 +10006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura���ão Real (horas)
+                          Dura��ão Real (horas)
                         </label>
                         <input
                           type="number"
