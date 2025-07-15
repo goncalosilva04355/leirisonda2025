@@ -3804,7 +3804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">€ </div>
+                                  <div className="text-gray-400 mb-2">��� </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -11025,6 +11025,7 @@ Verifique se:
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
+          <StableModeIndicator />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
