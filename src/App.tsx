@@ -47,7 +47,7 @@ import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
 // Limpar estados que causam modais indesejados
 import "./utils/clearModalStates";
 
-// Firebase Quota Recovery - recuperar opera��ões bloqueadas
+// Firebase Quota Recovery - recuperar operações bloqueadas
 import {
   autoRecoverOnInit,
   FirebaseQuotaRecovery,
@@ -399,7 +399,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZA��ÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -701,7 +701,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados críticos - NUNCA PERDER DADOS
+  // Proteção de dados cr��ticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -813,7 +813,7 @@ function App() {
           }
         } else {
           console.log(
-            "�� No saved users found, initializing with default users",
+            "📝 No saved users found, initializing with default users",
           );
 
           // Initialize with default admin user
@@ -1312,7 +1312,7 @@ function App() {
             setAutoSyncActive(false);
           }
         } else {
-          console.log("⏳ Firestore não pronto, tentando novamente...");
+          console.log("⏳ Firestore n��o pronto, tentando novamente...");
           setTimeout(async () => {
             if (isFirestoreReady()) {
               try {
@@ -1960,7 +1960,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🎉Forced logout state clear completed - redirected to login",
+        "����Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -2130,7 +2130,7 @@ ${index + 1}. ${work.title}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
-   ${work.budget ? `Or��amento: €${work.budget.toLocaleString("pt-PT")}` : ""}
+   ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Responsável: ${work.assignedTo}
    Descrição: ${work.description}
@@ -4977,7 +4977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N��vel da Água (m) *
+                                  N€vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -5118,7 +5118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa📞ções Específicas do Furo */}
+                          {/* Observa📞ç��es Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
