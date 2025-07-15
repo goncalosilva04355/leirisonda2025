@@ -117,7 +117,7 @@ async function initializeFirestore(
       return null;
     }
 
-    // Aguardar um pouco mais para garantir que os serviços estão prontos
+    // Aguardar um pouco mais para garantir que os servi��os estão prontos
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     console.log("💾 Chamando getFirestore()...");
@@ -263,10 +263,8 @@ export async function testFirestore(): Promise<boolean> {
 
 // Função para forçar inicialização
 export async function forceFirestoreInit(): Promise<boolean> {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("💾 Firestore forçado: aguardando deploy no Netlify");
-    return false;
-  }
+  // Remover bloqueio - sempre permitir inicialização forçada
+  console.log("🔄 Forçando inicialização...");
 
   try {
     console.log("🔄 Forçando inicialização Firestore...");
