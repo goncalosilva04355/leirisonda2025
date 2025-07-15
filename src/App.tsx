@@ -153,7 +153,7 @@ import "./utils/smartFirestoreDetection";
 
 // Teste de login
 import "./utils/testLogin";
-// For��a atualização de utilizadores
+// Força atualização de utilizadores
 import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 import "./utils/testDirectAuth";
@@ -819,7 +819,7 @@ function App() {
           const defaultUsers = [
             {
               id: 1,
-              name: "Gon��alo Fonseca",
+              name: "Gonçalo Fonseca",
               email: "gongonsilva@gmail.com",
               active: true,
               role: "super_admin",
@@ -906,7 +906,7 @@ function App() {
 
     window.addEventListener("usersUpdated", handleUsersUpdated);
     return () => window.removeEventListener("usersUpdated", handleUsersUpdated);
-  }, []);
+  }, [isAuthenticated]); // Recarregar quando faz login
 
   // Firebase handles user updates automatically via real-time listeners
   const [selectedWorkType, setSelectedWorkType] = useState("");
@@ -2049,7 +2049,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localiza��€: ${pool.location}
+   Localizaç€: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3124,7 +3124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3">
                               <div className="flex items-center space-x-2">
                                 <span className="text-sm font-medium text-gray-600">
-                                  ���� Morada:
+                                  🔥 Morada:
                                 </span>
                                 {work.location ? (
                                   <button
@@ -10223,7 +10223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     onClick={() => navigateToSection("utilizadores")}
                     className="mb-4 px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700"
                   >
-                    🎉 Voltar aos Utilizadores
+                    �� Voltar aos Utilizadores
                   </button>
                   <RegisterForm
                     onRegisterSuccess={() => {
@@ -10776,7 +10776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb€m funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
