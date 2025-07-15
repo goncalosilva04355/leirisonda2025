@@ -2816,7 +2816,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                 // console.log("✅ Login state updated successfully");
               } else {
-                console.warn("🎉 Login failed:", result.error);
+                console.warn("��� Login failed:", result.error);
                 setLoginError(result.error || "Credenciais inv✅lidas");
               }
             } catch (error: any) {
@@ -3868,6 +3868,56 @@ Verifique se:
                     </p>
                     <p className="text-purple-500 text-sm mt-1 font-bold">
                       Se Firestore estiver ativo, esta VAI funcionar!
+                    </p>
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      try {
+                        const { enableFirestoreREST, testIntegratedSystem } =
+                          await import("./services/firestoreIntegration");
+
+                        // Ativar sistema REST API
+                        enableFirestoreREST();
+
+                        // Testar sistema integrado
+                        const result = await testIntegratedSystem();
+
+                        if (result.success) {
+                          alert(`🎉 SISTEMA ATIVADO COM SUCESSO!
+
+✅ Firestore REST API está agora ATIVO em toda a aplicação!
+💾 Todos os dados serão guardados corretamente no Firestore!
+🔄 Sincronização automática ativada!
+
+A aplicação está agora funcionando normalmente com persistência na nuvem.`);
+
+                          // Forçar reload para aplicar mudanças
+                          setTimeout(() => {
+                            window.location.reload();
+                          }, 2000);
+                        } else {
+                          alert(`❌ Erro ao ativar sistema: ${result.message}`);
+                        }
+
+                        console.log("🔍 Resultado ativação:", result);
+                      } catch (error: any) {
+                        alert(`❌ Erro: ${error.message}`);
+                      }
+                    }}
+                    className="w-full bg-green-50 border-4 border-green-500 rounded-lg p-6 hover:bg-green-100 transition-colors"
+                  >
+                    <div className="flex items-center justify-center space-x-2">
+                      <Database className="h-6 w-6 text-green-600" />
+                      <span className="text-green-700 font-bold text-lg">
+                        ✅ ATIVAR SISTEMA REST API
+                      </span>
+                    </div>
+                    <p className="text-green-600 font-medium mt-2">
+                      Substitui SDK problemático e ativa Firestore via REST API
+                    </p>
+                    <p className="text-green-500 text-sm mt-1 font-bold">
+                      CLIQUE AQUI para resolver tudo definitivamente!
                     </p>
                   </button>
 
@@ -9428,7 +9478,7 @@ Verifique se:
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administração → "🔧 Correção de Atribuiç✅o de
+                                Administra��ão → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
