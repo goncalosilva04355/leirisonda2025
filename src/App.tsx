@@ -5611,6 +5611,36 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
 
                             console.log("✅ Obra criada com sucesso:", newWork);
+
+                            // Send push notifications to assigned users
+                            if (
+                              workData.assignedUsers &&
+                              workData.assignedUsers.length > 0
+                            ) {
+                              try {
+                                const { pushNotificationService } =
+                                  await import(
+                                    "../services/pushNotificationService"
+                                  );
+
+                                for (const userId of workData.assignedUsers) {
+                                  await pushNotificationService.notifyObraAssignment(
+                                    workData,
+                                    userId,
+                                  );
+                                  console.log(
+                                    "📢 Notificação enviada para utilizador:",
+                                    userId,
+                                  );
+                                }
+                              } catch (notificationError) {
+                                console.warn(
+                                  "⚠️ Erro ao enviar notificações:",
+                                  notificationError,
+                                );
+                                // Não bloquear a criação da obra por falha de notificação
+                              }
+                            }
                           } catch (error) {
                             console.error("❌ Error creating work:", error);
                             alert(
