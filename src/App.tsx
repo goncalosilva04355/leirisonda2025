@@ -95,9 +95,9 @@ import { offlineFirstService } from "./services/offlineFirstService"; // Serviç
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
-import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+// import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
-import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
+// import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
@@ -131,10 +131,10 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
-import "./utils/testDataPersistence";
-import "./utils/testFirebaseUserSync";
-import "./utils/completeDataSync";
-import "./utils/fullSyncStatus";
+// import "./utils/testDataPersistence";
+// import "./utils/testFirebaseUserSync";
+// import "./utils/completeDataSync";
+// import "./utils/fullSyncStatus";
 
 import { useDataCleanup } from "./hooks/useDataCleanup";
 import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
@@ -145,7 +145,7 @@ import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
-import "./utils/datainput-diagnostic";
+// import "./utils/datainput-diagnostic";
 import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
 import DataInputTutorial from "./components/DataInputTutorial";
 
@@ -1908,7 +1908,7 @@ function App() {
         // Garantir que auto sync está ativo após login
         setTimeout(async () => {
           try {
-            console.log("��� Verificando auto sync após login...");
+            console.log("���� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -3990,7 +3990,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             {pool.nextMaintenance && (
                               <p className="text-sm text-blue-600 mt-1">
-                                Pr🔥xima manuten��ão:{" "}
+                                Pr���xima manuten��ão:{" "}
                                 {new Date(
                                   pool.nextMaintenance,
                                 ).toLocaleDateString("pt-PT")}
@@ -7980,7 +7980,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>���� Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
-                        <li>• Próximas intervenções</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
@@ -10362,7 +10362,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             observations,
                           });
 
-                          alert("Manutenção atualizada com sucesso!");
+                          alert("Manuten��ão atualizada com sucesso!");
                           setEditingMaintenance(null);
                           setActiveSection("manutencoes");
                         }}
