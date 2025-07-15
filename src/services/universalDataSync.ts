@@ -551,7 +551,7 @@ class UniversalDataSyncService {
 
       await setDoc(doc(db, "universal_obras", id), obra);
       console.log(
-        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - vis��vel para todos`,
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
       );
       return id;
     } catch (error) {
