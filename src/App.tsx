@@ -70,6 +70,7 @@ import { StableModeIndicator } from "./components/StableModeIndicator";
 
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 import "./config/emergencyMode"; // Ativar modo emergência total
+import "./utils/loginLoopReport"; // Verificação de loops de login
 
 import { fcmService } from "./services/fcmService";
 
@@ -326,7 +327,7 @@ function App() {
         hasEmergencyShutdown
       ) {
         console.log("🔥 Firebase conflict detected on mobile device");
-        setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para n��o interferir com carregamento
+        setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
 
@@ -737,7 +738,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteção de dados críticos - NUNCA PERDER DADOS
+  // Proteç��o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
