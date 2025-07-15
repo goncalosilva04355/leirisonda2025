@@ -610,7 +610,7 @@ function App() {
         try {
           await addCliente(data);
         } catch (syncError) {
-          console.warn("€�� Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronização universal:", syncError);
         }
 
         return firestoreId;
