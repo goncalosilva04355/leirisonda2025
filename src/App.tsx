@@ -80,6 +80,7 @@ import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 import { fcmService } from "./services/fcmService";
+import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
