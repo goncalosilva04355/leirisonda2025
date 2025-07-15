@@ -15,6 +15,7 @@ import {
   directFirebaseInit,
   getDirectFirestore,
 } from "../utils/directFirebaseFix";
+import { waitForFirestore } from "../utils/waitForFirestore";
 
 /**
  * Serviço que força TODOS os dados a serem guardados no Firestore
