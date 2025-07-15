@@ -86,6 +86,7 @@ import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
 import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
+import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
@@ -1160,7 +1161,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "���€ Passo 3: Erro nas operaç€es Firestore:",
+                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -5984,7 +5985,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="solar">Aquecimento Solar</option>
                           <option value="bomba-calor">Bomba de Calor</option>
                           <option value="resistencia">
-                            Resistência Elétrica
+                            Resistência El��trica
                           </option>
                           <option value="gas">Aquecimento a G🎉s</option>
                         </select>
