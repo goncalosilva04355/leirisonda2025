@@ -2110,7 +2110,7 @@ ${index + 1}. ${work.title}
    Localização: ${work.location}
    Tipo: ${work.type}
    Estado: ${work.status === "completed" ? "Conclu📞da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
-   Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
+   Data In��cio: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
@@ -2786,7 +2786,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produção */}
+                {/* Firebase Status Display - Apenas em produ��ão */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -2843,8 +2843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
 
                   {/* Firebase, Firestore & AutoSync Status LEDs - Bottom Right Corner */}
-                  <div className="absolute bottom-2 right-2 z-20">
-                    <div className="flex items-center space-x-1">
+                  
                       <div
                         className={`w-2 h-2 rounded-full ${
                           isFirebaseReady() ? "bg-green-500" : "bg-red-500"
