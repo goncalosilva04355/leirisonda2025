@@ -1,20 +1,8 @@
-// PARAGEM DE EMERGÊNCIA TOTAL - TEMPORARIAMENTE DESATIVADO PARA REATIVAR FIREBASE
-// import "./utils/emergencyStopAll";
-
-// MONITOR EM TEMPO REAL - MANTIDO ATIVO
-import "./utils/realTimeMonitor";
-
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
 import "./utils/simpleFirebaseInit";
-
-// RASTREAMENTO DE ERROS FIREBASE
-import "./utils/firebaseErrorTracker";
-
-// SISTEMA DE LOGIN DE EMERGÊNCIA
-import "./utils/emergencyLogin";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -901,7 +889,7 @@ function App() {
           // Sincronizar com Firestore se disponível
           if (isFirestoreReady()) {
             console.log(
-              "🔄 Sincronizando utilizadores locais para Firestore...",
+              "��� Sincronizando utilizadores locais para Firestore...",
             );
             for (const user of parsedUsers) {
               if (!(user as any).firestoreId) {
@@ -1161,7 +1149,7 @@ function App() {
         }
 
         // If no valid session, start fresh
-        console.log("���� No valid session found, starting fresh");
+        console.log("������ No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -11059,7 +11047,7 @@ Verifique se:
           isLoading={false}
         />
 
-        {/* Admin Login Modal - tamb����m funciona na página de login */}
+        {/* Admin Login Modal - tamb��m funciona na página de login */}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
@@ -12118,7 +12106,7 @@ Verifique se:
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação n��o pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deletePool(selectedPool.id);
