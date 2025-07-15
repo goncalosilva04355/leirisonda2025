@@ -69,10 +69,7 @@ if (true) {
 
 // Função robusta para obter a app Firebase
 export function getFirebaseApp(): FirebaseApp | null {
-  if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
-    console.log("📱 Firebase App indisponível - aguardando deploy no Netlify");
-    return null;
-  }
+  // SEMPRE disponível - Firebase forçado ativo
 
   // Tentar inicializar se ainda não foi feito
   if (!firebaseApp) {
