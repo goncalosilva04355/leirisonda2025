@@ -13,7 +13,7 @@ const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO
+const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO - DEV E PROD
 
 // Flag para controlar se já verificamos a disponibilidade do Firestore
 let firestoreAvailabilityChecked = false;
@@ -126,7 +126,7 @@ async function initializeFirestore(
 
     console.log("💾 Chamando getFirestore()...");
     const db = getFirestore(app);
-    console.log("✅ Firestore inicializado com sucesso", typeof db);
+    console.log("�� Firestore inicializado com sucesso", typeof db);
 
     // Teste rápido para verificar se realmente funciona
     console.log("🧪 Testando conectividade Firestore...");
