@@ -1160,7 +1160,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "���€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -3819,6 +3819,26 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     )}
                   </div>
                 </div>
+
+                {/* Botão de Teste Firestore - apenas no modo de desenvolvimento */}
+                {import.meta.env.DEV && (
+                  <div className="mt-6">
+                    <button
+                      onClick={() => setActiveSection("teste-firestore")}
+                      className="w-full bg-red-50 border-2 border-red-200 rounded-lg p-4 hover:bg-red-100 transition-colors"
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <Database className="h-5 w-5 text-red-600" />
+                        <span className="text-red-700 font-medium">
+                          🔥 Teste Conectividade Firestore
+                        </span>
+                      </div>
+                      <p className="text-red-600 text-sm mt-1">
+                        Diagnosticar problemas de armazenamento de dados
+                      </p>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           );
