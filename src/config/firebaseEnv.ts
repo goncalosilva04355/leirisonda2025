@@ -23,7 +23,7 @@ export const LEIRIA_FIREBASE_CONFIG = {
     "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
     ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
-    : "leiria25",
+    : "leiria-1cfc9",
   storageBucket: !isPlaceholder(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET)
     ? import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!
     : "leiria25.firebasestorage.app",
