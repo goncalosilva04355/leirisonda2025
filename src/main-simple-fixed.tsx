@@ -104,27 +104,18 @@ try {
   // First, show loading screen
   ReactDOM.createRoot(root).render(<LoadingScreen />);
 
-  // Then load the main app with error handling
-  import("./App")
+  // Then load the simple app
+  import("./AppSimple")
     .then((AppModule) => {
-      const App = AppModule.default;
+      const AppSimple = AppModule.default;
 
-      // Import error boundary
-      return import("./components/ImprovedErrorBoundary").then(
-        (ErrorBoundaryModule) => {
-          const ImprovedErrorBoundary = ErrorBoundaryModule.default;
-
-          ReactDOM.createRoot(root).render(
-            <React.StrictMode>
-              <ImprovedErrorBoundary>
-                <App />
-              </ImprovedErrorBoundary>
-            </React.StrictMode>,
-          );
-
-          console.log("✅ Leirisonda carregada com sucesso");
-        },
+      ReactDOM.createRoot(root).render(
+        <React.StrictMode>
+          <AppSimple />
+        </React.StrictMode>,
       );
+
+      console.log("✅ Leirisonda carregada com sucesso");
     })
     .catch((error) => {
       console.error("❌ Erro ao carregar aplicação:", error);
