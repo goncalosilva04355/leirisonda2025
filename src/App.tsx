@@ -996,7 +996,7 @@ function App() {
           );
         }
       } catch (error) {
-        console.error("❌ Erro ao carregar configura��ões:", error);
+        console.error("❌ Erro ao carregar configurações:", error);
       }
     };
 
