@@ -1467,8 +1467,10 @@ function App() {
 
   // Sincronização inicial de todos os dados com Firestore - SÓ AP��S LOGIN
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log("📱 Firestore desativado - aguardando login");
+    if (!isAuthenticated || !mobileFirebaseReady) {
+      console.log(
+        "📱 Firestore desativado - aguardando login e Firebase estar pronto",
+      );
       return;
     }
 
@@ -5089,7 +5091,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && usersLoaded && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                ⚠�� Nenhum utilizador encontrado.
+                                ����� Nenhum utilizador encontrado.
                               </p>
                               <p className="text-xs text-yellow-700 mt-1">
                                 Debug: localStorage tem{" "}
