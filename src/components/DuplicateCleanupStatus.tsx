@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AlertCircle, CheckCircle, RefreshCw, Trash2 } from "lucide-react";
 import { debugDuplicateStatus } from "../utils/debugDuplicates";
 import { executeManualCleanup } from "../utils/manualDuplicateCleanup";
+import EmergencyCleanupButton from "./EmergencyCleanupButton";
 
 interface DuplicateStatus {
   total: number;
