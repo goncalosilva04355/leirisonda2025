@@ -690,9 +690,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteCliente = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteCliente called:", id);
-  }, []);
+  const deleteCliente = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando cliente:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "clientes",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Cliente eliminado do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingClientes = safeGetLocalStorage("clients");
+        const updatedClientes = existingClientes.filter(
+          (cliente: any) => cliente.id !== id,
+        );
+        safeSetLocalStorage("clients", updatedClientes);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          clientes: updatedClientes,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("clientesUpdated", {
+              detail: { data: updatedClientes, collection: "clientes" },
+            }),
+          );
+        }
+
+        console.log("✅ Cliente eliminado com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar cliente:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const forceSyncAll = useCallback(async (): Promise<void> => {
     console.log("🔄 forceSyncAll: Forçando sincronização com Firestore...");
