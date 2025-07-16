@@ -33,7 +33,7 @@ const AppWithFallback: React.FC = () => {
     }
   }, [retryCount]);
 
-  // Loading fallback usando SplashPage
+  // Loading fallback - simple loading without SplashPage
   const LoadingFallback = () => {
     const subtitle =
       retryCount > 0
@@ -41,7 +41,12 @@ const AppWithFallback: React.FC = () => {
         : "A carregar aplicação principal...";
 
     return (
-      <SplashPage title="Leirisonda" subtitle={subtitle} showProgress={true} />
+      <div className="min-h-screen bg-blue-200 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Leirisonda</h1>
+          <p className="text-gray-600">{subtitle}</p>
+        </div>
+      </div>
     );
   };
 
