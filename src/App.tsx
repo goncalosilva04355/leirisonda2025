@@ -748,7 +748,7 @@ function App() {
         (user) =>
           user.name === currentUser.name ||
           user.id === currentUser.id ||
-          user.id === currentUser.id.toString(),
+          user.id === String(currentUser.id),
       )
     ) {
       return true;
@@ -2283,7 +2283,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTENÇÕES RECENTES ===
+=== MANUTEN��ÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -5790,7 +5790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             if (e.target.value === "novo") {
                               console.log(
-                                "🔍 Tentando mostrar formul��rio de novo cliente...",
+                                "🔍 Tentando mostrar formulário de novo cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
@@ -7174,7 +7174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configura✅ões Avançadas
+                                      Configura��ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -9746,7 +9746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec📞ficas do Furo
+                          Observaç��es Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -10476,7 +10476,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h1>
                   <p className="text-gray-600 mb-4">
                     Apenas administradores podem aceder às funcionalidades de
-                    localizaç��o.
+                    localização.
                   </p>
                   <button
                     onClick={() => navigateToSection("dashboard")}
