@@ -373,7 +373,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addPiscina = useCallback(
     async (piscinaData: any): Promise<string> => {
       try {
-        const id = piscinaData.id || `piscina-${Date.now()}-${Math.random()}`;
+        const id = piscinaData.id || generateUniqueId("piscina");
         const piscina = {
           ...piscinaData,
           id,
