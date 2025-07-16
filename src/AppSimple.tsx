@@ -48,16 +48,7 @@ const AppSimple: React.FC = () => {
     initApp();
   }, []);
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <SplashPage
-        title="Leirisonda"
-        subtitle="A inicializar sistema..."
-        showProgress={true}
-      />
-    );
-  }
+  // Loading state - removed SplashPage, go directly to login
 
   // Error state
   if (error) {
