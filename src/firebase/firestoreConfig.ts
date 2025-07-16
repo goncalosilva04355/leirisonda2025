@@ -144,6 +144,11 @@ async function initializeFirestore(
     // Aguardar Firebase App estar pronto
     const app = await waitForFirebaseApp();
 
+    if (!app) {
+      console.warn("⚠️ Firebase App não disponível, continuando sem Firestore");
+      return null;
+    }
+
     console.log("🎆 Firebase App confirmada:", {
       name: app.name,
       projectId: app.options.projectId,
