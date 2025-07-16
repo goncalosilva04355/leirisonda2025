@@ -29,7 +29,7 @@ interface TeamLocationManagerProps {
     id: string;
     name: string;
     email: string;
-    role: string;
+    role?: string;
   };
   allUsers?: Array<{
     id: number | string;
