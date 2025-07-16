@@ -75,7 +75,11 @@ class DirectAuthService {
 
         // SEMPRE guardar no Firestore
         try {
-          await saveUser(userProfile);
+          await saveToFirestore(
+            "users",
+            userProfile.id?.toString() || email,
+            userProfile,
+          );
           console.log("✅ DirectAuth: Utilizador guardado no Firestore");
         } catch (firestoreError) {
           console.warn("⚠️ DirectAuth: Erro Firestore, mas login continua");
