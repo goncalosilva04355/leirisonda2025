@@ -159,6 +159,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/directDuplicateKill"; // ELIMINAÇÃO DIRETA E IMEDIATA DOS DUPLICADOS ESPECÍFICOS
+import "./utils/continuousCleanup"; // LIMPEZA CONTÍNUA ATÉ ELIMINAÇÃO COMPLETA
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -2740,7 +2741,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("€dress clicked:", address);
-    console.log("€ Maps redirect enabled:", enableMapsRedirect);
+    console.log("�� Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -3519,7 +3520,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu����da"
+                                        ? "Conclu📞da"
                                         : work.status}
                                 </span>
 
@@ -4380,7 +4381,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manutenções */}
+                {/* Lista de Manuten��ões */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -6581,7 +6582,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten✅ão
+                        Nova Manuten���ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar interven✅��o de manutenção
@@ -8352,7 +8353,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relat��rio de Clientes
+                          Relatório de Clientes
                         </h3>
                         <p className="text-sm text-gray-600">
                           Base de dados de clientes
@@ -9669,7 +9670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Técnicos Atribu��dos */}
+                    {/* Técnicos Atribuídos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -9962,7 +9963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec📞ficas do Furo
+                          Observaç����es Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -11219,7 +11220,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              // console.log("�� Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result.success && result.user) {
                 // console.log("✅ Login successful for:", result.user.email);
@@ -11688,7 +11689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ���� {selectedWork.contact}
+                            ������ {selectedWork.contact}
                           </button>
                         )}
                       </div>
