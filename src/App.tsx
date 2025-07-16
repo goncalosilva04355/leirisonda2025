@@ -187,6 +187,18 @@ const checkForDuplicateKeys = (
     console.warn(`🚨 Full array:`, array);
   }
 };
+
+// Debug: Intercept React warnings about duplicate keys
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  const message = args.join(" ");
+  if (message.includes("same key") && message.includes("1752574634617")) {
+    console.warn(`🚨 FOUND PROBLEM TIMESTAMP: 1752574634617`);
+    console.warn("🚨 Stack trace:", new Error().stack);
+    debugger; // Break here in devtools
+  }
+  return originalConsoleError.apply(console, args);
+};
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
@@ -1941,7 +1953,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log("���� Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       // await firebaseAutoFix.checkOnUserAction();
@@ -8195,7 +8207,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>��� Datas e dura🔥es</li>
+                        <li>����� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -10399,7 +10411,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��cnico *
+                          T����cnico *
                         </label>
                         <input
                           type="text"
@@ -11839,7 +11851,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic��vel */}
+                      {/* Detalhes do Furo de Água - Se aplic���vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
