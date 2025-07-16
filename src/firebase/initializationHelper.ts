@@ -145,9 +145,4 @@ export async function waitForFirebaseReady(
   return false;
 }
 
-// Auto-inicialização quando o módulo é importado
-setTimeout(() => {
-  initializeFirebaseComplete().catch((error) => {
-    console.error("❌ Erro na auto-inicialização do Firebase:", error);
-  });
-}, 1000);
+// Auto-inicialização removida - será feita apenas após login
