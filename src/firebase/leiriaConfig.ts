@@ -20,12 +20,12 @@ let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
 let auth: Auth | null = null;
 
-// Verificar se deve inicializar Firebase
+// Verificar se deve inicializar Firebase - SEMPRE ATIVO PARA DESENVOLVIMENTO IGUAL A PRODUÇÃO
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true" || true; // SEMPRE ATIVO
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
