@@ -472,7 +472,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("��SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -1037,7 +1037,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("��️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1239,7 +1239,7 @@ function App() {
         console.log("✅ Firebase Leiria pronto para uso");
 
         try {
-          await firestoreService.syncAll();
+          // await firestoreService.syncAll(); // Desabilitado - usando REST API
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização com Firebase Leiria:", error);
@@ -2203,7 +2203,7 @@ ${index + 1}. ${work.title}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
    ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
-   Respons����vel: ${work.assignedTo}
+   Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
   )
@@ -2259,7 +2259,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -9306,7 +9306,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa🔥ões Básicas
+                          Informa���ões Básicas
                         </h3>
                       </div>
 
@@ -9610,7 +9610,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Detalhes do Furo de Água */}
                     <div className="border border-cyan-200 rounded-lg p-6 bg-cyan-50">
                       <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                        🎉etalhes do Furo de ����gua
+                        🎉etalhes do Furo de ��gua
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
