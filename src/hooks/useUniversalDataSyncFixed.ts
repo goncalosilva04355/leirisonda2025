@@ -248,7 +248,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addObra = useCallback(
     async (obraData: any): Promise<string> => {
       try {
-        const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+        const id = obraData.id || generateUniqueId("obra");
         const obra = {
           ...obraData,
           id,
