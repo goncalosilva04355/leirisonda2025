@@ -160,6 +160,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
 import "./utils/simpleDuplicateReport"; // RELATÓRIO SIMPLES DE DUPLICADOS SEM ELIMINAÇÃO
+import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
@@ -454,7 +455,7 @@ function App() {
 
   // Verificar status da quota Firebase na inicialização
   useEffect(() => {
-    console.log("���� Verificando e recuperando quota Firebase...");
+    console.log("🔍 Verificando e recuperando quota Firebase...");
 
     // Tentar recuperação automática
     autoRecoverOnInit();
@@ -923,7 +924,7 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
+  // Auto-sync hook for automatic Firebase ↔��� localStorage synchronization
   const autoSyncData = {
     syncStatus: "disabled",
     lastSync: null,
@@ -1727,7 +1728,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "📞 Firebase Messaging Service Worker registered successfully:",
+              "�� Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -4355,7 +4356,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Piscinas
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Manuten��ões
+                      Manutenções
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
@@ -5523,7 +5524,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa����ções Espec��ficas do Furo */}
+                          {/* Observa����ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -8937,7 +8938,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic���el)
+                            Pessoa de Contacto (se aplic����el)
                           </label>
                           <input
                             type="text"
