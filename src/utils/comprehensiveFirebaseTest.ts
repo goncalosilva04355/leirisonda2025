@@ -40,7 +40,7 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
 
   try {
     // 1. Verificar se o projeto está correto
-    console.log("1️⃣ Verificando configuração do projeto...");
+    console.log("1️�� Verificando configuração do projeto...");
     const firebaseApp = getFirebaseApp();
 
     if (firebaseApp?.options.projectId === "leiria-1cfc9") {
@@ -87,9 +87,9 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
       console.error("❌ REST API falhou:", restApiTest.message);
     }
 
-    // 3. Testar SDK Firebase
-    console.log("3️⃣ Testando Firestore via SDK...");
-    const sdkTest = await smartFirebaseTest();
+    // 3. Testar SDK Firebase usando método seguro
+    console.log("3️⃣ Testando Firestore via método seguro...");
+    const sdkTest = await safeFirestoreTest();
 
     if (sdkTest.success) {
       console.log("✅ SDK Firebase funcionando");
