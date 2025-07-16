@@ -1,8 +1,9 @@
 // CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
-import {
-  initializeFirebaseMobile,
-  isFirebaseMobileReady,
-} from "./firebase/mobileFirebase";
+// Temporariamente comentado para debugar
+// import {
+//   initializeFirebaseMobile,
+//   isFirebaseMobileReady,
+// } from "./firebase/mobileFirebase";
 
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
@@ -1458,7 +1459,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "���€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -1646,7 +1647,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç����es
+    // Adicionar listeners para todas as coleç������es
     const collections = [
       "obras",
       "piscinas",
@@ -11041,7 +11042,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>�����</span>
+                  <span>�������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
