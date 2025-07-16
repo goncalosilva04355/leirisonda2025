@@ -88,11 +88,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // TEMPORÁRIO: Use AppMinimalTest para diagnóstico
-  const AppComponent = AppMinimalTest;
+  // Use the main App directly
+  const AppComponent = App;
   console.log(
     "📱 Using app:",
-    "AppMinimalTest (minimal test version for debugging)",
+    "App (main application with full functionality)",
   );
 
   ReactDOM.createRoot(rootElement).render(
