@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import {
   readFromFirestoreRest,
   saveToFirestoreRest,
+  deleteFromFirestoreRest,
 } from "../utils/firestoreRestApi";
 
 // Função SUPER ROBUSTA para gerar IDs únicos e evitar colisões
