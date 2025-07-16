@@ -1505,8 +1505,10 @@ function App() {
 
   // Inicializar sincronização automática em tempo real - SÓ APÓS LOGIN
   useEffect(() => {
-    if (!isAuthenticated) {
-      console.log("🔄 AutoSync desativado - aguardando login");
+    if (!isAuthenticated || !mobileFirebaseReady) {
+      console.log(
+        "🔄 AutoSync desativado - aguardando login e Firebase estar pronto",
+      );
       return;
     }
 
@@ -2210,7 +2212,7 @@ function App() {
               if (autoSyncStarted) {
                 console.log("�� Auto sync garantido após login!");
               } else {
-                console.warn("��️ Falha ao garantir auto sync após login");
+                console.warn("����� Falha ao garantir auto sync após login");
               }
             } else {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
@@ -2786,7 +2788,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠€ Maps redirect is disabled");
+        console.warn("���€ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠€ No address provided");
@@ -9865,7 +9867,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Diâmetro da Coluna
+                            Di��metro da Coluna
                           </label>
                           <select
                             defaultValue={editingWork?.columnDiameter}
