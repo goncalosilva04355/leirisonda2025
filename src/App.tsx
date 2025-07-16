@@ -13,6 +13,7 @@ import "./utils/verifySaveToFirestore";
 import "./utils/verifyAutoSync";
 import "./utils/finalFirebaseVerification";
 import "./utils/firestoreDiagnosticMessage";
+import "./utils/safeFirestoreTest";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -247,7 +248,7 @@ function App() {
   useEffect(() => {
     if (firestoreInitialized) {
       console.log(
-        "🔥 ForceFirestore inicializado - todos os dados v��o para Firestore:",
+        "🔥 ForceFirestore inicializado - todos os dados vão para Firestore:",
         firestoreStatus,
       );
     }
@@ -829,7 +830,7 @@ function App() {
           );
 
           if (!hasGoncalo) {
-            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
+            console.log("���� Adicionando Gonçalo Fonseca aos utilizadores");
             parsedUsers.push({
               id: 1,
               name: "Gonçalo Fonseca",
@@ -8560,7 +8561,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome / Razão Social *
+                            Nome / Raz��o Social *
                           </label>
                           <input
                             type="text"
@@ -8708,7 +8709,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç��🔥es
+                            Notas e Observaç🔥🔥es
                           </label>
                           <textarea
                             rows={4}
@@ -10375,7 +10376,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Dura���ão Real
+                            .value; // Dura��ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
@@ -12044,7 +12045,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manutenç��o
+                            Próxima Manuten����o
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.nextMaintenance
@@ -12160,7 +12161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P���gina
+                            Recarregar P����gina
                           </button>
                           <button
                             onClick={() => {
