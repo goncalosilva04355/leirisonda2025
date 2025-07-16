@@ -2446,7 +2446,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         const reader = new FileReader();
         reader.onload = (e: ProgressEvent<FileReader>) => {
           const newPhoto = {
-            id: Date.now() + Math.random(),
+            id: generateUniqueId("photo"),
             name: file.name,
             size: file.size,
             type: file.type,
