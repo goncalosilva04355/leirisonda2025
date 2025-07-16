@@ -716,7 +716,7 @@ function App() {
       );
       const newWork = {
         ...data,
-        id: data.id || Date.now().toString(),
+        id: data.id || generateUniqueId("work"),
         createdAt: data.createdAt || new Date().toISOString(),
       };
 
@@ -2047,7 +2047,7 @@ function App() {
         // Garantir que auto sync est���� ativo após login
         setTimeout(async () => {
           try {
-            console.log("��� Verificando auto sync após login...");
+            console.log("���� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -5416,7 +5416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa�����es e Trabalho
+                          Observa����es e Trabalho
                         </h3>
                       </div>
 
@@ -5809,7 +5809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                             }
                           } catch (error) {
-                            console.error("�� Error creating work:", error);
+                            console.error("❌ Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
@@ -8237,7 +8237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>����� Informações contratuais</li>
+                        <li>���� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8659,7 +8659,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informa��ões Básicas
+                        Informações Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -10842,7 +10842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relat����rio
+                  Escolha como pretende partilhar o relat🎉rio
                 </p>
               </div>
             </div>
@@ -11184,7 +11184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("�� Login error:", error);
+              console.error("✅ Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
