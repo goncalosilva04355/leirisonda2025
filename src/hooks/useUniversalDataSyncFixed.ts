@@ -72,27 +72,24 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     syncStatus: "disconnected",
   }));
 
-  // Safe localStorage access
-  const safeGetLocalStorage = useCallback(
-    (key: string, defaultValue = "[]") => {
-      try {
-        if (typeof window === "undefined" || !window.localStorage) {
-          return JSON.parse(defaultValue);
-        }
-        const item = localStorage.getItem(key);
-        if (!item) return JSON.parse(defaultValue);
-        const parsed = JSON.parse(item);
-        return Array.isArray(parsed) ? parsed : JSON.parse(defaultValue);
-      } catch (error) {
-        console.warn(`⚠️ Error reading localStorage key "${key}":`, error);
+  // Simple localStorage access - no useCallback to prevent re-renders
+  const safeGetLocalStorage = (key: string, defaultValue = "[]") => {
+    try {
+      if (typeof window === "undefined" || !window.localStorage) {
         return JSON.parse(defaultValue);
       }
-    },
-    [],
-  );
+      const item = localStorage.getItem(key);
+      if (!item) return JSON.parse(defaultValue);
+      const parsed = JSON.parse(item);
+      return Array.isArray(parsed) ? parsed : JSON.parse(defaultValue);
+    } catch (error) {
+      console.warn(`⚠️ Error reading localStorage key "${key}":`, error);
+      return JSON.parse(defaultValue);
+    }
+  };
 
-  // Safe localStorage write
-  const safeSetLocalStorage = useCallback((key: string, value: any) => {
+  // Simple localStorage write - no useCallback to prevent re-renders
+  const safeSetLocalStorage = (key: string, value: any) => {
     try {
       if (typeof window === "undefined" || !window.localStorage) {
         return false;
@@ -103,7 +100,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
       console.warn(`⚠️ Error writing localStorage key "${key}":`, error);
       return false;
     }
-  }, []);
+  };
 
   // Load initial data FROM FIRESTORE (development = production)
   useEffect(() => {
