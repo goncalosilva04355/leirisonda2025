@@ -29,14 +29,10 @@ const FORCE_FIREBASE_PRODUCTION =
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
-  // Respeitar configurações de ambiente
-  if (!FORCE_FIREBASE_PRODUCTION) {
-    console.log(
-      "🚫 Firebase leiria-1cfc9 não inicializado - modo desenvolvimento ativo",
-    );
-    console.log("📝 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
-    return false;
-  }
+  // SEMPRE INICIALIZAR FIREBASE - DESENVOLVIMENTO = PRODUÇÃO
+  console.log(
+    "🔥 Firebase leiria-1cfc9 SEMPRE ATIVO - desenvolvimento como produção",
+  );
 
   try {
     // Verificar se já existe uma app
