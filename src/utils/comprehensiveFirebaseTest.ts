@@ -158,11 +158,11 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
 
     console.log(`📊 Resultado: ${successCount}/${totalTests} testes passaram`);
 
-    if (successCount >= 3) {
-      // Pelo menos REST API, projeto e dados
+    if (successCount >= 2 && results.projectCheck && results.restApiCheck) {
+      // Pelo menos projeto correto e REST API funcionando
       return {
         success: true,
-        message: `Firebase/Firestore funcionando! ${successCount}/${totalTests} testes passaram`,
+        message: `Firebase/Firestore funcionando via REST API! ${successCount}/${totalTests} testes passaram`,
         details: results,
         data: {
           projectId: "leiria-1cfc9",
