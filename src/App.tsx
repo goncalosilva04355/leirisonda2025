@@ -342,7 +342,7 @@ function App() {
         console.log(
           "�� Inicializando Firebase Mobile para prevenir tela branca...",
         );
-                await initializeFirebaseMobile();
+        await initializeFirebaseMobile();
         setMobileFirebaseReady(true);
         console.log("✅ Firebase Mobile inicializado com sucesso!");
       } catch (error) {
@@ -2195,7 +2195,7 @@ function App() {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
-            console.log("🔄 Navigating to hash section:", hash);
+            console.log("���� Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
@@ -7445,7 +7445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="font-medium text-gray-800">
                                       Configura��ões Avançadas
                                     </p>
-                                                                        <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
                                     </p>
                                   </div>
@@ -7476,10 +7476,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </div>
             </div>
           );
-
-                                                default:
-          return null;
-      }
 
         case "utilizadores":
           // SECURITY: Only super admin can access user management
