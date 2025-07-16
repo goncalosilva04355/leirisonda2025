@@ -653,7 +653,7 @@ function App() {
   //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
   //     );
   //     console.log(
-  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //       "�� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
   //     );
   //   }
   // }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -6553,7 +6553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 description:
                                   "Manutennção programada durante criação da piscina",
                                 notes:
-                                  "Agendada automaticamente na criação da piscina",
+                                  "Agendada automaticamente na criaç��o da piscina",
                                 clientName: poolData.client,
                                 clientContact: poolData.contact || "",
                                 location: poolData.location,
@@ -7882,7 +7882,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN���ÃO: Esta opera✅ão é
+                                        �������� ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8753,7 +8753,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Básicas
+                        Informa��ões Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -8777,7 +8777,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P📞blica</option>
+                            <option value="publico">Entidade P���blica</option>
                           </select>
                         </div>
                       </div>
@@ -11196,6 +11196,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   JSON.stringify(result.user),
                 );
                 safeLocalStorage.setItem("isAuthenticated", "true");
+
+                // Inicializar Firebase após login bem-sucedido
+                await initializeFirebaseAfterLogin();
 
                 // Clear login form
                 setLoginForm({ email: "", password: "" });
