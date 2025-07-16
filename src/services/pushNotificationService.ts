@@ -380,9 +380,17 @@ export class PushNotificationService {
 // Instância singleton
 export const pushNotificationService = PushNotificationService.getInstance();
 
-// Auto-inicializar quando importado
+// Auto-inicializar quando importado (com tratamento de erro)
 if (typeof window !== "undefined") {
-  setTimeout(() => {
-    pushNotificationService.startNotificationService();
+  setTimeout(async () => {
+    try {
+      await pushNotificationService.startNotificationService();
+    } catch (error) {
+      console.warn(
+        "⚠️ Erro na inicialização automática do serviço de notificações:",
+        error,
+      );
+      // Prevent unhandled promise rejection
+    }
   }, 2000);
 }
