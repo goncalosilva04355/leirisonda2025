@@ -56,7 +56,6 @@ import {
   Share,
   Database,
 } from "lucide-react";
-import PullToRefresh from "./components/PullToRefresh";
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
@@ -462,29 +461,8 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-    const universalSync = useUniversalDataSync();
+  const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
-
-  // Função de refresh para Pull-to-Refresh
-  const handleDashboardRefresh = async (): Promise<void> => {
-    try {
-      console.log("🔄 Iniciando refresh do Dashboard...");
-
-      // Trigger refresh dos dados principais
-      await dataSync.syncAllData?.();
-
-      // Force refresh works
-      window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
-
-      // Universal sync
-      await universalSync.forceSync?.();
-
-      console.log("✅ Dashboard atualizado com sucesso!");
-    } catch (error) {
-      console.error("❌ Erro durante refresh do Dashboard:", error);
-      throw error; // Re-throw para mostrar feedback visual de erro
-    }
-  };
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
@@ -1276,7 +1254,7 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log(
-          "🔥 Iniciando sincronização com Firebase Leiria AP��S LOGIN...",
+          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
         );
         console.log("✅ Firebase Leiria pronto para uso");
 
@@ -2939,13 +2917,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Add error boundary
     try {
       switch (activeSection) {
-                case "dashboard":
+        case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-                                          <PullToRefresh onRefresh={handleDashboardRefresh}>
-                {/* Dashboard Content - Mobile First Design */}
-                <div className="px-4 py-4 space-y-4">
-                  {/* Firebase Status Display - Apenas em produção */}
+              {/* Dashboard Content - Mobile First Design */}
+              <div className="px-4 py-4 space-y-4">
+                {/* Firebase Status Display - Apenas em produção */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -3509,7 +3486,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">������</span>
+                      <span className="text-blue-600">����</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -3924,10 +3901,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </>
                         )}
                       </div>
-                                        )}
+                    )}
                   </div>
                 </div>
-              </PullToRefresh>
+              </div>
             </div>
           );
 
@@ -5559,7 +5536,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observações sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -8029,7 +8006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat��rios
+                          Relatórios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -8193,7 +8170,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Todas as informa��ões
+                          Todas as informações
                         </p>
                       </div>
                     </div>
@@ -8616,7 +8593,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P���blica</option>
+                            <option value="publico">Entidade P📞blica</option>
                           </select>
                         </div>
                       </div>
@@ -9358,7 +9335,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa🔥ões B��sicas
+                          Informa🔥ões Básicas
                         </h3>
                       </div>
 
@@ -10323,7 +10300,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manuten��ão</option>
+                          <option value="Manutenç€o">Manutenção</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
@@ -10420,7 +10397,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç��es
+                        Observações
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
