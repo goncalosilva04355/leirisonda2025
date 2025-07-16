@@ -657,7 +657,7 @@ function App() {
 
   const addWork = async (data: any) => {
     try {
-      console.log("��� addWork iniciado com Firestore ativo");
+      console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
       const firestoreId = await ultraSimpleOfflineService.createWork(data);
@@ -4661,7 +4661,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Sa��da
+                              Hora de Saída
                             </label>
                             <input
                               type="datetime-local"
@@ -5858,7 +5858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "���� hasPermission clientes create:",
+                                "🔥 hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -7863,7 +7863,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <h4 className="font-medium text-green-900">
                                       Tutorial Interativo
                                     </h4>
-                                    <DataInputTutorial />
+                                    <div className="text-green-700 text-sm">
+                                      Tutorial disponível
+                                    </div>
                                   </div>
                                   <p className="text-green-700 text-sm">
                                     Tutorial passo-a-passo para inser��ão de
