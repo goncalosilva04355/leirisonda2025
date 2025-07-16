@@ -105,7 +105,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
         firebaseApp = getApp();
       }
     } catch (error: any) {
-      console.error("❌ Erro na inicializaç��o assíncrona:", error.message);
+      console.error("❌ Erro na inicialização assíncrona:", error.message);
     }
   }
 
@@ -114,7 +114,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
 
 // Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  return true; // SEMPRE pronto - Firebase forçado ativo
+  return FORCE_FIREBASE_PRODUCTION && firebaseApp !== null;
 }
 
 // Função para obter db seguro - usar firestoreConfig diretamente
