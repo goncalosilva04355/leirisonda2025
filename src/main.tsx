@@ -38,12 +38,14 @@ window.addEventListener("unhandledrejection", (event) => {
     return;
   }
 
-  console.error("��� Unhandled promise rejection:", event.reason);
+  console.error("❌ Unhandled promise rejection:", event.reason);
   console.error("❌ Promise:", event.promise);
 });
 
 // App original reparado
 import App from "./App";
+// App simplificado funcional
+import AppSimpleFixed from "./AppSimpleFixed";
 // App mínimo para teste
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
