@@ -883,7 +883,10 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                   </div>
                   <div className="divide-y divide-gray-200 max-h-[500px] overflow-y-auto">
                     {authorizedUsers.map((user, index) => (
-                      <div key={user.email} className="px-6 py-4">
+                      <div
+                        key={user.email}
+                        className="px-6 py-4 hover:bg-gray-50 transition-colors"
+                      >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
