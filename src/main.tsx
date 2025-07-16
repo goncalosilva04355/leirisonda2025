@@ -55,6 +55,8 @@ import AppWithFallback from "./AppWithFallback";
 import AppWorking from "./AppWorking";
 // App simplificado para produção
 import AppProduction from "./AppProduction";
+// App corrigido sem loops
+import AppFixed from "./AppFixed";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
