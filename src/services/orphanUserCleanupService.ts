@@ -156,33 +156,36 @@ export class OrphanUserCleanupService {
    * Carrega todas as obras
    */
   private async loadAllWorks(): Promise<Work[]> {
-    try {
-      // Tentar carregar do firestoreService primeiro
-      const firestoreWorks = await firestoreService.getWorks();
-      if (firestoreWorks && firestoreWorks.length > 0) {
-        console.log(
-          `✅ Carregadas ${firestoreWorks.length} obras do firestoreService`,
-        );
-        return firestoreWorks;
-      }
+    const fallbackPromises = [
+      // Método 1: firestoreService
+      this.tryMethod("firestoreService.getWorks", () =>
+        firestoreService.getWorks(),
+      ),
 
-      // Fallback para forceFirestoreService
-      const forceWorks = await forceFirestoreService.getWorks();
-      if (forceWorks && forceWorks.length > 0) {
-        console.log(
-          `✅ Carregadas ${forceWorks.length} obras do forceFirestoreService`,
-        );
-        return forceWorks;
-      }
+      // Método 2: forceFirestoreService
+      this.tryMethod("forceFirestoreService.getWorks", () =>
+        forceFirestoreService.getWorks(),
+      ),
 
-      // Fallback para localStorage
-      const localWorks = JSON.parse(localStorage.getItem("works") || "[]");
-      console.log(`⚠️ Fallback para localStorage: ${localWorks.length} obras`);
-      return localWorks;
-    } catch (error) {
-      console.error("❌ Erro ao carregar obras:", error);
-      throw error;
+      // Método 3: localStorage
+      this.tryMethod("localStorage fallback", () => safeFallback.getWorks()),
+    ];
+
+    for (const method of fallbackPromises) {
+      try {
+        const result = await method;
+        if (result && result.length > 0) {
+          return result;
+        }
+      } catch (error) {
+        console.warn("Método falhou, tentando próximo...", error);
+      }
     }
+
+    console.warn(
+      "⚠️ Nenhum método conseguiu carregar obras, retornando array vazio",
+    );
+    return [];
   }
 
   /**
