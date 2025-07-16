@@ -45,6 +45,8 @@ import App from "./App";
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
 import AppDiagnostic from "./AppDiagnostic";
+// App debug para diagnóstico de tela branca
+import AppDebug from "./AppDebug";
 // App funcional garantido
 import AppWorking from "./AppWorking";
 // App simplificado para produção
