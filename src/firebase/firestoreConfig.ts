@@ -178,11 +178,11 @@ async function initializeFirestore(
 
     return db;
   } catch (error: any) {
-    console.error(
-      `❌ Erro ao inicializar Firestore (tentativa ${retryCount + 1}):`,
+    console.warn(
+      `⚠️ Erro ao inicializar Firestore (tentativa ${retryCount + 1}):`,
       error.message,
     );
-    console.error("🔍 Error code:", error.code);
+    console.warn("🔍 Error code:", error.code);
 
     // Se é erro de Firestore não disponível, não tentar novamente
     if (
