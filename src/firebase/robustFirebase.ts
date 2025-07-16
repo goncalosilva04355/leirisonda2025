@@ -143,8 +143,7 @@ export async function testFirestore(): Promise<boolean> {
   }
 }
 
-// Auto-inicializar
-initializeFirebaseRobust();
+// Auto-inicialização removida - será inicializado apenas após login
 
 // Exportações
 export { app, db, auth };
