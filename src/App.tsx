@@ -7,6 +7,24 @@
 // VERIFICAÇÃO BÁSICA DE SAÚDE
 // import "./utils/basicHealthCheck";
 
+// PREVENÇÃO DE ERROS GETIMMEDIATE
+import "./utils/preventGetImmediateError";
+
+// HANDLER GLOBAL DE ERROS
+import "./utils/globalErrorHandler";
+import "./utils/safeFetch";
+import "./utils/safeFirestoreTestFixed";
+import "./utils/loadFailedDetector";
+
+// TESTES ABRANGENTES FIREBASE/FIRESTORE
+import "./utils/comprehensiveFirebaseTest";
+import "./utils/verifySaveToFirestore";
+import "./utils/verifyAutoSync";
+import "./utils/finalFirebaseVerification";
+import "./utils/firestoreDiagnosticMessage";
+import "./utils/safeFirestoreTest";
+import "./utils/ultraSafeTest";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -96,7 +114,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -1101,7 +1119,7 @@ function App() {
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
-    console.log("🔒 SECURITY: App initialization started");
+    console.log("�� SECURITY: App initialization started");
 
     // SECURITY: Force complete logout on app start
     const initializeAuth = async () => {
@@ -1244,7 +1262,10 @@ function App() {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização com Firebase Leiria:", error);
+          console.error(
+            "❌ Erro na sincronizaç��o com Firebase Leiria:",
+            error,
+          );
           console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
@@ -1281,7 +1302,7 @@ function App() {
           // Force enable real-time sync for editing
           console.log("�� FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização automática:", error);
+          console.error("�� Erro ao iniciar sincronização automática:", error);
           // Try again if it fails
           setTimeout(async () => {
             try {
@@ -2248,7 +2269,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:

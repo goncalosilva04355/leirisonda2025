@@ -4,11 +4,11 @@ import { initializeApp, getApps, getApp } from "firebase/app";
 // Configuração Firebase fixa
 const firebaseConfig = {
   apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria25.firebaseapp.com",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
-    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria25",
-  storageBucket: "leiria25.firebasestorage.app",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
   appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
   measurementId: "G-Q2QWQVH60L",
@@ -43,7 +43,39 @@ export async function smartFirebaseTest(): Promise<{
     console.log("💾 Tentando inicializar Firestore...");
 
     try {
-      const db = getFirestore(app);
+      // Add a small delay to ensure Firebase app is fully ready
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      // Check if app is properly initialized with required options
+      if (!app.options.projectId || !app.options.apiKey) {
+        throw new Error("Firebase app não está adequadamente configurado");
+      }
+
+      console.log(
+        "🔍 Tentando getFirestore para projeto:",
+        app.options.projectId,
+      );
+
+      // Try to get Firestore instance with error prevention
+      let db;
+      try {
+        db = getFirestore(app);
+      } catch (immediateError: any) {
+        // Re-throw with more context if it's the getImmediate error
+        if (
+          immediateError.message?.includes("getImmediate") ||
+          immediateError.code === "firestore/unavailable"
+        ) {
+          const enhancedError = new Error(
+            "Firestore service is not available in this project",
+          );
+          enhancedError.name = "FirestoreUnavailableError";
+          (enhancedError as any).code = "firestore/unavailable";
+          (enhancedError as any).originalError = immediateError;
+          throw enhancedError;
+        }
+        throw immediateError;
+      }
       console.log("✅ Firestore inicializado com sucesso!", typeof db);
 
       // Se chegou aqui, o Firestore está funcionando

@@ -5,11 +5,11 @@ import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 // Configuração Firebase FIXA
 const firebaseConfig = {
   apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria25.firebaseapp.com",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
-    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria25",
-  storageBucket: "leiria25.firebasestorage.app",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
   appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
   measurementId: "G-Q2QWQVH60L",
@@ -49,7 +49,7 @@ async function initializeFirestore() {
     ) {
       console.error("❌ Firestore não está habilitado no projeto Firebase");
       console.error(
-        "🔗 Vá para: https://console.firebase.google.com/project/leiria25/firestore",
+        "🔗 Vá para: https://console.firebase.google.com/project/leiria-1cfc9/firestore",
       );
     }
 
