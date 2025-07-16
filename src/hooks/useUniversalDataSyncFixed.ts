@@ -383,6 +383,14 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           (m: any) => m.id === manutencao.id,
         );
 
+        if (maintenanceExists) {
+          console.warn(
+            "🚨 Manutenção com ID duplicado detectada, ignorando:",
+            manutencao.id,
+          );
+          return manutencao.id;
+        }
+
         if (!maintenanceExists) {
           // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
           console.log("🔥 Salvando manutenção no Firestore:", manutencao.id);
