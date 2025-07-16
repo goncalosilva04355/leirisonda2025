@@ -16,8 +16,8 @@ const AppSimple: React.FC = () => {
       try {
         console.log("🔄 Inicializando AppSimple...");
 
-        // Wait a bit to ensure everything is loaded
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        // Reduced wait time to prevent appearance of infinite loading
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         // Check for existing auth
         const savedUser = localStorage.getItem("currentUser");
