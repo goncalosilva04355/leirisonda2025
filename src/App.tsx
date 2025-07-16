@@ -100,7 +100,7 @@ import {
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 // import { fcmService } from "./services/fcmService";
-import NotificationCenter from "./components/NotificationCenter";
+// import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -115,7 +115,7 @@ import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Se
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
-// import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
+// import "./utils/testFirebaseBasic"; // Passo 1: Teste autom��tico Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
@@ -368,7 +368,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há m����ltiplos projetos carregados
+      // Verificar se há m���ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -547,7 +547,7 @@ function App() {
   //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
   //     );
   //     console.log(
-  //       "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
   //     );
   //   }
   // }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -11763,7 +11763,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "���� Gerada"
+                                ? "��� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
@@ -12124,7 +12124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especifica��✅es Técnicas */}
+                    {/* Especifica��✅es T��cnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
