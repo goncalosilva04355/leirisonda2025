@@ -3924,10 +3924,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </>
                         )}
                       </div>
-                    )}
+                                        )}
                   </div>
                 </div>
-              </div>
+              </PullToRefresh>
             </div>
           );
 
@@ -8029,7 +8029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relatórios
+                          Relat��rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
