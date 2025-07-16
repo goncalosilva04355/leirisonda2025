@@ -44,6 +44,8 @@ import AppMinimal from "./AppMinimal";
 import AppDiagnostic from "./AppDiagnostic";
 // App funcional garantido
 import AppWorking from "./AppWorking";
+// App de teste básico
+import AppMinimalTest from "./AppMinimalTest";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -64,9 +66,7 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
-      <AppLoader>
-        <App />
-      </AppLoader>
+      <AppMinimalTest />
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
