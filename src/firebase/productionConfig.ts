@@ -150,6 +150,12 @@ export const waitForFirebaseInit = () => Promise.resolve(firebaseApp !== null);
 export const isFirebaseAuthAvailable = () => firebaseApp !== null;
 export const isFirebaseFirestoreAvailable = () => firebaseApp !== null;
 
+// Export auth como instância
+export const auth = getAuth();
+
+// Export db como null (será implementado quando necessário)
+export const db = null;
+
 // Export principal
 export { firebaseApp };
 export default firebaseApp;
