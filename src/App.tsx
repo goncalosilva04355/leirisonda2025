@@ -1619,7 +1619,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("⚠️ Falha ao garantir auto sync após login");
+            console.warn("⚠️ Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
           }
         } else {
@@ -7477,35 +7477,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-                                default:
+                                        default:
           return null;
       }
-                              <div className="flex-1">
-                                <h3 className="text-lg font-medium text-blue-900 mb-2">
-                                  Gestão de Utilizadores Movida
-                                </h3>
-                                <p className="text-blue-700 mb-4">
-                                  A gestão de utilizadores foi consolidada no
-                                  menu de administração para evitar duplicações
-                                  e melhorar a experiência.
-                                </p>
-                                <button
-                                  onClick={() => {
-                                    setShowAdminLogin(true);
-                                  }}
-                                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
-                                >
-                                  <Shield className="h-4 w-4" />
-                                  <span>Ir para Administração</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                  </div>
-                </div>
-                ) : ( /* Simple configuration for non-admin users */
                 <div className="space-y-6">
                   {/* System Information */}
                   <div className="bg-white rounded-lg p-6 shadow-sm">
@@ -12261,7 +12235,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa🎉ões do Cliente
+                        Informa��ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
