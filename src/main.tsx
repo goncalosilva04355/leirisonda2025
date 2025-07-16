@@ -64,7 +64,9 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  console.log("�� Loading full application...");
+  console.log("🚀 Loading full application...");
+  console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
+  console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
