@@ -82,9 +82,10 @@ async function waitForFirebaseApp(
     return null;
   }
 
-  throw new Error(
-    "Firebase App não inicializou após aguardar e tentativas de emergência",
+  console.warn(
+    "⚠️ Firebase App não inicializou após aguardar e tentativas de emergência",
   );
+  return null;
 }
 
 // Função para verificar se Firestore está disponível no projeto
@@ -307,7 +308,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
   console.log("🔄 Forçando inicialização...");
 
   try {
-    console.log("🔄 Forçando inicialização Firestore...");
+    console.log("🔄 Forçando inicializaç��o Firestore...");
     firestoreInstance = await initializeFirestore();
 
     if (firestoreInstance) {
