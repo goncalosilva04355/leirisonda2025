@@ -159,6 +159,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
+import "./utils/simpleDuplicateReport"; // RELATÓRIO SIMPLES DE DUPLICADOS SEM ELIMINAÇÃO
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
@@ -453,7 +454,7 @@ function App() {
 
   // Verificar status da quota Firebase na inicialização
   useEffect(() => {
-    console.log("🔍 Verificando e recuperando quota Firebase...");
+    console.log("���� Verificando e recuperando quota Firebase...");
 
     // Tentar recuperação automática
     autoRecoverOnInit();
@@ -2489,7 +2490,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç���s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -4354,7 +4355,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       Piscinas
                     </button>
                     <button className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-medium">
-                      Manutenções
+                      Manuten��ões
                     </button>
                     <button
                       onClick={() => setActiveSection("futuras-manutencoes")}
@@ -5522,7 +5523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa����ções Específicas do Furo */}
+                          {/* Observa����ções Espec��ficas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
