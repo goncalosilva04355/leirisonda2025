@@ -34,7 +34,7 @@ export class FirestoreDataService {
   private db: any = null;
 
   private constructor() {
-    this.initializeDb();
+    // Não inicializar DB no constructor - será lazy loaded
   }
 
   // Singleton para garantir uma única instância
