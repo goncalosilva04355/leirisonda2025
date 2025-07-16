@@ -160,6 +160,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/directDuplicateKill"; // ELIMINAÇÃO DIRETA E IMEDIATA DOS DUPLICADOS ESPECÍFICOS
 import "./utils/continuousCleanup"; // LIMPEZA CONTÍNUA ATÉ ELIMINAÇÃO COMPLETA
+import "./utils/visualCleanupLogger"; // LOG VISUAL EM TEMPO REAL
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -1549,7 +1550,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -2741,7 +2742,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const handleAddressClick = (address: string) => {
     console.log("€dress clicked:", address);
-    console.log("�� Maps redirect enabled:", enableMapsRedirect);
+    console.log("€ Maps redirect enabled:", enableMapsRedirect);
 
     if (enableMapsRedirect && address) {
       // Open Google Maps with the address
@@ -4381,7 +4382,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </div>
                 </div>
 
-                {/* Lista de Manuten��ões */}
+                {/* Lista de Manutenções */}
                 <div className="space-y-4">
                   {maintenance.length === 0 ? (
                     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
@@ -6582,7 +6583,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Nova Manuten���ão
+                        Nova Manuten✅ão
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Registar interven✅��o de manutenção
@@ -6904,7 +6905,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentação",
+                          "Verificação alimentaç��o",
                           "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -7772,7 +7773,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        • As definiç✅es são guardadas
+                                        ��� As definiç✅es são guardadas
                                         localmente no dispositivo
                                       </li>
                                       <li>
@@ -9963,7 +9964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç����es Espec📞ficas do Furo
+                          Observaç��es Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -11689,7 +11690,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            ������ {selectedWork.contact}
+                            ���� {selectedWork.contact}
                           </button>
                         )}
                       </div>
@@ -12295,7 +12296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <p className="text-gray-900">
                             {selectedPool.depth
                               ? `${selectedPool.depth} m`
-                              : "Não especificado"}
+                              : "N��o especificado"}
                           </p>
                         </div>
                       </div>
