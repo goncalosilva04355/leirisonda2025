@@ -169,6 +169,24 @@ const generateUniqueId = (prefix: string = "item"): string => {
   const random = Math.random().toString(36).substring(2, 9);
   return `${prefix}-${timestamp}-${counter}-${random}`;
 };
+
+// Debug function to detect duplicate keys
+const checkForDuplicateKeys = (
+  array: any[],
+  fieldName: string = "id",
+): void => {
+  if (!Array.isArray(array)) return;
+
+  const keys = array
+    .map((item) => item[fieldName])
+    .filter((key) => key !== undefined);
+  const duplicates = keys.filter((key, index) => keys.indexOf(key) !== index);
+
+  if (duplicates.length > 0) {
+    console.warn(`🚨 Duplicate keys detected in ${fieldName}:`, duplicates);
+    console.warn(`🚨 Full array:`, array);
+  }
+};
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
