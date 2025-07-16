@@ -440,10 +440,10 @@ function App() {
   // Função para determinar o modo de dados atual
   const getDataMode = (): string => {
     try {
-      const isFirestoreActive = isFirestoreReady();
-      if (isFirestoreActive) {
-        return "Firebase/Firestore";
-      }
+      // const isFirestoreActive = isFirestoreReady();
+      // if (isFirestoreActive) {
+      //   return "Firebase/Firestore";
+      // }
       return "Armazenamento Local";
     } catch (error) {
       return "Armazenamento Local";
@@ -1357,7 +1357,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
+          console.log("✅ Sincronização autom��tica TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2045,7 +2045,7 @@ function App() {
                 console.warn("��️ Falha ao garantir auto sync após login");
               }
             } else {
-              console.log("��� Aguardando Firestore para ativar auto sync...");
+              console.log("⏳ Aguardando Firestore para ativar auto sync...");
               // Tentar novamente após 3 segundos
               setTimeout(async () => {
                 if (isFirestoreReady()) {
@@ -6386,7 +6386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten����ão Programada",
+                                type: "Manuten🔥ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
@@ -8221,7 +8221,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>���� Hist✅rico de serviços</li>
+                        <li>����� Hist✅rico de serviços</li>
                         <li>���� Informações contratuais</li>
                       </ul>
                     </div>
