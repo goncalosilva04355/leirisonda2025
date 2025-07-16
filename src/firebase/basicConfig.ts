@@ -34,12 +34,29 @@ if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
+// Safety check - prevent Firebase from blocking app initialization
+if (typeof window !== "undefined") {
+  window.addEventListener("error", (event) => {
+    if (
+      event.error &&
+      event.error.message &&
+      event.error.message.includes("firebase")
+    ) {
+      console.warn(
+        "⚠️ Firebase error caught, continuing with localStorage:",
+        event.error.message,
+      );
+      event.preventDefault();
+    }
+  });
+}
+
 // Inicializar Firebase apenas em produção (Netlify) ou se forçado
 if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
     const config = getFirebaseConfig();
-    console.log("🔧 Firebase Project:", config.projectId);
+    console.log("��� Firebase Project:", config.projectId);
     console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
 
     if (getApps().length === 0) {
