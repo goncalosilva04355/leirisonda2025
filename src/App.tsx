@@ -1,9 +1,8 @@
 // CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
-// Temporariamente comentado para debugar
-// import {
-//   initializeFirebaseMobile,
-//   isFirebaseMobileReady,
-// } from "./firebase/mobileFirebase";
+import {
+  initializeFirebaseMobile,
+  isFirebaseMobileReady,
+} from "./firebase/mobileFirebase";
 
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
@@ -1069,7 +1068,7 @@ function App() {
             console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
             parsedUsers.push({
               id: 1,
-              name: "Gon��alo Fonseca",
+              name: "Gonçalo Fonseca",
               email: "gongonsilva@gmail.com",
               active: true,
               role: "super_admin",
@@ -2461,7 +2460,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -4513,7 +4512,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ������ {maint.location}
+                                    ����� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7669,7 +7668,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Versão</span>
+                                <span className="text-gray-600">Vers��o</span>
                                 <span className="font-medium">1.0.0</span>
                               </div>
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -10326,7 +10325,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtra✅ão
+                          Sistema de Filtra��ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -10375,7 +10374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç✅es
+                        Observaç���es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
