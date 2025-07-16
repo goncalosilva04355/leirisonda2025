@@ -69,10 +69,10 @@ export class FirestoreDataService {
   }
 
   // Verificar se Firestore está disponível
-  private isAvailable(): boolean {
+  private async isAvailable(): Promise<boolean> {
     // Tentar inicializar se ainda não foi feito
-    if (this.db === null) {
-      this.initializeDb();
+    if (this.db === null && !this.initializationAttempted) {
+      await this.initializeDb();
     }
 
     if (this.db === null && !this.warningShown) {
@@ -156,7 +156,7 @@ export class FirestoreDataService {
           dataWithTimestamp,
         );
         console.log(
-          `✅ Dados gravados na cole��ão "${collectionName}" com ID: ${docRef.id}`,
+          `✅ Dados gravados na coleção "${collectionName}" com ID: ${docRef.id}`,
         );
       }
 
