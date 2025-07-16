@@ -161,13 +161,14 @@ import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) 
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
-import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
-import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
-import "./utils/debugDuplicates"; // Debug de duplicados
-import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
-import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
-import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
-import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
+// TODOS OS SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
+// import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
+// import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
+// import "./utils/debugDuplicates"; // Debug de duplicados
+// import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
+// import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
+// import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
+// import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -882,7 +883,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("�� addClient iniciado com Firestore ativo");
+      console.log("🔥 addClient iniciado com Firestore ativo");
 
       const firestoreId = await ultraSimpleOfflineService.createClient(data);
 
@@ -1171,7 +1172,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("���� Users updated event received, reloading...");
+      console.log("🎉 Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -3175,7 +3176,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
+                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -7232,7 +7233,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <h3 className="text-lg font-semibold text-gray-900">
-                                  Relatório de Piscinas
+                                  Relat��rio de Piscinas
                                 </h3>
                                 <p className="text-sm text-gray-600">
                                   Lista completa de piscinas
