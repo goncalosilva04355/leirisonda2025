@@ -170,6 +170,13 @@ const generateUniqueId = (prefix: string = "item"): string => {
   return `${prefix}-${timestamp}-${counter}-${random}`;
 };
 
+// Sistema de chaves únicas para React elements
+let keyCounter = 0;
+const generateUniqueKey = (baseKey: string): string => {
+  const counter = ++keyCounter;
+  return `${baseKey}-${counter}-${Date.now()}`;
+};
+
 // Debug function to detect duplicate keys
 const checkForDuplicateKeys = (
   array: any[],
@@ -249,7 +256,7 @@ console.error = (...args) => {
 
 // Teste de login
 // import "./utils/testLogin";
-// For��a atualização de utilizadores
+// Força atualização de utilizadores
 // import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 // import "./utils/testDirectAuth";
@@ -1723,7 +1730,7 @@ function App() {
             }
           } catch (error) {
             console.warn(
-              "⚠️ Erro ao inicializar serviço de notificações:",
+              "���️ Erro ao inicializar serviço de notificações:",
               error,
             );
           }
@@ -2322,7 +2329,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -2439,7 +2446,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -3372,7 +3379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Verificar assignedUserIds array
                           (w.assignedUserIds &&
                             w.assignedUserIds.includes(currentUser.id)));
-                      return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
+                      return isAssignedToUser; // Mostrar apenas obras atribu��das ao utilizador
                     })
                     .slice(0, 3); // Limitar a 3 obras atribuídas mais recentes
 
@@ -8210,7 +8217,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa���ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
