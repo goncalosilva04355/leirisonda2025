@@ -488,7 +488,7 @@ function App() {
   const pullToRefresh = usePullToRefresh({
     onRefresh: handleDashboardRefresh,
     threshold: 60,
-    disabled: activeSection !== "dashboard" || isLoginCheckComplete === false,
+    disabled: activeSection !== "dashboard",
   });
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
@@ -8183,7 +8183,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>��� Informações contratuais</li>
+                        <li>���� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
