@@ -290,6 +290,22 @@ export default function AppProduction() {
                       Modo simplificado para produção
                     </span>
                   </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm text-gray-600">
+                      Status: {appStatus}
+                    </span>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-700 mb-2">
+                      Informações de Debug
+                    </h4>
+                    <div className="text-xs text-gray-500 space-y-1">
+                      <p>Host: {window.location.host}</p>
+                      <p>Protocolo: {window.location.protocol}</p>
+                      <p>Timestamp: {new Date().toLocaleString("pt-PT")}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
