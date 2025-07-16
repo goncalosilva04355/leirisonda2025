@@ -1,6 +1,24 @@
 import { firestoreService } from "./firestoreService";
 import { forceFirestoreService } from "./forceFirestoreService";
 
+// Fallback para casos em que os serviços não estão disponíveis
+const safeFallback = {
+  async getUtilizadores() {
+    return JSON.parse(localStorage.getItem("app-users") || "[]");
+  },
+  async getWorks() {
+    return JSON.parse(localStorage.getItem("works") || "[]");
+  },
+  async updateWork(id: string, work: any) {
+    const works = JSON.parse(localStorage.getItem("works") || "[]");
+    const index = works.findIndex((w: any) => w.id === id);
+    if (index >= 0) {
+      works[index] = { ...works[index], ...work };
+      localStorage.setItem("works", JSON.stringify(works));
+    }
+  },
+};
+
 interface Work {
   id: string;
   assignedUsers?: Array<{ id: string; name: string }>;
