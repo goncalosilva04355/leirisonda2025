@@ -55,6 +55,9 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
   }
 
   useEffect(() => {
+    // Inicializar serviços primeiro
+    initializeServices();
+
     const checkStatus = () => {
       try {
         // Verificar se os serviços estão disponíveis antes de usar
