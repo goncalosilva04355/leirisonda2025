@@ -94,8 +94,17 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
       console.log("✅ SDK Firebase funcionando");
       results.sdkCheck = true;
     } else {
-      console.warn("⚠️ SDK Firebase com problemas:", sdkTest.message);
-      // Não falhar aqui se REST API funciona
+      if (
+        sdkTest.message?.includes("getImmediate") ||
+        sdkTest.message?.includes("não está habilitado")
+      ) {
+        console.warn(
+          "⚠️ Firestore não está habilitado no projeto - usando REST API",
+        );
+        // Don't mark as failure since REST API works
+      } else {
+        console.warn("⚠️ SDK Firebase com problemas:", sdkTest.message);
+      }
     }
 
     // 4. Testar armazenamento de dados
