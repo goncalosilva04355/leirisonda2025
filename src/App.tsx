@@ -598,10 +598,36 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
+  // SINCRONIZAÇÃO UNIVERSAL - Temporariamente comentado para diagnóstico
   // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
+  // const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
+
+  // Mock universal sync para evitar erros
+  const universalSync = {
+    obras: [],
+    manutencoes: [],
+    piscinas: [],
+    clientes: [],
+    isLoading: false,
+    lastSync: new Date().toISOString(),
+    error: null,
+    addObra: async () => {},
+    addManutencao: async () => {},
+    addPiscina: async () => {},
+    addCliente: async () => {},
+    updateObra: async () => {},
+    updateManutencao: async () => {},
+    updatePiscina: async () => {},
+    updateCliente: async () => {},
+    deleteObra: async () => {},
+    deleteManutencao: async () => {},
+    deletePiscina: async () => {},
+    deleteCliente: async () => {},
+    forceSyncAll: async () => {},
+    syncStatus: "idle",
+    totalItems: 0,
+  };
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -7281,7 +7307,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>�� Próximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -8140,7 +8166,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅��es
+                                    Hist��rico de interven✅��es
                                   </p>
                                 </div>
                               </div>
