@@ -1524,7 +1524,7 @@ function App() {
     }
 
     const initAutoSync = async () => {
-      // Aguardar Firestore estar pronto APÓS LOGIN
+      // Aguardar Firestore estar pronto AP��S LOGIN
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
@@ -3410,7 +3410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -7477,40 +7477,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-                                        default:
+                                                default:
           return null;
       }
-                <div className="space-y-6">
-                  {/* System Information */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Informações do Sistema
-                    </h3>
-                    <div className="grid gap-3">
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers🎉o</span>
-                        <span className="font-medium">1.0.0</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Utilizador Ativo</span>
-                        <span className="font-medium">{currentUser?.name}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Perfil</span>
-                        <span className="font-medium capitalize">
-                          {currentUser?.role?.replace("_", " ")}
-                        </span>
-                      </div>
-                      <div className="flex justify-between py-2">
-                        <span className="text-gray-600">Modo de Dados</span>
-                        <span className="font-medium">{getDataMode()}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
 
         case "utilizadores":
           // SECURITY: Only super admin can access user management
@@ -8012,7 +7981,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
-                                Ferramentas de diagnóstico e correção para
+                                Ferramentas de diagn��stico e correção para
                                 problemas do sistema.
                               </p>
 
