@@ -3384,7 +3384,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecerão aqui
+                          As futuras manutenções aparecer��o aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -8992,6 +8992,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="space-y-4">
                   {works
                     .filter((work) => {
+                      // Primeiro, verificar se a obra está atribuída ao utilizador atual
+                      const isAssigned = isWorkAssignedToCurrentUser(work);
+                      if (!isAssigned) return false;
+
+                      // Depois aplicar os filtros de status
                       if (activeWorkFilter === "all") return true;
                       if (activeWorkFilter === "no_sheet")
                         return (
