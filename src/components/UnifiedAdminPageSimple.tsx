@@ -898,7 +898,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2 gap-1">
                             <span
                               className={`px-2 py-1 text-xs font-medium rounded-full ${
                                 user.role === "super_admin"
