@@ -99,7 +99,7 @@ import {
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
-import { fcmService } from "./services/fcmService";
+// import { fcmService } from "./services/fcmService";
 import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
@@ -368,7 +368,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há m���ltiplos projetos carregados
+      // Verificar se há m����ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -547,7 +547,7 @@ function App() {
   //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
   //     );
   //     console.log(
-  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //       "��� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
   //     );
   //   }
   // }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -11763,7 +11763,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "��� Gerada"
+                                ? "���� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
