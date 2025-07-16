@@ -317,6 +317,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         );
 
         if (!maintenanceExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando manutenção no Firestore:", manutencao.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "manutencoes",
+            manutencao.id,
+            manutencao,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Manutenção salva no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar manutenção no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedManutencoes = [...existingManutencoes, manutencao];
           safeSetLocalStorage("maintenance", updatedManutencoes);
 
