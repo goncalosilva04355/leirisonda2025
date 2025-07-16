@@ -43,6 +43,9 @@ export async function smartFirebaseTest(): Promise<{
     console.log("💾 Tentando inicializar Firestore...");
 
     try {
+      // Add a small delay to ensure Firebase app is fully ready
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       const db = getFirestore(app);
       console.log("✅ Firestore inicializado com sucesso!", typeof db);
 
