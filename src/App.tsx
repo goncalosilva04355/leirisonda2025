@@ -366,7 +366,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há múltiplos projetos carregados
+      // Verificar se há m��ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -4269,7 +4269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    ���� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -5714,7 +5714,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
                                   console.log(
                                     "📢 Notificação enviada para utilizador:",
-                                    userId,
+                                    typeof user === "string" ? user : user.id,
                                   );
                                 }
                               } catch (notificationError) {
@@ -10231,7 +10231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico *
+                          T��cnico *
                         </label>
                         <input
                           type="text"
