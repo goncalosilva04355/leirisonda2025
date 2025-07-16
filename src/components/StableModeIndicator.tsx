@@ -6,11 +6,8 @@ import React from "react";
 import { SystemConfig } from "../config/systemConfig";
 
 export function StableModeIndicator() {
-  const isFirebaseReactivated =
-    !SystemConfig.FORCE_EMERGENCY_MODE && SystemConfig.ENABLE_FIREBASE_DEV;
-
-  // Mostrar se Firebase foi reativado
-  if (!isFirebaseReactivated) return null;
+  // Desativado conforme solicitação do utilizador - não mostrar notificação sistema ativo
+  return null;
 
   const getConfig = () => {
     return {

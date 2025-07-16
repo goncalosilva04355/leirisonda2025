@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
 import { FCMNotificationSetup } from "./FCMNotificationSetup";
+import { NotificationDebugger } from "./NotificationDebugger";
 
 interface User {
   uid: string;
@@ -942,6 +943,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
               {/* FCM Setup Component */}
               <FCMNotificationSetup />
+
+              {/* Notification Debugger */}
+              <NotificationDebugger />
 
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

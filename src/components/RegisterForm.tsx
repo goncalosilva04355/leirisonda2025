@@ -98,7 +98,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
         };
       case "manager":
         return {
-          obras: { view: true, create: true, edit: true, delete: false },
+          obras: { view: true, create: true, edit: true, delete: true },
           manutencoes: { view: true, create: true, edit: true, delete: false },
           piscinas: { view: true, create: true, edit: true, delete: false },
           utilizadores: {

@@ -1305,7 +1305,7 @@ function App() {
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
-        console.log("💾 Dados serão salvos apenas no localStorage");
+        console.log("�� Dados serão salvos apenas no localStorage");
       }
     };
 
@@ -2966,12 +2966,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produção */}
-                {(typeof import.meta === "undefined" ||
-                  !import.meta.env ||
-                  !import.meta.env.DEV) && (
-                  <FirebaseStatusDisplay compact={true} expandable={true} />
-                )}
+                {/* Firebase Status Display - Removido conforme solicitação do utilizador */}
 
                 {/* Simple Welcome Header */}
                 <div
@@ -11518,7 +11513,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enablePhoneDialer}
                           >
-                            🔥 {selectedWork.contact}
+                            ���� {selectedWork.contact}
                           </button>
                         )}
                       </div>

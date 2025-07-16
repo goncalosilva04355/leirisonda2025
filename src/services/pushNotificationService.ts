@@ -27,27 +27,49 @@ export class PushNotificationService {
 
   async initialize(): Promise<boolean> {
     try {
+      console.log("🚀 Inicializando Push Notification Service...");
+
       // Verificar se push notifications são suportadas
+      console.log(`📋 Notification in window: ${"Notification" in window}`);
+      console.log(
+        `📋 ServiceWorker in navigator: ${"serviceWorker" in navigator}`,
+      );
+
       if (!("Notification" in window) || !("serviceWorker" in navigator)) {
         console.warn("⚠️ Push notifications não são suportadas neste browser");
+        this.isSupported = false;
         return false;
       }
 
       // Verificar se Firebase App está inicializada
       const apps = getApps();
+      console.log(`📋 Firebase apps encontradas: ${apps.length}`);
+
       if (apps.length === 0) {
-        console.warn("⚠️ Firebase App não está inicializada");
-        return false;
+        console.warn(
+          "⚠️ Firebase App não está inicializada - continuando sem Firebase Messaging",
+        );
+        this.isSupported = true; // Permitir notificações locais mesmo sem Firebase
+        return true;
       }
 
-      const app = getApp();
-      this.messaging = getMessaging(app);
-      this.isSupported = true;
+      try {
+        const app = getApp();
+        this.messaging = getMessaging(app);
+        console.log("✅ Firebase Messaging inicializado");
+      } catch (messagingError) {
+        console.warn(
+          "⚠️ Erro ao inicializar Firebase Messaging - usando apenas notificações locais:",
+          messagingError,
+        );
+      }
 
-      console.log("✅ Push Notification Service inicializado");
+      this.isSupported = true;
+      console.log("✅ Push Notification Service inicializado com sucesso");
       return true;
     } catch (error) {
       console.error("❌ Erro ao inicializar Push Notification Service:", error);
+      this.isSupported = false;
       return false;
     }
   }
@@ -118,25 +140,54 @@ export class PushNotificationService {
   }
 
   private showLocalNotification(title: string, body: string, data?: any): void {
+    console.log(`🔔 Tentando mostrar notificação: "${title}" - "${body}"`);
+    console.log(`📋 Permissão atual: ${Notification.permission}`);
+    console.log(`🌐 Suporte a notificações: ${"Notification" in window}`);
+
+    if (!("Notification" in window)) {
+      console.warn("⚠️ Este browser não suporta notificações");
+      return;
+    }
+
     if (Notification.permission === "granted") {
-      const notification = new Notification(title, {
-        body,
-        icon: "/icon.svg",
-        badge: "/icon.svg",
-        tag: "leirisonda-obra",
-        data: data,
-      });
+      try {
+        const notification = new Notification(title, {
+          body,
+          icon: "/icon.svg",
+          badge: "/icon.svg",
+          tag: "leirisonda-obra",
+          data: data,
+          requireInteraction: true, // Mantém a notificação visível até interação
+        });
 
-      notification.onclick = () => {
-        window.focus();
-        notification.close();
+        console.log("✅ Notificação criada com sucesso");
 
-        // Se há dados sobre a obra, navegar para ela
-        if (data?.obraId) {
-          console.log("📋 Navegando para obra:", data.obraId);
-          // Aqui você pode adicionar lógica de navegação
-        }
-      };
+        notification.onclick = () => {
+          console.log("👆 Notificação clicada");
+          window.focus();
+          notification.close();
+
+          // Se há dados sobre a obra, navegar para ela
+          if (data?.obraId) {
+            console.log("📋 Navegando para obra:", data.obraId);
+            // Aqui você pode adicionar lógica de navegação
+          }
+        };
+
+        notification.onshow = () => {
+          console.log("✅ Notificação mostrada");
+        };
+
+        notification.onerror = (error) => {
+          console.error("❌ Erro na notificação:", error);
+        };
+      } catch (error) {
+        console.error("❌ Erro ao criar notificação:", error);
+      }
+    } else {
+      console.warn(
+        `⚠️ Permissão de notificação não concedida: ${Notification.permission}`,
+      );
     }
   }
 
@@ -148,7 +199,7 @@ export class PushNotificationService {
       // Em uma implementação real, isso seria feito através de uma Cloud Function
       // ou servidor backend que tem acesso às chaves de servidor do FCM
 
-      console.log("📤 Simulando envio de notificação para usuário:", userId);
+      console.log("📤 Simulando envio de notificaç��o para usuário:", userId);
       console.log("📋 Notificação:", notification);
 
       // Por agora, vamos simular o envio gravando no localStorage
@@ -277,16 +328,35 @@ export class PushNotificationService {
     console.log("🚀 Iniciando serviço de notificações...");
 
     const initialized = await this.initialize();
-    if (!initialized) return;
+    if (!initialized) {
+      console.warn("⚠️ Falha na inicialização - serviço não será iniciado");
+      return;
+    }
 
-    this.setupForegroundMessageListener();
+    // Setup listeners (com tolerância a erros)
+    try {
+      this.setupForegroundMessageListener();
+      console.log("✅ Listeners de mensagem configurados");
+    } catch (error) {
+      console.warn(
+        "⚠️ Erro ao configurar listeners, continuando sem eles:",
+        error,
+      );
+    }
 
     // Verificar notificações pendentes periodicamente
     setInterval(() => {
-      this.checkPendingNotifications();
+      try {
+        this.checkPendingNotifications();
+      } catch (error) {
+        console.error("❌ Erro ao verificar notificações pendentes:", error);
+      }
     }, 30000); // A cada 30 segundos
 
-    console.log("✅ Serviço de notificações ativo");
+    console.log("✅ Serviço de notificações ativo e funcionando");
+
+    // Teste automático de permissões
+    console.log(`📋 Estado atual das permissões: ${Notification.permission}`);
   }
 }
 

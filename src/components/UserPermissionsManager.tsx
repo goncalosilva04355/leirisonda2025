@@ -223,7 +223,7 @@ const getDefaultPermissions = (role: string) => {
       };
     case "admin":
       return {
-        obras: { view: true, create: true, edit: true, delete: false },
+        obras: { view: true, create: true, edit: true, delete: true },
         manutencoes: { view: true, create: true, edit: true, delete: false },
         piscinas: { view: true, create: true, edit: true, delete: false },
         utilizadores: { view: true, create: true, edit: false, delete: false },
@@ -232,7 +232,7 @@ const getDefaultPermissions = (role: string) => {
       };
     case "manager":
       return {
-        obras: { view: true, create: true, edit: true, delete: false },
+        obras: { view: true, create: true, edit: true, delete: true },
         manutencoes: { view: true, create: true, edit: true, delete: false },
         piscinas: { view: true, create: false, edit: true, delete: false },
         utilizadores: { view: true, create: false, edit: false, delete: false },
