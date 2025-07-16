@@ -1417,7 +1417,7 @@ function App() {
 
         try {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
-          console.log("���� Sincronização com Firebase Leiria completa!");
+          console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error(
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
@@ -1993,7 +1993,12 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("���� Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log(
+        "������ Login attempt for:",
+        email,
+        "rememberMe:",
+        rememberMe,
+      );
 
       // Auto-check Firebase before login attempt
       // await firebaseAutoFix.checkOnUserAction();
@@ -3385,9 +3390,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
-                        {assignedWorks.map((work) => (
+                        {assignedWorks.map((work, index) => (
                           <div
-                            key={work.id}
+                            key={`assigned-work-${work.id}-${index}`}
                             className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
                           >
                             <div className="space-y-3">
@@ -6132,7 +6137,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "��� User Permissions:",
+                                "🔍 User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -7361,7 +7366,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configura����es Avançadas
+                                      Configura��ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7872,7 +7877,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        �������� ATEN���ÃO: Esta opera✅ão é
+                                        ������ ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -9603,7 +9608,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               type="datetime-local"
                               defaultValue={editingWork?.endTime}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda n��o terminou"
+                              placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               Deixe vazio se ainda n€o terminou
@@ -11552,7 +11557,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <button
                     onClick={() => {
                       const password = prompt(
-                        "Digite a palavra-passe para aceder ��s configurações:",
+                        "Digite a palavra-passe para aceder ���s configurações:",
                       );
                       if (password === "19867") {
                         navigateToSection("configuracoes");
