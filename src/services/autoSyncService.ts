@@ -197,6 +197,31 @@ export class AutoSyncService {
     try {
       console.log(`🔄 Sincronizando ${collectionName} manualmente...`);
 
+      if (!this.firestoreAvailable) {
+        console.log(
+          `📱 Firestore indisponível - usando dados locais para ${collectionName}`,
+        );
+
+        // Use local data if Firestore is not available
+        const localData = this.getLocalStorageData(localStorageKey);
+
+        // Dispatch event with local data
+        window.dispatchEvent(
+          new CustomEvent(`${collectionName}Updated`, {
+            detail: {
+              data: localData,
+              collection: collectionName,
+              source: "localStorage",
+            },
+          }),
+        );
+
+        console.log(
+          `📱 ${collectionName} carregado do localStorage: ${localData.length} itens`,
+        );
+        return;
+      }
+
       const data = await firestoreService.getCollection(collectionName);
       localStorage.setItem(localStorageKey, JSON.stringify(data));
 
