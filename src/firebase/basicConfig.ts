@@ -55,9 +55,19 @@ if (typeof window !== "undefined") {
 if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
-    const config = getFirebaseConfig();
-    console.log("��� Firebase Project:", config.projectId);
-    console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
+
+    let config;
+    try {
+      config = getFirebaseConfig();
+      console.log("🔧 Firebase Project:", config.projectId);
+      console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
+    } catch (configError) {
+      console.error("❌ Erro ao obter config Firebase:", configError);
+      console.log(
+        "📝 Continuando sem Firebase - app funcionará com localStorage",
+      );
+      return; // Exit early, don't try to initialize Firebase
+    }
 
     if (getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
