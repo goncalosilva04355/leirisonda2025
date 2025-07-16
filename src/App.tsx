@@ -114,7 +114,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç���o
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -321,7 +321,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("����� Persistência reparada automaticamente");
+        //     console.log("������� Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -463,8 +463,35 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  // const universalSync = useUniversalDataSync();
+  // const dataSync = useDataSyncSimple();
+
+  // Temporary fallback while debugging
+  const universalSync = {
+    obras: [],
+    manutencoes: [],
+    piscinas: [],
+    clientes: [],
+    isLoading: false,
+    lastSync: new Date().toISOString(),
+    error: null,
+    syncStatus: "disconnected" as const,
+    totalItems: 0,
+    addObra: async (data: any) => data.id || Date.now().toString(),
+    addManutencao: async (data: any) => data.id || Date.now().toString(),
+    addPiscina: async (data: any) => data.id || Date.now().toString(),
+    addCliente: async (data: any) => data.id || Date.now().toString(),
+    updateObra: async () => {},
+    updateManutencao: async () => {},
+    updatePiscina: async () => {},
+    updateCliente: async () => {},
+    deleteObra: async () => {},
+    deleteManutencao: async () => {},
+    deletePiscina: async () => {},
+    deleteCliente: async () => {},
+    forceSyncAll: async () => {},
+  };
+  const dataSync = { syncStatus: "disconnected", lastSync: null };
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -2395,7 +2422,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
     if (files.length + uploadedPhotos.length > 20) {
-      alert("Máximo de 20 fotografias permitidas");
+      alert("M��ximo de 20 fotografias permitidas");
       return;
     }
 
@@ -10091,7 +10118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç��da piscina"
+                          placeholder="Localizaç���da piscina"
                           required
                         />
                       </div>
