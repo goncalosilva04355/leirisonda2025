@@ -601,8 +601,40 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  let universalSync;
+  let dataSync;
+
+  try {
+    universalSync = useUniversalDataSync();
+    dataSync = useDataSyncSimple();
+  } catch (error) {
+    console.error("❌ Erro nos hooks de sincronização:", error);
+    // Fallback para dados vazios para evitar tela branca
+    universalSync = {
+      obras: [],
+      manutencoes: [],
+      piscinas: [],
+      clientes: [],
+      isLoading: false,
+      lastSync: null,
+      error: null,
+      addObra: () => Promise.resolve(),
+      addManutencao: () => Promise.resolve(),
+      addPiscina: () => Promise.resolve(),
+      addCliente: () => Promise.resolve(),
+      updateObra: () => Promise.resolve(),
+      updateManutencao: () => Promise.resolve(),
+      updatePiscina: () => Promise.resolve(),
+      updateCliente: () => Promise.resolve(),
+      deleteObra: () => Promise.resolve(),
+      deleteManutencao: () => Promise.resolve(),
+      deletePiscina: () => Promise.resolve(),
+      deleteCliente: () => Promise.resolve(),
+      forceSyncAll: () => Promise.resolve(),
+      syncStatus: "offline",
+    };
+    dataSync = { isLoading: false, error: null };
+  }
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -5366,7 +5398,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Mediç✅es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medições do Furo
+                              Medi��ões do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -11008,7 +11040,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���������</span>
+                  <span>�������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11912,7 +11944,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
+                      {/* Detalhes do Furo de Água - Se aplic������vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
@@ -12215,7 +12247,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            ��🎉 {selectedPool.location}
+                            🔥🎉 {selectedPool.location}
                           </button>
                         </div>
                       </div>
