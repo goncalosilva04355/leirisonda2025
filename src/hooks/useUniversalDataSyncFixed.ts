@@ -110,7 +110,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
       try {
         console.log(
-          "🔥 Carregando dados do Firestore (desenvolvimento = produção)...",
+          "��� Carregando dados do Firestore (desenvolvimento = produção)...",
         );
 
         // Tentar carregar do Firestore primeiro
@@ -443,6 +443,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         );
 
         if (!clienteExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando cliente no Firestore:", cliente.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "clientes",
+            cliente.id,
+            cliente,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Cliente salvo no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar cliente no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedClientes = [...existingClientes, cliente];
           safeSetLocalStorage("clients", updatedClientes);
 
