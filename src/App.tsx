@@ -2942,7 +2942,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-              <PullToRefresh onRefresh={handleDashboardRefresh}>
+                            <PullToRefresh onRefresh={handleDashboardRefresh}>
                 {/* Dashboard Content - Mobile First Design */}
                 <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
@@ -10323,7 +10323,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manutenção</option>
+                          <option value="Manutenç€o">Manuten��ão</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
