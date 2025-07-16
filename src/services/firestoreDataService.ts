@@ -32,6 +32,8 @@ interface FormData {
 export class FirestoreDataService {
   private static instance: FirestoreDataService;
   private db: any = null;
+  private warningShown: boolean = false;
+  private initializationAttempted: boolean = false;
 
   private constructor() {
     // Não inicializar DB no constructor - será lazy loaded
