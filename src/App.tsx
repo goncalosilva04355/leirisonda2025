@@ -136,6 +136,7 @@ import { useForceFirestore } from "./hooks/useForceFirestore";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - FUNCIONA GARANTIDAMENTE
+import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -1375,7 +1376,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as cole��ões
+    // Adicionar listeners para todas as coleções
     const collections = [
       "obras",
       "piscinas",
@@ -6664,7 +6665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom�����tico",
+                          "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7852,7 +7853,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Hist��rico de interven✅ões
+                                    Histórico de interven✅ões
                                   </p>
                                 </div>
                               </div>
@@ -8006,7 +8007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>�������� Informa��ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -12005,7 +12006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Manutenções */}
+                    {/* Manutenç��es */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Manutenç🎉es
