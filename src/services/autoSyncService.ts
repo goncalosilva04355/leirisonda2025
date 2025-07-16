@@ -25,11 +25,53 @@ export class AutoSyncService {
   private isActive = false;
   private firestoreAvailable = false;
 
+  // Check if Firestore is available
+  private async checkFirestoreAvailability(): Promise<boolean> {
+    try {
+      this.db = getFirebaseFirestore();
+      if (this.db) {
+        this.firestoreAvailable = true;
+        console.log("✅ Firestore disponível para sincronização");
+        return true;
+      } else {
+        this.firestoreAvailable = false;
+        console.warn(
+          "⚠️ Firestore não disponível - usando apenas localStorage",
+        );
+        return false;
+      }
+    } catch (error: any) {
+      this.firestoreAvailable = false;
+      if (
+        error.message?.includes("getImmediate") ||
+        error.code === "firestore/unavailable" ||
+        error.message?.includes("Service firestore is not available")
+      ) {
+        console.warn("⚠️ Firestore não está habilitado no projeto Firebase");
+        console.info("💡 Aplicação funcionará com localStorage apenas");
+      } else {
+        console.error("❌ Erro ao verificar Firestore:", error.message);
+      }
+      return false;
+    }
+  }
+
   // Inicializar sincronização automática
   async startAutoSync(): Promise<void> {
-    if (!this.db || this.isActive) return;
+    console.log("🔄 Iniciando sincronização automática...");
 
-    console.log("🔄 Iniciando sincronização automática em tempo real...");
+    // Check Firestore availability first
+    const firestoreAvailable = await this.checkFirestoreAvailability();
+
+    if (!firestoreAvailable) {
+      console.log("📱 Modo localStorage ativo - sincronização limitada");
+      this.isActive = true; // Still mark as active for localStorage operations
+      return;
+    }
+
+    if (this.isActive) return;
+
+    console.log("🔄 Iniciando sincronização em tempo real...");
     this.isActive = true;
 
     // Configurar observadores para todas as coleções
