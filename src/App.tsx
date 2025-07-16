@@ -1289,7 +1289,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("��� Iniciando sincronização automática APÓS LOGIN...");
+        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -6940,7 +6940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura�����ões
+                        Configura������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7624,7 +7624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     type="submit"
                                     className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
                                   >
-                                    Aceder às Configurações
+                                    Aceder às Configuraç��es
                                   </button>
                                 </form>
                               </div>
@@ -11689,7 +11689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "✓ Gerada"
+                                ? "��� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
