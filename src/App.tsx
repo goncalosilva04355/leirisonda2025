@@ -158,8 +158,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
-import "./utils/directDuplicateKill"; // ELIMINAÇÃO DIRETA E IMEDIATA DOS DUPLICADOS ESPECÍFICOS
-import "./utils/continuousCleanup"; // LIMPEZA CONTÍNUA ATÉ ELIMINAÇÃO COMPLETA
+import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -2164,7 +2163,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������� Navigating to dashboard");
+            console.log("��������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -2360,7 +2359,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç���: ${pool.location}
+   Localizaç€: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3205,7 +3204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar obras pendentes atribu��das ao utilizador atual
+                          // Filtrar obras pendentes atribuídas ao utilizador atual
                           const pendingWorks = works.filter((w) => {
                             const isPending =
                               w.status === "pending" || w.status === "pendente";
@@ -5548,7 +5547,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observa��ões
+                            Observações
                           </label>
                           <textarea
                             rows={3}
@@ -6214,7 +6213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "��� Cliente adicionado com sucesso:",
+                                    "����� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
