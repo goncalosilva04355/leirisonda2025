@@ -56,7 +56,8 @@ import {
   Share,
   Database,
 } from "lucide-react";
-import PullToRefresh from "./components/PullToRefresh";
+import { usePullToRefresh } from "./hooks/usePullToRefresh";
+import RefreshIndicator from "./components/RefreshIndicator";
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
@@ -2328,7 +2329,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN��ÕES RECENTES ===
+=== MANUTEN����ÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -11575,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             : selectedWork.status === "in_progress"
                               ? "Em Progresso"
                               : selectedWork.status === "completed"
-                                ? "Concluída"
+                                ? "Conclu��da"
                                 : selectedWork.status}
                         </span>
                       </div>
