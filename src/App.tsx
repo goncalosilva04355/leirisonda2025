@@ -157,6 +157,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
+import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -1730,7 +1731,7 @@ function App() {
             }
           } catch (error) {
             console.warn(
-              "���️ Erro ao inicializar serviço de notificações:",
+              "⚠️ Erro ao inicializar serviço de notificações:",
               error,
             );
           }
@@ -2329,7 +2330,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-�� ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -2344,7 +2345,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manuten��ões: ${futureMaintenance.length}
+- Futuras Manuten����ões: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -3379,7 +3380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           // Verificar assignedUserIds array
                           (w.assignedUserIds &&
                             w.assignedUserIds.includes(currentUser.id)));
-                      return isAssignedToUser; // Mostrar apenas obras atribu��das ao utilizador
+                      return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
                     })
                     .slice(0, 3); // Limitar a 3 obras atribuídas mais recentes
 
@@ -9946,7 +9947,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Selecionar voltagem
                             </option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif📞sico)</option>
+                            <option value="400V">400V (trif����sico)</option>
                           </select>
                         </div>
                       </div>
@@ -11569,7 +11570,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configurações"
+                    title="Configura��ões"
                   >
                     <Settings className="h-5 w-5" />
                   </button>
@@ -11899,7 +11900,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic���vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
