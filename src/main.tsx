@@ -20,7 +20,7 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  ReactDOM.createRoot(rootElement).render(<AppClean />);
+  ReactDOM.createRoot(rootElement).render(<App />);
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
