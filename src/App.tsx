@@ -17,6 +17,7 @@ import "./utils/verifyAutoSync";
 import "./utils/finalFirebaseVerification";
 import "./utils/firestoreDiagnosticMessage";
 import "./utils/safeFirestoreTest";
+import "./utils/ultraSafeTest";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -1834,7 +1835,7 @@ function App() {
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("��� Login successful for:", result.user.email);
 
         // Set user state and authentication
         setCurrentUser(result.user);
@@ -8029,7 +8030,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>������ Informa���ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -9604,7 +9605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descri��ão do trabalho realizado..."
                           />
                         </div>
                         <div>
@@ -11630,7 +11631,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "�� Gerada"
+                                ? "✓ Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
