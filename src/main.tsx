@@ -66,15 +66,24 @@ try {
 
   // Use production app for Netlify deployment
   const isProduction = import.meta.env.PROD;
-  const AppComponent = isProduction ? AppProduction : App;
+  console.log("🔍 Environment check:", {
+    isProduction,
+    mode: import.meta.env.MODE,
+  });
 
-  ReactDOM.createRoot(rootElement).render(
-    <ErrorBoundary>
-      <AppLoader>
-        <AppComponent />
-      </AppLoader>
-    </ErrorBoundary>,
-  );
+  if (isProduction) {
+    console.log("🚀 Loading production app...");
+    ReactDOM.createRoot(rootElement).render(<AppProduction />);
+  } else {
+    console.log("🔧 Loading development app...");
+    ReactDOM.createRoot(rootElement).render(
+      <ErrorBoundary>
+        <AppLoader>
+          <App />
+        </AppLoader>
+      </ErrorBoundary>,
+    );
+  }
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
