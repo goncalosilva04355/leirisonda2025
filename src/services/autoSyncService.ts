@@ -228,7 +228,7 @@ export class AutoSyncService {
       // Disparar evento de atualização
       window.dispatchEvent(
         new CustomEvent(`${collectionName}Updated`, {
-          detail: { data, collection: collectionName },
+          detail: { data, collection: collectionName, source: "firestore" },
         }),
       );
 
