@@ -335,7 +335,7 @@ function App() {
   (window as any).lastAppRenderTime = renderTime;
 
   // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false);
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
 
   useEffect(() => {
     const initMobileFirebase = async () => {
@@ -1283,7 +1283,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("����️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -2205,7 +2205,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est���� ativo após login
+        // Garantir que auto sync est������ ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -4425,7 +4425,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manutenç��o registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
@@ -7804,7 +7804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruç✅es
+                                      Instru��✅es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
