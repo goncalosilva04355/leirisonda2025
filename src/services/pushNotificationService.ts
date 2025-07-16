@@ -27,27 +27,49 @@ export class PushNotificationService {
 
   async initialize(): Promise<boolean> {
     try {
+      console.log("🚀 Inicializando Push Notification Service...");
+
       // Verificar se push notifications são suportadas
+      console.log(`📋 Notification in window: ${"Notification" in window}`);
+      console.log(
+        `📋 ServiceWorker in navigator: ${"serviceWorker" in navigator}`,
+      );
+
       if (!("Notification" in window) || !("serviceWorker" in navigator)) {
         console.warn("⚠️ Push notifications não são suportadas neste browser");
+        this.isSupported = false;
         return false;
       }
 
       // Verificar se Firebase App está inicializada
       const apps = getApps();
+      console.log(`📋 Firebase apps encontradas: ${apps.length}`);
+
       if (apps.length === 0) {
-        console.warn("⚠️ Firebase App não está inicializada");
-        return false;
+        console.warn(
+          "⚠️ Firebase App não está inicializada - continuando sem Firebase Messaging",
+        );
+        this.isSupported = true; // Permitir notificações locais mesmo sem Firebase
+        return true;
       }
 
-      const app = getApp();
-      this.messaging = getMessaging(app);
-      this.isSupported = true;
+      try {
+        const app = getApp();
+        this.messaging = getMessaging(app);
+        console.log("✅ Firebase Messaging inicializado");
+      } catch (messagingError) {
+        console.warn(
+          "⚠️ Erro ao inicializar Firebase Messaging - usando apenas notificações locais:",
+          messagingError,
+        );
+      }
 
-      console.log("✅ Push Notification Service inicializado");
+      this.isSupported = true;
+      console.log("✅ Push Notification Service inicializado com sucesso");
       return true;
     } catch (error) {
       console.error("❌ Erro ao inicializar Push Notification Service:", error);
+      this.isSupported = false;
       return false;
     }
   }
