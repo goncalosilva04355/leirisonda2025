@@ -189,10 +189,8 @@ async function initializeFirestore(
       error.code === "firestore/unavailable" ||
       error.message.includes("Service firestore is not available")
     ) {
-      console.error(
-        "❌ Firestore não está habilitado - não tentando novamente",
-      );
-      console.error(
+      console.warn("⚠️ Firestore não está habilitado - não tentando novamente");
+      console.warn(
         "💡 A aplicação continuará funcionando com localStorage apenas",
       );
       return null;
