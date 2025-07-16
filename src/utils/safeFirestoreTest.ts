@@ -1,5 +1,6 @@
 // Safe Firestore test that doesn't trigger getImmediate errors
 import { getFirebaseApp } from "../firebase/basicConfig";
+import { safeFetch } from "./safeFetch";
 
 export async function safeFirestoreTest(): Promise<{
   success: boolean;
@@ -41,7 +42,7 @@ export async function safeFirestoreTest(): Promise<{
 
       console.log("📡 Resposta:", response.status, response.statusText);
     } catch (fetchError: any) {
-      console.warn("⚠��� Erro na requisição fetch:", fetchError.message);
+      console.warn("⚠️ Erro na requisição fetch:", fetchError.message);
 
       // Handle Load failed error specifically
       if (
