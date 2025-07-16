@@ -467,7 +467,7 @@ function App() {
   const dataSync = useDataSyncSimple();
 
   // Função de refresh para Pull-to-Refresh
-  const handleDashboardRefresh = async (): Promise<void> => {
+    const handleDashboardRefresh = useCallback(async (): Promise<void> => {
     try {
       console.log("🔄 Iniciando refresh do Dashboard...");
 
@@ -5347,7 +5347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa����ções Específicas do Furo */}
+                          {/* Observa������ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -7450,7 +7450,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç��es do Sistema
+                              Informaç����es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
