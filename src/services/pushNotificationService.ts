@@ -145,15 +145,20 @@ export class PushNotificationService {
   setupForegroundMessageListener(): void {
     if (!this.messaging || !this.isSupported) return;
 
-    onMessage(this.messaging, (payload) => {
-      console.log("📢 Mensagem recebida em foreground:", payload);
+    try {
+      onMessage(this.messaging, (payload) => {
+        console.log("📢 Mensagem recebida em foreground:", payload);
 
-      const { title, body } = payload.notification || {};
+        const { title, body } = payload.notification || {};
 
-      if (title && body) {
-        this.showLocalNotification(title, body, payload.data);
-      }
-    });
+        if (title && body) {
+          this.showLocalNotification(title, body, payload.data);
+        }
+      });
+    } catch (error) {
+      console.warn("⚠️ Erro ao configurar listener de mensagens:", error);
+      // Don't rethrow, just continue without the listener
+    }
   }
 
   private showLocalNotification(title: string, body: string, data?: any): void {
