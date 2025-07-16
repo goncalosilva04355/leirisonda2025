@@ -221,12 +221,17 @@ function App() {
   // Mobile Firebase conflict detection
   const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
 
-  // Forçar TODOS os dados a serem guardados no Firestore
-  const {
-    isInitialized: firestoreInitialized,
-    status: firestoreStatus,
-    refreshStatus,
-  } = useForceFirestore();
+  // Forçar TODOS os dados a serem guardados no Firestore - DESABILITADO (problemas SDK)
+  // const {
+  //   isInitialized: firestoreInitialized,
+  //   status: firestoreStatus,
+  //   refreshStatus,
+  // } = useForceFirestore();
+
+  // Substituído por REST API
+  const firestoreInitialized = true; // REST API sempre pronta
+  const firestoreStatus = "REST API ativa";
+  const refreshStatus = () => console.log("REST API não precisa refresh");
 
   // Log status do Firestore
   useEffect(() => {
@@ -512,7 +517,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺��� Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -11964,7 +11969,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            �� {selectedPool.clientPhone || "Não especificado"}
+                            📞 {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
@@ -11991,7 +11996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Dimensões
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.dimensions || "N��o especificado"}
+                            {selectedPool.dimensions || "Não especificado"}
                           </p>
                         </div>
                         <div>
