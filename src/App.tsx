@@ -161,6 +161,7 @@ import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) 
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
+import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -8254,7 +8255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>�������� Informa��ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -11376,7 +11377,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Furos e Capta��ões de Água
+                        Furos e Capta����ões de Água
                       </p>
                     </div>
                   </div>
