@@ -485,6 +485,30 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Notification Permissions Settings */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-2 bg-yellow-100 rounded-lg">
+                        <Bell className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          Permissões de Notificações
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Gerir permissões para receber notificações push no
+                          dispositivo
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <NotificationPermissionsManager />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
