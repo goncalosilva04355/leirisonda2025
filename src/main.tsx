@@ -55,6 +55,8 @@ import AppWithFallback from "./AppWithFallback";
 import AppWorking from "./AppWorking";
 // App simplificado para produção
 import AppProduction from "./AppProduction";
+// App corrigido sem loops
+import AppFixed from "./AppFixed";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -73,14 +75,23 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  console.log("🚀 Loading full application...");
+  console.log("🚀 Loading application...");
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
+
+  // Use AppFixed in production to avoid loops
+  const AppComponent = import.meta.env.PROD ? AppFixed : AppWithFallback;
+  console.log(
+    "📱 Using app:",
+    import.meta.env.PROD
+      ? "AppFixed (Production)"
+      : "AppWithFallback (Development)",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <AppWithFallback />
+        <AppComponent />
       </ErrorBoundary>
     </React.StrictMode>,
   );

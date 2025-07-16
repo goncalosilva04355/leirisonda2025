@@ -108,10 +108,9 @@ const AppWithFallback: React.FC = () => {
           );
           setRetryCount((prev) => prev + 1);
 
-          // Tentar novamente após um delay
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
+          // Em vez de reload, usar app simples diretamente
+          console.log("🔄 Alternando para app simples devido a erro");
+          setUseSimpleApp(true);
         } else {
           console.log("🏳️ Máximo de tentativas atingido, usando app simples");
           setUseSimpleApp(true);
