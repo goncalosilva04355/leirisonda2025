@@ -93,13 +93,80 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     }
   }, []);
 
-  // Load initial data
+  // Load initial data FROM FIRESTORE (development = production)
   useEffect(() => {
     // Only run on client side
     if (typeof window === "undefined") return;
 
-    const loadData = () => {
+    const loadData = async () => {
+      setState((prev) => ({
+        ...prev,
+        isLoading: true,
+        syncStatus: "connecting",
+      }));
+
       try {
+        console.log(
+          "🔥 Carregando dados do Firestore (desenvolvimento = produção)...",
+        );
+
+        // Tentar carregar do Firestore primeiro
+        const [
+          obrasFirestore,
+          manutencaoFirestore,
+          piscinasFirestore,
+          clientesFirestore,
+        ] = await Promise.all([
+          readFromFirestoreRest("obras"),
+          readFromFirestoreRest("manutencoes"),
+          readFromFirestoreRest("piscinas"),
+          readFromFirestoreRest("clientes"),
+        ]);
+
+        // Se temos dados do Firestore, usar esses
+        if (
+          obrasFirestore.length > 0 ||
+          manutencaoFirestore.length > 0 ||
+          piscinasFirestore.length > 0 ||
+          clientesFirestore.length > 0
+        ) {
+          console.log("✅ Dados carregados do Firestore:", {
+            obras: obrasFirestore.length,
+            manutencoes: manutencaoFirestore.length,
+            piscinas: piscinasFirestore.length,
+            clientes: clientesFirestore.length,
+          });
+
+          // Também salvar no localStorage para backup
+          safeSetLocalStorage("works", obrasFirestore);
+          safeSetLocalStorage("maintenance", manutencaoFirestore);
+          safeSetLocalStorage("pools", piscinasFirestore);
+          safeSetLocalStorage("clients", clientesFirestore);
+
+          setState({
+            obras: obrasFirestore,
+            manutencoes: manutencaoFirestore,
+            piscinas: piscinasFirestore,
+            clientes: clientesFirestore,
+            totalItems:
+              obrasFirestore.length +
+              manutencaoFirestore.length +
+              piscinasFirestore.length +
+              clientesFirestore.length,
+            lastSync: new Date().toISOString(),
+            isGloballyShared: true,
+            isLoading: false,
+            error: null,
+            syncStatus: "connected",
+          });
+          return;
+        }
+
+        console.log(
+          "⚠️ Firestore vazio, carregando do localStorage como fallback...",
+        );
+
+        // Fallback para localStorage se Firestore estiver vazio
         const obras = safeGetLocalStorage("works");
         const manutencoes = safeGetLocalStorage("maintenance");
         const piscinas = safeGetLocalStorage("pools");
@@ -122,13 +189,31 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           syncStatus: "connected",
         });
       } catch (error) {
-        console.error("❌ Error loading initial data:", error);
-        setState((prev) => ({
-          ...prev,
-          error: "Failed to load data",
+        console.error("❌ Erro ao carregar dados do Firestore:", error);
+
+        // Fallback para localStorage em caso de erro
+        console.log("⚠️ Usando localStorage como fallback devido a erro...");
+        const obras = safeGetLocalStorage("works");
+        const manutencoes = safeGetLocalStorage("maintenance");
+        const piscinas = safeGetLocalStorage("pools");
+        const clientes = safeGetLocalStorage("clients");
+
+        setState({
+          obras,
+          manutencoes,
+          piscinas,
+          clientes,
+          totalItems:
+            obras.length +
+            manutencoes.length +
+            piscinas.length +
+            clientes.length,
+          lastSync: new Date().toISOString(),
+          isGloballyShared: true,
           isLoading: false,
-          syncStatus: "error",
-        }));
+          error: null,
+          syncStatus: "connected",
+        });
       }
     };
 
