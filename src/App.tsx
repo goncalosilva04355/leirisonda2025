@@ -1270,7 +1270,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+    console.log("���� Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -3682,7 +3682,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>��</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -5589,7 +5589,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç✅es sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -7446,8 +7446,76 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="font-medium text-gray-800">
                                       Configura��ões Avançadas
                                     </p>
-                                    <p className="text-sm text-gray-600">
+                                                                        <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
+                                    </p>
+                                  </div>
+                                </div>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {safeActiveAdminTab === "utilizadores" && (
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                          Gestão de Utilizadores
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                          Adicionar, editar e gerir utilizadores do sistema.
+                        </p>
+                        <div className="text-center text-gray-500">
+                          <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                          <p>Gestão de utilizadores em desenvolvimento</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+
+        default:
+          return null;
+      }
+    })()}
+
+    {/* Admin area - separate from main app */}
+    {showAdminLogin && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg p-6 w-full max-w-md">
+          {!isAdminAuthenticated ? (
+            <AdminLogin
+              onLogin={() => {
+                setIsAdminAuthenticated(true);
+                setShowAdminLogin(false);
+              }}
+              onCancel={() => setShowAdminLogin(false)}
+            />
+          ) : (
+            <AdminPage
+              currentUser={currentUser}
+              onLogout={() => {
+                setIsAdminAuthenticated(false);
+                setShowAdminLogin(false);
+              }}
+            />
+          )}
+        </div>
+      )}
+
+      {/* Mobile Firebase Fix - Show when conflicts detected */}
+      {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
+
+      {/* App Status Indicator */}
+      <AppStatusIndicator />
+    </InstantSyncManagerSafe>
+  </AutoSyncProviderSafe>
+);
+}
                                     </p>
                                   </div>
                                 </div>
