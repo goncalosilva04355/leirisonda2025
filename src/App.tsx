@@ -160,6 +160,15 @@ import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) 
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
+
+// Função para gerar IDs únicos e evitar colisões React
+let appIdCounter = 0;
+const generateUniqueId = (prefix: string = "item"): string => {
+  const timestamp = Date.now();
+  const counter = ++appIdCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  return `${prefix}-${timestamp}-${counter}-${random}`;
+};
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
@@ -5407,7 +5416,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa����es e Trabalho
+                          Observa�����es e Trabalho
                         </h3>
                       </div>
 
@@ -5800,7 +5809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                             }
                           } catch (error) {
-                            console.error("❌ Error creating work:", error);
+                            console.error("�� Error creating work:", error);
                             alert(
                               `Erro ao criar obra: ${error.message || error}`,
                             );
@@ -8228,7 +8237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>���� Informações contratuais</li>
+                        <li>����� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8650,7 +8659,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informações Básicas
+                        Informa��ões Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -10833,7 +10842,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   Manutenção guardada com sucesso!
                 </h3>
                 <p className="text-gray-600">
-                  Escolha como pretende partilhar o relat🎉rio
+                  Escolha como pretende partilhar o relat����rio
                 </p>
               </div>
             </div>
@@ -11175,7 +11184,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("✅ Login error:", error);
+              console.error("�� Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
