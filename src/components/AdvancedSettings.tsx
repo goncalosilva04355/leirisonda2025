@@ -941,7 +941,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
 
               {/* FCM Setup Component */}
-              <FCMNotificationSetup currentUser={currentUser} />
+              <FCMNotificationSetup />
 
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
