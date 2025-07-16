@@ -19,9 +19,14 @@ export class AggressiveFirebaseFix {
   private static currentAuth: any = null;
 
   // Firebase config from centralized environment
-  private static get config() {
-    const { getLegacyFirebaseConfig } = require("../config/firebaseEnv");
-    return getLegacyFirebaseConfig();
+  private static async getConfig() {
+    try {
+      const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+      return getLegacyFirebaseConfig();
+    } catch (error) {
+      console.error("❌ Erro ao carregar config Firebase:", error);
+      return null;
+    }
   }
 
   /**
