@@ -109,9 +109,9 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 //   isFirestoreReady,
 //   getFirebaseFirestore,
 // } from "./firebase/leiriaConfig";
-import { initializeAuthorizedUsers } from "./config/authorizedUsers";
-import { firestoreService } from "./services/firestoreService";
-import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
+// import { initializeAuthorizedUsers } from "./config/authorizedUsers";
+// import { firestoreService } from "./services/firestoreService";
+// import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
@@ -493,7 +493,7 @@ function App() {
   };
   const dataSync = { syncStatus: "disconnected", lastSync: null };
 
-  // Função de refresh para Pull-to-Refresh
+  // Fun��ão de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
     try {
       console.log("🔄 Iniciando refresh do Dashboard...");
