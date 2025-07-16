@@ -14,6 +14,7 @@ import "./utils/preventGetImmediateError";
 import "./utils/globalErrorHandler";
 import "./utils/safeFetch";
 import "./utils/safeFirestoreTestFixed";
+import "./utils/loadFailedDetector";
 
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
 import "./utils/comprehensiveFirebaseTest";
@@ -113,7 +114,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -1261,7 +1262,10 @@ function App() {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
-          console.error("❌ Erro na sincronização com Firebase Leiria:", error);
+          console.error(
+            "❌ Erro na sincronizaç��o com Firebase Leiria:",
+            error,
+          );
           console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
@@ -1562,7 +1566,7 @@ function App() {
             }
           } catch (error) {
             console.warn(
-              "⚠�� Erro ao inicializar serviço de notificações:",
+              "⚠️ Erro ao inicializar serviço de notificações:",
               error,
             );
           }
@@ -3326,7 +3330,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Eye className="h-4 w-4" />
                                   </button>
 
-                                  {/* Botão Iniciar Obra (s�� se pendente) */}
+                                  {/* Botão Iniciar Obra (só se pendente) */}
                                   {work.status === "pending" && (
                                     <button
                                       onClick={(e) => {
@@ -7102,7 +7106,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
-                                <li>• Prazos e or���amentos</li>
+                                <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
