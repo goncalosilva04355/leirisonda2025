@@ -83,6 +83,41 @@ export const NotificationPermissionsManager: React.FC<
 
   const testNotification = async () => {
     try {
+      console.log("🧪 Iniciando teste de notificação...");
+
+      // Verificar permissões primeiro
+      console.log(`📋 Permissão atual: ${Notification.permission}`);
+      console.log(`🌐 Suporte: ${"Notification" in window}`);
+
+      if (Notification.permission !== "granted") {
+        alert(
+          "❌ Permissões de notificação não estão ativas! Ative-as primeiro.",
+        );
+        return;
+      }
+
+      // Teste simples e direto
+      console.log("🔔 Criando notificação de teste simples...");
+      const testNotif = new Notification("🧪 Teste Leirisonda", {
+        body: "Esta é uma notificação de teste. Se conseguir ver isto, as notificações estão a funcionar!",
+        icon: "/icon.svg",
+        requireInteraction: true,
+      });
+
+      testNotif.onshow = () => {
+        console.log("✅ Notificação de teste mostrada com sucesso!");
+      };
+
+      testNotif.onerror = (error) => {
+        console.error("❌ Erro na notificação de teste:", error);
+      };
+
+      testNotif.onclick = () => {
+        console.log("👆 Notificação de teste clicada");
+        testNotif.close();
+      };
+
+      // Também testar através do serviço
       const { pushNotificationService } = await import(
         "../services/pushNotificationService"
       );
@@ -91,6 +126,7 @@ export const NotificationPermissionsManager: React.FC<
         localStorage.getItem("currentUser") || "{}",
       );
 
+      console.log("🔄 Testando através do serviço...");
       await pushNotificationService.notifyObraAssignment(
         {
           id: "test",
@@ -100,10 +136,12 @@ export const NotificationPermissionsManager: React.FC<
         String(currentUser.id) || currentUser.email,
       );
 
-      alert("Notificação de teste enviada!");
+      alert(
+        "✅ Teste de notificação executado! Verifique se recebeu a notificação.",
+      );
     } catch (error) {
-      console.error("Erro ao testar notificação:", error);
-      alert("Erro ao enviar notificação de teste");
+      console.error("❌ Erro no teste:", error);
+      alert(`❌ Erro ao testar notificação: ${error.message}`);
     }
   };
 
