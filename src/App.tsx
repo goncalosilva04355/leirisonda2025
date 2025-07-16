@@ -657,7 +657,7 @@ function App() {
 
   const addWork = async (data: any) => {
     try {
-      console.log("🔧 addWork iniciado com Firestore ativo");
+      console.log("��� addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
       const firestoreId = await ultraSimpleOfflineService.createWork(data);
@@ -4661,7 +4661,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Saída
+                              Hora de Sa��da
                             </label>
                             <input
                               type="datetime-local"
@@ -5858,7 +5858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "🔥 hasPermission clientes create:",
+                                "���� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -7836,7 +7836,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 {/* Data Input Status */}
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                                  <DataInputStatusIndicator />
+                                  <div className="text-purple-900 font-medium">
+                                    Sistema de Diagnóstico Ativo
+                                  </div>
+                                  <div className="text-purple-700 text-sm mt-1">
+                                    Monitorização em tempo real
+                                  </div>
                                 </div>
 
                                 {/* Firebase Fix Button */}
