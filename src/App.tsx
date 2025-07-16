@@ -9917,6 +9917,50 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           dataSync.updateWork(editingWork.id, updateData);
 
+                          // Notificar utilizadores atribuídos (novos ou todos)
+                          if (
+                            editAssignedUsers &&
+                            editAssignedUsers.length > 0
+                          ) {
+                            try {
+                              const { pushNotificationService } = await import(
+                                "./services/pushNotificationService"
+                              );
+
+                              // Comparar com utilizadores anteriormente atribuídos
+                              const previousUsers =
+                                editingWork.assignedUsers || [];
+                              const newUsers = editAssignedUsers.filter(
+                                (newUser) =>
+                                  !previousUsers.some(
+                                    (prevUser) => prevUser.id === newUser.id,
+                                  ),
+                              );
+
+                              // Se há novos utilizadores, notificar todos (novos + existentes para atualização)
+                              const usersToNotify =
+                                newUsers.length > 0 ? editAssignedUsers : [];
+
+                              for (const user of usersToNotify) {
+                                await pushNotificationService.notifyObraAssignment(
+                                  { ...updateData, id: editingWork.id },
+                                  String(user.id),
+                                );
+                              }
+
+                              if (newUsers.length > 0) {
+                                console.log(
+                                  `✅ Notificações enviadas para ${usersToNotify.length} utilizadores`,
+                                );
+                              }
+                            } catch (error) {
+                              console.error(
+                                "❌ Erro ao enviar notificações:",
+                                error,
+                              );
+                            }
+                          }
+
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
                           setEditAssignedUsers([]);
@@ -10387,7 +10431,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // T🔥cnico
+                            .value; // T��cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
