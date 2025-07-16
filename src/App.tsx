@@ -342,7 +342,7 @@ function App() {
         console.log(
           "�� Inicializando Firebase Mobile para prevenir tela branca...",
         );
-        // await initializeFirebaseMobile(); // Temporariamente comentado
+                await initializeFirebaseMobile();
         setMobileFirebaseReady(true);
         console.log("✅ Firebase Mobile inicializado com sucesso!");
       } catch (error) {
@@ -371,7 +371,7 @@ function App() {
   //   refreshStatus,
   // } = useForceFirestore();
 
-  // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
+  // Substitu��do por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
   const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
   const refreshStatus = () => console.log("REST API n��o precisa refresh");
@@ -2460,7 +2460,7 @@ ${index + 1}. ${work.title}
    Cliente: ${work.client}
    Localização: ${work.location}
    Tipo: ${work.type}
-   Estado: ${work.status === "completed" ? "Conclu����da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
+   Estado: ${work.status === "completed" ? "Conclu���da" : work.status === "pending" ? "Pendente" : "Em Progresso"}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
@@ -7668,7 +7668,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Vers��o</span>
+                                <span className="text-gray-600">Versão</span>
                                 <span className="font-medium">1.0.0</span>
                               </div>
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -10325,7 +10325,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Sistema de Filtra��ão
+                          Sistema de Filtra✅ão
                         </label>
                         <select
                           defaultValue={editingPool?.filtrationSystem || "sand"}
@@ -10374,7 +10374,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observaç���es
+                        Observaç✅es
                       </label>
                       <textarea
                         defaultValue={editingPool?.observations}
