@@ -463,7 +463,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-    const universalSync = useUniversalDataSync();
+  const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
   // Função de refresh para Pull-to-Refresh
@@ -2198,7 +2198,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+LEIRISONDA - RELATÓRIO DE MANUTEN��ÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -2940,9 +2940,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Add error boundary
     try {
       switch (activeSection) {
-                case "dashboard":
+        case "dashboard":
           return (
-                        <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50">
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
@@ -3924,10 +3924,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </>
                         )}
                       </div>
-                                        )}
+                    )}
                   </div>
                 </div>
-              </PullToRefresh>
+              </div>
             </div>
           );
 
@@ -5326,7 +5326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Selecionar voltagem
                                   </option>
                                   <option value="230V">
-                                    230V (monof📞sico)
+                                    230V (monof����sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5831,7 +5831,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
                             console.log(
-                              "🔍 Select cliente onChange:",
+                              "��� Select cliente onChange:",
                               e.target.value,
                             );
                             if (e.target.value === "novo") {
@@ -6517,7 +6517,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furgão 1, Carrinha 2"
+                          placeholder="Ex: Furg��o 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7588,7 +7588,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         localmente no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç��� automática funciona melhor
+                                        • A marcaç€ automática funciona melhor
                                         em dispositivos móveis
                                       </li>
                                       <li>
@@ -7843,7 +7843,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <DataInputTutorial />
                                   </div>
                                   <p className="text-green-700 text-sm">
-                                    Tutorial passo-a-passo para inserção de
+                                    Tutorial passo-a-passo para inser��ão de
                                     dados.
                                   </p>
                                 </div>
