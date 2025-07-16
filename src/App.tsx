@@ -96,7 +96,6 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
-import { StableModeIndicator } from "./components/StableModeIndicator";
 import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
@@ -529,7 +528,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZA��ÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -566,7 +565,7 @@ function App() {
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
-      console.log("���� Phone dialer synchronized:", event.detail.enabled);
+      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
     };
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
@@ -1174,9 +1173,7 @@ function App() {
           safeLocalStorage.getItem("isAuthenticated");
 
         // DISABLED: Auto-login sempre desabilitado
-        console.log(
-          "��� Auto-login desabilitado - utilizador deve fazer login",
-        );
+        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
@@ -5165,7 +5162,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N���vel da Água (m) *
+                                  N�����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
