@@ -25,7 +25,7 @@
 // import "./utils/safeFirestoreTest";
 // import "./utils/ultraSafeTest";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Building2,
   Menu,
@@ -1425,7 +1425,7 @@ function App() {
 
         try {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
-          console.log("🎉 Sincronização com Firebase Leiria completa!");
+          console.log("🎉 Sincronizaç��o com Firebase Leiria completa!");
         } catch (error) {
           console.error(
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
@@ -1572,7 +1572,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç��es
+    // Adicionar listeners para todas as coleç����es
     const collections = [
       "obras",
       "piscinas",
@@ -2219,7 +2219,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🎉Forced logout state clear completed - redirected to login",
+        "���Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -4510,7 +4510,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manuten����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -8325,7 +8325,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>���� Hist✅rico de serviços</li>
+                        <li>������ Hist✅rico de serviços</li>
                         <li>����� Informações contratuais</li>
                       </ul>
                     </div>
