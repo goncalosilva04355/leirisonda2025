@@ -4,8 +4,8 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
-// Import App without error boundary first to see actual errors
-import App from "./App";
+// Testar primeiro com App mínimo
+import App from "./App-minimal";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
