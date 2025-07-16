@@ -79,23 +79,23 @@ import {
 // import "./utils/clearModalStates";
 
 // Firebase Quota Recovery - recuperar operações bloqueadas
-import {
-  autoRecoverOnInit,
-  FirebaseQuotaRecovery,
-} from "./utils/firebaseQuotaRecovery";
+// import {
+//   autoRecoverOnInit,
+//   FirebaseQuotaRecovery,
+// } from "./utils/firebaseQuotaRecovery";
 
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
 
-import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
+// import { AutoSyncProviderSafe } from "./components/AutoSyncProviderSafe";
 import {
   safeLocalStorage,
   safeSessionStorage,
   storageUtils,
 } from "./utils/storageUtils";
 
-import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
-import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
+// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+// import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
@@ -114,7 +114,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç���o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -321,7 +321,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("��� Persistência reparada automaticamente");
+        //     console.log("����� Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -2653,7 +2653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -6506,7 +6506,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons🎉vel *
+                          Técnico Respons��vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -8089,7 +8089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
-                        <li>• Próximas intervenções</li>
+                        <li>��� Próximas intervenções</li>
                       </ul>
                     </div>
                     <button
