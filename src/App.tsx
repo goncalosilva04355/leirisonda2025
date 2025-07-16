@@ -12,6 +12,7 @@ import "./utils/comprehensiveFirebaseTest";
 import "./utils/verifySaveToFirestore";
 import "./utils/verifyAutoSync";
 import "./utils/finalFirebaseVerification";
+import "./utils/firestoreDiagnosticMessage";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -246,7 +247,7 @@ function App() {
   useEffect(() => {
     if (firestoreInitialized) {
       console.log(
-        "🔥 ForceFirestore inicializado - todos os dados vão para Firestore:",
+        "🔥 ForceFirestore inicializado - todos os dados v��o para Firestore:",
         firestoreStatus,
       );
     }
@@ -319,7 +320,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persist���ncia:", error);
+        console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
     };
 
@@ -8707,7 +8708,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç🔥🔥es
+                            Notas e Observaç��🔥es
                           </label>
                           <textarea
                             rows={4}
@@ -10374,7 +10375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Dura��ão Real
+                            .value; // Dura���ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
