@@ -236,7 +236,12 @@ export function getFirebaseFirestore(): Firestore | null {
 
 // Função assíncrona para obter Firestore (recomendada)
 export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
-  // Remover bloqueio - Firestore sempre disponível
+  // Verificar se Firebase está disponível
+  if (!isFirebaseAvailable()) {
+    console.log("📱 Firebase não disponível - usando localStorage");
+    return null;
+  }
+
   console.log("🔥 Inicializando Firestore...");
 
   // Tentar inicializar se ainda não foi feito
