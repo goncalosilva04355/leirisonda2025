@@ -57,7 +57,6 @@ import {
   Database,
 } from "lucide-react";
 import PullToRefresh from "./components/PullToRefresh";
-import PullToRefresh from "./components/PullToRefresh";
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
@@ -1710,7 +1709,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat€rios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigat€rios (Piscina e T��cnico).");
       return;
     }
 
