@@ -333,29 +333,10 @@ function App() {
   }
   (window as any).lastAppRenderTime = renderTime;
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
 
-  useEffect(() => {
-    const initMobileFirebase = async () => {
-      try {
-        console.log(
-          "�� Inicializando Firebase Mobile para prevenir tela branca...",
-        );
-        await initializeFirebaseMobile();
-        setMobileFirebaseReady(true);
-        console.log("✅ Firebase Mobile inicializado com sucesso!");
-      } catch (error) {
-        console.warn(
-          "⚠️ Firebase Mobile falhou, continuando em modo local:",
-          error,
-        );
-        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
-      }
-    };
-
-    initMobileFirebase();
-  }, []);
+  // Firebase será inicializado apenas após o login - removida inicialização automática
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -7279,7 +7260,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localiza��ão</li>
+                                <li>✅ Estado e localiza����ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
