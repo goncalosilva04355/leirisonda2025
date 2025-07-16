@@ -249,7 +249,7 @@ console.error = (...args) => {
 
 // Teste de login
 // import "./utils/testLogin";
-// Força atualização de utilizadores
+// For��a atualização de utilizadores
 // import "./utils/forceUserUpdate";
 // Teste direto de autenticação
 // import "./utils/testDirectAuth";
@@ -1993,12 +1993,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log(
-        "������ Login attempt for:",
-        email,
-        "rememberMe:",
-        rememberMe,
-      );
+      console.log("���� Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       // await firebaseAutoFix.checkOnUserAction();
@@ -2444,7 +2439,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç✅s Conclu��das: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -3762,9 +3757,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ),
                                   )
                                   .slice(0, 3)
-                                  .map((work) => (
+                                  .map((work, index) => (
                                     <button
-                                      key={work.id}
+                                      key={`dashboard-work-${work.id}-${index}`}
                                       onClick={() => {
                                         navigateToSection("obras");
                                         setGlobalSearchTerm("");
@@ -8215,7 +8210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>������ Informa���ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -11557,7 +11552,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <button
                     onClick={() => {
                       const password = prompt(
-                        "Digite a palavra-passe para aceder ���s configurações:",
+                        "Digite a palavra-passe para aceder ��s configurações:",
                       );
                       if (password === "19867") {
                         navigateToSection("configuracoes");
