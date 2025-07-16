@@ -9,6 +9,7 @@ interface LocationPageProps {
     id: string;
     name: string;
     email: string;
+    role?: string;
   };
   allUsers?: Array<{
     id: number | string;
