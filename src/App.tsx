@@ -603,7 +603,7 @@ function App() {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
-      const firestoreId = await offlineFirstService.createWork(data);
+      const firestoreId = await ultraSimpleOfflineService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -1265,7 +1265,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("��� Iniciando sincronização automática APÓS LOGIN...");
+        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -2136,7 +2136,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Próxima Manutenç��o: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -2776,7 +2776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "localizacoes",
       icon: MapPin,
-      label: "Localiza��ões",
+      label: "Localizações",
       path: "/localizacoes",
     },
   ];
@@ -4091,7 +4091,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manuten���ões
+                          Manuten✅ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -11578,7 +11578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900">
                               {selectedWork.budget
                                 ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
-                                : "N��o especificado"}
+                                : "Não especificado"}
                             </p>
                           </div>
                           <div>
@@ -11679,7 +11679,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di���metro da Coluna
+                                Di����metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
