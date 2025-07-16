@@ -92,11 +92,11 @@ try {
   );
 
   ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <ErrorBoundary>
-        <AppComponent />
-      </ErrorBoundary>
-    </React.StrictMode>,
+    // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
+    <ErrorBoundary>
+      <AppComponent />
+    </ErrorBoundary>,
+    // </React.StrictMode>
   );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {

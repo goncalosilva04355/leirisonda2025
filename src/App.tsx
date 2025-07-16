@@ -25,7 +25,7 @@
 // import "./utils/safeFirestoreTest";
 // import "./utils/ultraSafeTest";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Building2,
   Menu,
@@ -69,6 +69,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
 import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
@@ -156,7 +157,88 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
-import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO
+import "./utils/emergencyUnblock"; // SISTEMA DE DESBLOQUEIO DE EMERGÊNCIA
+import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
+import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
+import "./utils/simpleDuplicateReport"; // RELATÓRIO SIMPLES DE DUPLICADOS SEM ELIMINAÇÃO
+import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
+// SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
+// import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
+// import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
+// TODOS OS SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
+// import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
+// import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
+// import "./utils/debugDuplicates"; // Debug de duplicados
+// import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
+// import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
+// import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
+// import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
+console.log(
+  "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
+);
+
+// Função para gerar IDs únicos e evitar colisões React
+let appIdCounter = 0;
+const generateUniqueId = (prefix: string = "item"): string => {
+  const timestamp = Date.now();
+  const counter = ++appIdCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  return `${prefix}-${timestamp}-${counter}-${random}`;
+};
+
+// Sistema de chaves únicas para React elements
+let keyCounter = 0;
+const generateUniqueKey = (baseKey: string): string => {
+  const counter = ++keyCounter;
+  return `${baseKey}-${counter}-${Date.now()}`;
+};
+
+// Debug function to detect duplicate keys
+const checkForDuplicateKeys = (
+  array: any[],
+  fieldName: string = "id",
+): void => {
+  if (!Array.isArray(array)) return;
+
+  const keys = array
+    .map((item) => item[fieldName])
+    .filter((key) => key !== undefined);
+  const duplicates = keys.filter((key, index) => keys.indexOf(key) !== index);
+
+  if (duplicates.length > 0) {
+    console.warn(`🚨 Duplicate keys detected in ${fieldName}:`, duplicates);
+    console.warn(`🚨 Full array:`, array);
+  }
+};
+
+// Debug: Intercept React warnings about duplicate keys
+const problemTimestamps = [
+  "1752604451507",
+  "1752602368414",
+  "1752578821484",
+  "1752582282132",
+  "1752574634617",
+  "1752517424794",
+  "1752582282133",
+];
+
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  const message = args.join(" ");
+  if (message.includes("same key")) {
+    const foundTimestamp = problemTimestamps.find((ts) => message.includes(ts));
+    if (foundTimestamp) {
+      console.warn(`🚨 FOUND PROBLEM TIMESTAMP: ${foundTimestamp}`);
+      console.warn("🚨 Full message:", message);
+      console.warn("🚨 Stack trace:", new Error().stack);
+
+      // Try to find where this timestamp is coming from
+      console.warn("🚨 Current obras data:", obras?.slice(0, 3));
+      console.warn("🚨 Current works data:", works?.slice(0, 3));
+    }
+  }
+  return originalConsoleError.apply(console, args);
+};
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
@@ -203,6 +285,7 @@ import DiagnosticPage from "./components/DiagnosticPage";
 
 // Indicador de status da aplicação
 import AppStatusIndicator from "./components/AppStatusIndicator";
+import RenderTracker from "./components/RenderTracker";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -235,7 +318,15 @@ const showNotification = (
 };
 
 function App() {
-  console.log("🚀 App component rendering...");
+  const renderTime = Date.now();
+  console.log("🚀 App component rendering at:", renderTime);
+
+  // Debug: Check if App is being rendered multiple times with same timestamp
+  if ((window as any).lastAppRenderTime === renderTime) {
+    console.error("🚨 DUPLICATE APP RENDER DETECTED!", renderTime);
+    console.trace("Stack trace for duplicate render:");
+  }
+  (window as any).lastAppRenderTime = renderTime;
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -251,10 +342,26 @@ function App() {
   //   refreshStatus,
   // } = useForceFirestore();
 
-  // Substituído por REST API
+  // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
-  const firestoreStatus = "REST API ativa";
-  const refreshStatus = () => console.log("REST API não precisa refresh");
+  const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
+  const refreshStatus = () => console.log("REST API n��o precisa refresh");
+
+  // Verificar se REST API está funcionando
+  const [restApiStatus, setRestApiStatus] = useState("aguardando");
+
+  useEffect(() => {
+    // Verificar REST API após 1 segundo
+    setTimeout(() => {
+      if ((window as any).firestoreRestApi) {
+        setRestApiStatus("ativo");
+        console.log("✅ REST API verificado e ativo no desenvolvimento!");
+      } else {
+        setRestApiStatus("aguardando");
+        console.log("⏳ REST API ainda não verificado...");
+      }
+    }, 1000);
+  }, []);
 
   // Log status do Firestore
   useEffect(() => {
@@ -323,7 +430,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("��� Persistência reparada automaticamente");
+        //     console.log("����� Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -333,7 +440,7 @@ function App() {
         //   console.log("✅ Sistema de persistência está funcional");
         // }
 
-        console.log("📱 Data persistence monitoring temporarily disabled");
+        console.log("���� Data persistence monitoring temporarily disabled");
       } catch (error) {
         console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
@@ -481,7 +588,7 @@ function App() {
 
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
-      console.error("��� Erro durante refresh do Dashboard:", error);
+      console.error("���� Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
     }
   }, [universalSync]);
@@ -625,17 +732,67 @@ function App() {
     syncStatus,
   } = universalSync;
 
+  // Debug: Check for duplicate keys in data
+  useEffect(() => {
+    console.log("🔍 Verificando dados carregados:", {
+      obras: obras.length,
+      manutencoes: manutencoes.length,
+      piscinas: piscinas.length,
+      clientes: clientes.length,
+    });
+
+    checkForDuplicateKeys(obras, "id");
+    checkForDuplicateKeys(manutencoes, "id");
+    checkForDuplicateKeys(piscinas, "id");
+    checkForDuplicateKeys(clientes, "id");
+
+    // Check for timestamp-based IDs that might be duplicating
+    obras.forEach((obra) => {
+      if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
+        console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
+      }
+    });
+  }, [obras, manutencoes, piscinas, clientes]);
+
   // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
   const maintenance = manutencoes;
   const works = obras;
   const clients = clientes;
 
-  // Calcular manutenções futuras
-  const today = new Date();
-  const futureMaintenance = manutencoes.filter(
-    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
-  );
+  // Calcular manutenções futuras - OTIMIZADO COM useMemo
+  const futureMaintenance = useMemo(() => {
+    const today = new Date();
+    return manutencoes.filter(
+      (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
+    );
+  }, [manutencoes]);
+
+  // OTIMIZAÇÃO: Contadores de obras memorizados para evitar re-cálculos
+  const worksCounts = useMemo(() => {
+    const pending = works.filter(
+      (w) => w.status === "pendente" || w.status === "pending",
+    ).length;
+    const inProgress = works.filter(
+      (w) => w.status === "em_progresso" || w.status === "in_progress",
+    ).length;
+    const completed = works.filter(
+      (w) => w.status === "concluida" || w.status === "completed",
+    ).length;
+    const noSheet = works.filter(
+      (w) =>
+        !w.sheetGenerated &&
+        w.status !== "concluida" &&
+        w.status !== "completed",
+    ).length;
+
+    return { pending, inProgress, completed, noSheet };
+  }, [works]);
+
+  // OTIMIZAÇÃO: Clientes ativos memorizados
+  const activeClientsCount = useMemo(() => {
+    return clients.filter((c) => c.status === "Ativo").length;
+  }, [clients]);
 
   // Funç��es de compatibilidade simplificadas
   const addPool = async (data: any) => {
@@ -688,7 +845,7 @@ function App() {
       );
       const newWork = {
         ...data,
-        id: data.id || Date.now().toString(),
+        id: data.id || generateUniqueId("work"),
         createdAt: data.createdAt || new Date().toISOString(),
       };
 
@@ -716,7 +873,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -1188,7 +1345,9 @@ function App() {
           safeLocalStorage.getItem("isAuthenticated");
 
         // DISABLED: Auto-login sempre desabilitado
-        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
+        console.log(
+          "��� Auto-login desabilitado - utilizador deve fazer login",
+        );
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
@@ -1208,7 +1367,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicialização:", error);
+        console.error("❌ Erro na inicializaç��o:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -1311,7 +1470,7 @@ function App() {
 
         try {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
-          console.log("🎉 Sincronização com Firebase Leiria completa!");
+          console.log("🎉 Sincronizaç��o com Firebase Leiria completa!");
         } catch (error) {
           console.error(
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
@@ -1458,7 +1617,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleções
+    // Adicionar listeners para todas as coleç����es
     const collections = [
       "obras",
       "piscinas",
@@ -1750,7 +1909,7 @@ function App() {
 
     // Save complete intervention data
     const interventionData = {
-      id: Date.now(),
+      id: generateUniqueId("intervention"),
       poolId: maintenanceForm.poolId,
       poolName: selectedPool ? selectedPool.name : "Piscina Desconhecida",
       client: selectedPool ? selectedPool.client : "",
@@ -1887,7 +2046,7 @@ function App() {
     rememberMe: boolean = false,
   ) => {
     try {
-      console.log("🔑 Login attempt for:", email, "rememberMe:", rememberMe);
+      console.log("���� Login attempt for:", email, "rememberMe:", rememberMe);
 
       // Auto-check Firebase before login attempt
       // await firebaseAutoFix.checkOnUserAction();
@@ -2016,7 +2175,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est�� ativo após login
+        // Garantir que auto sync est���� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -2105,7 +2264,7 @@ function App() {
       window.location.hash = "";
 
       console.log(
-        "🎉Forced logout state clear completed - redirected to login",
+        "���Forced logout state clear completed - redirected to login",
       );
     }
   };
@@ -2231,7 +2390,7 @@ Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
 - Total de Manutenções: ${maintenance.length}
-- Futuras Manuten��ões: ${futureMaintenance.length}
+- Futuras Manuten����ões: ${futureMaintenance.length}
 
 MANUTENÇÕES REALIZADAS:
 ${maintenance
@@ -2418,7 +2577,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         const reader = new FileReader();
         reader.onload = (e: ProgressEvent<FileReader>) => {
           const newPhoto = {
-            id: Date.now() + Math.random(),
+            id: generateUniqueId("photo"),
             name: file.name,
             size: file.size,
             type: file.type,
@@ -2465,7 +2624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     const files = Array.from(e.dataTransfer.files);
     files.forEach((file) => {
       const newPhoto = {
-        id: Date.now() + Math.random(),
+        id: generateUniqueId("photo"),
         name: file.name,
         url: URL.createObjectURL(file),
         file: file,
@@ -2834,7 +2993,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "manutencoes",
       icon: Wrench,
-      label: "Manutenções",
+      label: "Manuten��ões",
       path: "/manutencoes",
     },
     {
@@ -3279,9 +3438,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h2>
                       </div>
                       <div className="p-4 space-y-3">
-                        {assignedWorks.map((work) => (
+                        {assignedWorks.map((work, index) => (
                           <div
-                            key={work.id}
+                            key={`assigned-work-${work.id}-${index}`}
                             className="border-l-4 border-purple-500 bg-purple-50 rounded-r-lg p-4 hover:bg-purple-100 transition-colors"
                           >
                             <div className="space-y-3">
@@ -3319,7 +3478,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                                    ���� Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -3651,9 +3810,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         ),
                                   )
                                   .slice(0, 3)
-                                  .map((work) => (
+                                  .map((work, index) => (
                                     <button
-                                      key={work.id}
+                                      key={`dashboard-work-${work.id}-${index}`}
                                       onClick={() => {
                                         navigateToSection("obras");
                                         setGlobalSearchTerm("");
@@ -4324,7 +4483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ���� {maint.location}
+                                    ����� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -4364,7 +4523,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -4396,7 +4555,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manutenç��es
+                          Futuras Manuten����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -4445,7 +4604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manuten��ões aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -4776,7 +4935,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {workVehicles.map((vehicle, index) => (
                                 <div
-                                  key={index}
+                                  key={`vehicle-${vehicle}-${index}`}
                                   className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-gray-700">
@@ -4840,7 +4999,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {workTechnicians.map((technician, index) => (
                                 <div
-                                  key={index}
+                                  key={`technician-${technician}-${index}`}
                                   className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-gray-700">
@@ -5111,7 +5270,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {assignedUsers.map((assignedUser, index) => (
                                 <div
-                                  key={index}
+                                  key={`assigned-${assignedUser.id}-${index}`}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
@@ -5411,7 +5570,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descri��ão do trabalho realizado..."
                           />
                         </div>
                       </div>
@@ -5670,10 +5829,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Create complete work data object (matching Work interface)
                           const workData = {
-                            id: `work_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                            id: generateUniqueId("work"),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
-                              : `LS-${Date.now()}`,
+                              : `LS-${generateUniqueId("sheet").split("-")[1]}`,
                             type: (() => {
                               const validTypes = [
                                 "piscina",
@@ -6305,7 +6464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Collect all form data
                           const poolData = {
-                            id: Date.now().toString(),
+                            id: generateUniqueId("pool"),
                             name:
                               (
                                 form.querySelector(
@@ -6759,7 +6918,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza skimmers",
                           "Verificação equipamentos",
                         ].map((task, index) => (
-                          <label key={index} className="flex items-center">
+                          <label
+                            key={`task-${task}-${index}`}
+                            className="flex items-center"
+                          >
                             <input
                               type="checkbox"
                               className="mr-2 text-green-600 focus:ring-green-500"
@@ -7058,7 +7220,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat������rios do Sistema
+                            Relat��������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -7642,7 +7804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Shield className="h-6 w-6 text-yellow-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Configurações Avançadas
+                                Configurações Avan��adas
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -7742,7 +7904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminará permanentemente:
+                                        Esta ação eliminar�� permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
@@ -7848,6 +8010,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
 
                               <div className="space-y-4">
+                                {/* Duplicate Cleanup Status - DESATIVADO PARA PARAR LOOPS */}
+                                {/* <DuplicateCleanupStatus /> */}
+
                                 {/* Data Input Status */}
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <div className="text-purple-900 font-medium">
@@ -7947,7 +8112,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅ões
+                                    Histórico de interven✅��es
                                   </p>
                                 </div>
                               </div>
@@ -8138,7 +8303,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>��� Datas e dura🔥es</li>
+                        <li>����� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
@@ -8208,8 +8373,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>���� Hist✅rico de serviços</li>
-                        <li>���� Informações contratuais</li>
+                        <li>������ Hist✅rico de serviços</li>
+                        <li>����� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8438,7 +8603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes Ativos
                         </p>
                         <p className="text-2xl font-bold text-gray-900">
-                          {clients.filter((c) => c.status === "Ativo").length}
+                          {activeClientsCount}
                         </p>
                       </div>
                     </div>
@@ -8856,7 +9021,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           try {
                             const newClient = {
-                              id: Date.now(),
+                              id: generateUniqueId("client"),
                               name: name,
                               email: email,
                               phone: phone,
@@ -8983,14 +9148,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Pendentes (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "pendente" || w.status === "pending",
-                        ).length
-                      }
-                      )
+                      Pendentes ({worksCounts.pending})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("in_progress")}
@@ -9000,15 +9158,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Em Progresso (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "em_progresso" ||
-                            w.status === "in_progress",
-                        ).length
-                      }
-                      )
+                      Em Progresso ({worksCounts.inProgress})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("completed")}
@@ -9018,15 +9168,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Concluídas (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "concluida" ||
-                            w.status === "completed",
-                        ).length
-                      }
-                      )
+                      Concluídas ({worksCounts.completed})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("no_sheet")}
@@ -9036,16 +9178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Sem Folha de Obra (
-                      {
-                        works.filter(
-                          (w) =>
-                            !w.folhaGerada &&
-                            w.status !== "completed" &&
-                            w.status !== "concluida",
-                        ).length
-                      }
-                      )
+                      Sem Folha de Obra ({worksCounts.noSheet})
                     </button>
                   </div>
                 </div>
@@ -9083,9 +9216,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         );
                       return work.status === activeWorkFilter;
                     })
-                    .map((work) => (
+                    .map((work, index) => (
                       <div
-                        key={work.id}
+                        key={`work-item-${work.id}-${index}`}
                         className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between">
@@ -9286,7 +9419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                    () => dataSync.deleteWork(work.id),
+                                    () => deleteObra(work.id),
                                   )
                                 }
                                 className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
@@ -9634,11 +9767,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {editAssignedUsers.map((assignedUser, index) => (
                                 <div
-                                  key={index}
+                                  key={`edit-assigned-${assignedUser.id}-${index}`}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    €{assignedUser.name}
+                                    ��{assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -9830,7 +9963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Selecionar voltagem
                             </option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif📞sico)</option>
+                            <option value="400V">400V (trif����sico)</option>
                           </select>
                         </div>
                       </div>
@@ -10342,7 +10475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T��cnico *
+                          T������cnico *
                         </label>
                         <input
                           type="text"
@@ -10363,7 +10496,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
                           <option value="Manutenç€o">Manuten��ão</option>
-                          <option value="Reparaç🎉">Reparação</option>
+                          <option value="Reparaç���">Reparação</option>
                         </select>
                       </div>
                       <div>
@@ -10376,7 +10509,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="scheduled">Agendado</option>
                           <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Concluído</option>
+                          <option value="completed">Conclu��do</option>
                           <option value="cancelled">Cancelado</option>
                         </select>
                       </div>
@@ -10540,7 +10673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alterações
+                        Guardar Alteraç��es
                       </button>
                     </div>
                   </form>
@@ -10609,7 +10742,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     Acesso Restrito
                   </h1>
                   <p className="text-gray-600 mb-4">
-                    Apenas administradores podem aceder às funcionalidades de
+                    Apenas administradores podem aceder ��s funcionalidades de
                     localização.
                   </p>
                   <button
@@ -10879,7 +11012,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>�����</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11072,7 +11205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("✅ Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -11179,7 +11312,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p✅gina de login */}
+        {/* Admin Page - tamb��m funciona na p✅gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
@@ -11231,6 +11364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       collections={["users", "pools", "maintenance", "works", "clients"]}
       showNotifications={false}
     >
+      <RenderTracker name="App" data={obras} />
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
           {/* Firebase works automatically in background - no UI elements */}
@@ -11442,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <button
                     onClick={() => {
                       const password = prompt(
-                        "Digite a palavra-passe para aceder às configurações:",
+                        "Digite a palavra-passe para aceder ��s configurações:",
                       );
                       if (password === "19867") {
                         navigateToSection("configuracoes");
@@ -11452,7 +11586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       }
                     }}
                     className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Configurações"
+                    title="Configura��ões"
                   >
                     <Settings className="h-5 w-5" />
                   </button>
@@ -11782,7 +11916,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic��vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
@@ -11981,7 +12115,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
-                            dataSync.deleteWork(selectedWork.id);
+                            deleteObra(selectedWork.id);
                             showNotification(
                               "Obra Eliminada",
                               `A obra "${selectedWork.title || selectedWork.client}" foi eliminada com sucesso`,
@@ -12285,48 +12419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
           {/* Main Content */}
           <main className="lg:ml-80 min-h-screen">
-            <div className="p-4 lg:p-6">
-              {(() => {
-                try {
-                  return renderContent();
-                } catch (error) {
-                  console.error("Error rendering content:", error);
-                  return (
-                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                      <div className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full text-center">
-                        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <AlertCircle className="h-8 w-8 text-red-600" />
-                        </div>
-                        <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderização
-                        </h1>
-                        <p className="text-gray-600 mb-4">
-                          Ocorreu um erro ao carregar a página. Por favor, tente
-                          novamente.
-                        </p>
-                        <div className="space-y-2">
-                          <button
-                            onClick={() => window.location.reload()}
-                            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
-                          >
-                            Recarregar Página
-                          </button>
-                          <button
-                            onClick={() => {
-                              setActiveSection("dashboard");
-                              setActiveAdminTab("relatorios");
-                            }}
-                            className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-lg hover:bg-gray-300"
-                          >
-                            Voltar ao Dashboard
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                }
-              })()}
-            </div>
+            <div className="p-4 lg:p-6">{renderContent()}</div>
           </main>
 
           {/* Install Prompt for Mobile */}

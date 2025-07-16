@@ -1,10 +1,19 @@
 import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
+// Função para gerar IDs únicos evitando colisões
+let serviceIdCounter = 0;
+const generateServiceId = (prefix: string): string => {
+  const timestamp = Date.now();
+  const counter = ++serviceIdCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  return `${prefix}-${timestamp}-${counter}-${random}`;
+};
+
 class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
     try {
       console.log("🔧 Criando obra...");
-      const workId = `work-${Date.now()}`;
+      const workId = generateServiceId("work");
       await saveToFirestoreRest("works", workId, {
         ...workData,
         id: workId,
@@ -22,7 +31,7 @@ class UltraSimpleOfflineService {
   async createPool(poolData: any): Promise<string> {
     try {
       console.log("🏊 Criando piscina...");
-      const poolId = `pool-${Date.now()}`;
+      const poolId = generateServiceId("pool");
       await saveToFirestoreRest("pools", poolId, {
         ...poolData,
         id: poolId,
@@ -40,7 +49,7 @@ class UltraSimpleOfflineService {
   async createMaintenance(maintenanceData: any): Promise<string> {
     try {
       console.log("🔧 Criando manutenção...");
-      const maintenanceId = `maintenance-${Date.now()}`;
+      const maintenanceId = generateServiceId("maintenance");
       await saveToFirestoreRest("maintenance", maintenanceId, {
         ...maintenanceData,
         id: maintenanceId,
@@ -58,7 +67,7 @@ class UltraSimpleOfflineService {
   async createClient(clientData: any): Promise<string> {
     try {
       console.log("👤 Criando cliente...");
-      const clientId = `client-${Date.now()}`;
+      const clientId = generateServiceId("client");
       await saveToFirestoreRest("clients", clientId, {
         ...clientData,
         id: clientId,

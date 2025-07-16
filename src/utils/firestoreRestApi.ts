@@ -227,13 +227,16 @@ const testRestApi = async () => {
   }
 };
 
-// Auto-executar teste
+// Auto-executar teste IMEDIATAMENTE no desenvolvimento
 setTimeout(async () => {
-  console.log("🚀 REST API: Auto-teste iniciando...");
+  console.log(
+    "🚀 REST API: Auto-teste iniciando (desenvolvimento = produção)...",
+  );
   const success = await testRestApi();
 
   if (success) {
     console.log("🎉 REST API: AUTO-TESTE SUCESSO - FIRESTORE FUNCIONAL!");
+    console.log("🔥 REST API: DESENVOLVIMENTO AGORA IGUAL À PRODUÇÃO!");
 
     // Disponibilizar globalmente
     (window as any).firestoreRestApi = {
@@ -245,7 +248,7 @@ setTimeout(async () => {
   } else {
     console.error("❌ REST API: AUTO-TESTE FALHOU");
   }
-}, 2000);
+}, 500); // Reduzir tempo para 500ms
 
 export default {
   save: saveToFirestoreRest,

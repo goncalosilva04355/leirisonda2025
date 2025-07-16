@@ -20,23 +20,19 @@ let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
 let auth: Auth | null = null;
 
-// Verificar se deve inicializar Firebase
+// Verificar se deve inicializar Firebase - SEMPRE ATIVO PARA DESENVOLVIMENTO IGUAL A PRODUÇÃO
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true" || true; // SEMPRE ATIVO
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
-  // Respeitar configurações de ambiente
-  if (!FORCE_FIREBASE_PRODUCTION) {
-    console.log(
-      "🚫 Firebase leiria-1cfc9 não inicializado - modo desenvolvimento ativo",
-    );
-    console.log("📝 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
-    return false;
-  }
+  // SEMPRE INICIALIZAR FIREBASE - DESENVOLVIMENTO = PRODUÇÃO
+  console.log(
+    "🔥 Firebase leiria-1cfc9 SEMPRE ATIVO - desenvolvimento como produção",
+  );
 
   try {
     // Verificar se já existe uma app

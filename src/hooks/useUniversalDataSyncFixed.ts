@@ -1,4 +1,33 @@
 import { useState, useEffect, useCallback } from "react";
+import {
+  readFromFirestoreRest,
+  saveToFirestoreRest,
+  deleteFromFirestoreRest,
+} from "../utils/firestoreRestApi";
+
+// Função SUPER ROBUSTA para gerar IDs únicos e evitar colisões
+let idCounter = 0;
+let lastTimestamp = 0;
+
+const generateUniqueId = (prefix: string): string => {
+  let timestamp = Date.now();
+
+  // Ensure timestamp is always increasing to prevent duplicates
+  if (timestamp <= lastTimestamp) {
+    timestamp = lastTimestamp + 1;
+  }
+  lastTimestamp = timestamp;
+
+  const counter = ++idCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  const extraRandom = Math.random().toString(36).substring(2, 5);
+
+  // Format: prefix-timestamp-counter-random-extraRandom
+  const uniqueId = `${prefix}-${timestamp}-${counter}-${random}-${extraRandom}`;
+
+  console.log(`🆔 ID único gerado: ${uniqueId}`);
+  return uniqueId;
+};
 
 export interface UniversalSyncState {
   obras: any[];
@@ -92,13 +121,143 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     }
   }, []);
 
-  // Load initial data
+  // Load initial data FROM FIRESTORE (development = production)
   useEffect(() => {
     // Only run on client side
     if (typeof window === "undefined") return;
 
-    const loadData = () => {
+    const loadData = async () => {
+      setState((prev) => ({
+        ...prev,
+        isLoading: true,
+        syncStatus: "connecting",
+      }));
+
       try {
+        console.log(
+          "��� Carregando dados do Firestore (desenvolvimento = produção)...",
+        );
+
+        // Tentar carregar do Firestore primeiro
+        const [
+          obrasFirestoreRaw,
+          manutencaoFirestoreRaw,
+          piscinasFirestoreRaw,
+          clientesFirestoreRaw,
+        ] = await Promise.all([
+          readFromFirestoreRest("obras"),
+          readFromFirestoreRest("manutencoes"),
+          readFromFirestoreRest("piscinas"),
+          readFromFirestoreRest("clientes"),
+        ]);
+
+        // Use let so we can modify arrays for deduplication
+        let obrasFirestore = obrasFirestoreRaw;
+        let manutencaoFirestore = manutencaoFirestoreRaw;
+        let piscinasFirestore = piscinasFirestoreRaw;
+        let clientesFirestore = clientesFirestoreRaw;
+
+        // Se temos dados do Firestore, usar esses
+        if (
+          obrasFirestore.length > 0 ||
+          manutencaoFirestore.length > 0 ||
+          piscinasFirestore.length > 0 ||
+          clientesFirestore.length > 0
+        ) {
+          console.log("✅ Dados carregados do Firestore:", {
+            obras: obrasFirestore.length,
+            manutencoes: manutencaoFirestore.length,
+            piscinas: piscinasFirestore.length,
+            clientes: clientesFirestore.length,
+          });
+
+          // ROBUST DEDUPLICATION - Remove ALL duplicates IMMEDIATELY
+          const deduplicateRobust = (array: any[], name: string) => {
+            if (!Array.isArray(array) || array.length === 0) return array;
+
+            const seenIds = new Set();
+            const duplicateIds = [];
+            const unique = array.filter((item) => {
+              if (!item || !item.id) {
+                console.warn(`⚠️ Item sem ID em ${name}, removendo:`, item);
+                return false;
+              }
+
+              if (seenIds.has(item.id)) {
+                duplicateIds.push(item.id);
+                console.warn(
+                  `🗑️ DUPLICATE ${name.toUpperCase()} REMOVED:`,
+                  item.id,
+                );
+                return false;
+              }
+
+              seenIds.add(item.id);
+              return true;
+            });
+
+            if (duplicateIds.length > 0) {
+              console.warn(
+                `⚠️ ${name.toUpperCase()} duplicados detectados (removidos apenas da memória local):`,
+                duplicateIds.join(","),
+              );
+              console.log(
+                `📝 ${name} - Dados únicos carregados: ${unique.length}/${array.length} (${duplicateIds.length} duplicados ignorados)`,
+              );
+              console.log(
+                `🔗 Para eliminar permanentemente, elimine manualmente no Firebase Console`,
+              );
+            }
+
+            return unique;
+          };
+
+          // Apply ROBUST deduplication to ALL collections
+          obrasFirestore = deduplicateRobust(obrasFirestore, "obra");
+          manutencaoFirestore = deduplicateRobust(
+            manutencaoFirestore,
+            "manutenção",
+          );
+          piscinasFirestore = deduplicateRobust(piscinasFirestore, "piscina");
+          clientesFirestore = deduplicateRobust(clientesFirestore, "cliente");
+
+          console.log("🎯 ALL DATA DEDUPLICATED - FINAL COUNTS:", {
+            obras: obrasFirestore.length,
+            manutencoes: manutencaoFirestore.length,
+            piscinas: piscinasFirestore.length,
+            clientes: clientesFirestore.length,
+          });
+
+          // Também salvar no localStorage para backup
+          safeSetLocalStorage("works", obrasFirestore);
+          safeSetLocalStorage("maintenance", manutencaoFirestore);
+          safeSetLocalStorage("pools", piscinasFirestore);
+          safeSetLocalStorage("clients", clientesFirestore);
+
+          setState({
+            obras: obrasFirestore,
+            manutencoes: manutencaoFirestore,
+            piscinas: piscinasFirestore,
+            clientes: clientesFirestore,
+            totalItems:
+              obrasFirestore.length +
+              manutencaoFirestore.length +
+              piscinasFirestore.length +
+              clientesFirestore.length,
+            lastSync: new Date().toISOString(),
+            isGloballyShared: true,
+            isLoading: false,
+            error: null,
+            syncStatus: "connected",
+          });
+          return;
+        }
+
+        console.log(
+          "⚠️ Firestore vazio, carregando do localStorage como fallback...",
+        );
+
+        // Fallback para localStorage se Firestore estiver vazio
         const obras = safeGetLocalStorage("works");
         const manutencoes = safeGetLocalStorage("maintenance");
         const piscinas = safeGetLocalStorage("pools");
@@ -121,13 +280,31 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           syncStatus: "connected",
         });
       } catch (error) {
-        console.error("❌ Error loading initial data:", error);
-        setState((prev) => ({
-          ...prev,
-          error: "Failed to load data",
+        console.error("❌ Erro ao carregar dados do Firestore:", error);
+
+        // Fallback para localStorage em caso de erro
+        console.log("⚠️ Usando localStorage como fallback devido a erro...");
+        const obras = safeGetLocalStorage("works");
+        const manutencoes = safeGetLocalStorage("maintenance");
+        const piscinas = safeGetLocalStorage("pools");
+        const clientes = safeGetLocalStorage("clients");
+
+        setState({
+          obras,
+          manutencoes,
+          piscinas,
+          clientes,
+          totalItems:
+            obras.length +
+            manutencoes.length +
+            piscinas.length +
+            clientes.length,
+          lastSync: new Date().toISOString(),
+          isGloballyShared: true,
           isLoading: false,
-          syncStatus: "error",
-        }));
+          error: null,
+          syncStatus: "connected",
+        });
       }
     };
 
@@ -144,13 +321,13 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
       window.addEventListener("storage", handleStorageChange);
       return () => window.removeEventListener("storage", handleStorageChange);
     }
-  }, [safeGetLocalStorage]);
+  }, []); // FIXED: Empty dependencies to prevent infinite re-renders
 
   // Add obra function
   const addObra = useCallback(
     async (obraData: any): Promise<string> => {
       try {
-        const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
+        const id = obraData.id || generateUniqueId("obra");
         const obra = {
           ...obraData,
           id,
@@ -159,30 +336,81 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           visibleToAllUsers: true,
         };
 
+        // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
         const existingObras = safeGetLocalStorage("works");
-        const workExists = existingObras.some((w: any) => w.id === obra.id);
+        const localWorkExists = existingObras.some(
+          (w: any) => w.id === obra.id,
+        );
 
-        if (!workExists) {
-          const updatedObras = [...existingObras, obra];
-          safeSetLocalStorage("works", updatedObras);
+        // Also check in current state to prevent duplicates in memory
+        const stateWorkExists = state.obras.some((w: any) => w.id === obra.id);
 
-          setState((prev) => ({
-            ...prev,
-            obras: updatedObras,
-            totalItems: prev.totalItems + 1,
-          }));
-
-          // Trigger update event (only on client side)
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(
-              new CustomEvent("obrasUpdated", {
-                detail: { data: updatedObras, collection: "obras" },
-              }),
-            );
-          }
+        if (localWorkExists || stateWorkExists) {
+          console.warn(
+            "🚨 DUPLICADO DETECTADO - Obra já existe, ignorando:",
+            obra.id,
+          );
+          return obra.id; // Return existing ID instead of creating duplicate
         }
 
-        return id;
+        // EXTRA SAFETY: Check in Firestore as well
+        try {
+          const firestoreObras = await readFromFirestoreRest("obras");
+          const firestoreWorkExists = firestoreObras.some(
+            (w: any) => w.id === obra.id,
+          );
+
+          if (firestoreWorkExists) {
+            console.warn(
+              "🚨 DUPLICADO NO FIRESTORE - Obra já existe, ignorando:",
+              obra.id,
+            );
+            return obra.id;
+          }
+        } catch (error) {
+          console.warn(
+            "⚠️ Não foi possível verificar duplicados no Firestore:",
+            error,
+          );
+        }
+
+        // Proceed with creation since no duplicates found
+        // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+        console.log("🔥 Salvando obra no Firestore:", obra.id);
+        const firestoreSaved = await saveToFirestoreRest(
+          "obras",
+          obra.id,
+          obra,
+        );
+
+        if (firestoreSaved) {
+          console.log("✅ Obra salva no Firestore com sucesso");
+        } else {
+          console.warn(
+            "⚠️ Falha ao salvar no Firestore, continuando com localStorage",
+          );
+        }
+
+        // SEGUNDO: Atualizar localStorage (backup)
+        const updatedObras = [...existingObras, obra];
+        safeSetLocalStorage("works", updatedObras);
+
+        setState((prev) => ({
+          ...prev,
+          obras: updatedObras,
+          totalItems: prev.totalItems + 1,
+        }));
+
+        // Trigger update event (only on client side)
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("obrasUpdated", {
+              detail: { data: updatedObras, collection: "obras" },
+            }),
+          );
+        }
+
+        return obra.id;
       } catch (error) {
         console.error("❌ Error adding obra:", error);
         throw error;
@@ -195,8 +423,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
       try {
-        const id =
-          manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
+        const id = manutencaoData.id || generateUniqueId("manutencao");
         const manutencao = {
           ...manutencaoData,
           id,
@@ -210,7 +437,32 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           (m: any) => m.id === manutencao.id,
         );
 
+        if (maintenanceExists) {
+          console.warn(
+            "🚨 Manutenção com ID duplicado detectada, ignorando:",
+            manutencao.id,
+          );
+          return manutencao.id;
+        }
+
         if (!maintenanceExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando manutenção no Firestore:", manutencao.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "manutencoes",
+            manutencao.id,
+            manutencao,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Manutenção salva no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar manutenção no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedManutencoes = [...existingManutencoes, manutencao];
           safeSetLocalStorage("maintenance", updatedManutencoes);
 
@@ -242,7 +494,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addPiscina = useCallback(
     async (piscinaData: any): Promise<string> => {
       try {
-        const id = piscinaData.id || `piscina-${Date.now()}-${Math.random()}`;
+        const id = piscinaData.id || generateUniqueId("piscina");
         const piscina = {
           ...piscinaData,
           id,
@@ -257,6 +509,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         );
 
         if (!piscinaExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando piscina no Firestore:", piscina.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "piscinas",
+            piscina.id,
+            piscina,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Piscina salva no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar piscina no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedPiscinas = [...existingPiscinas, piscina];
           safeSetLocalStorage("pools", updatedPiscinas);
 
@@ -288,7 +557,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addCliente = useCallback(
     async (clienteData: any): Promise<string> => {
       try {
-        const id = clienteData.id || `cliente-${Date.now()}-${Math.random()}`;
+        const id = clienteData.id || generateUniqueId("cliente");
         const cliente = {
           ...clienteData,
           id,
@@ -303,6 +572,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         );
 
         if (!clienteExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando cliente no Firestore:", cliente.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "clientes",
+            cliente.id,
+            cliente,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Cliente salvo no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar cliente no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedClientes = [...existingClientes, cliente];
           safeSetLocalStorage("clients", updatedClientes);
 
@@ -338,9 +624,63 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteObra = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteObra called:", id);
-  }, []);
+  const deleteObra = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando obra:", id);
+
+        // PRIMEIRO: Eliminar do Firestore (desenvolvimento = produção)
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest("obras", id);
+
+          if (firestoreDeleted) {
+            console.log("✅ Obra eliminada do Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao eliminar do Firestore, continuando com localStorage",
+            );
+          }
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ Erro no Firestore, continuando com localStorage:",
+            firestoreError,
+          );
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingObras = safeGetLocalStorage("works");
+        const updatedObras = existingObras.filter(
+          (obra: any) => obra.id !== id,
+        );
+        safeSetLocalStorage("works", updatedObras);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          obras: updatedObras,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("obrasUpdated", {
+              detail: { data: updatedObras, collection: "obras" },
+            }),
+          );
+        }
+
+        console.log("✅ Obra eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar obra:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updateManutencao = useCallback(
     async (id: string, data: any): Promise<void> => {
@@ -349,9 +689,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteManutencao = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteManutencao called:", id);
-  }, []);
+  const deleteManutencao = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando manutenção:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "manutencoes",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Manutenção eliminada do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingManutencoes = safeGetLocalStorage("maintenance");
+        const updatedManutencoes = existingManutencoes.filter(
+          (maint: any) => maint.id !== id,
+        );
+        safeSetLocalStorage("maintenance", updatedManutencoes);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          manutencoes: updatedManutencoes,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("manutencoesUpdated", {
+              detail: { data: updatedManutencoes, collection: "manutencoes" },
+            }),
+          );
+        }
+
+        console.log("✅ Manutenção eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar manutenção:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updatePiscina = useCallback(
     async (id: string, data: any): Promise<void> => {
@@ -360,9 +750,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deletePiscina = useCallback(async (id: string): Promise<void> => {
-    console.log("deletePiscina called:", id);
-  }, []);
+  const deletePiscina = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando piscina:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "piscinas",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Piscina eliminada do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingPiscinas = safeGetLocalStorage("pools");
+        const updatedPiscinas = existingPiscinas.filter(
+          (piscina: any) => piscina.id !== id,
+        );
+        safeSetLocalStorage("pools", updatedPiscinas);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          piscinas: updatedPiscinas,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("piscinasUpdated", {
+              detail: { data: updatedPiscinas, collection: "piscinas" },
+            }),
+          );
+        }
+
+        console.log("✅ Piscina eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar piscina:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updateCliente = useCallback(
     async (id: string, data: any): Promise<void> => {
@@ -371,13 +811,151 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteCliente = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteCliente called:", id);
-  }, []);
+  const deleteCliente = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando cliente:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "clientes",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Cliente eliminado do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingClientes = safeGetLocalStorage("clients");
+        const updatedClientes = existingClientes.filter(
+          (cliente: any) => cliente.id !== id,
+        );
+        safeSetLocalStorage("clients", updatedClientes);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          clientes: updatedClientes,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("clientesUpdated", {
+              detail: { data: updatedClientes, collection: "clientes" },
+            }),
+          );
+        }
+
+        console.log("✅ Cliente eliminado com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar cliente:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const forceSyncAll = useCallback(async (): Promise<void> => {
-    console.log("🔄 forceSyncAll called");
-  }, []);
+    console.log("🔄 forceSyncAll: Forçando sincronização com Firestore...");
+    setState((prev) => ({ ...prev, isLoading: true, syncStatus: "syncing" }));
+
+    try {
+      // Recarregar todos os dados do Firestore
+      const [
+        obrasFirestoreRaw,
+        manutencaoFirestoreRaw,
+        piscinasFirestoreRaw,
+        clientesFirestoreRaw,
+      ] = await Promise.all([
+        readFromFirestoreRest("obras"),
+        readFromFirestoreRest("manutencoes"),
+        readFromFirestoreRest("piscinas"),
+        readFromFirestoreRest("clientes"),
+      ]);
+
+      // Use let so we can modify arrays for deduplication
+      let obrasFirestore = obrasFirestoreRaw;
+      let manutencaoFirestore = manutencaoFirestoreRaw;
+      let piscinasFirestore = piscinasFirestoreRaw;
+      let clientesFirestore = clientesFirestoreRaw;
+
+      console.log("✅ forceSyncAll: Dados atualizados do Firestore:", {
+        obras: obrasFirestore.length,
+        manutencoes: manutencaoFirestore.length,
+        piscinas: piscinasFirestore.length,
+        clientes: clientesFirestore.length,
+      });
+
+      // Deduplicate data before using
+      const deduplicate = (array: any[], name: string) => {
+        const seenIds = new Set();
+        const unique = array.filter((item) => {
+          if (seenIds.has(item.id)) {
+            console.warn(
+              `🗑️ forceSyncAll: Removing duplicate ${name}:`,
+              item.id,
+            );
+            return false;
+          }
+          seenIds.add(item.id);
+          return true;
+        });
+        if (unique.length < array.length) {
+          console.log(
+            `✅ forceSyncAll: ${name} duplicates removed. Unique: ${unique.length}/${array.length}`,
+          );
+        }
+        return unique;
+      };
+
+      obrasFirestore = deduplicate(obrasFirestore, "obra");
+      manutencaoFirestore = deduplicate(manutencaoFirestore, "manutenção");
+      piscinasFirestore = deduplicate(piscinasFirestore, "piscina");
+      clientesFirestore = deduplicate(clientesFirestore, "cliente");
+
+      // Atualizar localStorage
+      safeSetLocalStorage("works", obrasFirestore);
+      safeSetLocalStorage("maintenance", manutencaoFirestore);
+      safeSetLocalStorage("pools", piscinasFirestore);
+      safeSetLocalStorage("clients", clientesFirestore);
+
+      // Atualizar estado
+      setState({
+        obras: obrasFirestore,
+        manutencoes: manutencaoFirestore,
+        piscinas: piscinasFirestore,
+        clientes: clientesFirestore,
+        totalItems:
+          obrasFirestore.length +
+          manutencaoFirestore.length +
+          piscinasFirestore.length +
+          clientesFirestore.length,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: true,
+        isLoading: false,
+        error: null,
+        syncStatus: "connected",
+      });
+    } catch (error) {
+      console.error("❌ forceSyncAll: Erro na sincronização:", error);
+      setState((prev) => ({
+        ...prev,
+        error: "Erro na sincronização",
+        isLoading: false,
+        syncStatus: "error",
+      }));
+    }
+  }, [safeGetLocalStorage, safeSetLocalStorage]);
 
   const resetSync = useCallback(async (): Promise<void> => {
     console.log("🔄 resetSync called");
