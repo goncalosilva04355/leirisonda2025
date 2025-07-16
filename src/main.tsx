@@ -70,7 +70,9 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
-      <AppNoFirebase />
+      <AppLoader>
+        <App />
+      </AppLoader>
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
