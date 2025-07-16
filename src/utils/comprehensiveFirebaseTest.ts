@@ -6,6 +6,7 @@ import { ultraSimpleFirebaseTest } from "./ultraSimpleTest";
 import { smartFirebaseTest } from "./smartFirebaseTest";
 import { safeFirestoreTest } from "./safeFirestoreTest";
 import { ultraSafeTest } from "./ultraSafeTest";
+import { safeFirestoreTestFixed } from "./safeFirestoreTestFixed";
 import { firestoreService } from "../services/firestoreService";
 import { autoSyncService } from "../services/autoSyncService";
 import {
@@ -29,7 +30,7 @@ export interface ComprehensiveTestResult {
 
 export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestResult> {
   console.log("🚀 Iniciando teste abrangente do Firebase/Firestore...");
-  console.log("���� Verificando projeto leiria-1cfc9...");
+  console.log("📋 Verificando projeto leiria-1cfc9...");
 
   const results = {
     projectCheck: false,
@@ -147,7 +148,7 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
     }
 
     // 5. Testar sincronização automática
-    console.log("5️⃣ Testando sincronização automática...");
+    console.log("5��⃣ Testando sincronização automática...");
     try {
       if (!autoSyncService.isAutoSyncActive()) {
         await autoSyncService.startAutoSync();
