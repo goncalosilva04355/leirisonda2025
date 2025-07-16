@@ -1276,7 +1276,7 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log(
-          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+          "🔥 Iniciando sincronização com Firebase Leiria AP��S LOGIN...",
         );
         console.log("✅ Firebase Leiria pronto para uso");
 
@@ -2942,10 +2942,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-                            <PullToRefresh onRefresh={handleDashboardRefresh}>
+                                          <PullToRefresh onRefresh={handleDashboardRefresh}>
                 {/* Dashboard Content - Mobile First Design */}
                 <div className="px-4 py-4 space-y-4">
-                {/* Firebase Status Display - Apenas em produção */}
+                  {/* Firebase Status Display - Apenas em produção */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -3509,7 +3509,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="bg-white rounded-lg shadow-sm p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600">����</span>
+                      <span className="text-blue-600">������</span>
                     </div>
                     <h2 className="text-lg font-semibold text-gray-900">
                       Pesquisa Global
@@ -8193,7 +8193,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relatório Completo
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Todas as informações
+                          Todas as informa��ões
                         </p>
                       </div>
                     </div>
@@ -8616,7 +8616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P📞blica</option>
+                            <option value="publico">Entidade P���blica</option>
                           </select>
                         </div>
                       </div>
