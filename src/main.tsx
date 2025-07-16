@@ -13,10 +13,18 @@ if (!rootElement) {
 }
 
 try {
+  console.log("🔄 Tentando renderizar aplicação...");
+  console.log("🔍 Root element:", rootElement);
+  console.log(
+    "🔍 CSS imported:",
+    !!document.querySelector('style, link[rel="stylesheet"]'),
+  );
+
   ReactDOM.createRoot(rootElement).render(<AppSimpleTest />);
-  console.log("✅ Aplicação renderizada!");
+  console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
+  console.error("❌ Stack trace:", error.stack);
 
   // Fallback: Simple error display
   rootElement.innerHTML = `
