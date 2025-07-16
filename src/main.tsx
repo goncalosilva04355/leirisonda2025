@@ -38,6 +38,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
+// App directo para teste
+import AppDirect from "./AppDirect";
 // App mínimo para teste
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
@@ -64,7 +66,7 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
-      <App />
+      <AppDirect />
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
