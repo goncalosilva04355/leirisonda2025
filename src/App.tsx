@@ -647,7 +647,8 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await offlineFirstService.createMaintenance(data);
+      const firestoreId =
+        await ultraSimpleOfflineService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("🔥 Manutenção criada no Firestore:", firestoreId);
@@ -1265,7 +1266,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
+        console.log("��� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -2136,7 +2137,7 @@ ${index + 1}. ${pool.name}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
-   ${pool.nextMaintenance ? `Próxima Manutenç��o: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
+   ${pool.nextMaintenance ? `Próxima Manutenção: ${new Date(pool.nextMaintenance).toLocaleDateString("pt-PT")}` : ""}
 `,
   )
   .join("\n")}
@@ -8444,7 +8445,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   }`}
                                   disabled={!enablePhoneDialer}
                                 >
-                                  📞 {client.phone}
+                                  ���� {client.phone}
                                 </button>
                               </div>
                               <div>
@@ -11679,7 +11680,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di����metro da Coluna
+                                Di���metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
