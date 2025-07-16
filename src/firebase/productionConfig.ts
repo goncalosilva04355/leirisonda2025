@@ -156,6 +156,9 @@ export const auth = getAuth();
 // Export db como null (será implementado quando necessário)
 export const db = null;
 
+// Export app como instância
+export const app = firebaseApp;
+
 // Export principal
 export { firebaseApp };
 export default firebaseApp;
