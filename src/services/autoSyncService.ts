@@ -154,7 +154,7 @@ export class AutoSyncService {
     try {
       console.log(`🔄 Sincronizando ${collectionName} manualmente...`);
 
-      const data = await firestoreService.read(collectionName);
+      const data = await firestoreService.getCollection(collectionName);
       localStorage.setItem(localStorageKey, JSON.stringify(data));
 
       // Disparar evento de atualização
