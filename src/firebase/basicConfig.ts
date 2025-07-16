@@ -34,8 +34,8 @@ if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
-// Inicializar Firebase SEMPRE (desenvolvimento e produção)
-if (true) {
+// Inicializar Firebase apenas em produção (Netlify) ou se forçado
+if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
     const config = getFirebaseConfig();
@@ -105,7 +105,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
         firebaseApp = getApp();
       }
     } catch (error: any) {
-      console.error("❌ Erro na inicialização assíncrona:", error.message);
+      console.error("❌ Erro na inicializaç��o assíncrona:", error.message);
     }
   }
 
