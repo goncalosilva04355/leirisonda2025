@@ -2045,7 +2045,7 @@ function App() {
                 console.warn("��️ Falha ao garantir auto sync após login");
               }
             } else {
-              console.log("⏳ Aguardando Firestore para ativar auto sync...");
+              console.log("��� Aguardando Firestore para ativar auto sync...");
               // Tentar novamente após 3 segundos
               setTimeout(async () => {
                 if (isFirestoreReady()) {
@@ -2692,12 +2692,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
 
         // Criar no Firestore primeiro
-        const firestoreId = await firestoreService.createUtilizador(newUser);
+        // const firestoreId = await firestoreService.createUtilizador(newUser);
 
-        if (firestoreId) {
-          console.log("✅ Utilizador criado no Firestore:", firestoreId);
-          (newUser as any).firestoreId = firestoreId;
-        }
+        // if (firestoreId) {
+        //   console.log("✅ Utilizador criado no Firestore:", firestoreId);
+        //   (newUser as any).firestoreId = firestoreId;
+        // }
 
         // Atualizar estado local
         setUsers([...users, newUser]);
@@ -6386,7 +6386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               const futureMaintenance = {
                                 poolId: poolData.id.toString(),
                                 poolName: poolData.name,
-                                type: "Manuten🔥ão Programada",
+                                type: "Manuten����ão Programada",
                                 scheduledDate: poolData.nextMaintenance,
                                 technician: "A atribuir",
                                 status: "scheduled" as const,
