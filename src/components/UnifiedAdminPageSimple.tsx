@@ -794,7 +794,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                             {[
                               { key: "obras", label: "Obras" },
                               { key: "piscinas", label: "Piscinas" },
-                              { key: "manutencoes", label: "Manuten��ões" },
+                              { key: "manutencoes", label: "Manutenções" },
                               { key: "utilizadores", label: "Utilizadores" },
                               { key: "relatorios", label: "Relatórios" },
                               { key: "clientes", label: "Clientes" },
@@ -875,13 +875,13 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                 )}
 
                 {/* Users List */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm overflow-visible">
                   <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                     <h3 className="text-lg font-medium text-gray-900">
                       Utilizadores Registados ({authorizedUsers.length})
                     </h3>
                   </div>
-                  <div className="divide-y divide-gray-200">
+                  <div className="divide-y divide-gray-200 max-h-[500px] overflow-y-auto">
                     {authorizedUsers.map((user, index) => (
                       <div key={user.email} className="px-6 py-4">
                         <div className="flex items-center justify-between">
