@@ -471,14 +471,14 @@ function App() {
     try {
       console.log("🔄 Iniciando refresh do Dashboard...");
 
-      // Trigger refresh dos dados principais
-      await dataSync.syncAllData?.();
-
       // Force refresh works
       window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
 
       // Universal sync
-      await universalSync.forceSync?.();
+      await universalSync.forceSyncAll?.();
+
+      // Trigger manual refresh
+      dataSync.triggerRefresh?.();
 
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
@@ -1983,7 +1983,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("🎉 Navigating to dashboard");
+            console.log("���� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
