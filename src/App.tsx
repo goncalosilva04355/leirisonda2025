@@ -778,7 +778,7 @@ function App() {
     );
   }, [manutencoes]);
 
-  // OTIMIZAÇÃO: Contadores de obras memorizados para evitar re-cálculos
+  // OTIMIZA��ÃO: Contadores de obras memorizados para evitar re-cálculos
   const worksCounts = useMemo(() => {
     const pending = works.filter(
       (w) => w.status === "pendente" || w.status === "pending",
@@ -1461,6 +1461,28 @@ function App() {
   }, []);
   */
 
+  // Inicializar Firebase SOMENTE após login
+  useEffect(() => {
+    if (!isAuthenticated) {
+      console.log("📱 Firebase desativado - aguardando login");
+      return;
+    }
+
+    const initFirebaseAfterLogin = async () => {
+      try {
+        console.log("🔥 Inicializando Firebase APÓS LOGIN...");
+        await initializeFirebaseMobile();
+        setMobileFirebaseReady(true);
+        console.log("✅ Firebase Mobile inicializado após login!");
+      } catch (error) {
+        console.warn("⚠️ Firebase falhou após login:", error);
+        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
+      }
+    };
+
+    initFirebaseAfterLogin();
+  }, [isAuthenticated]); // Só executa quando faz login
+
   // Sincronização inicial de todos os dados com Firestore - SÓ APÓS LOGIN
   useEffect(() => {
     if (!isAuthenticated) {
@@ -2120,7 +2142,7 @@ function App() {
         return result;
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       throw error;
     }
   };
@@ -7260,7 +7282,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localiza����ão</li>
+                                <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
