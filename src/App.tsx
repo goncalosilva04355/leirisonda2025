@@ -300,7 +300,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-        // Restaurar utilizadores automaticamente se necessário
+    // Restaurar utilizadores automaticamente se necessário
     // userRestoreService.autoRestore();
 
     // Monitorização automática de persistência de dados
@@ -309,7 +309,7 @@ function App() {
         // Aguardar um pouco antes de iniciar verificação
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
-                // Verificar estado da persistência
+        // Verificar estado da persistência
         // const status = await dataPersistenceManager.diagnoseDataPersistence();
 
         // if (!status.working) {
@@ -319,17 +319,19 @@ function App() {
         //   // Tentar reparar automaticamente
         //   const repaired = await dataPersistenceManager.repairDataPersistence();
 
-          if (repaired) {
-            setPersistenceIssueDetected(false);
-            console.log("��� Persistência reparada automaticamente");
-          } else {
-            console.error(
-              "⚠️ N��o foi possível reparar a persistência automaticamente",
-            );
-          }
-        } else {
-          console.log("✅ Sistema de persistência está funcional");
-        }
+        //   if (repaired) {
+        //     setPersistenceIssueDetected(false);
+        //     console.log("��� Persistência reparada automaticamente");
+        //   } else {
+        //     console.error(
+        //       "⚠️ N��o foi possível reparar a persistência automaticamente",
+        //     );
+        //   }
+        // } else {
+        //   console.log("✅ Sistema de persistência está funcional");
+        // }
+
+        console.log("📱 Data persistence monitoring temporarily disabled");
       } catch (error) {
         console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
@@ -7891,7 +7893,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Piscinas
+                                    Relat��rio de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
@@ -12315,7 +12317,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           )}
         </div>
 
-                {/* Mobile Firebase Fix - Show when conflicts detected */}
+        {/* Mobile Firebase Fix - Show when conflicts detected */}
         {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
 
         {/* App Status Indicator */}
