@@ -1,4 +1,4 @@
-import { saveToFirestore } from "../utils/ultraSimpleFirestore";
+import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
 class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
