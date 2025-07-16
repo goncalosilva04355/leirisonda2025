@@ -292,7 +292,7 @@ import DiagnosticPage from "./components/DiagnosticPage";
 import AppStatusIndicator from "./components/AppStatusIndicator";
 import RenderTracker from "./components/RenderTracker";
 
-// Production users - only real admin account
+// DESENVOLVIMENTO = PRODUÇÃO - utilizador admin real
 const initialUsers = [
   {
     id: 1,
@@ -1769,7 +1769,7 @@ function App() {
           })
           .catch((error) => {
             console.error(
-              "��� Firebase Messaging Service Worker registration failed:",
+              "❌ Firebase Messaging Service Worker registration failed:",
               error,
             );
             // Fallback: try to register a basic service worker
@@ -2229,7 +2229,7 @@ function App() {
                       await autoSyncService.ensureAutoSyncAfterLogin();
                     setAutoSyncActive(autoSyncStarted);
                     console.log(
-                      "��� Auto sync garantido após aguardar Firestore!",
+                      "���� Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
                     console.error("❌ Erro ao garantir auto sync:", error);
