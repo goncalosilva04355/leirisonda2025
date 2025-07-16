@@ -64,9 +64,7 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
-      <AppLoader>
-        <App />
-      </AppLoader>
+      <App />
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
