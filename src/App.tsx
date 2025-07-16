@@ -668,10 +668,10 @@ function App() {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
       // Usar serviço ultra-simples
-      const firestoreId = await ultraSimpleOfflineService.createPool(data);
-      if (firestoreId) {
-        console.log("✅ Piscina criada:", firestoreId);
-      }
+      // const firestoreId = await ultraSimpleOfflineService.createPool(data);
+      // if (firestoreId) {
+      //   console.log("✅ Piscina criada:", firestoreId);
+      // }
 
       return await addPiscina(data);
     } catch (error) {
@@ -1330,7 +1330,7 @@ function App() {
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
             error,
           );
-          console.log("�� Aplicação continua funcional em modo offline");
+          console.log("�� Aplicaç��o continua funcional em modo offline");
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
@@ -7175,7 +7175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
-                                <li>• Clientes e localizações</li>
+                                <li>�� Clientes e localizações</li>
                               </ul>
                             </div>
                             <button
