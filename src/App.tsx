@@ -689,21 +689,21 @@ function App() {
       // Usar serviço offline-first com Firebase Leiria
       // const firestoreId = await ultraSimpleOfflineService.createWork(data);
 
-      if (firestoreId) {
-        console.log("✅ Obra criada no Firestore:", firestoreId);
+      // if (firestoreId) {
+      //   console.log("✅ Obra criada no Firestore:", firestoreId);
 
-        // Backup automático desativado temporariamente
-        // NOTE: Não chamar addObra() aqui para evitar duplicação
-        // O hook universalSync já sincroniza automaticamente com Firestore
+      //   // Backup automático desativado temporariamente
+      //   // NOTE: Não chamar addObra() aqui para evitar duplicação
+      //   // O hook universalSync já sincroniza automaticamente com Firestore
 
-        return firestoreId;
-      } else {
-        // Fallback para sistema atual se Firestore falhar
-        console.warn("🎉 Firestore não disponível, usando sistema atual");
-        const result = await addObra(data);
+      //   return firestoreId;
+      // } else {
+      // Fallback para sistema atual se Firestore falhar
+      console.warn("🎉 Firestore não disponível, usando sistema atual");
+      const result = await addObra(data);
 
-        return result;
-      }
+      return result;
+      // }
     } catch (error) {
       console.error("❌ Erro no sistema de obras:", error);
 
@@ -894,7 +894,7 @@ function App() {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
-          console.log("✅ Users loaded from localStorage:", parsedUsers.length);
+          console.log("�� Users loaded from localStorage:", parsedUsers.length);
 
           // Garantir que Gonçalo Fonseca está sempre disponível
           const hasGoncalo = parsedUsers.some(
@@ -1427,7 +1427,7 @@ function App() {
     const handleUserLoggedIn = async (event: CustomEvent) => {
       const { user, timestamp } = event.detail;
       console.log(
-        "��� Utilizador fez login, verificando auto sync:",
+        "����� Utilizador fez login, verificando auto sync:",
         user.email,
       );
 
@@ -2916,7 +2916,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               // console.log("🔐 Auth result:", result);
 
               if (result?.success && result?.user) {
-                // console.log("✅ Login successful for:", result.user.email);
+                // console.log("�� Login successful for:", result.user.email);
 
                 // Update state
                 setCurrentUser(result.user);
@@ -7101,7 +7101,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localiza��ão</li>
+                                <li>✅ Estado e localiza����o</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Próximas intervenções</li>
