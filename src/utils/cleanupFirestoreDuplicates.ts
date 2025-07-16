@@ -116,4 +116,21 @@ if (!cleanupExecuted && typeof window !== "undefined") {
   }, 1000); // Execute após apenas 1 segundo
 }
 
+// Disponibilizar função globalmente para debug manual
+(window as any).cleanupFirestoreDuplicates = cleanupFirestoreDuplicates;
+(window as any).manualCleanup = async () => {
+  console.log("🧹 LIMPEZA MANUAL INICIADA...");
+  const result = await cleanupFirestoreDuplicates();
+  console.log("🎯 RESULTADO LIMPEZA MANUAL:", result);
+  if (result.success && result.cleaned > 0) {
+    console.log("🔄 Recarregando em 2 segundos...");
+    setTimeout(() => window.location.reload(), 2000);
+  }
+  return result;
+};
+
+console.log(
+  "🛠️ DEBUG: Digite 'manualCleanup()' no console para forçar limpeza",
+);
+
 export default cleanupFirestoreDuplicates;
