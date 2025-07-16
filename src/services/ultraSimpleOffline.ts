@@ -1,5 +1,14 @@
 import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
+// Função para gerar IDs únicos evitando colisões
+let serviceIdCounter = 0;
+const generateServiceId = (prefix: string): string => {
+  const timestamp = Date.now();
+  const counter = ++serviceIdCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  return `${prefix}-${timestamp}-${counter}-${random}`;
+};
+
 class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
     try {
