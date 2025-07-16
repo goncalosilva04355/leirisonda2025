@@ -51,34 +51,11 @@ const AppSimple: React.FC = () => {
   // Loading state
   if (isLoading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏊‍♂️</div>
-          <div
-            style={{
-              fontSize: "1.5rem",
-              marginBottom: "1rem",
-              fontWeight: "bold",
-            }}
-          >
-            Leirisonda
-          </div>
-          <div style={{ opacity: 0.8, marginBottom: "2rem" }}>
-            Sistema de Gestão de Piscinas
-          </div>
-          <div style={{ opacity: 0.6 }}>A carregar aplicação...</div>
-        </div>
-      </div>
+      <SplashPage
+        title="Leirisonda"
+        subtitle="A inicializar sistema..."
+        showProgress={true}
+      />
     );
   }
 
