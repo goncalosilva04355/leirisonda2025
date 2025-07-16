@@ -80,7 +80,7 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <AppSimple />
+        <AppWithFallback />
       </ErrorBoundary>
     </React.StrictMode>,
   );
