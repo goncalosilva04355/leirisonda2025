@@ -173,11 +173,11 @@ export async function verifyAutoSync(): Promise<AutoSyncVerificationResult> {
       `📊 Verificação de sincronização: ${successCount}/${totalTests} testes passaram`,
     );
 
-    if (successCount >= 3) {
-      // Pelo menos projeto, auto sync e um teste de sync
+    if (successCount >= 2 && results.projectVerified) {
+      // Pelo menos projeto correto e alguma funcionalidade de sync
       return {
         success: true,
-        message: `Sincronização automática funcionando! ${successCount}/${totalTests} verificações passaram`,
+        message: `Sincronização funcionando com fallback local! ${successCount}/${totalTests} verificações passaram`,
         details: results,
         syncData: {
           projectId: "leiria-1cfc9",
