@@ -1,3 +1,9 @@
+// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
+import {
+  initializeFirebaseMobile,
+  isFirebaseMobileReady,
+} from "./firebase/mobileFirebase";
+
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
 
@@ -327,6 +333,30 @@ function App() {
     console.trace("Stack trace for duplicate render:");
   }
   (window as any).lastAppRenderTime = renderTime;
+
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false);
+
+  useEffect(() => {
+    const initMobileFirebase = async () => {
+      try {
+        console.log(
+          "�� Inicializando Firebase Mobile para prevenir tela branca...",
+        );
+        await initializeFirebaseMobile();
+        setMobileFirebaseReady(true);
+        console.log("✅ Firebase Mobile inicializado com sucesso!");
+      } catch (error) {
+        console.warn(
+          "⚠️ Firebase Mobile falhou, continuando em modo local:",
+          error,
+        );
+        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
+      }
+    };
+
+    initMobileFirebase();
+  }, []);
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1433,7 +1463,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de segurança",
+                "💡 Firestore conectado mas pode haver problema nas regras de seguran��a",
               );
             }
           }
@@ -5088,7 +5118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           )}
 
-                          {/* Botão para recarregar utilizadores quando lista está vazia */}
+                          {/* Botão para recarregar utilizadores quando lista est�� vazia */}
                           {users.length === 0 && (
                             <div className="mb-3">
                               <button
@@ -11973,7 +12003,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                             <div>
                               <label className="block text-sm font-medium text-gray-700">
-                                Di���metro da Coluna
+                                Di�����metro da Coluna
                               </label>
                               <p className="text-gray-900">
                                 {selectedWork.columnDiameter
