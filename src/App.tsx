@@ -1342,7 +1342,7 @@ function App() {
   });
 
   // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(false);
+  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
 
   useEffect(() => {
     console.log("🚀 App safety check...");
@@ -1586,7 +1586,7 @@ function App() {
       //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
-      // Forçar re-render dos dados universais se necessário
+      // Forçar re-render dos dados universais se necess��rio
       if (collection === "obras") {
         // Trigger re-fetch das obras
         window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
@@ -5111,7 +5111,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {!usersLoaded && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-blue-800">
-                                🔄 Carregando utilizadores...
+                                ���� Carregando utilizadores...
                               </p>
                             </div>
                           )}
