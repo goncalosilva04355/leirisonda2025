@@ -197,31 +197,16 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             });
 
             if (duplicateIds.length > 0) {
-              console.error(
-                `🚨 ${name.toUpperCase()} DUPLICATES FOUND AND REMOVED:`,
-                duplicateIds,
+              console.warn(
+                `⚠️ ${name.toUpperCase()} duplicados detectados (removidos apenas da memória local):`,
+                duplicateIds.join(","),
               );
               console.log(
-                `✅ ${name} cleaned: ${unique.length}/${array.length} (removed ${duplicateIds.length})`,
+                `📝 ${name} - Dados únicos carregados: ${unique.length}/${array.length} (${duplicateIds.length} duplicados ignorados)`,
               );
-
-              // SISTEMA DE ELIMINAÇÃO AUTOMÁTICA DESATIVADO PARA PARAR LOOPS
-              // if (name === "obra") {
-              //   console.log("🔥 FORÇANDO ELIMINAÇÃO DOS DUPLICADOS NO FIRESTORE...");
-              //   duplicateIds.forEach(async (duplicateId) => {
-              //     try {
-              //       console.log(`🗑️ Tentando eliminar do Firestore: ${duplicateId}`);
-              //       const deleted = await deleteFromFirestoreRest("obras", duplicateId);
-              //       if (deleted) {
-              //         console.log(`✅ ELIMINADO DO FIRESTORE: ${duplicateId}`);
-              //       } else {
-              //         console.warn(`⚠️ FALHA ao eliminar do Firestore: ${duplicateId}`);
-              //       }
-              //     } catch (error) {
-              //       console.error(`❌ ERRO ao eliminar ${duplicateId} do Firestore:`, error);
-              //     }
-              //   });
-              // }
+              console.log(
+                `🔗 Para eliminar permanentemente, elimine manualmente no Firebase Console`,
+              );
             }
 
             return unique;
