@@ -79,16 +79,29 @@ let cleanupExecuted = false;
 if (!cleanupExecuted && typeof window !== "undefined") {
   cleanupExecuted = true;
 
-  setTimeout(async () => {
-    console.log("🚀 Auto-executando limpeza de duplicados...");
-    const result = await cleanupFirestoreDuplicates();
+  console.log("🚀 INICIANDO LIMPEZA IMEDIATA DE DUPLICADOS...");
 
-    if (result.success && result.cleaned > 0) {
-      console.log("🔄 Recarregando página após limpeza...");
-      // Refresh page to reload clean data
-      setTimeout(() => window.location.reload(), 2000);
+  setTimeout(async () => {
+    console.log("🧹 Executando limpeza de duplicados NOW...");
+    try {
+      const result = await cleanupFirestoreDuplicates();
+      console.log("🎯 Resultado da limpeza:", result);
+
+      if (result.success && result.cleaned > 0) {
+        console.log("🔄 Dados limpos! Recarregando página em 3 segundos...");
+        setTimeout(() => {
+          console.log("🔄 RECARREGANDO PÁGINA AGORA...");
+          window.location.reload();
+        }, 3000);
+      } else if (result.success && result.cleaned === 0) {
+        console.log("✅ Nenhum duplicado encontrado para limpar");
+      } else {
+        console.error("❌ Limpeza falhou:", result);
+      }
+    } catch (error) {
+      console.error("❌ Erro na execução da limpeza:", error);
     }
-  }, 5000); // Wait 5 seconds after page load
+  }, 1000); // Execute após apenas 1 segundo
 }
 
 export default cleanupFirestoreDuplicates;
