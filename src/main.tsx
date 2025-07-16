@@ -64,10 +64,14 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
+  // Use production app for Netlify deployment
+  const isProduction = import.meta.env.PROD;
+  const AppComponent = isProduction ? AppProduction : App;
+
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
       <AppLoader>
-        <App />
+        <AppComponent />
       </AppLoader>
     </ErrorBoundary>,
   );
