@@ -215,7 +215,11 @@ if (FORCE_FIRESTORE_PRODUCTION) {
 
 // Função principal para obter Firestore (síncrona - pode retornar null se ainda não inicializado)
 export function getFirebaseFirestore(): Firestore | null {
-  // Firestore sempre disponível - sem condições de bloqueio
+  // Verificar se Firebase está disponível
+  if (!isFirebaseAvailable()) {
+    console.log("📱 Firebase não disponível - usando localStorage");
+    return null;
+  }
 
   if (!firestoreInstance) {
     console.warn(
