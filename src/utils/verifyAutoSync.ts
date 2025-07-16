@@ -52,7 +52,9 @@ export async function verifyAutoSync(): Promise<AutoSyncVerificationResult> {
     }
 
     if (autoSyncService.isAutoSyncActive()) {
-      console.log("✅ Auto sync está ativo");
+      console.log(
+        "✅ Auto sync está ativo (pode usar localStorage como fallback)",
+      );
       results.autoSyncActive = true;
     } else {
       console.warn("⚠️ Auto sync não conseguiu iniciar");
