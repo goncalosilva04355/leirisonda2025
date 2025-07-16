@@ -243,13 +243,13 @@ export const CompleteDeviceActivation: React.FC = () => {
   const setupFirebaseSync = async (): Promise<boolean> => {
     try {
       // Verificar se Firebase está configurado
-      const { isFirebaseReady, getFirebaseStatus } = await import(
-        "../firebase/config"
+      const { isFirebaseReady } = await import("../firebase/config");
+      const { getFirebaseStatus, reinitializeFirebase } = await import(
+        "../firebase/fallbackFunctions"
       );
 
       if (!isFirebaseReady()) {
         // Tentar reinicializar Firebase
-        const { reinitializeFirebase } = await import("../firebase/config");
         const initialized = await reinitializeFirebase();
 
         if (!initialized) {
