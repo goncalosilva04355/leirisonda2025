@@ -106,35 +106,50 @@ export class OrphanUserCleanupService {
    * Carrega utilizadores válidos do Firestore
    */
   private async loadValidUsers(): Promise<User[]> {
-    try {
-      // Tentar carregar do firestoreService primeiro
-      const firestoreUsers = await firestoreService.getUtilizadores();
-      if (firestoreUsers && firestoreUsers.length > 0) {
-        console.log(
-          `✅ Carregados ${firestoreUsers.length} utilizadores do firestoreService`,
-        );
-        return firestoreUsers;
-      }
+    const fallbackPromises = [
+      // Método 1: firestoreService
+      this.tryMethod("firestoreService.getUtilizadores", () =>
+        firestoreService.getUtilizadores(),
+      ),
 
-      // Fallback para forceFirestoreService
-      const forceUsers = await forceFirestoreService.getUsers();
-      if (forceUsers && forceUsers.length > 0) {
-        console.log(
-          `✅ Carregados ${forceUsers.length} utilizadores do forceFirestoreService`,
-        );
-        return forceUsers;
-      }
+      // Método 2: forceFirestoreService
+      this.tryMethod("forceFirestoreService.getUsers", () =>
+        forceFirestoreService.getUsers(),
+      ),
 
-      // Fallback para localStorage
-      const localUsers = JSON.parse(localStorage.getItem("app-users") || "[]");
-      console.log(
-        `⚠️ Fallback para localStorage: ${localUsers.length} utilizadores`,
-      );
-      return localUsers;
-    } catch (error) {
-      console.error("❌ Erro ao carregar utilizadores:", error);
-      throw error;
+      // Método 3: localStorage
+      this.tryMethod("localStorage fallback", () =>
+        safeFallback.getUtilizadores(),
+      ),
+    ];
+
+    for (const method of fallbackPromises) {
+      try {
+        const result = await method;
+        if (result && result.length > 0) {
+          return result;
+        }
+      } catch (error) {
+        console.warn("Método falhou, tentando próximo...", error);
+      }
     }
+
+    console.warn(
+      "⚠️ Nenhum método conseguiu carregar utilizadores, retornando array vazio",
+    );
+    return [];
+  }
+
+  private async tryMethod<T>(
+    name: string,
+    method: () => Promise<T>,
+  ): Promise<T> {
+    console.log(`🔄 Tentando carregar utilizadores via ${name}`);
+    const result = await method();
+    console.log(
+      `✅ ${name}: ${Array.isArray(result) ? result.length : "dados"} carregados`,
+    );
+    return result;
   }
 
   /**
