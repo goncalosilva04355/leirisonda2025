@@ -365,7 +365,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-6 min-h-[600px]">
             {/* Configurações Tab */}
             {activeTab === "configuracoes" && (
               <div className="space-y-6">
@@ -794,7 +794,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                             {[
                               { key: "obras", label: "Obras" },
                               { key: "piscinas", label: "Piscinas" },
-                              { key: "manutencoes", label: "Manutenções" },
+                              { key: "manutencoes", label: "Manuten��ões" },
                               { key: "utilizadores", label: "Utilizadores" },
                               { key: "relatorios", label: "Relatórios" },
                               { key: "clientes", label: "Clientes" },
