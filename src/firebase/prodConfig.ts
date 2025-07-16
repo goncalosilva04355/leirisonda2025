@@ -5,15 +5,15 @@ import { getAuth } from "firebase/auth";
 
 // Configuração válida do projeto Leiria
 const firebaseConfig = {
-  apiKey: "AIzaSyC5Pp6xbF4YJjGkJpfG6xXfJR4jBjJJZ4w",
-  authDomain: "leiria25.firebaseapp.com",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
-    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "Leiria25",
-  storageBucket: "leiria25.firebasestorage.app",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef123456789012abcdef",
-  measurementId: "G-ABCDEFGHIJ",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
 // Inicializar Firebase
