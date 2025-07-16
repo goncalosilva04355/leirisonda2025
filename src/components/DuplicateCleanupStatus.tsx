@@ -167,11 +167,6 @@ export const DuplicateCleanupStatus: React.FC = () => {
           )}
         </div>
       )}
-
-      {/* Emergency Cleanup Button */}
-      <div className="mt-4">
-        <EmergencyCleanupButton />
-      </div>
     </div>
   );
 };
