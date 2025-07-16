@@ -1499,7 +1499,7 @@ function App() {
     };
 
     syncAllData();
-  }, [isAuthenticated]); // Só executa quando faz login
+  }, [isAuthenticated, mobileFirebaseReady]); // Só executa quando faz login E Firebase está pronto
 
   // Inicializar sincronização automática em tempo real - SÓ APÓS LOGIN
   useEffect(() => {
@@ -1799,7 +1799,10 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("���� Notification clicked, navigating...", event.data);
+            console.log(
+              "����� Notification clicked, navigating...",
+              event.data,
+            );
 
             const { data } = event.data;
 
@@ -5950,7 +5953,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } catch (notificationError) {
                                 console.warn(
-                                  "⚠️ Erro ao enviar notificações:",
+                                  "⚠️ Erro ao enviar notificaç��es:",
                                   notificationError,
                                 );
                                 // Não bloquear a criação da obra por falha de notificação
