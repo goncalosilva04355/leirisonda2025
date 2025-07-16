@@ -759,20 +759,20 @@ function App() {
 
       // const firestoreId = await ultraSimpleOfflineService.createClient(data);
 
-      if (firestoreId) {
-        console.log("✅ Cliente criado no Firestore:", firestoreId);
+      // if (firestoreId) {
+      //   console.log("✅ Cliente criado no Firestore:", firestoreId);
 
-        // Sincronizar com sistema universal
-        try {
-          await addCliente(data);
-        } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
-        }
+      //   // Sincronizar com sistema universal
+      //   try {
+      //     await addCliente(data);
+      //   } catch (syncError) {
+      //     console.warn("⚠️ Erro na sincronização universal:", syncError);
+      //   }
 
-        return firestoreId;
-      } else {
-        return await addCliente(data);
-      }
+      //   return firestoreId;
+      // } else {
+      return await addCliente(data);
+      // }
     } catch (error) {
       console.error("❌ Erro no sistema de clientes:", error);
       return await addCliente(data);
@@ -2199,7 +2199,7 @@ function App() {
       // Se não estiver no dashboard e não tiver regra específica, vai para dashboard
       navigateToSection("dashboard");
     } else {
-      // Se já estiver no dashboard, tenta usar o history do browser
+      // Se j�� estiver no dashboard, tenta usar o history do browser
       if (window.history.length > 1) {
         window.history.back();
       }
@@ -12161,7 +12161,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Manutenções */}
+                    {/* Manutenç��es */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Manutenções
