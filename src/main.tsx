@@ -66,6 +66,8 @@ import AppFixed from "./AppFixed";
 import AppTest from "./AppTest";
 // App minimal para teste
 import AppMinimalTest from "./AppMinimalTest";
+// App limpo para produção
+import AppCleanProduction from "./AppCleanProduction";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -88,12 +90,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the main App directly
-  const AppComponent = App;
-  console.log(
-    "📱 Using app:",
-    "App (main application with full functionality)",
-  );
+  // Use clean production app to resolve white screen issue
+  const AppComponent = AppCleanProduction;
+  console.log("📱 Using app:", "AppCleanProduction (clean production version)");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
