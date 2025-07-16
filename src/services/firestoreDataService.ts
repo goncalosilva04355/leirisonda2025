@@ -291,7 +291,7 @@ export class FirestoreDataService {
 
   // Método de teste para verificar conectividade
   async testConnection(): Promise<boolean> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Para teste, mostramos uma mensagem mais detalhada
       console.info(
         "🔍 Firestore não disponível para teste - localStorage está funcionando",
