@@ -830,7 +830,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteç���o de dados cr��ticos - NUNCA PERDER DADOS
+  // Proteç���o de dados críticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -4505,7 +4505,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -7747,7 +7747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          �� Dados do Firebase e armazenamento
+                                          🔥 Dados do Firebase e armazenamento
                                           local
                                         </li>
                                       </ul>
@@ -12266,7 +12266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P���gina
+                            Recarregar Página
                           </button>
                           <button
                             onClick={() => {
