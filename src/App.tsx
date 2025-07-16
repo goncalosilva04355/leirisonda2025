@@ -462,7 +462,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
+    const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
   // Função de refresh para Pull-to-Refresh
@@ -2939,11 +2939,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     // Add error boundary
     try {
       switch (activeSection) {
-        case "dashboard":
+                case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
-              {/* Dashboard Content - Mobile First Design */}
-              <div className="px-4 py-4 space-y-4">
+              <PullToRefresh onRefresh={handleDashboardRefresh}>
+                {/* Dashboard Content - Mobile First Design */}
+                <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
@@ -6487,7 +6488,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons����vel *
+                          Técnico Respons🎉vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -7088,7 +7089,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3 mb-4">
                               <p className="text-sm text-gray-600">
                                 <strong>{maintenance.length}</strong>{" "}
-                                manuten��ões registadas
+                                manutenções registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔥 Trabalhos realizados</li>
