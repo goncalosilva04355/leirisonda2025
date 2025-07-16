@@ -4,6 +4,7 @@
 import { testFirestoreAPI, firestoreREST } from "./directFirestoreAPI";
 import { ultraSimpleFirebaseTest } from "./ultraSimpleTest";
 import { smartFirebaseTest } from "./smartFirebaseTest";
+import { safeFirestoreTest } from "./safeFirestoreTest";
 import { firestoreService } from "../services/firestoreService";
 import { autoSyncService } from "../services/autoSyncService";
 import {
