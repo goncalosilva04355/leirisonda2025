@@ -769,7 +769,7 @@ function App() {
     }
   };
 
-  // Função para enviar notificações push quando uma obra é atribuída
+  // Função para enviar notificações push quando uma obra é atribu��da
 
   const addWork = async (data: any) => {
     try {
@@ -1505,8 +1505,8 @@ function App() {
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
-  // Listeners para atualizações automáticas da UI
-  useEffect(() => {
+    // Listeners para atualizações automáticas da UI - COMMENTED TO PREVENT RE-RENDERS
+  // useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
