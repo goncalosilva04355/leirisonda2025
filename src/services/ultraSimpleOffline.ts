@@ -31,7 +31,7 @@ class UltraSimpleOfflineService {
   async createPool(poolData: any): Promise<string> {
     try {
       console.log("🏊 Criando piscina...");
-      const poolId = `pool-${Date.now()}`;
+      const poolId = generateServiceId("pool");
       await saveToFirestoreRest("pools", poolId, {
         ...poolData,
         id: poolId,
