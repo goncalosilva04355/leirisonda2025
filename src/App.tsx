@@ -164,6 +164,7 @@ import "./utils/debugDuplicates"; // Debug de duplicados
 import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
 import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
+import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -336,7 +337,7 @@ function App() {
   // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
   const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
-  const refreshStatus = () => console.log("REST API n����o precisa refresh");
+  const refreshStatus = () => console.log("REST API n��o precisa refresh");
 
   // Verificar se REST API está funcionando
   const [restApiStatus, setRestApiStatus] = useState("aguardando");
@@ -872,7 +873,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("❌ Erro no sistema de manutenções:", error);
+      console.error("��� Erro no sistema de manutenções:", error);
       return await addManutencao(data);
     }
   };
@@ -1382,7 +1383,7 @@ function App() {
         const firestoreResult = false; // Temporariamente false
 
         if (firestoreResult) {
-          console.log("✅ Passo 3: Firestore ativo e funcional!");
+          console.log("�� Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
           const db = getFirebaseFirestore();
@@ -6176,7 +6177,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "🔍 User Permissions:",
+                                "���� User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -7211,7 +7212,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat��������rios do Sistema
+                            Relat����������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
