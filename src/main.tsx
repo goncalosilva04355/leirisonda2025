@@ -38,18 +38,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
-// App mínimo para teste
-import AppMinimal from "./AppMinimal";
-// App diagnóstico
-import AppDiagnostic from "./AppDiagnostic";
-// App funcional garantido
-import AppWorking from "./AppWorking";
-// App de teste básico
-import AppMinimalTest from "./AppMinimalTest";
-// App ultra simples
-import AppUltraSimple from "./AppUltraSimple";
-// App sem Firebase
-import AppNoFirebase from "./AppNoFirebase";
+// App corrigido e funcional
+import AppFixed from "./AppFixed";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -71,14 +61,14 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
       <AppLoader>
-        <App />
+        <AppFixed />
       </AppLoader>
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
-  console.error("❌ Stack trace:", error.stack);
+  console.error("��� Stack trace:", error.stack);
 
   // Fallback: Simple error display
   rootElement.innerHTML = `
