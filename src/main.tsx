@@ -44,6 +44,8 @@ import AppMinimal from "./AppMinimal";
 import AppDiagnostic from "./AppDiagnostic";
 // App funcional garantido
 import AppWorking from "./AppWorking";
+// App simplificado para produção
+import AppProduction from "./AppProduction";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
