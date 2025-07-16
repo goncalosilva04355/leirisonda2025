@@ -334,27 +334,25 @@ function App() {
   }
   (window as any).lastAppRenderTime = renderTime;
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false);
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - NÃO BLOQUEIA RENDERIZAÇÃO
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear
 
   useEffect(() => {
     const initMobileFirebase = async () => {
       try {
-        console.log(
-          "�� Inicializando Firebase Mobile para prevenir tela branca...",
-        );
+        console.log("🔥 Inicializando Firebase Mobile em background...");
         await initializeFirebaseMobile();
-        setMobileFirebaseReady(true);
         console.log("✅ Firebase Mobile inicializado com sucesso!");
       } catch (error) {
         console.warn(
           "⚠️ Firebase Mobile falhou, continuando em modo local:",
           error,
         );
-        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
+        // Aplicação continua funcionando normalmente
       }
     };
 
+    // Executar em background sem bloquear
     initMobileFirebase();
   }, []);
 
@@ -8263,7 +8261,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat���rios
+                          Relat�����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
