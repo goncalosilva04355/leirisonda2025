@@ -311,6 +311,14 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         const existingObras = safeGetLocalStorage("works");
         const workExists = existingObras.some((w: any) => w.id === obra.id);
 
+        if (workExists) {
+          console.warn(
+            "🚨 Obra com ID duplicado detectada, ignorando:",
+            obra.id,
+          );
+          return obra.id; // Return existing ID instead of creating duplicate
+        }
+
         if (!workExists) {
           // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
           console.log("🔥 Salvando obra no Firestore:", obra.id);
