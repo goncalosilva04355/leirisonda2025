@@ -13,7 +13,7 @@ class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
     try {
       console.log("🔧 Criando obra...");
-      const workId = `work-${Date.now()}`;
+      const workId = generateServiceId("work");
       await saveToFirestoreRest("works", workId, {
         ...workData,
         id: workId,
