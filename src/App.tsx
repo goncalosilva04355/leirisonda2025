@@ -734,20 +734,20 @@ function App() {
       // const firestoreId =
       //   await ultraSimpleOfflineService.createMaintenance(data);
 
-      if (firestoreId) {
-        console.log("🔥 Manutenção criada no Firestore:", firestoreId);
+      // if (firestoreId) {
+      //   console.log("🔥 Manutenção criada no Firestore:", firestoreId);
 
-        // Sincronizar com sistema universal
-        try {
-          await addManutencao(data);
-        } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
-        }
+      //   // Sincronizar com sistema universal
+      //   try {
+      //     await addManutencao(data);
+      //   } catch (syncError) {
+      //     console.warn("⚠️ Erro na sincronização universal:", syncError);
+      //   }
 
-        return firestoreId;
-      } else {
-        return await addManutencao(data);
-      }
+      //   return firestoreId;
+      // } else {
+      return await addManutencao(data);
+      // }
     } catch (error) {
       console.error("❌ Erro no sistema de manutenções:", error);
       return await addManutencao(data);
@@ -7532,7 +7532,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                 <div className="flex items-start space-x-3">
                                   <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                                    🏊
+                                    ����
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center justify-between mb-2">
@@ -10375,7 +10375,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manuten��ão</option>
+                          <option value="Manutenç€o">Manuten���ão</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
