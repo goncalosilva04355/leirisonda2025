@@ -25,7 +25,7 @@ import "./utils/firestoreDiagnosticMessage";
 import "./utils/safeFirestoreTest";
 import "./utils/ultraSafeTest";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Building2,
   Menu,
@@ -368,7 +368,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há m��ltiplos projetos carregados
+      // Verificar se há m���ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
