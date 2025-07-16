@@ -824,16 +824,22 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     try {
       // Recarregar todos os dados do Firestore
       const [
-        obrasFirestore,
-        manutencaoFirestore,
-        piscinasFirestore,
-        clientesFirestore,
+        obrasFirestoreRaw,
+        manutencaoFirestoreRaw,
+        piscinasFirestoreRaw,
+        clientesFirestoreRaw,
       ] = await Promise.all([
         readFromFirestoreRest("obras"),
         readFromFirestoreRest("manutencoes"),
         readFromFirestoreRest("piscinas"),
         readFromFirestoreRest("clientes"),
       ]);
+
+      // Use let so we can modify arrays for deduplication
+      let obrasFirestore = obrasFirestoreRaw;
+      let manutencaoFirestore = manutencaoFirestoreRaw;
+      let piscinasFirestore = piscinasFirestoreRaw;
+      let clientesFirestore = clientesFirestoreRaw;
 
       console.log("✅ forceSyncAll: Dados atualizados do Firestore:", {
         obras: obrasFirestore.length,
