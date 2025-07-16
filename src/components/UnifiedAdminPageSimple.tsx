@@ -50,7 +50,7 @@ interface UnifiedAdminPageProps {
   handleDataCleanup: () => void;
   cleanupLoading: boolean;
   cleanupError: string | null;
-  // Função para gerar relat��rios
+  // Função para gerar relatórios
   generateReport?: (type: string) => void;
 }
 
@@ -333,7 +333,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         </div>
 
         {/* Tabs Navigation */}
-        <div className="bg-white rounded-lg shadow-sm relative">
+        <div className="bg-white rounded-lg shadow-sm relative z-10">
           <div className="border-b border-gray-200">
             <nav className="flex px-6 overflow-x-auto">
               {tabs.map((tab) => {
