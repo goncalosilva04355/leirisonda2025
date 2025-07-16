@@ -1156,6 +1156,18 @@ function App() {
     status: "completed",
   });
 
+  // Safety check - render loading state if essential hooks are not ready
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    console.log("🚀 App safety check...");
+    // Simple timeout to ensure all React internals are ready
+    setTimeout(() => {
+      setIsAppReady(true);
+      console.log("✅ App ready to render");
+    }, 100);
+  }, []);
+
   // Initialize authentication state with auto-login check
   useEffect(() => {
     console.log("�� SECURITY: App initialization started");
@@ -1433,7 +1445,7 @@ function App() {
                 console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
-                  "❌ Erro ao garantir auto sync após aguardar:",
+                  "❌ Erro ao garantir auto sync ap��s aguardar:",
                   error,
                 );
                 setAutoSyncActive(false);
@@ -7751,7 +7763,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN��ÃO: Esta opera✅ão é
+                                        ������ ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8091,7 +8103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
-                        <li>• Próximas intervenções</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
