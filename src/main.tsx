@@ -17,6 +17,21 @@ window.addEventListener("error", (event) => {
 });
 
 window.addEventListener("unhandledrejection", (event) => {
+  // Check if it's a Firebase messaging error and prevent logging
+  if (
+    event.reason &&
+    (event.reason.toString().includes("firebase") ||
+      event.reason.toString().includes("messaging") ||
+      event.reason.toString().includes("_FirebaseError"))
+  ) {
+    console.warn(
+      "⚠️ Firebase messaging error handled gracefully:",
+      event.reason.message || event.reason,
+    );
+    event.preventDefault(); // Prevent the error from being logged as unhandled
+    return;
+  }
+
   console.error("❌ Unhandled promise rejection:", event.reason);
   console.error("❌ Promise:", event.promise);
 });
