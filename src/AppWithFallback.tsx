@@ -19,11 +19,16 @@ const AppWithFallback: React.FC = () => {
     const forceSimple = localStorage.getItem("forceSimpleApp");
     const lastError = localStorage.getItem("lastAppError");
 
+    // TEMPORARIAMENTE: Always try main app first (remove flag)
     if (forceSimple === "true") {
-      console.log("📱 Forçando uso da app simples conforme preferência");
-      setUseSimpleApp(true);
-    } else if (lastError && retryCount === 0) {
-      console.log("⚠️ Erro anterior detectado, tentando app principal uma vez");
+      console.log("🔄 Removendo flag forceSimpleApp para tentar app principal");
+      localStorage.removeItem("forceSimpleApp");
+    }
+
+    if (lastError && retryCount === 0) {
+      console.log(
+        "⚠️ Erro anterior detectado, removendo e tentando app principal",
+      );
       localStorage.removeItem("lastAppError");
     }
   }, [retryCount]);
