@@ -757,7 +757,7 @@ function App() {
     try {
       console.log("🔥 addClient iniciado com Firestore ativo");
 
-      const firestoreId = await ultraSimpleOfflineService.createClient(data);
+      // const firestoreId = await ultraSimpleOfflineService.createClient(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -2024,7 +2024,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������� Navigating to dashboard");
+            console.log("������ Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -4696,7 +4696,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               placeholder="Deixe vazio se ainda não terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
-                              Deixe vazio se ainda não terminou
+                              Deixe vazio se ainda n��o terminou
                             </p>
                           </div>
                         </div>
