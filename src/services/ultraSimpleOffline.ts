@@ -5,7 +5,7 @@ class UltraSimpleOfflineService {
     try {
       console.log("🔧 Criando obra...");
       const workId = `work-${Date.now()}`;
-      await saveToFirestore("works", workId, {
+      await saveToFirestoreRest("works", workId, {
         ...workData,
         id: workId,
         createdAt: new Date().toISOString(),
@@ -23,7 +23,7 @@ class UltraSimpleOfflineService {
     try {
       console.log("🏊 Criando piscina...");
       const poolId = `pool-${Date.now()}`;
-      await saveToFirestore("pools", poolId, {
+      await saveToFirestoreRest("pools", poolId, {
         ...poolData,
         id: poolId,
         createdAt: new Date().toISOString(),
@@ -41,7 +41,7 @@ class UltraSimpleOfflineService {
     try {
       console.log("🔧 Criando manutenção...");
       const maintenanceId = `maintenance-${Date.now()}`;
-      await saveToFirestore("maintenance", maintenanceId, {
+      await saveToFirestoreRest("maintenance", maintenanceId, {
         ...maintenanceData,
         id: maintenanceId,
         createdAt: new Date().toISOString(),
@@ -59,7 +59,7 @@ class UltraSimpleOfflineService {
     try {
       console.log("👤 Criando cliente...");
       const clientId = `client-${Date.now()}`;
-      await saveToFirestore("clients", clientId, {
+      await saveToFirestoreRest("clients", clientId, {
         ...clientData,
         id: clientId,
         createdAt: new Date().toISOString(),
