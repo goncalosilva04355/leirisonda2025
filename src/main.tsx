@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-console.log("🚀 Inicializando aplicação...");
+console.log("���� Inicializando aplicação...");
 
 // Production safety - prevent crashes
 import "./utils/productionSafety";
@@ -76,7 +76,7 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <App />
+        <AppDebug />
       </ErrorBoundary>
     </React.StrictMode>,
   );
