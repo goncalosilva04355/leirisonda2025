@@ -149,6 +149,19 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             clientes: clientesFirestore.length,
           });
 
+          // Debug: Check for duplicate IDs in Firestore data
+          const obraIds = obrasFirestore.map((o) => o.id);
+          const duplicateObraIds = obraIds.filter(
+            (id, index) => obraIds.indexOf(id) !== index,
+          );
+          if (duplicateObraIds.length > 0) {
+            console.error(
+              "🚨 DUPLICATE OBRA IDS FROM FIRESTORE:",
+              duplicateObraIds,
+            );
+            console.error("🚨 Full obras data:", obrasFirestore);
+          }
+
           // Também salvar no localStorage para backup
           safeSetLocalStorage("works", obrasFirestore);
           safeSetLocalStorage("maintenance", manutencaoFirestore);
