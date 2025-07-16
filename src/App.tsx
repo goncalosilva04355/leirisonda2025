@@ -1778,7 +1778,7 @@ function App() {
 
     // Save complete intervention data
     const interventionData = {
-      id: Date.now(),
+      id: generateUniqueId("intervention"),
       poolId: maintenanceForm.poolId,
       poolName: selectedPool ? selectedPool.name : "Piscina Desconhecida",
       client: selectedPool ? selectedPool.client : "",
@@ -2047,7 +2047,7 @@ function App() {
         // Garantir que auto sync est���� ativo após login
         setTimeout(async () => {
           try {
-            console.log("���� Verificando auto sync após login...");
+            console.log("��� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
