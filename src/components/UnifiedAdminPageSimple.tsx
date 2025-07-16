@@ -206,6 +206,43 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
     }
   };
 
+  const handleUpdateUser = async (updatedUser: AuthorizedUser) => {
+    try {
+      // Atualizar na lista de utilizadores autorizados
+      const updatedAuthorizedUsers = authorizedUsers.map((user) =>
+        user.email === updatedUser.email ? updatedUser : user,
+      );
+      await updateUsers(updatedAuthorizedUsers);
+
+      // Atualizar também nos utilizadores da aplicação
+      const existingAppUsers = JSON.parse(
+        safeLocalStorage.getItem("app-users") || "[]",
+      );
+      const updatedAppUsers = existingAppUsers.map((user: any) =>
+        user.email === updatedUser.email
+          ? {
+              ...user,
+              name: updatedUser.name,
+              email: updatedUser.email,
+              role: updatedUser.role,
+              permissions: updatedUser.permissions,
+            }
+          : user,
+      );
+      safeLocalStorage.setItem("app-users", JSON.stringify(updatedAppUsers));
+
+      // Trigger update event
+      window.dispatchEvent(new CustomEvent("usersUpdated"));
+
+      setEditingUser(null);
+      console.log("✅ Utilizador atualizado:", updatedUser.email);
+      alert(`Utilizador ${updatedUser.name} atualizado com sucesso!`);
+    } catch (error) {
+      console.error("❌ Erro ao atualizar utilizador:", error);
+      alert("Erro ao atualizar utilizador");
+    }
+  };
+
   const getDefaultPermissions = (role: string) => {
     const basePermissions = {
       obras: { view: false, create: false, edit: false, delete: false },
