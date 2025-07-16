@@ -56,12 +56,12 @@ import {
   Share,
   Database,
 } from "lucide-react";
-import { usePullToRefresh } from "./hooks/usePullToRefresh";
-import RefreshIndicator from "./components/RefreshIndicator";
-import jsPDF from "jspdf";
+// import { usePullToRefresh } from "./hooks/usePullToRefresh";
+// import RefreshIndicator from "./components/RefreshIndicator";
+// import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
-import { AdvancedSettings } from "./components/AdvancedSettings";
-import InstallPromptSimple from "./components/InstallPromptSimple";
+// import { AdvancedSettings } from "./components/AdvancedSettings";
+// import InstallPromptSimple from "./components/InstallPromptSimple";
 // UserPermissionsManager removido - consolidado no UserManager do painel admin
 
 import { LocationPage } from "./components/LocationPage";
@@ -5571,7 +5571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Descrição"]',
+                                'textarea[placeholder*="Descriç��o"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const observations =
@@ -11576,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "N��o especificado"}
+                            : "N���o especificado"}
                         </p>
                       </div>
                       <div>
