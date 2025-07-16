@@ -235,11 +235,9 @@ const showNotification = (
 };
 
 function App() {
-  // Production safety - ensure app doesn't crash on missing dependencies
-  try {
-    // SECURITY: Always start as not authenticated - NUNCA mudar para true
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
+  // SECURITY: Always start as not authenticated - NUNCA mudar para true
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
   // Mobile Firebase conflict detection
   const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
