@@ -31,6 +31,7 @@ import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
 import { safeLocalStorage } from "../utils/storageUtils";
 import NotificationPermissionsManager from "./NotificationPermissionsManager";
 import { PersonalLocationSettings } from "./PersonalLocationSettings";
+import OrphanUserCleanup from "./OrphanUserCleanup";
 
 interface UnifiedAdminPageProps {
   currentUser: any;
@@ -50,7 +51,7 @@ interface UnifiedAdminPageProps {
   handleDataCleanup: () => void;
   cleanupLoading: boolean;
   cleanupError: string | null;
-  // Funç��o para gerar relatórios
+  // Função para gerar relatórios
   generateReport?: (type: string) => void;
 }
 
