@@ -118,13 +118,13 @@ export function isFirebaseReady(): boolean {
 }
 
 // Função para obter auth seguro
-export function getAuth() {
+export async function getAuth() {
   try {
     if (!firebaseApp) {
       console.error("🔐 Firebase App não inicializada para Auth");
       return null;
     }
-    const { getAuth: getFirebaseAuth } = require("firebase/auth");
+    const { getAuth: getFirebaseAuth } = await import("firebase/auth");
     return getFirebaseAuth(firebaseApp);
   } catch (error: any) {
     console.error("🔐 Erro ao obter Auth:", error.message);

@@ -28,23 +28,59 @@ async function waitForFirebaseApp(
   delay = 1000,
 ): Promise<any> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const apps = getApps();
-    if (apps.length > 0) {
-      const app = getApp();
-      // Verificar se a app tem as propriedades necessárias
-      if (app.options.projectId && app.options.apiKey) {
-        console.log(`✅ Firebase App pronta na tentativa ${attempt}`);
-        return app;
+    try {
+      const apps = getApps();
+
+      if (apps.length > 0) {
+        const app = getApp();
+        // Verificar se a app tem as propriedades necessárias
+        if (app && app.options && app.options.projectId && app.options.apiKey) {
+          console.log(`✅ Firebase App pronta na tentativa ${attempt}`);
+          return app;
+        } else {
+          console.warn(`⚠️ Firebase App encontrada mas incompleta:`, {
+            hasOptions: !!app.options,
+            projectId: app.options?.projectId,
+            hasApiKey: !!app.options?.apiKey,
+          });
+        }
+      } else {
+        console.log(
+          `⏳ Tentativa ${attempt}/${maxAttempts} - nenhuma Firebase App encontrada`,
+        );
       }
+    } catch (error) {
+      console.warn(`⚠️ Erro na tentativa ${attempt}:`, error);
     }
 
-    console.log(
-      `⏳ Tentativa ${attempt}/${maxAttempts} - aguardando Firebase App...`,
-    );
-    await new Promise((resolve) => setTimeout(resolve, delay));
+    if (attempt < maxAttempts) {
+      console.log(`⏳ Aguardando ${delay}ms antes da próxima tentativa...`);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
   }
 
-  throw new Error("Firebase App não inicializou após aguardar");
+  console.error("❌ Firebase App não inicializou após todas as tentativas");
+  console.log("🔧 Tentando inicialização de emergência...");
+
+  // Tentativa de emergência - inicializar Firebase se ainda não foi
+  try {
+    const { initializeApp } = await import("firebase/app");
+    const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+
+    const config = getLegacyFirebaseConfig();
+    if (config && config.projectId && config.apiKey) {
+      console.log("🚀 Tentando inicialização de emergência do Firebase...");
+      const emergencyApp = initializeApp(config, `emergency-${Date.now()}`);
+      console.log("✅ Firebase inicializado em modo de emergência");
+      return emergencyApp;
+    }
+  } catch (emergencyError) {
+    console.error("❌ Falha na inicialização de emergência:", emergencyError);
+  }
+
+  throw new Error(
+    "Firebase App não inicializou após aguardar e tentativas de emergência",
+  );
 }
 
 // Função para verificar se Firestore está disponível no projeto
@@ -231,7 +267,7 @@ export async function getFirebaseFirestoreAsync(): Promise<Firestore | null> {
   return firestoreInstance;
 }
 
-// Função para verificar se Firestore está pronto
+// Função para verificar se Firestore est�� pronto
 export function isFirestoreReady(): boolean {
   // Remover bloqueio - verificar apenas se instância existe
   return firestoreInstance !== null;

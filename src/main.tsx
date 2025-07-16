@@ -45,6 +45,12 @@ import App from "./App";
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
 import AppDiagnostic from "./AppDiagnostic";
+// App debug para diagnóstico de tela branca
+import AppDebug from "./AppDebug";
+// App simples e robusto
+import AppSimple from "./AppSimple";
+// App com sistema de fallback inteligente
+import AppWithFallback from "./AppWithFallback";
 // App funcional garantido
 import AppWorking from "./AppWorking";
 // App simplificado para produção
@@ -74,7 +80,7 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <App />
+        <AppWithFallback />
       </ErrorBoundary>
     </React.StrictMode>,
   );

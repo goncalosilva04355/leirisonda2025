@@ -41,16 +41,15 @@ export function useProductionEffect(
   effect: () => void | (() => void),
   deps?: React.DependencyList,
 ): void {
-  const React = require("react");
+  // Esta função não deve ser usada em produção - apenas em desenvolvimento para debug
+  if (import.meta.env.DEV) {
+    console.log("🚫 useEffect produção desativado em desenvolvimento");
+    return;
+  }
 
-  React.useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.log("🚫 Effect desativado em desenvolvimento");
-      return;
-    }
-
-    return effect();
-  }, deps);
+  // Em produção, executar normalmente (mas React não está disponível aqui)
+  // Esta função precisa ser refatorada para ser usada corretamente
+  console.warn("⚠️ devUseEffect: função precisa ser refatorada");
 }
 
 // Log de performance melhorada

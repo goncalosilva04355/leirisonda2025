@@ -235,6 +235,8 @@ const showNotification = (
 };
 
 function App() {
+  console.log("🚀 App component rendering...");
+
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -1154,6 +1156,18 @@ function App() {
     status: "completed",
   });
 
+  // Safety check - render loading state if essential hooks are not ready
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  useEffect(() => {
+    console.log("🚀 App safety check...");
+    // Simple timeout to ensure all React internals are ready
+    setTimeout(() => {
+      setIsAppReady(true);
+      console.log("✅ App ready to render");
+    }, 100);
+  }, []);
+
   // Initialize authentication state with auto-login check
   useEffect(() => {
     console.log("�� SECURITY: App initialization started");
@@ -1431,7 +1445,7 @@ function App() {
                 console.log("✅ Auto sync garantido após aguardar Firestore!");
               } catch (error) {
                 console.error(
-                  "❌ Erro ao garantir auto sync após aguardar:",
+                  "❌ Erro ao garantir auto sync ap��s aguardar:",
                   error,
                 );
                 setAutoSyncActive(false);
@@ -1997,7 +2011,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������ Navigating to dashboard");
+            console.log("������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -2045,7 +2059,7 @@ function App() {
         setLoginError("Login incorreto");
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       setLoginError("Login incorreto");
     }
   };
@@ -7044,7 +7058,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat����rios do Sistema
+                            Relat������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -7749,7 +7763,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN��ÃO: Esta opera✅ão é
+                                        ������ ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8089,7 +8103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
-                        <li>• Próximas intervenções</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
@@ -11185,6 +11199,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
 
+  // Safety check before rendering
+  if (!isAppReady) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🏊‍♂️</div>
+          <div style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>
+            Leirisonda
+          </div>
+          <div style={{ opacity: 0.8 }}>A carregar aplicação...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AutoSyncProviderSafe
       enabled={true}
@@ -12179,7 +12218,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Criação */}
+                    {/* Data de Criaç��o */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
