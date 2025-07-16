@@ -717,27 +717,27 @@ function App() {
     syncStatus,
   } = universalSync;
 
-  // Debug: Check for duplicate keys in data - COMMENTED TO PREVENT RE-RENDERS
-  // useEffect(() => {
-  //   console.log("🔍 Verificando dados carregados:", {
-  //     obras: obras.length,
-  //     manutencoes: manutencoes.length,
-  //     piscinas: piscinas.length,
-  //     clientes: clientes.length,
-  //   });
+  // Debug: Check for duplicate keys in data
+  useEffect(() => {
+    console.log("🔍 Verificando dados carregados:", {
+      obras: obras.length,
+      manutencoes: manutencoes.length,
+      piscinas: piscinas.length,
+      clientes: clientes.length,
+    });
 
-  //   checkForDuplicateKeys(obras, "id");
-  //   checkForDuplicateKeys(manutencoes, "id");
-  //   checkForDuplicateKeys(piscinas, "id");
-  //   checkForDuplicateKeys(clientes, "id");
+    checkForDuplicateKeys(obras, "id");
+    checkForDuplicateKeys(manutencoes, "id");
+    checkForDuplicateKeys(piscinas, "id");
+    checkForDuplicateKeys(clientes, "id");
 
-  //   // Check for timestamp-based IDs that might be duplicating
-  //   obras.forEach((obra) => {
-  //     if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
-  //       console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
-  //     }
-  //   });
-  // }, [obras, manutencoes, piscinas, clientes]);
+    // Check for timestamp-based IDs that might be duplicating
+    obras.forEach((obra) => {
+      if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
+        console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
+      }
+    });
+  }, [obras, manutencoes, piscinas, clientes]);
 
   // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
@@ -769,7 +769,7 @@ function App() {
     }
   };
 
-  // Função para enviar notificações push quando uma obra é atribu��da
+  // Função para enviar notificações push quando uma obra é atribuída
 
   const addWork = async (data: any) => {
     try {
@@ -1454,7 +1454,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("������ Iniciando sincronização automática APÓS LOGIN...");
+        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1505,8 +1505,8 @@ function App() {
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
-    // Listeners para atualizações automáticas da UI - COMMENTED TO PREVENT RE-RENDERS
-  // useEffect(() => {
+  // Listeners para atualizações automáticas da UI
+  useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
@@ -7759,7 +7759,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Shield className="h-6 w-6 text-yellow-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Configuraç��es Avan��adas
+                                Configurações Avan��adas
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -8290,7 +8290,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
-                        <li>���� Equipas responsáveis</li>
+                        <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
                     </div>
@@ -8748,7 +8748,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Basic Information */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Informaç��es Básicas
+                        Informações Básicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
