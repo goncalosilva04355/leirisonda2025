@@ -55,7 +55,27 @@ export async function smartFirebaseTest(): Promise<{
         "🔍 Tentando getFirestore para projeto:",
         app.options.projectId,
       );
-      const db = getFirestore(app);
+
+      // Try to get Firestore instance with error prevention
+      let db;
+      try {
+        db = getFirestore(app);
+      } catch (immediateError: any) {
+        // Re-throw with more context if it's the getImmediate error
+        if (
+          immediateError.message?.includes("getImmediate") ||
+          immediateError.code === "firestore/unavailable"
+        ) {
+          const enhancedError = new Error(
+            "Firestore service is not available in this project",
+          );
+          enhancedError.name = "FirestoreUnavailableError";
+          (enhancedError as any).code = "firestore/unavailable";
+          (enhancedError as any).originalError = immediateError;
+          throw enhancedError;
+        }
+        throw immediateError;
+      }
       console.log("✅ Firestore inicializado com sucesso!", typeof db);
 
       // Se chegou aqui, o Firestore está funcionando
