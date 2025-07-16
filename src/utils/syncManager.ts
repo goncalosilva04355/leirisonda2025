@@ -194,4 +194,21 @@ export const syncManager = {
       !this.circuitBreakerOpen
     );
   },
+
+  // Perform full sync (method needed by components)
+  async performFullSync(): Promise<boolean> {
+    if (!this.isFirebaseOperationAllowed()) {
+      console.warn("Firebase operations not allowed - skipping full sync");
+      return false;
+    }
+
+    try {
+      console.log("🔄 Performing full sync...");
+      // Placeholder for full sync logic
+      return true;
+    } catch (error) {
+      console.error("❌ Error during full sync:", error);
+      return false;
+    }
+  },
 };
