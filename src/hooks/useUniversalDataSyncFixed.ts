@@ -4,6 +4,15 @@ import {
   saveToFirestoreRest,
 } from "../utils/firestoreRestApi";
 
+// Função para gerar IDs únicos e evitar colisões
+let idCounter = 0;
+const generateUniqueId = (prefix: string): string => {
+  const timestamp = Date.now();
+  const counter = ++idCounter;
+  const random = Math.random().toString(36).substring(2, 9);
+  return `${prefix}-${timestamp}-${counter}-${random}`;
+};
+
 export interface UniversalSyncState {
   obras: any[];
   manutencoes: any[];
