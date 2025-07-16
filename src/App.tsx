@@ -277,7 +277,15 @@ const showNotification = (
 };
 
 function App() {
-  console.log("🚀 App component rendering...");
+  const renderTime = Date.now();
+  console.log("🚀 App component rendering at:", renderTime);
+
+  // Debug: Check if App is being rendered multiple times with same timestamp
+  if ((window as any).lastAppRenderTime === renderTime) {
+    console.error("🚨 DUPLICATE APP RENDER DETECTED!", renderTime);
+    console.trace("Stack trace for duplicate render:");
+  }
+  (window as any).lastAppRenderTime = renderTime;
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1274,7 +1282,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicialização:", error);
+        console.error("❌ Erro na inicializaç��o:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
