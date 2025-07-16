@@ -75,7 +75,7 @@ class DirectAuthService {
 
         // SEMPRE guardar no Firestore
         try {
-          await saveToFirestore(
+          await saveToFirestoreRest(
             "users",
             userProfile.id?.toString() || email,
             userProfile,
