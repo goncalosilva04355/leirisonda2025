@@ -1031,7 +1031,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("�� Loading users from localStorage...");
+      console.log("🔄 Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -1342,17 +1342,7 @@ function App() {
     status: "completed",
   });
 
-  // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
-
-  useEffect(() => {
-    console.log("🚀 App safety check...");
-    // Simple timeout to ensure all React internals are ready
-    setTimeout(() => {
-      setIsAppReady(true);
-      console.log("✅ App ready to render");
-    }, 100);
-  }, []);
+  // Safety check removed - go directly to login
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
@@ -1480,7 +1470,7 @@ function App() {
   }, []);
   */
 
-  // Sincronização inicial de todos os dados com Firestore - SÓ APÓS LOGIN
+  // Sincronização inicial de todos os dados com Firestore - SÓ AP��S LOGIN
   useEffect(() => {
     if (!isAuthenticated) {
       console.log("📱 Firestore desativado - aguardando login");
@@ -7006,7 +6996,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -7038,7 +7028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manuten����o
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -8084,7 +8074,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅��es
+                                    Histórico de interven✅���es
                                   </p>
                                 </div>
                               </div>
@@ -10040,7 +10030,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               "input, select, textarea",
                             );
                             console.log(
-                              "🔧 DEBUG boreInputs found:",
+                              "��� DEBUG boreInputs found:",
                               boreInputs.length,
                             );
                             updateData = {
@@ -10605,7 +10595,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Dura���ão Real
+                            .value; // Dura��ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
@@ -10984,7 +10974,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>��������</span>
+                  <span>�������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
