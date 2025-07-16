@@ -1,3 +1,9 @@
+// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
+import {
+  initializeFirebaseMobile,
+  isFirebaseMobileReady,
+} from "./firebase/mobileFirebase";
+
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
 
@@ -5088,7 +5094,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           )}
 
-                          {/* Botão para recarregar utilizadores quando lista está vazia */}
+                          {/* Botão para recarregar utilizadores quando lista est�� vazia */}
                           {users.length === 0 && (
                             <div className="mb-3">
                               <button
