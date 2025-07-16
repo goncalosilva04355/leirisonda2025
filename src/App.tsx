@@ -180,7 +180,7 @@ import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
-  "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
+  "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
 );
 
 // Função para gerar IDs únicos e evitar colisões React
@@ -1769,7 +1769,7 @@ function App() {
           })
           .catch((error) => {
             console.error(
-              "❌ Firebase Messaging Service Worker registration failed:",
+              "��� Firebase Messaging Service Worker registration failed:",
               error,
             );
             // Fallback: try to register a basic service worker
