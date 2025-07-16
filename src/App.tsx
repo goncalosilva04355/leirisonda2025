@@ -180,7 +180,7 @@ import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
-  "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
+  "🔥 App.tsx: Firebase será ativado apenas APÓS LOGIN - REST API disponível",
 );
 
 // Função para gerar IDs únicos e evitar colisões React
@@ -7676,8 +7676,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                     <p className="text-blue-700 text-sm mb-3">
                                       Quando ativado, clicar num número de
-                                      telefone abrir€ diretamente o marcador do
-                                      telefone.
+                                      telefone abrir��� diretamente o marcador
+                                      do telefone.
                                     </p>
                                     <p className="text-blue-600 text-xs">
                                       Estado:{" "}
@@ -8270,7 +8270,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>����� Datas e dura🔥es</li>
+                        <li>����� Datas e dura����es</li>
                         <li>• Estados e observações</li>
                       </ul>
                     </div>
