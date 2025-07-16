@@ -16,7 +16,7 @@ function TestApp() {
           Se vê esta mensagem, o React está a funcionar!
         </p>
         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
-          <p className="text-green-800">�� Sistema operacional</p>
+          <p className="text-green-800">✅ Sistema operacional</p>
           <p className="text-sm text-green-600 mt-1">
             Data: {new Date().toLocaleString()}
           </p>
