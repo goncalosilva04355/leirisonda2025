@@ -1293,7 +1293,7 @@ function App() {
                   docSnap.data(),
                 );
                 console.log(
-                  "�� PASSO 3 COMPLETADO: Firestore totalmente funcional!",
+                  "🎉 PASSO 3 COMPLETADO: Firestore totalmente funcional!",
                 );
               }
             } catch (writeError) {
@@ -2406,7 +2406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
+      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
   };
 
@@ -3474,7 +3474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => navigateToSection("nova-manutencao")}
                             className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
                           >
-                            Agendar Manuten��ão
+                            Agendar Manutenção
                           </button>
                         )}
                       </div>
@@ -4868,7 +4868,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {workTechnicians.map((technician, index) => (
                                 <div
-                                  key={index}
+                                  key={`technician-${technician}-${index}`}
                                   className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-gray-700">
@@ -6054,7 +6054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "��� User Permissions:",
+                                "🔍 User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -7770,7 +7770,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         Limpar Dados do Sistema
                                       </h4>
                                       <p className="text-red-700 text-sm mb-3">
-                                        Esta ação eliminará permanentemente:
+                                        Esta ação eliminar�� permanentemente:
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
@@ -7975,7 +7975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅ões
+                                    Histórico de interven✅��es
                                   </p>
                                 </div>
                               </div>
@@ -8130,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
-                        <li>• Histórico de manuten���ões</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
