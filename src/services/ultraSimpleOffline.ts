@@ -4,10 +4,13 @@ class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
     try {
       console.log("🔧 Criando obra...");
-      const id = await saveData("works", {
+      const workId = `work-${Date.now()}`;
+      await saveToFirestore("works", workId, {
         ...workData,
+        id: workId,
         createdAt: new Date().toISOString(),
       });
+      const id = workId;
       console.log("✅ Obra criada:", id);
       return id;
     } catch (error) {
@@ -19,10 +22,13 @@ class UltraSimpleOfflineService {
   async createPool(poolData: any): Promise<string> {
     try {
       console.log("🏊 Criando piscina...");
-      const id = await saveData("pools", {
+      const poolId = `pool-${Date.now()}`;
+      await saveToFirestore("pools", poolId, {
         ...poolData,
+        id: poolId,
         createdAt: new Date().toISOString(),
       });
+      const id = poolId;
       console.log("✅ Piscina criada:", id);
       return id;
     } catch (error) {
@@ -34,10 +40,13 @@ class UltraSimpleOfflineService {
   async createMaintenance(maintenanceData: any): Promise<string> {
     try {
       console.log("🔧 Criando manutenção...");
-      const id = await saveData("maintenance", {
+      const maintenanceId = `maintenance-${Date.now()}`;
+      await saveToFirestore("maintenance", maintenanceId, {
         ...maintenanceData,
+        id: maintenanceId,
         createdAt: new Date().toISOString(),
       });
+      const id = maintenanceId;
       console.log("✅ Manutenção criada:", id);
       return id;
     } catch (error) {
@@ -49,10 +58,13 @@ class UltraSimpleOfflineService {
   async createClient(clientData: any): Promise<string> {
     try {
       console.log("👤 Criando cliente...");
-      const id = await saveData("clients", {
+      const clientId = `client-${Date.now()}`;
+      await saveToFirestore("clients", clientId, {
         ...clientData,
+        id: clientId,
         createdAt: new Date().toISOString(),
       });
+      const id = clientId;
       console.log("✅ Cliente criado:", id);
       return id;
     } catch (error) {
