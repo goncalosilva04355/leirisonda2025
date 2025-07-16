@@ -516,6 +516,30 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Location Permissions Settings */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <MapPin className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          Permissões de Localização
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Gerir partilha de localização e configurações GPS do
+                          dispositivo
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <PersonalLocationSettings />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
