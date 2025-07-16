@@ -41,9 +41,10 @@ export function useProductionEffect(
   effect: () => void | (() => void),
   deps?: React.DependencyList,
 ): void {
-  const React = require("react");
+  // React já está importado no escopo onde esta função é usada
+  // Removendo o require desnecessário
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
     if (import.meta.env.DEV) {
       console.log("🚫 Effect desativado em desenvolvimento");
       return;
