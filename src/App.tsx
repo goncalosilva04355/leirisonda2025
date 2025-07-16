@@ -158,6 +158,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
+import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -1602,7 +1603,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç�����es
+    // Adicionar listeners para todas as coleç����es
     const collections = [
       "obras",
       "piscinas",
@@ -6708,7 +6709,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Water Values */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Valores da Água
+                        Valores da ��gua
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
@@ -7837,8 +7838,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
-                                    Acesso às configurações avan��adas do
-                                    sistema
+                                    Acesso às configurações avançadas do sistema
                                   </p>
                                   <button
                                     onClick={() => {
@@ -10510,7 +10510,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura��ão Real (horas)
+                          Dura���ão Real (horas)
                         </label>
                         <input
                           type="number"
