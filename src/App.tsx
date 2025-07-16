@@ -177,7 +177,7 @@ import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // import "./utils/debugDuplicates"; // Debug de duplicados
 // import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
-// import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
+// import "./utils/startupDuplicateCheck"; // Verificação e limpeza autom��tica no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
   "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
@@ -333,29 +333,10 @@ function App() {
   }
   (window as any).lastAppRenderTime = renderTime;
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
+  // INICIALIZAÇÃO FIREBASE MOBILE DESATIVADA - SÓ ATIVAR APÓS LOGIN
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false); // Firebase desativo até login
 
-  useEffect(() => {
-    const initMobileFirebase = async () => {
-      try {
-        console.log(
-          "�� Inicializando Firebase Mobile para prevenir tela branca...",
-        );
-        await initializeFirebaseMobile();
-        setMobileFirebaseReady(true);
-        console.log("✅ Firebase Mobile inicializado com sucesso!");
-      } catch (error) {
-        console.warn(
-          "⚠️ Firebase Mobile falhou, continuando em modo local:",
-          error,
-        );
-        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
-      }
-    };
-
-    initMobileFirebase();
-  }, []);
+  // Firebase será inicializado apenas após login bem-sucedido
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -7072,7 +7053,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manuten��€
+                          manuten���€
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -7179,7 +7160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configura������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configurações do sistema, relatórios e utilizadores
+                        Configuraç��es do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
