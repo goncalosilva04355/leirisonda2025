@@ -49,7 +49,12 @@ export class AggressiveFirebaseFix {
       const { getFirestore } = await import("firebase/firestore");
       const { getAuth } = await import("firebase/auth");
 
-      const app = initializeApp(this.config, `firebase-app-${Date.now()}`);
+      const config = await this.getConfig();
+      if (!config) {
+        throw new Error("Firebase config não disponível");
+      }
+
+      const app = initializeApp(config, `firebase-app-${Date.now()}`);
       const db = getFirestore(app);
       const auth = getAuth(app);
 
