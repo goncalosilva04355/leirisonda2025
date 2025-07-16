@@ -1031,7 +1031,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from localStorage...");
+      console.log("�� Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -7038,7 +7038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenç��o
+                          Estado da Manuten����o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -10605,7 +10605,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             inputs[4] as HTMLInputElement
                           ).value; // Duração Estimada
                           const actualDuration = (inputs[5] as HTMLInputElement)
-                            .value; // Dura��ão Real
+                            .value; // Dura���ão Real
                           const cost = (inputs[6] as HTMLInputElement).value; // Custo
                           const priority = (inputs[7] as HTMLInputElement)
                             .value; // Prioridade
@@ -10984,7 +10984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>�������</span>
+                  <span>��������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11304,30 +11304,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
 
-  // Safety check before rendering
-  if (!isAppReady) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🏊‍♂️</div>
-          <div style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>
-            Leirisonda
-          </div>
-          <div style={{ opacity: 0.8 }}>A carregar aplicação...</div>
-        </div>
-      </div>
-    );
-  }
+  // Safety check removed - go directly to login
 
   return (
     <AutoSyncProviderSafe
