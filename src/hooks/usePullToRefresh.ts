@@ -92,7 +92,7 @@ export const usePullToRefresh = ({
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [onRefresh, threshold, disabled, isRefreshing, pullDistance]);
+  }, [threshold, disabled]);
 
   return {
     isRefreshing,
