@@ -317,15 +317,42 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           visibleToAllUsers: true,
         };
 
+        // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
         const existingObras = safeGetLocalStorage("works");
-        const workExists = existingObras.some((w: any) => w.id === obra.id);
+        const localWorkExists = existingObras.some(
+          (w: any) => w.id === obra.id,
+        );
 
-        if (workExists) {
+        // Also check in current state to prevent duplicates in memory
+        const stateWorkExists = state.obras.some((w: any) => w.id === obra.id);
+
+        if (localWorkExists || stateWorkExists) {
           console.warn(
-            "🚨 Obra com ID duplicado detectada, ignorando:",
+            "🚨 DUPLICADO DETECTADO - Obra já existe, ignorando:",
             obra.id,
           );
           return obra.id; // Return existing ID instead of creating duplicate
+        }
+
+        // EXTRA SAFETY: Check in Firestore as well
+        try {
+          const firestoreObras = await readFromFirestoreRest("obras");
+          const firestoreWorkExists = firestoreObras.some(
+            (w: any) => w.id === obra.id,
+          );
+
+          if (firestoreWorkExists) {
+            console.warn(
+              "🚨 DUPLICADO NO FIRESTORE - Obra já existe, ignorando:",
+              obra.id,
+            );
+            return obra.id;
+          }
+        } catch (error) {
+          console.warn(
+            "⚠️ Não foi possível verificar duplicados no Firestore:",
+            error,
+          );
         }
 
         if (!workExists) {
