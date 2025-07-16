@@ -2118,7 +2118,7 @@ function App() {
 
       console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
-      console.error("❌ Error during logout:", error);
+      console.error("�� Error during logout:", error);
 
       // Force clear state even if logout service fails
       setSidebarOpen(false);
@@ -3464,7 +3464,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Waves className="h-6 w-6 text-cyan-600" />
                         </div>
                         <p className="text-gray-500 text-sm font-medium">
-                          Nenhuma manuten��✅endada
+                          Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
                           As futuras manutenções aparecer��o aqui
@@ -7142,7 +7142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenç����es
+                                  Hist���rico de intervenç����es
                                 </p>
                               </div>
                             </div>
@@ -7213,7 +7213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gerir configurações da aplicação, notificações e
-                            prefer��ncias.
+                            prefer✅ncias.
                           </p>
                         </div>
 
@@ -7470,7 +7470,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <div className="flex items-center space-x-2">
                             <BarChart3 className="h-4 w-4" />
-                            <span>Relat��rios</span>
+                            <span>Relatórios</span>
                           </div>
                         </button>
                         <button
@@ -8884,7 +8884,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           try {
                             const newClient = {
-                              id: Date.now(),
+                              id: generateUniqueId("client"),
                               name: name,
                               email: email,
                               phone: phone,
@@ -9858,7 +9858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Selecionar voltagem
                             </option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif���sico)</option>
+                            <option value="400V">400V (trif📞sico)</option>
                           </select>
                         </div>
                       </div>
