@@ -880,14 +880,14 @@ function App() {
           // Tentar carregar do Firestore
           // const firestoreUsers = await firestoreService.getUtilizadores();
 
-          if (firestoreUsers.length > 0) {
-            console.log(
-              "✅ Utilizadores carregados do Firestore:",
-              firestoreUsers.length,
-            );
-            setUsers(firestoreUsers as any);
-            return;
-          }
+          // if (firestoreUsers.length > 0) {
+          //   console.log(
+          //     "✅ Utilizadores carregados do Firestore:",
+          //     firestoreUsers.length,
+          //   );
+          //   setUsers(firestoreUsers as any);
+          //   return;
+          // }
         }
 
         // Fallback para localStorage se Firestore não tiver dados
@@ -1409,7 +1409,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1444,7 +1444,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("��️ Falha ao garantir auto sync após login");
+            console.warn("⚠️ Falha ao garantir auto sync após login");
             setAutoSyncActive(false);
           }
         } else {
@@ -1834,7 +1834,7 @@ function App() {
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
-          description: "Manutenç��o programada automaticamente",
+          description: "Manutenção programada automaticamente",
           notes: "Agendada automaticamente após manutenç��o anterior",
           clientName: selectedPool ? selectedPool.client : "",
           clientContact: "", // Could be populated from client data if available
@@ -3955,7 +3955,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     .includes(globalSearchTerm.toLowerCase()),
                               ).length === 0 && (
                                 <div className="text-center py-8">
-                                  <div className="text-gray-400 mb-2">��� </div>
+                                  <div className="text-gray-400 mb-2">€ </div>
                                   <p className="text-gray-500 text-sm">
                                     Nenhum resultado encontrado para "
                                     {globalSearchTerm}"
@@ -4572,7 +4572,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa����ões Básicas */}
+                    {/* Informa���ões Básicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5604,7 +5604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa����ões sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -6060,7 +6060,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
 
                                 console.log(
-                                  "✅ Permissão validada, criando cliente...",
+                                  "��� Permissão validada, criando cliente...",
                                 );
                                 // Add client to the system
                                 const newClient = {
@@ -6367,7 +6367,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               poolData,
                             );
                           } catch (error) {
-                            console.error("�� Erro ao criar piscina:", error);
+                            console.error("❌ Erro ao criar piscina:", error);
                             alert(
                               `Erro ao criar piscina: ${error.message || error}`,
                             );
@@ -6707,7 +6707,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Chemical Products */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Produtos Químicos Utilizados
+                        Produtos Qu��micos Utilizados
                       </h3>
                       <div className="space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -9578,7 +9578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
                                 €hum utilizador encontrado. Vá à Área de
-                                Administra��ão → "🔧 Correção de Atribuiç✅o de
+                                Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
                             </div>
