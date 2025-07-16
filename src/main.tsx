@@ -82,12 +82,10 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the main App directly
-  const AppComponent = App;
-  console.log(
-    "📱 Using app:",
-    "App (main application with full functionality)",
-  );
+  // Use test app to diagnose the blank screen issue
+  import AppTest from "./AppTest";
+  const AppComponent = AppTest;
+  console.log("📱 Using app:", "AppTest (simple diagnostic app)");
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
