@@ -189,13 +189,30 @@ const checkForDuplicateKeys = (
 };
 
 // Debug: Intercept React warnings about duplicate keys
+const problemTimestamps = [
+  "1752604451507",
+  "1752602368414",
+  "1752578821484",
+  "1752582282132",
+  "1752574634617",
+  "1752517424794",
+  "1752582282133",
+];
+
 const originalConsoleError = console.error;
 console.error = (...args) => {
   const message = args.join(" ");
-  if (message.includes("same key") && message.includes("1752574634617")) {
-    console.warn(`🚨 FOUND PROBLEM TIMESTAMP: 1752574634617`);
-    console.warn("🚨 Stack trace:", new Error().stack);
-    debugger; // Break here in devtools
+  if (message.includes("same key")) {
+    const foundTimestamp = problemTimestamps.find((ts) => message.includes(ts));
+    if (foundTimestamp) {
+      console.warn(`🚨 FOUND PROBLEM TIMESTAMP: ${foundTimestamp}`);
+      console.warn("🚨 Full message:", message);
+      console.warn("🚨 Stack trace:", new Error().stack);
+
+      // Try to find where this timestamp is coming from
+      console.warn("🚨 Current obras data:", obras?.slice(0, 3));
+      console.warn("🚨 Current works data:", works?.slice(0, 3));
+    }
   }
   return originalConsoleError.apply(console, args);
 };
@@ -305,7 +322,7 @@ function App() {
   // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
   const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
-  const refreshStatus = () => console.log("REST API não precisa refresh");
+  const refreshStatus = () => console.log("REST API n��o precisa refresh");
 
   // Verificar se REST API está funcionando
   const [restApiStatus, setRestApiStatus] = useState("aguardando");
