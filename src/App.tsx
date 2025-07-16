@@ -5684,10 +5684,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "./services/pushNotificationService"
                                   );
 
-                                for (const userId of workData.assignedUsers) {
+                                for (const user of workData.assignedUsers) {
                                   await pushNotificationService.notifyObraAssignment(
                                     workData,
-                                    userId,
+                                    typeof user === "string" ? user : user.id,
                                   );
                                   console.log(
                                     "📢 Notificação enviada para utilizador:",
