@@ -118,25 +118,54 @@ export class PushNotificationService {
   }
 
   private showLocalNotification(title: string, body: string, data?: any): void {
+    console.log(`🔔 Tentando mostrar notificação: "${title}" - "${body}"`);
+    console.log(`📋 Permissão atual: ${Notification.permission}`);
+    console.log(`🌐 Suporte a notificações: ${"Notification" in window}`);
+
+    if (!("Notification" in window)) {
+      console.warn("⚠️ Este browser não suporta notificações");
+      return;
+    }
+
     if (Notification.permission === "granted") {
-      const notification = new Notification(title, {
-        body,
-        icon: "/icon.svg",
-        badge: "/icon.svg",
-        tag: "leirisonda-obra",
-        data: data,
-      });
+      try {
+        const notification = new Notification(title, {
+          body,
+          icon: "/icon.svg",
+          badge: "/icon.svg",
+          tag: "leirisonda-obra",
+          data: data,
+          requireInteraction: true, // Mantém a notificação visível até interação
+        });
 
-      notification.onclick = () => {
-        window.focus();
-        notification.close();
+        console.log("✅ Notificação criada com sucesso");
 
-        // Se há dados sobre a obra, navegar para ela
-        if (data?.obraId) {
-          console.log("📋 Navegando para obra:", data.obraId);
-          // Aqui você pode adicionar lógica de navegação
-        }
-      };
+        notification.onclick = () => {
+          console.log("👆 Notificação clicada");
+          window.focus();
+          notification.close();
+
+          // Se há dados sobre a obra, navegar para ela
+          if (data?.obraId) {
+            console.log("📋 Navegando para obra:", data.obraId);
+            // Aqui você pode adicionar lógica de navegação
+          }
+        };
+
+        notification.onshow = () => {
+          console.log("✅ Notificação mostrada");
+        };
+
+        notification.onerror = (error) => {
+          console.error("❌ Erro na notificação:", error);
+        };
+      } catch (error) {
+        console.error("❌ Erro ao criar notificação:", error);
+      }
+    } else {
+      console.warn(
+        `⚠️ Permissão de notificação não concedida: ${Notification.permission}`,
+      );
     }
   }
 
@@ -148,7 +177,7 @@ export class PushNotificationService {
       // Em uma implementação real, isso seria feito através de uma Cloud Function
       // ou servidor backend que tem acesso às chaves de servidor do FCM
 
-      console.log("📤 Simulando envio de notificação para usuário:", userId);
+      console.log("📤 Simulando envio de notificaç��o para usuário:", userId);
       console.log("📋 Notificação:", notification);
 
       // Por agora, vamos simular o envio gravando no localStorage
