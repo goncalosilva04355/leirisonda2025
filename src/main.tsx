@@ -4,8 +4,8 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
-// Testar primeiro com App mínimo
-import App from "./App-minimal";
+// Voltar ao App original
+import App from "./App";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
