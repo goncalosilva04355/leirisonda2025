@@ -85,7 +85,6 @@ try {
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
   // Use test app to diagnose the blank screen issue
-  import AppTest from "./AppTest";
   const AppComponent = AppTest;
   console.log("📱 Using app:", "AppTest (simple diagnostic app)");
 
