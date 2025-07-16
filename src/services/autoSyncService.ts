@@ -23,6 +23,7 @@ export class AutoSyncService {
   private observers: Map<string, SyncObserver> = new Map();
   private db = getFirebaseFirestore();
   private isActive = false;
+  private firestoreAvailable = false;
 
   // Inicializar sincronização automática
   async startAutoSync(): Promise<void> {
