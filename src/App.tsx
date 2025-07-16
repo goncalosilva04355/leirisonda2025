@@ -239,8 +239,7 @@ console.error = (...args) => {
       console.warn("🚨 Stack trace:", new Error().stack);
 
       // Try to find where this timestamp is coming from
-      console.warn("🚨 Current obras data:", obras?.slice(0, 3));
-      console.warn("🚨 Current works data:", works?.slice(0, 3));
+      console.warn("🚨 Found timestamp in React key error");
     }
   }
   return originalConsoleError.apply(console, args);
@@ -11418,7 +11417,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Furos e Capta��ões de Água
+                        Furos e Capta���ões de Água
                       </p>
                     </div>
                   </div>

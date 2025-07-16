@@ -44,6 +44,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
+// App simplificado funcional
+import AppSimpleFixed from "./AppSimpleFixed";
 // App mínimo para teste
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
