@@ -2011,7 +2011,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������ Navigating to dashboard");
+            console.log("������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -11198,6 +11198,31 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   // Use sync manager to determine if sync should be enabled
   const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
+
+  // Safety check before rendering
+  if (!isAppReady) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🏊‍♂️</div>
+          <div style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>
+            Leirisonda
+          </div>
+          <div style={{ opacity: 0.8 }}>A carregar aplicação...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AutoSyncProviderSafe
