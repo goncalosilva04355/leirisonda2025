@@ -96,7 +96,6 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
-import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
@@ -854,7 +853,7 @@ function App() {
 
           if (firestoreUsers.length > 0) {
             console.log(
-              "��� Utilizadores carregados do Firestore:",
+              "✅ Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
             setUsers(firestoreUsers as any);
@@ -1305,7 +1304,7 @@ function App() {
           console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
-        console.log("📱 Firebase Leiria n��o disponível - modo offline ativo");
+        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
         console.log("💾 Dados serão salvos apenas no localStorage");
       }
     };
@@ -2151,7 +2150,7 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    // Manter histórico de navegaç��o simples
+    // Manter histórico de navegação simples
     const sectionHistory = {
       "nova-obra": "obras",
       "nova-manutencao": "manutencoes",
@@ -8154,7 +8153,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>• Or��amentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -10337,7 +10336,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manutenção
+                          Tipo de Manuten��ão
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
