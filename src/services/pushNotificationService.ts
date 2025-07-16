@@ -125,6 +125,16 @@ export class PushNotificationService {
         return null;
       }
 
+      // Add additional check for VAPID key validity
+      if (
+        !this.vapidKey ||
+        this.vapidKey.includes("substitua") ||
+        this.vapidKey.length < 60
+      ) {
+        console.warn("⚠️ VAPID key não configurada corretamente");
+        return null;
+      }
+
       const token = await getToken(this.messaging, {
         vapidKey: this.vapidKey,
       });
@@ -137,7 +147,10 @@ export class PushNotificationService {
         return null;
       }
     } catch (error) {
-      console.error("❌ Erro ao obter token:", error);
+      console.warn(
+        "⚠️ Erro ao obter token (handled gracefully):",
+        error.message || error,
+      );
       return null;
     }
   }
