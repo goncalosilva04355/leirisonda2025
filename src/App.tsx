@@ -7,6 +7,10 @@
 // VERIFICAÇÃO BÁSICA DE SAÚDE
 // import "./utils/basicHealthCheck";
 
+// TESTES ABRANGENTES FIREBASE/FIRESTORE
+import "./utils/comprehensiveFirebaseTest";
+import "./utils/verifySaveToFirestore";
+
 import React, { useState, useEffect } from "react";
 import {
   Building2,
@@ -1289,7 +1293,7 @@ function App() {
               setAutoSyncActive(true);
               console.log("✅ AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
-              console.error("❌ Erro na segunda tentativa:", retryError);
+              console.error("��� Erro na segunda tentativa:", retryError);
             }
           }, 5000);
         }
@@ -10250,7 +10254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Duração Estimada (horas)
+                          Dura��ão Estimada (horas)
                         </label>
                         <input
                           type="number"
