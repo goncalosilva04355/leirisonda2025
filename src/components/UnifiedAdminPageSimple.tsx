@@ -333,21 +333,21 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         {/* Tabs Navigation */}
         <div className="bg-white rounded-lg shadow-sm">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8 px-6">
+            <nav className="flex px-6">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    className={`relative py-4 px-4 mr-2 border-b-2 font-medium text-sm transition-colors ${
                       activeTab === tab.id
-                        ? "border-blue-500 text-blue-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        ? "border-blue-500 text-blue-600 bg-blue-50"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex items-center space-x-2">
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-5 w-5" />
                       <span>{tab.name}</span>
                     </div>
                   </button>
