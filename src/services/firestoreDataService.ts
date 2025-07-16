@@ -61,6 +61,11 @@ export class FirestoreDataService {
 
   // Verificar se Firestore está disponível
   private isAvailable(): boolean {
+    // Tentar inicializar se ainda não foi feito
+    if (this.db === null) {
+      this.initializeDb();
+    }
+
     if (this.db === null && !this.warningShown) {
       console.info(
         "📱 Firestore não disponível - usando localStorage como armazenamento principal",

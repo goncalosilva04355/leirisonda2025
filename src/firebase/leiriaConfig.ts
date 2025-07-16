@@ -25,7 +25,7 @@ const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE;
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
