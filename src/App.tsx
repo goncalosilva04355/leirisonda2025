@@ -273,7 +273,7 @@ console.error = (...args) => {
 
 // Diagnóstico Firebase
 // import "./utils/firebaseDiagnostic";
-// Detecção inteligente de Firestore
+// Detecç��o inteligente de Firestore
 // import "./utils/smartFirestoreDetection";
 
 // Teste de login
@@ -1344,7 +1344,7 @@ function App() {
   });
 
   // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(false);
+  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
 
   useEffect(() => {
     console.log("🚀 App safety check...");
@@ -2546,7 +2546,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN��ÕES RECENTES ===
+=== MANUTEN����ES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -8357,7 +8357,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construç✅es
+                          Projetos e construç��es
                         </p>
                       </div>
                     </div>
@@ -8439,7 +8439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
-                        <li>• An✅lise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
