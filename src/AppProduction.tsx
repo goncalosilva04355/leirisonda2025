@@ -23,15 +23,52 @@ export default function AppProduction() {
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [loginError, setLoginError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [appStatus, setAppStatus] = useState("Carregando...");
 
   // Check if user is already logged in
   useEffect(() => {
-    const savedAuth = localStorage.getItem("isAuthenticated");
-    const savedUser = localStorage.getItem("currentUser");
+    try {
+      console.log("🚀 AppProduction: Inicializando...");
+      setAppStatus("Verificando autenticação...");
 
-    if (savedAuth === "true" && savedUser) {
-      setIsAuthenticated(true);
+      const savedAuth = localStorage.getItem("isAuthenticated");
+      const savedUser = localStorage.getItem("currentUser");
+
+      console.log("🔍 Auth check:", { savedAuth, hasUser: !!savedUser });
+
+      if (savedAuth === "true" && savedUser) {
+        setIsAuthenticated(true);
+        setAppStatus("Autenticado");
+        console.log("✅ Utilizador já autenticado");
+      } else {
+        setAppStatus("Aguardando login");
+        console.log("📋 Aguardando login do utilizador");
+      }
+    } catch (error) {
+      console.error("❌ Erro na inicialização:", error);
+      setAppStatus("Erro na inicialização");
     }
+  }, []);
+
+  // Add global error handler
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error("❌ Erro global capturado:", event.error);
+      setAppStatus(`Erro: ${event.error?.message || "Erro desconhecido"}`);
+    };
+
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      console.error("❌ Promise rejeitada:", event.reason);
+      setAppStatus(`Erro de promise: ${event.reason}`);
+    };
+
+    window.addEventListener("error", handleError);
+    window.addEventListener("unhandledrejection", handleRejection);
+
+    return () => {
+      window.removeEventListener("error", handleError);
+      window.removeEventListener("unhandledrejection", handleRejection);
+    };
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
