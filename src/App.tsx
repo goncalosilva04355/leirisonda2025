@@ -351,7 +351,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("��� Persistência reparada automaticamente");
+        //     console.log("����� Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -1486,7 +1486,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleções
+    // Adicionar listeners para todas as coleç��es
     const collections = [
       "obras",
       "piscinas",
@@ -2118,7 +2118,7 @@ function App() {
 
       console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
-      console.error("�� Error during logout:", error);
+      console.error("❌ Error during logout:", error);
 
       // Force clear state even if logout service fails
       setSidebarOpen(false);
@@ -5701,7 +5701,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             id: generateUniqueId("work"),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
-                              : `LS-${Date.now()}`,
+                              : `LS-${generateUniqueId("sheet").split("-")[1]}`,
                             type: (() => {
                               const validTypes = [
                                 "piscina",
@@ -7142,7 +7142,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist���rico de intervenç����es
+                                  Hist📞rico de intervenç����es
                                 </p>
                               </div>
                             </div>
@@ -8237,7 +8237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>���� Informações contratuais</li>
+                        <li>����� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -11470,7 +11470,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <button
                     onClick={() => {
                       const password = prompt(
-                        "Digite a palavra-passe para aceder às configurações:",
+                        "Digite a palavra-passe para aceder ��s configurações:",
                       );
                       if (password === "19867") {
                         navigateToSection("configuracoes");
