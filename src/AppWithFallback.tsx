@@ -28,59 +28,17 @@ const AppWithFallback: React.FC = () => {
     }
   }, [retryCount]);
 
-  // Loading fallback
-  const LoadingFallback = () => (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "white",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <div style={{ textAlign: "center" }}>
-        <div
-          style={{
-            fontSize: "3rem",
-            marginBottom: "1rem",
-            animation: "pulse 2s infinite",
-          }}
-        >
-          🏊‍♂️
-        </div>
-        <div
-          style={{
-            fontSize: "1.5rem",
-            marginBottom: "1rem",
-            fontWeight: "bold",
-          }}
-        >
-          Leirisonda
-        </div>
-        <div style={{ opacity: 0.8, marginBottom: "2rem" }}>
-          Sistema de Gestão de Piscinas
-        </div>
-        <div style={{ opacity: 0.6 }}>A carregar aplicação principal...</div>
-        {retryCount > 0 && (
-          <div
-            style={{
-              opacity: 0.6,
-              fontSize: "0.875rem",
-              marginTop: "1rem",
-              background: "rgba(255, 255, 255, 0.1)",
-              padding: "0.5rem",
-              borderRadius: "0.25rem",
-            }}
-          >
-            Tentativa {retryCount + 1} de {maxRetries + 1}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  // Loading fallback usando SplashPage
+  const LoadingFallback = () => {
+    const subtitle =
+      retryCount > 0
+        ? `A carregar aplicação... (Tentativa ${retryCount + 1} de ${maxRetries + 1})`
+        : "A carregar aplicação principal...";
+
+    return (
+      <SplashPage title="Leirisonda" subtitle={subtitle} showProgress={true} />
+    );
+  };
 
   // Error boundary customizado para capturar erros da app principal
   class AppErrorBoundary extends React.Component<
