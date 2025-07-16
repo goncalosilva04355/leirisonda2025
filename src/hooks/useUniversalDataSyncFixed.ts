@@ -252,6 +252,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         const workExists = existingObras.some((w: any) => w.id === obra.id);
 
         if (!workExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando obra no Firestore:", obra.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "obras",
+            obra.id,
+            obra,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Obra salva no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedObras = [...existingObras, obra];
           safeSetLocalStorage("works", updatedObras);
 
