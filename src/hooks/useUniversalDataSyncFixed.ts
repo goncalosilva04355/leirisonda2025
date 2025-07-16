@@ -149,7 +149,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             clientes: clientesFirestore.length,
           });
 
-          // Debug: Check for duplicate IDs in Firestore data
+          // Debug: Check for duplicate IDs in Firestore data and REMOVE duplicates
           const obraIds = obrasFirestore.map((o) => o.id);
           const duplicateObraIds = obraIds.filter(
             (id, index) => obraIds.indexOf(id) !== index,
@@ -160,7 +160,45 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
               duplicateObraIds,
             );
             console.error("🚨 Full obras data:", obrasFirestore);
+
+            // REMOVE DUPLICATES: Keep only the first occurrence of each ID
+            const seenIds = new Set();
+            obrasFirestore = obrasFirestore.filter((obra) => {
+              if (seenIds.has(obra.id)) {
+                console.warn("🗑️ Removing duplicate obra:", obra.id);
+                return false;
+              }
+              seenIds.add(obra.id);
+              return true;
+            });
+            console.log(
+              "✅ Duplicates removed. Unique obras:",
+              obrasFirestore.length,
+            );
           }
+
+          // Also deduplicate other collections
+          const deduplicate = (array: any[], name: string) => {
+            const seenIds = new Set();
+            const unique = array.filter((item) => {
+              if (seenIds.has(item.id)) {
+                console.warn(`🗑️ Removing duplicate ${name}:`, item.id);
+                return false;
+              }
+              seenIds.add(item.id);
+              return true;
+            });
+            if (unique.length < array.length) {
+              console.log(
+                `✅ ${name} duplicates removed. Unique: ${unique.length}/${array.length}`,
+              );
+            }
+            return unique;
+          };
+
+          manutencaoFirestore = deduplicate(manutencaoFirestore, "manutenção");
+          piscinasFirestore = deduplicate(piscinasFirestore, "piscina");
+          clientesFirestore = deduplicate(clientesFirestore, "cliente");
 
           // Também salvar no localStorage para backup
           safeSetLocalStorage("works", obrasFirestore);
