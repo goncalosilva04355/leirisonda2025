@@ -4,8 +4,8 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
-// Voltar ao App original
-import App from "./App";
+// App limpo para teste
+import AppClean from "./AppClean";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
