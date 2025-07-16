@@ -157,6 +157,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
+import "./utils/emergencyUnblock"; // SISTEMA DE DESBLOQUEIO DE EMERGÊNCIA
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
 import "./utils/simpleDuplicateReport"; // RELATÓRIO SIMPLES DE DUPLICADOS SEM ELIMINAÇÃO
@@ -872,7 +873,7 @@ function App() {
         try {
           await addManutencao(data);
         } catch (syncError) {
-          console.warn("⚠️ Erro na sincronização universal:", syncError);
+          console.warn("⚠️ Erro na sincronizaç��o universal:", syncError);
         }
 
         return firestoreId;
@@ -924,7 +925,7 @@ function App() {
   const cleanupLoading = false;
   const cleanupError = null;
 
-  // Auto-sync hook for automatic Firebase ↔��� localStorage synchronization
+  // Auto-sync hook for automatic Firebase ↔️ localStorage synchronization
   const autoSyncData = {
     syncStatus: "disabled",
     lastSync: null,
@@ -1728,7 +1729,7 @@ function App() {
           .register("/firebase-messaging-sw.js", { updateViaCache: "none" })
           .then((registration) => {
             console.log(
-              "�� Firebase Messaging Service Worker registered successfully:",
+              "📞 Firebase Messaging Service Worker registered successfully:",
               registration.scope,
             );
 
@@ -4603,7 +4604,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nenhuma manutenção agendada
                       </h3>
                       <p className="text-gray-600 text-sm mb-4">
-                        As futuras manutenções aparecerão aqui quando forem
+                        As futuras manuten��ões aparecerão aqui quando forem
                         agendadas
                       </p>
                       <button
@@ -8938,7 +8939,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic����el)
+                            Pessoa de Contacto (se aplic���el)
                           </label>
                           <input
                             type="text"
@@ -9770,7 +9771,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    €{assignedUser.name}
+                                    ��{assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -10474,7 +10475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          T����cnico *
+                          T������cnico *
                         </label>
                         <input
                           type="text"
@@ -10672,7 +10673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         }}
                         className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                       >
-                        Guardar Alterações
+                        Guardar Alteraç��es
                       </button>
                     </div>
                   </form>
