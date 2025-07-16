@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppSimple from "./AppSimple";
+import SplashPage from "./pages/SplashPage";
 
 // Lazy load da aplicação principal
 const App = React.lazy(() => import("./App"));
