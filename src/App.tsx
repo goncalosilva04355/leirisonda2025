@@ -492,7 +492,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("����� Firebase handles auth state automatically");
+    console.log("��� Firebase handles auth state automatically");
 
     // Detectar conflitos Firebase em dispositivos móveis
     const detectFirebaseConflicts = () => {
@@ -598,7 +598,7 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-  // SINCRONIZAÇÃO UNIVERSAL - Temporariamente comentado para diagnóstico
+    // SINCRONIZAÇÃO UNIVERSAL - Temporariamente comentado para diagnóstico
   // Firebase ativo como solicitado - Fixed version
   // const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
@@ -625,8 +625,8 @@ function App() {
     deletePiscina: async () => {},
     deleteCliente: async () => {},
     forceSyncAll: async () => {},
-    syncStatus: "idle",
-    totalItems: 0,
+    syncStatus: 'idle',
+    totalItems: 0
   };
 
   // Função de refresh para Pull-to-Refresh
@@ -808,7 +808,7 @@ function App() {
     });
   }, [obras, manutencoes, piscinas, clientes]);
 
-  // Mapear dados universais para compatibilidade com c��digo existente
+  // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
   const maintenance = manutencoes;
   const works = obras;
@@ -1046,7 +1046,7 @@ function App() {
   // Debug logging removed to prevent re-render loops
 
   // Proteç���o de dados críticos - NUNCA PERDER DADOS
-  // Temporariamente comentado para diagnóstico da tela branca
+    // Temporariamente comentado para diagnóstico da tela branca
   // const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
   //   useDataProtection();
 
@@ -1083,7 +1083,7 @@ function App() {
           }
         }
 
-        // Fallback para localStorage se Firestore não tiver dados
+        // Fallback para localStorage se Firestore n��o tiver dados
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
@@ -1540,7 +1540,7 @@ function App() {
           console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
-        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
+        console.log("���� Firebase Leiria não disponível - modo offline ativo");
         console.log("�� Dados serão salvos apenas no localStorage");
       }
     };
@@ -2887,7 +2887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`�� Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -3077,7 +3077,52 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     },
   ];
 
-  const renderContent = () => {
+    const renderContent = () => {
+    // Versão simplificada para diagnóstico
+    if (!isAuthenticated) {
+      return (
+        <div style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#f3f4f6'
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '2rem',
+            borderRadius: '0.5rem',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+          }}>
+            <h1 style={{ color: '#1f2937', marginBottom: '1rem' }}>Leirisonda</h1>
+            <p style={{ color: '#6b7280' }}>Por favor, faça login para continuar.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f3f4f6'
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          padding: '2rem',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h1 style={{ color: '#1f2937', marginBottom: '1rem' }}>Dashboard</h1>
+          <p style={{ color: '#6b7280' }}>Bem-vindo, {currentUser?.name}!</p>
+        </div>
+      </div>
+    );
+
+    /* Comentário original:
+    const renderContentOriginal = () => {
     // Show login page when user not authenticated
     if (!currentUser || !isAuthenticated) {
       return (
@@ -12325,7 +12370,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            📞 {selectedPool.clientPhone || "Não especificado"}
+                            ���� {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
