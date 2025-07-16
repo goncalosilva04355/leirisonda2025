@@ -168,20 +168,20 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
 // import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
 // import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
-import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
-import UserMigrationIndicator from "./components/UserMigrationIndicator";
+// import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+// import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
 // import "./utils/datainput-diagnostic";
-import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
-import DataInputTutorial from "./components/DataInputTutorial";
+// import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
+// import DataInputTutorial from "./components/DataInputTutorial";
 
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
 
-import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
+// import { userRestoreService } from "./services/userRestoreService";
+// import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Diagnóstico Firebase
 // import "./utils/firebaseDiagnostic";
@@ -1189,7 +1189,7 @@ function App() {
         safeLocalStorage.removeItem("test-data");
         safeLocalStorage.removeItem("sample-data");
 
-        console.log("✅ App initialization completed");
+        console.log("��� App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
@@ -5575,7 +5575,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa��ões sobre a obra"]',
+                                'textarea[placeholder*="Observa����es sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -8632,7 +8632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P📞blica</option>
+                            <option value="publico">Entidade P����blica</option>
                           </select>
                         </div>
                       </div>
@@ -11930,7 +11930,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta a��ão não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
