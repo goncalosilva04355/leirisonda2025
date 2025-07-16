@@ -5,6 +5,7 @@ import { testFirestoreAPI, firestoreREST } from "./directFirestoreAPI";
 import { ultraSimpleFirebaseTest } from "./ultraSimpleTest";
 import { smartFirebaseTest } from "./smartFirebaseTest";
 import { safeFirestoreTest } from "./safeFirestoreTest";
+import { ultraSafeTest } from "./ultraSafeTest";
 import { firestoreService } from "../services/firestoreService";
 import { autoSyncService } from "../services/autoSyncService";
 import {
@@ -40,7 +41,7 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
 
   try {
     // 1. Verificar se o projeto está correto
-    console.log("1️�� Verificando configuração do projeto...");
+    console.log("1️⃣ Verificando configuração do projeto...");
     const firebaseApp = getFirebaseApp();
 
     if (firebaseApp?.options.projectId === "leiria-1cfc9") {
