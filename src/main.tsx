@@ -38,7 +38,7 @@ window.addEventListener("unhandledrejection", (event) => {
     return;
   }
 
-  console.error("❌ Unhandled promise rejection:", event.reason);
+  console.error("�� Unhandled promise rejection:", event.reason);
   console.error("❌ Promise:", event.promise);
 });
 
@@ -90,12 +90,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the main App directly
+  // SEMPRE usar App principal - desenvolvimento = produção
   const AppComponent = App;
-  console.log(
-    "📱 Using app:",
-    "App (main application with full functionality)",
-  );
+  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
