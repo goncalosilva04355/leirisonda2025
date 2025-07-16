@@ -15,6 +15,16 @@ const IS_NETLIFY_BUILD =
   import.meta.env.VITE_IS_NETLIFY === "true";
 const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO - DEV E PROD
 
+// Verificar se Firebase está disponível antes de prosseguir
+function isFirebaseAvailable(): boolean {
+  try {
+    const apps = getApps();
+    return apps.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 // Flag para controlar se já verificamos a disponibilidade do Firestore
 let firestoreAvailabilityChecked = false;
 let firestoreIsAvailable = false;
@@ -45,7 +55,7 @@ async function waitForFirebaseApp(
     }
 
     console.log(
-      `⏳ Tentativa ${attempt}/${maxAttempts} - aguardando Firebase App...`,
+      `�� Tentativa ${attempt}/${maxAttempts} - aguardando Firebase App...`,
     );
     await new Promise((resolve) => setTimeout(resolve, delay));
   }
@@ -53,7 +63,7 @@ async function waitForFirebaseApp(
   throw new Error("Firebase App não inicializou após aguardar");
 }
 
-// Fun��ão para verificar se Firestore está disponível no projeto
+// Função para verificar se Firestore está disponível no projeto
 async function checkFirestoreAvailability(app: any): Promise<boolean> {
   // Se já verificamos, retornar o resultado cached
   if (firestoreAvailabilityChecked) {
