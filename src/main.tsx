@@ -7,6 +7,9 @@ console.log("🚀 Inicializando aplicação...");
 // Production safety - prevent crashes
 import "./utils/productionSafety";
 
+// Clear any flags that might force simple app
+import "./utils/clearAppFlags";
+
 // Adicionar error boundary e tratamento global de erros
 window.addEventListener("error", (event) => {
   console.error("❌ Global error:", event.error);
