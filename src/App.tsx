@@ -465,6 +465,27 @@ function App() {
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
 
+  // Função de refresh para Pull-to-Refresh
+  const handleDashboardRefresh = async (): Promise<void> => {
+    try {
+      console.log("🔄 Iniciando refresh do Dashboard...");
+
+      // Trigger refresh dos dados principais
+      await dataSync.syncAllData?.();
+
+      // Force refresh works
+      window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
+
+      // Universal sync
+      await universalSync.forceSync?.();
+
+      console.log("✅ Dashboard atualizado com sucesso!");
+    } catch (error) {
+      console.error("❌ Erro durante refresh do Dashboard:", error);
+      throw error; // Re-throw para mostrar feedback visual de erro
+    }
+  };
+
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
     checkOnUserAction: async () => {
@@ -6466,7 +6487,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons🎉vel *
+                          Técnico Respons����vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -7067,7 +7088,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="space-y-3 mb-4">
                               <p className="text-sm text-gray-600">
                                 <strong>{maintenance.length}</strong>{" "}
-                                manutenções registadas
+                                manuten��ões registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔥 Trabalhos realizados</li>
