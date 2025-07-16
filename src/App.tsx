@@ -440,7 +440,7 @@ function App() {
   // Função para determinar o modo de dados atual
   const getDataMode = (): string => {
     try {
-      // const isFirestoreActive = isFirestoreReady();
+      // const isFirestoreActive = false;
       // if (isFirestoreActive) {
       //   return "Firebase/Firestore";
       // }
@@ -874,7 +874,7 @@ function App() {
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
-        // if (isAuthenticated && isFirestoreReady()) {
+        // if (isAuthenticated && false) {
         //   console.log("🔥 Carregando utilizadores do Firestore...");
 
         //   // Tentar carregar do Firestore
@@ -953,7 +953,7 @@ function App() {
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
-          // if (isFirestoreReady()) {
+          // if (false) {
           //   console.log(
           //     "🔄 Sincronizando utilizadores locais para Firestore...",
           //   );
@@ -1022,7 +1022,7 @@ function App() {
           safeLocalStorage.setItem("app-users", JSON.stringify(defaultUsers));
 
           // Criar no Firestore também
-          // if (isFirestoreReady()) {
+          // if (false) {
           //   for (const user of defaultUsers) {
           //     const firestoreId = await firestoreService.createUtilizador(user);
           //     if (firestoreId) {
@@ -1316,7 +1316,7 @@ function App() {
       // Aguardar um pouco para o Firestore estar pronto APÓS LOGIN
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      if (isFirestoreReady()) {
+      if (false) {
         console.log(
           "��� Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
         );
@@ -1352,7 +1352,7 @@ function App() {
       // Aguardar Firestore estar pronto APÓS LOGIN
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      if (isFirestoreReady()) {
+      if (false) {
         console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
@@ -1383,7 +1383,7 @@ function App() {
           "�� Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
-          if (isFirestoreReady()) {
+          if (false) {
             try {
               await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
@@ -1435,7 +1435,7 @@ function App() {
         // Aguardar um momento para o sistema se estabilizar
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        if (isFirestoreReady()) {
+        if (false) {
           // Usar método específico para garantir auto sync após login
           const autoSyncStarted =
             await autoSyncService.ensureAutoSyncAfterLogin();
@@ -1450,7 +1450,7 @@ function App() {
         } else {
           console.log("⏳ Firestore não pronto, tentando novamente...");
           setTimeout(async () => {
-            if (isFirestoreReady()) {
+            if (false) {
               try {
                 const autoSyncStarted =
                   await autoSyncService.ensureAutoSyncAfterLogin();
@@ -2034,7 +2034,7 @@ function App() {
           try {
             console.log("��� Verificando auto sync após login...");
 
-            if (isFirestoreReady()) {
+            if (false) {
               const autoSyncStarted =
                 await autoSyncService.ensureAutoSyncAfterLogin();
               setAutoSyncActive(autoSyncStarted);
@@ -2048,7 +2048,7 @@ function App() {
               console.log("⏳ Aguardando Firestore para ativar auto sync...");
               // Tentar novamente após 3 segundos
               setTimeout(async () => {
-                if (isFirestoreReady()) {
+                if (false) {
                   try {
                     const autoSyncStarted =
                       await autoSyncService.ensureAutoSyncAfterLogin();
@@ -10892,7 +10892,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>�����</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11865,7 +11865,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observações Específicas do Furo
+                                Observaç��es Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
