@@ -614,7 +614,7 @@ function App() {
   //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
   //     );
   //     console.log(
-  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //       "�� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
   //     );
   //   }
   // }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -1161,7 +1161,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("🎉 Users updated event received, reloading...");
+      console.log("��� Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -2749,7 +2749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("⚠€ Maps redirect is disabled");
+        console.warn("��€ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠€ No address provided");
@@ -2758,7 +2758,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleDeleteUser = (userId) => {
-    // BACKUP AUTOM✅TICO antes de eliminar utilizador
+    // BACKUP AUTOM���TICO antes de eliminar utilizador
     backupBeforeOperation("delete_user");
 
     // Check if it's the main user
@@ -6576,7 +6576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Nova Manuten✅ão
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Registar interven✅����o de manutenção
+                        Registar interven✅��o de manutenção
                       </p>
                     </div>
                   </div>
@@ -6664,7 +6664,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Técnico Respons����vel *
+                          Técnico Respons🎉vel *
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -8029,7 +8029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </div>
                                   </div>
                                   <p className="text-green-700 text-sm">
-                                    Tutorial passo-a-passo para inser����ão de
+                                    Tutorial passo-a-passo para inser��ão de
                                     dados.
                                   </p>
                                 </div>
@@ -8284,7 +8284,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
-                        <li>��� Técnicos responsáveis</li>
+                        <li>�� Técnicos responsáveis</li>
                         <li>����� Datas e dura🔥es</li>
                         <li>• Estados e observações</li>
                       </ul>
@@ -9130,14 +9130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Pendentes (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "pendente" || w.status === "pending",
-                        ).length
-                      }
-                      )
+                      Pendentes ({worksCounts.pending})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("in_progress")}
@@ -9711,7 +9704,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {users.length === 0 && (
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-yellow-800">
-                                €hum utilizador encontrado. V�� à Área de
+                                €hum utilizador encontrado. Vá à Área de
                                 Administração → "🔧 Correção de Atribuiç✅o de
                                 Obras" para corrigir este problema.
                               </p>
