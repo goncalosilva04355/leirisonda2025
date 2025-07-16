@@ -46,6 +46,15 @@ export async function smartFirebaseTest(): Promise<{
       // Add a small delay to ensure Firebase app is fully ready
       await new Promise((resolve) => setTimeout(resolve, 100));
 
+      // Check if app is properly initialized with required options
+      if (!app.options.projectId || !app.options.apiKey) {
+        throw new Error("Firebase app não está adequadamente configurado");
+      }
+
+      console.log(
+        "🔍 Tentando getFirestore para projeto:",
+        app.options.projectId,
+      );
       const db = getFirestore(app);
       console.log("✅ Firestore inicializado com sucesso!", typeof db);
 
