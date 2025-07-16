@@ -114,7 +114,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 // import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 // import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
+// import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -843,7 +843,7 @@ function App() {
       return true;
     }
 
-    // Se não há utilizadores atribuídos, mostrar para super admin
+    // Se não há utilizadores atribu��dos, mostrar para super admin
     if (
       !work.assignedTo &&
       (!work.assignedUsers || work.assignedUsers.length === 0) &&
@@ -1908,7 +1908,7 @@ function App() {
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
-        console.log("�� Login successful for:", result.user.email);
+        console.log("✅ Login successful for:", result.user.email);
 
         // Set user state and authentication
         setCurrentUser(result.user);
@@ -2103,7 +2103,7 @@ function App() {
 
       console.log("✅ Logout completed successfully - redirected to login");
     } catch (error) {
-      console.error("❌ Error during logout:", error);
+      console.error("�� Error during logout:", error);
 
       // Force clear state even if logout service fails
       setSidebarOpen(false);
@@ -8185,7 +8185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
-                        <li>��� Prazos e cronogramas</li>
+                        <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
@@ -12127,7 +12127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Especifica��✅es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Especificações Técnicas
+                        Especificações T��cnicas
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
