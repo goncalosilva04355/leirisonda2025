@@ -3,13 +3,13 @@ import { FirebaseApp, initializeApp, getApps, getApp } from "firebase/app";
 import { getFirebaseConfig } from "../config/firebaseEnv";
 import { getAuth as getFirebaseAuth } from "firebase/auth";
 
-// Estado: Firebase apenas ativo no Netlify (produção)
+// Estado: Firebase sempre ativo (produção e desenvolvimento)
 const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
-  import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
+  import.meta.env.VITE_IS_NETLIFY === "true" ||
+  !import.meta.env.DEV; // Considera produção se não for DEV
+const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
