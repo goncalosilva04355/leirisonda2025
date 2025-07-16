@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-import SplashPage from "./pages/SplashPage";
 
 const AppSimple: React.FC = () => {
   console.log("🚀 AppSimple renderizando...");
