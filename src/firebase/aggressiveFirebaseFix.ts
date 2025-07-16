@@ -91,7 +91,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Try initializeFirestore with iOS-specific settings
@@ -140,7 +144,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Very basic Firestore initialization
@@ -179,7 +187,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Try with different cache settings
