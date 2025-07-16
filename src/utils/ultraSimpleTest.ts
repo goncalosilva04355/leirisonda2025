@@ -7,8 +7,8 @@ export async function ultraSimpleFirebaseTest(): Promise<{
   try {
     console.log("🔥 Teste ultra simples do Firebase...");
 
-    // Teste 1: Verificar se conseguimos fazer uma requisição HTTP simples ao Firebase
-    const projectId = "leiria25";
+    // Teste 1: Verificar se conseguimos fazer uma requisi��ão HTTP simples ao Firebase
+    const projectId = "leiria-1cfc9";
     const testUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
 
     console.log("📡 Testando conectividade HTTP com Firebase...");
