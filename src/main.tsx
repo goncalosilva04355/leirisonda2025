@@ -86,11 +86,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the simple test app to diagnose the white screen issue
-  const AppComponent = AppSimpleTest;
+  // Use the main App directly
+  const AppComponent = App;
   console.log(
     "📱 Using app:",
-    "AppSimpleTest (simple test to diagnose white screen)",
+    "App (main application with full functionality)",
   );
 
   ReactDOM.createRoot(rootElement).render(
