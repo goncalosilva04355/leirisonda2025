@@ -20,15 +20,13 @@ interface FormData {
   timestamp?: Timestamp;
 }
 
-// Classe principal do serviço
+// Classe principal do serviço usando REST API
 export class FirestoreDataService {
   private static instance: FirestoreDataService;
-  private db: any = null;
   private warningShown: boolean = false;
-  private initializationAttempted: boolean = false;
 
   private constructor() {
-    // Não inicializar DB no constructor - será lazy loaded
+    // REST API não precisa inicialização
   }
 
   // Singleton para garantir uma única instância
@@ -39,41 +37,9 @@ export class FirestoreDataService {
     return FirestoreDataService.instance;
   }
 
-  // Inicializar conexão com Firestore
-  private async initializeDb() {
-    if (this.initializationAttempted) {
-      return; // Evitar múltiplas tentativas
-    }
-
-    this.initializationAttempted = true;
-
-    try {
-      this.db = await getFirebaseFirestore();
-      if (this.db) {
-        console.log("✅ FirestoreDataService: Conexão estabelecida");
-      } else {
-        console.warn("⚠️ FirestoreDataService: Firestore não disponível");
-      }
-    } catch (error) {
-      console.warn("⚠️ FirestoreDataService: Erro na inicialização:", error);
-      this.db = null;
-    }
-  }
-
-  // Verificar se Firestore está disponível
+  // REST API está sempre disponível
   private async isAvailable(): Promise<boolean> {
-    // Tentar inicializar se ainda não foi feito
-    if (this.db === null && !this.initializationAttempted) {
-      await this.initializeDb();
-    }
-
-    if (this.db === null && !this.warningShown) {
-      console.info(
-        "📱 Firestore não disponível - usando localStorage como armazenamento principal",
-      );
-      this.warningShown = true;
-    }
-    return this.db !== null;
+    return true; // REST API não depende de inicialização SDK
   }
 
   private warningShown = false;
