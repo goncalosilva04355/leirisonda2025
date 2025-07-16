@@ -340,7 +340,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative py-4 px-4 mr-2 border-b-2 font-medium text-sm transition-colors ${
+                    className={`relative py-4 px-6 mr-1 border-b-2 font-medium text-sm transition-all duration-200 min-w-0 flex-shrink-0 ${
                       activeTab === tab.id
                         ? "border-blue-500 text-blue-600 bg-blue-50"
                         : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50"
