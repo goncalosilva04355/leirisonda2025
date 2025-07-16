@@ -55,6 +55,21 @@ export class PushNotificationService {
 
       try {
         const app = getApp();
+
+        // Verificar se as configurações Firebase estão válidas
+        const config = app.options;
+        if (
+          !config.messagingSenderId ||
+          config.messagingSenderId === "your_sender_id" ||
+          config.messagingSenderId === ""
+        ) {
+          console.warn(
+            "⚠️ Firebase messaging não configurado corretamente - usando apenas notificações locais",
+          );
+          this.isSupported = true;
+          return true;
+        }
+
         this.messaging = getMessaging(app);
         console.log("✅ Firebase Messaging inicializado");
       } catch (messagingError) {
@@ -62,6 +77,8 @@ export class PushNotificationService {
           "⚠️ Erro ao inicializar Firebase Messaging - usando apenas notificações locais:",
           messagingError,
         );
+        // Don't rethrow the error, just continue without Firebase messaging
+        this.messaging = null;
       }
 
       this.isSupported = true;
@@ -108,6 +125,16 @@ export class PushNotificationService {
         return null;
       }
 
+      // Add additional check for VAPID key validity
+      if (
+        !this.vapidKey ||
+        this.vapidKey.includes("substitua") ||
+        this.vapidKey.length < 60
+      ) {
+        console.warn("⚠️ VAPID key não configurada corretamente");
+        return null;
+      }
+
       const token = await getToken(this.messaging, {
         vapidKey: this.vapidKey,
       });
@@ -120,7 +147,10 @@ export class PushNotificationService {
         return null;
       }
     } catch (error) {
-      console.error("❌ Erro ao obter token:", error);
+      console.warn(
+        "⚠️ Erro ao obter token (handled gracefully):",
+        error.message || error,
+      );
       return null;
     }
   }
@@ -128,15 +158,20 @@ export class PushNotificationService {
   setupForegroundMessageListener(): void {
     if (!this.messaging || !this.isSupported) return;
 
-    onMessage(this.messaging, (payload) => {
-      console.log("📢 Mensagem recebida em foreground:", payload);
+    try {
+      onMessage(this.messaging, (payload) => {
+        console.log("📢 Mensagem recebida em foreground:", payload);
 
-      const { title, body } = payload.notification || {};
+        const { title, body } = payload.notification || {};
 
-      if (title && body) {
-        this.showLocalNotification(title, body, payload.data);
-      }
-    });
+        if (title && body) {
+          this.showLocalNotification(title, body, payload.data);
+        }
+      });
+    } catch (error) {
+      console.warn("⚠️ Erro ao configurar listener de mensagens:", error);
+      // Don't rethrow, just continue without the listener
+    }
   }
 
   private showLocalNotification(title: string, body: string, data?: any): void {
@@ -363,9 +398,17 @@ export class PushNotificationService {
 // Instância singleton
 export const pushNotificationService = PushNotificationService.getInstance();
 
-// Auto-inicializar quando importado
+// Auto-inicializar quando importado (com tratamento de erro)
 if (typeof window !== "undefined") {
-  setTimeout(() => {
-    pushNotificationService.startNotificationService();
+  setTimeout(async () => {
+    try {
+      await pushNotificationService.startNotificationService();
+    } catch (error) {
+      console.warn(
+        "⚠️ Erro na inicialização automática do serviço de notificações:",
+        error,
+      );
+      // Prevent unhandled promise rejection
+    }
   }, 2000);
 }

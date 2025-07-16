@@ -4,6 +4,38 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Adicionar error boundary e tratamento global de erros
+window.addEventListener("error", (event) => {
+  console.error("❌ Global error:", event.error);
+  console.error("❌ Error details:", {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    stack: event.error?.stack,
+  });
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  // Check if it's a Firebase messaging error and prevent logging
+  if (
+    event.reason &&
+    (event.reason.toString().includes("firebase") ||
+      event.reason.toString().includes("messaging") ||
+      event.reason.toString().includes("_FirebaseError"))
+  ) {
+    console.warn(
+      "⚠️ Firebase messaging error handled gracefully:",
+      event.reason.message || event.reason,
+    );
+    event.preventDefault(); // Prevent the error from being logged as unhandled
+    return;
+  }
+
+  console.error("❌ Unhandled promise rejection:", event.reason);
+  console.error("❌ Promise:", event.promise);
+});
+
 // App original reparado
 import App from "./App";
 // App mínimo para teste
@@ -12,6 +44,10 @@ import AppMinimal from "./AppMinimal";
 import AppDiagnostic from "./AppDiagnostic";
 // App funcional garantido
 import AppWorking from "./AppWorking";
+// Error Boundary
+import ErrorBoundary from "./components/ErrorBoundary";
+// App Loader
+import AppLoader from "./components/AppLoader";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -26,7 +62,13 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  ReactDOM.createRoot(rootElement).render(<App />);
+  ReactDOM.createRoot(rootElement).render(
+    <ErrorBoundary>
+      <AppLoader>
+        <App />
+      </AppLoader>
+    </ErrorBoundary>,
+  );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
