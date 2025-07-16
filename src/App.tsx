@@ -1308,7 +1308,7 @@ function App() {
           }
         } else {
           console.log(
-            "⚠��� Passo 3: Firestore não disponível, usando localStorage",
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
           );
         }
       } catch (error) {
@@ -5698,7 +5698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                           // Create complete work data object (matching Work interface)
                           const workData = {
-                            id: `work_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                            id: generateUniqueId("work"),
                             workSheetNumber: workTitle.startsWith("LS-")
                               ? workTitle
                               : `LS-${Date.now()}`,
@@ -9689,7 +9689,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observa✅ões */}
+                    {/* Observa��ões */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
