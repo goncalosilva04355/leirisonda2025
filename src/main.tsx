@@ -48,6 +48,8 @@ import AppWorking from "./AppWorking";
 import AppMinimalTest from "./AppMinimalTest";
 // App ultra simples
 import AppUltraSimple from "./AppUltraSimple";
+// App sem Firebase
+import AppNoFirebase from "./AppNoFirebase";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -66,7 +68,11 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  ReactDOM.createRoot(rootElement).render(<AppUltraSimple />);
+  ReactDOM.createRoot(rootElement).render(
+    <ErrorBoundary>
+      <AppNoFirebase />
+    </ErrorBoundary>,
+  );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
