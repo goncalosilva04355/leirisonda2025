@@ -53,7 +53,38 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback content for production white screen issues -->
+      <div
+        style="
+          min-height: 100vh;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-family: system-ui;
+        "
+      >
+        <div style="text-align: center">
+          <div style="font-size: 3rem; margin-bottom: 1rem">🏊‍♂️</div>
+          <h1 style="margin: 0 0 1rem 0; font-size: 2rem">Leirisonda</h1>
+          <p style="margin: 0; opacity: 0.8" id="loading-message">
+            Carregando aplicação...
+          </p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Fallback script to detect loading issues -->
+    <script>
+      setTimeout(function () {
+        if (document.getElementById("loading-message")) {
+          document.getElementById("loading-message").textContent =
+            "Problema de carregamento detectado. Tente recarregar a página.";
+        }
+      }, 5000);
+    </script>
   </body>
 </html>
