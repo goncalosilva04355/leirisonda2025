@@ -131,11 +131,11 @@ import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 
-import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
-import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
-import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
-import { UserProfile } from "./services/robustLoginService";
-import { DataProtectionService } from "./utils/dataProtection";
+// import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
+// import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
+// import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
+// import { UserProfile } from "./services/robustLoginService";
+// import { DataProtectionService } from "./utils/dataProtection";
 
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // Firebase works silently in background - no diagnostics or UI needed
@@ -1204,7 +1204,7 @@ function App() {
         console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
-        console.log("����� No valid session found, starting fresh");
+        console.log("������� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -7008,7 +7008,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura������ões
+                        Configura��������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
