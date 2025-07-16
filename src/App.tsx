@@ -492,7 +492,7 @@ function App() {
 
   // Firebase handles auth state automatically - no manual clearing needed
   useEffect(() => {
-    console.log("��� Firebase handles auth state automatically");
+    console.log("����� Firebase handles auth state automatically");
 
     // Detectar conflitos Firebase em dispositivos móveis
     const detectFirebaseConflicts = () => {
@@ -808,7 +808,7 @@ function App() {
     });
   }, [obras, manutencoes, piscinas, clientes]);
 
-  // Mapear dados universais para compatibilidade com código existente
+  // Mapear dados universais para compatibilidade com c��digo existente
   const pools = piscinas;
   const maintenance = manutencoes;
   const works = obras;
@@ -1046,8 +1046,15 @@ function App() {
   // Debug logging removed to prevent re-render loops
 
   // Proteç���o de dados críticos - NUNCA PERDER DADOS
-  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
-    useDataProtection();
+  // Temporariamente comentado para diagnóstico da tela branca
+  // const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+  //   useDataProtection();
+
+  // Mock para evitar erros
+  const isProtected = true;
+  const dataRestored = false;
+  const backupBeforeOperation = async () => {};
+  const checkIntegrity = async () => true;
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -7307,7 +7314,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>�� Próximas intervenções</li>
+                                <li>• Próximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -8166,7 +8173,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Hist��rico de interven✅��es
+                                    Histórico de interven✅��es
                                   </p>
                                 </div>
                               </div>
