@@ -90,9 +90,12 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use AppSimple temporariamente para resolver problema da tela branca
-  const AppComponent = AppSimple;
-  console.log("📱 Using app:", "AppSimple (temporary fix for white screen)");
+  // Use the main App directly
+  const AppComponent = App;
+  console.log(
+    "📱 Using app:",
+    "App (main application with full functionality)",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
