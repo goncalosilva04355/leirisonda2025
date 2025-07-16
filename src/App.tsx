@@ -4657,7 +4657,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manuten����es
+                          Futuras Manuten�����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -7806,7 +7806,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "🔥 Ativo"
+                                        ? "�� Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -11397,6 +11397,50 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             Leirisonda
           </div>
           <div style={{ opacity: 0.8 }}>A carregar aplicação...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // PROTEÇÃO FINAL: Se renderFallback estiver ativo ou houver problemas, mostrar versão simplificada
+  if (renderFallback) {
+    console.log("🛡️ Renderizando versão de fallback para evitar tela branca");
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+          padding: "20px",
+        }}
+      >
+        <div style={{ textAlign: "center", maxWidth: "400px" }}>
+          <div style={{ fontSize: "4rem", marginBottom: "2rem" }}>🏊‍♂️</div>
+          <h1 style={{ margin: "0 0 1rem 0", fontSize: "2.5rem" }}>
+            Leirisonda
+          </h1>
+          <p style={{ margin: "0 0 2rem 0", opacity: 0.9, fontSize: "1.1rem" }}>
+            Sistema de Gestão de Piscinas
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              background: "rgba(255,255,255,0.2)",
+              border: "1px solid rgba(255,255,255,0.3)",
+              color: "white",
+              padding: "12px 24px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "1rem",
+              fontWeight: "500",
+            }}
+          >
+            Recarregar Aplicação
+          </button>
         </div>
       </div>
     );
