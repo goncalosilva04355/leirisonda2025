@@ -113,7 +113,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 // import { firestoreService } from "./services/firestoreService";
 // import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
+// import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
@@ -1908,7 +1908,7 @@ function App() {
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Set user state and authentication
         setCurrentUser(result.user);
@@ -8185,7 +8185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Orçamentos e custos</li>
-                        <li>• Prazos e cronogramas</li>
+                        <li>��� Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
                       </ul>
