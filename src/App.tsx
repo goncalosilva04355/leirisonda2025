@@ -114,7 +114,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
+import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç���o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -245,6 +245,7 @@ import DiagnosticPage from "./components/DiagnosticPage";
 
 // Indicador de status da aplicação
 import AppStatusIndicator from "./components/AppStatusIndicator";
+import RenderTracker from "./components/RenderTracker";
 
 // Production users - only real admin account
 const initialUsers = [
@@ -967,7 +968,7 @@ function App() {
           );
 
           if (!hasGoncalo) {
-            console.log("���� Adicionando Gonçalo Fonseca aos utilizadores");
+            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
             parsedUsers.push({
               id: 1,
               name: "Gonçalo Fonseca",
@@ -8005,7 +8006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Piscinas
+                                    Relat���rio de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
@@ -10584,7 +10585,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // T��cnico
+                            .value; // T���cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
