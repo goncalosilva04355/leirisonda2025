@@ -156,9 +156,9 @@ import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
-import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
-import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
-import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
+// import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
+// import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
+// import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
