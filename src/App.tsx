@@ -69,6 +69,7 @@ import { PersonalLocationSettings } from "./components/PersonalLocationSettings"
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
 import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
@@ -7207,7 +7208,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat������rios do Sistema
+                            Relat��������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -10996,7 +10997,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>���</span>
+                  <span>�����</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
