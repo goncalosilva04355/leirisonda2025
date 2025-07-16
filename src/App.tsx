@@ -7118,7 +7118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔥 Trabalhos realizados</li>
                                 <li>🎉 Técnicos responsáveis</li>
                                 <li>• Datas e duraç✅es</li>
-                                <li>• Estados e observações</li>
+                                <li>�� Estados e observações</li>
                               </ul>
                             </div>
                             <button
@@ -8116,7 +8116,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten��
+                        <strong>{maintenance.length}</strong> manuten����
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -10616,6 +10616,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           id: currentUser.uid || "unknown",
                           name: currentUser.name || "Utilizador",
                           email: currentUser.email || "",
+                          role: currentUser.role || "viewer",
                         }
                       : undefined
                   }
