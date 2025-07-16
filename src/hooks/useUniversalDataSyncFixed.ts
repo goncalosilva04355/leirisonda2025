@@ -503,9 +503,63 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteObra = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteObra called:", id);
-  }, []);
+  const deleteObra = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando obra:", id);
+
+        // PRIMEIRO: Eliminar do Firestore (desenvolvimento = produção)
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest("obras", id);
+
+          if (firestoreDeleted) {
+            console.log("✅ Obra eliminada do Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao eliminar do Firestore, continuando com localStorage",
+            );
+          }
+        } catch (firestoreError) {
+          console.warn(
+            "⚠️ Erro no Firestore, continuando com localStorage:",
+            firestoreError,
+          );
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingObras = safeGetLocalStorage("works");
+        const updatedObras = existingObras.filter(
+          (obra: any) => obra.id !== id,
+        );
+        safeSetLocalStorage("works", updatedObras);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          obras: updatedObras,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("obrasUpdated", {
+              detail: { data: updatedObras, collection: "obras" },
+            }),
+          );
+        }
+
+        console.log("✅ Obra eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar obra:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updateManutencao = useCallback(
     async (id: string, data: any): Promise<void> => {
