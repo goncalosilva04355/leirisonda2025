@@ -438,7 +438,7 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
 
   // Função para determinar o modo de dados atual
-  const getDataMode = (): string => {
+    const getDataMode = (): string => {
     try {
       // const isFirestoreActive = isFirestoreReady();
       // if (isFirestoreActive) {
@@ -873,8 +873,8 @@ function App() {
       console.log("🔄 Loading users from localStorage...");
 
       try {
-        // SÓ carregar do Firestore se estiver autenticado
-        if (isAuthenticated && isFirestoreReady()) {
+                // SÓ carregar do Firestore se estiver autenticado
+        // if (isAuthenticated && isFirestoreReady()) {
           console.log("🔥 Carregando utilizadores do Firestore...");
 
           // Tentar carregar do Firestore
@@ -1318,7 +1318,7 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log(
-          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+          "��� Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
         );
         console.log("✅ Firebase Leiria pronto para uso");
 
@@ -1357,7 +1357,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização autom��tica TOTALMENTE ATIVA!");
+          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2691,7 +2691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
 
-        // Criar no Firestore primeiro
+                // Criar no Firestore primeiro
         // const firestoreId = await firestoreService.createUtilizador(newUser);
 
         // if (firestoreId) {
@@ -7864,7 +7864,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 {/* Data Input Status */}
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <div className="text-purple-900 font-medium">
-                                    Sistema de Diagnóstico Ativo
+                                    Sistema de Diagn��stico Ativo
                                   </div>
                                   <div className="text-purple-700 text-sm mt-1">
                                     Monitorização em tempo real
@@ -7957,7 +7957,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Manutenções
+                                    Relatório de Manutenç��es
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Histórico de interven✅ões
@@ -8221,7 +8221,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>����� Hist✅rico de serviços</li>
+                        <li>���� Hist✅rico de serviços</li>
                         <li>���� Informações contratuais</li>
                       </ul>
                     </div>
@@ -10419,7 +10419,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (���)
                         </label>
                         <input
                           type="number"
