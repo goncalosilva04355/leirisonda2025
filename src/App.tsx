@@ -1417,7 +1417,7 @@ function App() {
 
         try {
           // await firestoreService.syncAll(); // Desabilitado - usando REST API
-          console.log("🎉 Sincronização com Firebase Leiria completa!");
+          console.log("���� Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error(
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
@@ -6132,7 +6132,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "🔍 User Permissions:",
+                                "��� User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -7361,7 +7361,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configura��ões Avançadas
+                                      Configura����es Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7872,7 +7872,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN���ÃO: Esta opera✅ão é
+                                        �������� ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -9192,9 +9192,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         );
                       return work.status === activeWorkFilter;
                     })
-                    .map((work) => (
+                    .map((work, index) => (
                       <div
-                        key={work.id}
+                        key={`work-item-${work.id}-${index}`}
                         className="bg-white rounded-lg p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-start justify-between">
@@ -9603,7 +9603,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               type="datetime-local"
                               defaultValue={editingWork?.endTime}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                              placeholder="Deixe vazio se ainda não terminou"
+                              placeholder="Deixe vazio se ainda n��o terminou"
                             />
                             <p className="text-xs text-gray-500 mt-1">
                               Deixe vazio se ainda n€o terminou
