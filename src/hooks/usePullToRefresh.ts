@@ -68,7 +68,7 @@ export const usePullToRefresh = ({
         setIsRefreshing(true);
 
         try {
-          await onRefresh();
+          await onRefreshRef.current();
         } catch (error) {
           console.error("❌ Erro durante refresh:", error);
         }
