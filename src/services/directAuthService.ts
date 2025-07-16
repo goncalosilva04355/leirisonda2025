@@ -29,43 +29,81 @@ class DirectAuthService {
       // Normalizar email
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Verificar se email está na lista autorizada (hardcoded)
-      const isAuthorizedEmail =
-        this.AUTHORIZED_EMAILS.includes(normalizedEmail);
+      // Primeiro verificar emails hardcoded (para compatibilidade)
+      const isHardcodedEmail = this.AUTHORIZED_EMAILS.includes(normalizedEmail);
 
-      if (!isAuthorizedEmail) {
-        console.warn("❌ Email não está na lista autorizada:", email);
-        console.log("📋 Emails autorizados:", this.AUTHORIZED_EMAILS);
+      // Também verificar utilizadores criados no sistema
+      const savedUsers = safeLocalStorage.getItem("app-users");
+      let authorizedUser = null;
+
+      if (savedUsers) {
+        try {
+          const users = JSON.parse(savedUsers);
+          authorizedUser = users.find(
+            (user: any) =>
+              user.email?.toLowerCase().trim() === normalizedEmail &&
+              user.active,
+          );
+        } catch (error) {
+          console.warn("❌ Erro ao carregar utilizadores:", error);
+        }
+      }
+
+      if (!isHardcodedEmail && !authorizedUser) {
+        console.warn("❌ Email não encontrado no sistema:", email);
         return {
           success: false,
-          error: `Email não autorizado. Use: ${this.AUTHORIZED_EMAILS.join(" ou ")}`,
+          error: "Email não encontrado ou utilizador inativo",
         };
       }
 
-      // Verificar password (muito permissiva)
-      const isPasswordValid =
-        password === "123456" ||
-        password === "123" ||
-        password === "19867gsf" ||
-        password.length >= 3; // Qualquer password com 3+ caracteres
+      // Verificar password
+      let isPasswordValid = false;
+      let userProfile: UserProfile;
+
+      if (isHardcodedEmail) {
+        // Para emails hardcoded, usar password permissiva
+        isPasswordValid =
+          password === "123456" ||
+          password === "123" ||
+          password === "19867gsf" ||
+          password.length >= 3;
+
+        userProfile = {
+          uid: `direct_${Date.now()}`,
+          email: normalizedEmail,
+          name: "Gonçalo Fonseca",
+          role: "super_admin",
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+      } else if (authorizedUser) {
+        // Para utilizadores criados, verificar password exata
+        isPasswordValid = authorizedUser.password === password;
+
+        userProfile = {
+          uid: authorizedUser.id?.toString() || `user_${Date.now()}`,
+          email: normalizedEmail,
+          name: authorizedUser.name,
+          role: authorizedUser.role || "technician",
+          active: authorizedUser.active,
+          permissions: authorizedUser.permissions,
+          createdAt: authorizedUser.createdAt || new Date().toISOString(),
+        };
+      } else {
+        return {
+          success: false,
+          error: "Erro de autenticação",
+        };
+      }
 
       if (!isPasswordValid) {
-        console.warn("❌ Password muito curta para:", email);
+        console.warn("❌ Password incorreta para:", email);
         return {
           success: false,
-          error: `Password deve ter pelo menos 3 caracteres. Tente: 123, 123456 ou 19867gsf`,
+          error: "Password incorreta",
         };
       }
-
-      // Criar perfil do utilizador
-      const userProfile: UserProfile = {
-        uid: `direct_${Date.now()}`,
-        email: normalizedEmail,
-        name: "Gonçalo Fonseca",
-        role: "super_admin",
-        active: true,
-        createdAt: new Date().toISOString(),
-      };
 
       // Persistir dados no localStorage E no Firestore
       try {

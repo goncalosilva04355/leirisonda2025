@@ -1,97 +1,66 @@
-import React, { useState } from "react";
+import React from "react";
 
-// Imports mínimos essenciais
-import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-
-function AppMinimal() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loginError, setLoginError] = useState("");
-
-  const handleLogin = async (
-    email: string,
-    password: string,
-    rememberMe?: boolean,
-  ) => {
-    console.log("🔑 Login attempt:", email);
-    setLoginError("");
-
-    // Login básico funcional
-    if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-      setIsAuthenticated(true);
-      localStorage.setItem(
-        "currentUser",
-        JSON.stringify({
-          id: 1,
-          email: email,
-          name: "Gonçalo Fonseca",
-          role: "super_admin",
-        }),
-      );
-      localStorage.setItem("isAuthenticated", "true");
-      console.log("✅ Login realizado com sucesso");
-    } else {
-      setLoginError("Email ou password incorretos");
-      console.log("❌ Login falhou");
-    }
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("isAuthenticated");
-    console.log("🚪 Logout realizado");
-  };
-
-  // Se não está autenticado, mostrar login
-  if (!isAuthenticated) {
-    return (
-      <LoginPage
-        onLogin={handleLogin}
-        loginError={loginError}
-        isLoading={false}
-      />
-    );
-  }
-
-  // Dashboard simples após login
+export default function AppMinimal() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <h1 className="text-xl font-semibold text-gray-900">
-              Leirisonda - Sistema de Gestão
-            </h1>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f3f4f6",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        fontFamily: "system-ui",
+      }}
+    >
+      <div
+        style={{
+          background: "white",
+          padding: "2rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          textAlign: "center",
+        }}
+      >
+        <h1
+          style={{
+            color: "#1f2937",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+          }}
+        >
+          🏊‍♂️ Leirisonda
+        </h1>
+        <p
+          style={{
+            color: "#6b7280",
+            marginBottom: "1.5rem",
+          }}
+        >
+          Sistema de Gestão de Piscinas
+        </p>
+        <div
+          style={{
+            background: "#10b981",
+            color: "white",
+            padding: "0.75rem 1.5rem",
+            borderRadius: "0.375rem",
+            display: "inline-block",
+          }}
+        >
+          ✅ Aplicação a funcionar correctamente!
         </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-medium text-green-600 mb-4">
-              🎉 Sistema funcionando!
-            </h2>
-            <p className="text-gray-700 mb-4">
-              Login realizado com sucesso. O sistema está operacional.
-            </p>
-            <div className="space-y-2 text-sm text-gray-600">
-              <p>✅ React: Funcionando</p>
-              <p>✅ TailwindCSS: Funcionando</p>
-              <p>✅ Login: Funcionando</p>
-              <p>✅ Navegação: Funcionando</p>
-            </div>
-          </div>
-        </div>
+        <p
+          style={{
+            color: "#9ca3af",
+            fontSize: "0.875rem",
+            marginTop: "1rem",
+          }}
+        >
+          Versão mínima carregada com sucesso
+        </p>
       </div>
     </div>
   );
 }
-
-export default AppMinimal;
