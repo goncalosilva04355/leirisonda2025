@@ -34,15 +34,42 @@ if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
+// Safety check - prevent Firebase from blocking app initialization
+if (typeof window !== "undefined") {
+  window.addEventListener("error", (event) => {
+    if (
+      event.error &&
+      event.error.message &&
+      event.error.message.includes("firebase")
+    ) {
+      console.warn(
+        "⚠️ Firebase error caught, continuing with localStorage:",
+        event.error.message,
+      );
+      event.preventDefault();
+    }
+  });
+}
+
 // Inicializar Firebase apenas em produção (Netlify) ou se forçado
 if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
-    const config = getFirebaseConfig();
-    console.log("🔧 Firebase Project:", config.projectId);
-    console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
 
-    if (getApps().length === 0) {
+    let config;
+    try {
+      config = getFirebaseConfig();
+      console.log("🔧 Firebase Project:", config.projectId);
+      console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
+    } catch (configError) {
+      console.error("❌ Erro ao obter config Firebase:", configError);
+      console.log(
+        "📝 Continuando sem Firebase - app funcionará com localStorage",
+      );
+      config = null; // Signal that config failed
+    }
+
+    if (config && getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
       firebaseApp = initializeApp(config);
       console.log(
@@ -50,12 +77,14 @@ if (FORCE_FIREBASE_PRODUCTION) {
         firebaseApp.name,
       );
       console.log("🔍 Project ID ativo:", firebaseApp.options.projectId);
-    } else {
+    } else if (config) {
       firebaseApp = getApp();
       console.log(
         "✅ Firebase já estava inicializado no Netlify",
         firebaseApp.name,
       );
+    } else {
+      console.log("⏸️ Firebase initialization skipped - no valid config");
     }
   } catch (error: any) {
     console.error("❌ Erro ao inicializar Firebase no Netlify:", error.message);

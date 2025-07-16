@@ -4,6 +4,9 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Production safety - prevent crashes
+import "./utils/productionSafety";
+
 // Adicionar error boundary e tratamento global de erros
 window.addEventListener("error", (event) => {
   console.error("❌ Global error:", event.error);
@@ -44,6 +47,8 @@ import AppMinimal from "./AppMinimal";
 import AppDiagnostic from "./AppDiagnostic";
 // App funcional garantido
 import AppWorking from "./AppWorking";
+// App simplificado para produção
+import AppProduction from "./AppProduction";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -62,12 +67,16 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
+  console.log("🚀 Loading full application...");
+  console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
+  console.log("🔍 Base URL:", import.meta.env.BASE_URL);
+
   ReactDOM.createRoot(rootElement).render(
-    <ErrorBoundary>
-      <AppLoader>
+    <React.StrictMode>
+      <ErrorBoundary>
         <App />
-      </AppLoader>
-    </ErrorBoundary>,
+      </ErrorBoundary>
+    </React.StrictMode>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {

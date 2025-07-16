@@ -37,11 +37,13 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
+      console.error("🚨 ErrorBoundary activated:", this.state.error);
+
       return (
         <div
           style={{
             minHeight: "100vh",
-            background: "#f3f4f6",
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

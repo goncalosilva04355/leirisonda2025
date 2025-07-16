@@ -7145,7 +7145,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <strong>{works.length}</strong> obras registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>🏗️ Estado dos projetos</li>
+                                <li>����️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
                                 <li>• Clientes e localizações</li>
@@ -7749,7 +7749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ���✅ ATEN��ÃO: Esta opera✅ão é
+                                        ������ ATEN��ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
