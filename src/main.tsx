@@ -7,6 +7,9 @@ console.log("🚀 Inicializando aplicação...");
 // Production safety - prevent crashes
 import "./utils/productionSafety";
 
+// Clear any flags that might force simple app
+import "./utils/clearAppFlags";
+
 // Adicionar error boundary e tratamento global de erros
 window.addEventListener("error", (event) => {
   console.error("❌ Global error:", event.error);
@@ -79,11 +82,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use AppWithFallback in both production and development
-  const AppComponent = AppWithFallback;
+  // Use the main App directly
+  const AppComponent = App;
   console.log(
     "📱 Using app:",
-    "AppWithFallback (with fallback to AppSimple if needed)",
+    "App (main application with full functionality)",
   );
 
   ReactDOM.createRoot(rootElement).render(
