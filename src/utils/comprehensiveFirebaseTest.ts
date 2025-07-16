@@ -29,7 +29,7 @@ export interface ComprehensiveTestResult {
 
 export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestResult> {
   console.log("🚀 Iniciando teste abrangente do Firebase/Firestore...");
-  console.log("📋 Verificando projeto leiria-1cfc9...");
+  console.log("���� Verificando projeto leiria-1cfc9...");
 
   const results = {
     projectCheck: false,
@@ -90,7 +90,18 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
 
     // 3. Testar SDK Firebase usando método seguro
     console.log("3️⃣ Testando Firestore via método seguro...");
-    const sdkTest = await safeFirestoreTest();
+    let sdkTest = await safeFirestoreTest();
+
+    // If safe test has Load failed error, try ultra-safe test
+    if (
+      sdkTest.data?.error?.includes("Load failed") ||
+      sdkTest.message?.includes("Load failed")
+    ) {
+      console.log(
+        "🔒 Safe test teve Load failed - tentando ultra-safe test...",
+      );
+      sdkTest = await ultraSafeTest();
+    }
 
     if (sdkTest.success) {
       console.log("✅ SDK Firebase funcionando");
