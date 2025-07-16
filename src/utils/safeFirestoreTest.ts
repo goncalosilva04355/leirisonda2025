@@ -173,9 +173,9 @@ export async function safeFirestoreTest(): Promise<{
           status: response.status,
           statusText: response.statusText,
         },
-      };
+            };
     }
-    } catch (error: any) {
+  } catch (error: any) {
     console.warn("⚠️ Erro no teste seguro:", error.message);
 
     // Handle specific "Load failed" error
