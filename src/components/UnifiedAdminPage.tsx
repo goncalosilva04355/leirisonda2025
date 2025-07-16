@@ -237,7 +237,7 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
       case "manager":
         return {
           ...basePermissions,
-          obras: { view: true, create: true, edit: true, delete: false },
+          obras: { view: true, create: true, edit: true, delete: true },
           manutencoes: { view: true, create: true, edit: true, delete: false },
           piscinas: { view: true, create: true, edit: false, delete: false },
           clientes: { view: true, create: true, edit: false, delete: false },
