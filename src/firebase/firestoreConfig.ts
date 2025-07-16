@@ -213,10 +213,11 @@ async function initializeFirestore(
   }
 }
 
-// Tentar inicializar Firestore se forçado ou em produção
-if (FORCE_FIRESTORE_PRODUCTION) {
+// Inicialização automática removida - será feita apenas após login
+if (false) {
+  // Disabled auto-initialization
   console.log("🔥 Verificando disponibilidade do Firestore...");
-  // Usar setTimeout assíncrono para garantir que Firebase App foi inicializado primeiro
+  // Inicialização removida - será feita apenas após login
   setTimeout(async () => {
     if (!firestoreInstance) {
       console.log("🔍 Testando Firestore no projeto...");
