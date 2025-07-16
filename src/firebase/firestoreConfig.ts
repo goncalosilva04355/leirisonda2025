@@ -28,14 +28,20 @@ async function waitForFirebaseApp(
   delay = 1000,
 ): Promise<any> {
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-    const apps = getApps();
-    if (apps.length > 0) {
-      const app = getApp();
-      // Verificar se a app tem as propriedades necessárias
-      if (app.options.projectId && app.options.apiKey) {
-        console.log(`✅ Firebase App pronta na tentativa ${attempt}`);
-        return app;
+    try {
+      const apps = getApps();
+      if (apps.length > 0) {
+        const app = getApp();
+        // Verificar se a app tem as propriedades necessárias
+        if (app.options.projectId && app.options.apiKey) {
+          console.log(`✅ Firebase App pronta na tentativa ${attempt}`);
+          return app;
+        }
       }
+    } catch (error) {
+      console.log(
+        `⚠️ Tentativa ${attempt} - Firebase App ainda não disponível`,
+      );
     }
 
     console.log(
