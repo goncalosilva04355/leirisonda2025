@@ -17,6 +17,7 @@ import {
   Key,
   User,
   Bell,
+  MapPin,
   Waves,
   Building2,
   Wrench,
@@ -28,6 +29,9 @@ import {
 import { AuthorizedUser } from "../config/authorizedUsers";
 import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
 import { safeLocalStorage } from "../utils/storageUtils";
+import NotificationPermissionsManager from "./NotificationPermissionsManager";
+import { PersonalLocationSettings } from "./PersonalLocationSettings";
+import OrphanUserCleanup from "./OrphanUserCleanup";
 
 interface UnifiedAdminPageProps {
   currentUser: any;
@@ -186,7 +190,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         );
         await updateUsers(updatedUsers);
 
-        // Remover também dos utilizadores da aplicação
+        // Remover também dos utilizadores da aplica��ão
         const existingAppUsers = JSON.parse(
           safeLocalStorage.getItem("app-users") || "[]",
         );
@@ -302,8 +306,8 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="px-4 py-4 space-y-6">
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="px-4 py-4 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
@@ -330,24 +334,30 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         </div>
 
         {/* Tabs Navigation */}
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm relative z-10">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8 px-6">
+            <nav className="flex px-6 overflow-x-auto">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    onClick={() => {
+                      console.log(`🔥 Tab clicado: ${tab.id} -> ${tab.name}`);
+                      setActiveTab(tab.id);
+                    }}
+                    className={`relative py-4 px-6 mr-1 border-b-2 font-medium text-sm transition-all duration-200 min-w-0 flex-shrink-0 ${
                       activeTab === tab.id
-                        ? "border-blue-500 text-blue-600"
-                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                        ? "border-blue-500 text-blue-600 bg-blue-50"
+                        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
-                      <Icon className="h-4 w-4" />
-                      <span>{tab.name}</span>
+                    <div className="flex items-center space-x-2 relative">
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      <span className="whitespace-nowrap">{tab.name}</span>
+                      {activeTab === tab.id && (
+                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-blue-500 rounded-full"></div>
+                      )}
                     </div>
                   </button>
                 );
@@ -356,7 +366,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-6 min-h-[600px]">
             {/* Configurações Tab */}
             {activeTab === "configuracoes" && (
               <div className="space-y-6">
@@ -485,12 +495,60 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                     </div>
                   </div>
                 </div>
+
+                {/* Notification Permissions Settings */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-2 bg-yellow-100 rounded-lg">
+                        <Bell className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          Permissões de Notificações
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Gerir permissões para receber notificações push no
+                          dispositivo
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <NotificationPermissionsManager />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Location Permissions Settings */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+                  <div className="p-6">
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <MapPin className="h-5 w-5 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-900">
+                          Permissões de Localização
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          Gerir partilha de localização e configurações GPS do
+                          dispositivo
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <PersonalLocationSettings />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
             {/* Utilizadores Tab */}
             {activeTab === "utilizadores" && (
-              <div className="space-y-6">
+              <div className="space-y-6 relative">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">
@@ -817,17 +875,46 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                   </div>
                 )}
 
+                {/* Quick Access to Orphan Cleanup */}
+                {currentUser?.role === "super_admin" && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Trash2 className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <h4 className="font-medium text-yellow-900">
+                            Limpeza de Utilizadores Órfãos
+                          </h4>
+                          <p className="text-sm text-yellow-700">
+                            Remove utilizadores inexistentes das obras
+                            atribuídas
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab("sistema")}
+                        className="px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+                      >
+                        Aceder
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Users List */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div className="bg-white rounded-lg shadow-sm overflow-visible">
                   <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                     <h3 className="text-lg font-medium text-gray-900">
                       Utilizadores Registados ({authorizedUsers.length})
                     </h3>
                   </div>
-                  <div className="divide-y divide-gray-200">
+                  <div className="divide-y divide-gray-200 max-h-[500px] overflow-y-auto">
                     {authorizedUsers.map((user, index) => (
-                      <div key={user.email} className="px-6 py-4">
-                        <div className="flex items-center justify-between">
+                      <div
+                        key={user.email}
+                        className="px-6 py-4 hover:bg-gray-50 transition-colors"
+                      >
+                        <div className="flex items-center justify-between min-h-[60px]">
                           <div className="flex items-center space-x-3">
                             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                               <User className="h-5 w-5 text-blue-600" />
@@ -841,7 +928,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2 gap-1">
                             <span
                               className={`px-2 py-1 text-xs font-medium rounded-full ${
                                 user.role === "super_admin"
@@ -863,7 +950,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                             </span>
                             <button
                               onClick={() => setEditingUser(user)}
-                              className="text-blue-600 hover:text-blue-800 p-1"
+                              className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-md transition-colors"
                               title="Editar utilizador"
                             >
                               <Edit className="h-4 w-4" />
@@ -871,7 +958,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                             {user.email !== "gongonsilva@gmail.com" && (
                               <button
                                 onClick={() => handleDeleteUser(user)}
-                                className="text-red-600 hover:text-red-800 p-1"
+                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-md transition-colors"
                                 title="Eliminar utilizador"
                               >
                                 <Trash2 className="h-4 w-4" />
@@ -1073,6 +1160,9 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                     Ferramentas avançadas de administração do sistema
                   </p>
                 </div>
+
+                {/* Orphan User Cleanup */}
+                <OrphanUserCleanup />
 
                 {/* Data Management */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">

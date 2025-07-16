@@ -25,7 +25,7 @@ import "./utils/firestoreDiagnosticMessage";
 import "./utils/safeFirestoreTest";
 import "./utils/ultraSafeTest";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Building2,
   Menu,
@@ -56,6 +56,8 @@ import {
   Share,
   Database,
 } from "lucide-react";
+import { usePullToRefresh } from "./hooks/usePullToRefresh";
+import RefreshIndicator from "./components/RefreshIndicator";
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
@@ -94,8 +96,6 @@ import {
 
 import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
-import { StableModeIndicator } from "./components/StableModeIndicator";
-import { SimpleFirestoreStatus } from "./components/SimpleFirestoreStatus";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
@@ -366,7 +366,7 @@ function App() {
       );
       const hasMultipleFirebaseProjects = firebaseIframes.length > 1;
 
-      // Verificar se há m��ltiplos projetos carregados
+      // Verificar se há m���ltiplos projetos carregados
       const hasConflictingProjects = Array.from(firebaseIframes).some(
         (iframe) => {
           const src = iframe.getAttribute("src") || "";
@@ -463,6 +463,41 @@ function App() {
   // Firebase ativo como solicitado - Fixed version
   const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
+
+  // Função de refresh para Pull-to-Refresh
+  const handleDashboardRefresh = useCallback(async (): Promise<void> => {
+    try {
+      console.log("🔄 Iniciando refresh do Dashboard...");
+
+      // Force refresh works
+      window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
+
+      // Universal sync
+      await universalSync.forceSyncAll?.();
+
+      console.log("✅ Dashboard atualizado com sucesso!");
+    } catch (error) {
+      console.error("��� Erro durante refresh do Dashboard:", error);
+      throw error; // Re-throw para mostrar feedback visual de erro
+    }
+  }, [universalSync]);
+
+  // Pull-to-refresh hook
+  let pullToRefresh = {
+    isRefreshing: false,
+    pullDistance: 0,
+    showIndicator: false,
+    canRefresh: false,
+  };
+  try {
+    pullToRefresh = usePullToRefresh({
+      onRefresh: handleDashboardRefresh,
+      threshold: 60,
+      disabled: activeSection !== "dashboard",
+    });
+  } catch (error) {
+    console.error("❌ Erro no pull-to-refresh:", error);
+  }
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
@@ -1289,7 +1324,7 @@ function App() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
-        console.log("��� Iniciando sincronização automática APÓS LOGIN...");
+        console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
           await autoSyncService.startAutoSync();
@@ -1308,7 +1343,7 @@ function App() {
             try {
               await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
-              console.log("✅ AutoSync ativado na segunda tentativa!");
+              console.log("�� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
               console.error("❌ Erro na segunda tentativa:", retryError);
             }
@@ -1687,7 +1722,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat€rios (Piscina e Técnico).");
+      alert("Por favor, preencha os campos obrigat€rios (Piscina e T��cnico).");
       return;
     }
 
@@ -1960,7 +1995,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("🎉 Navigating to dashboard");
+            console.log("������ Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -2175,7 +2210,7 @@ ${index + 1}. ${pool.name}
 
   const generateMaintenancePDF = () => {
     const content = `
-LEIRISONDA - RELATÓRIO DE MANUTENÇÕES
+LEIRISONDA - RELATÓRIO DE MANUTEN��ÕES
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO:
@@ -2920,6 +2955,15 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         case "dashboard":
           return (
             <div className="min-h-screen bg-gray-50">
+              {/* Pull-to-refresh indicator */}
+              <RefreshIndicator
+                isVisible={pullToRefresh.showIndicator}
+                isRefreshing={pullToRefresh.isRefreshing}
+                pullDistance={pullToRefresh.pullDistance}
+                canRefresh={pullToRefresh.canRefresh}
+                threshold={60}
+              />
+
               {/* Dashboard Content - Mobile First Design */}
               <div className="px-4 py-4 space-y-4">
                 {/* Firebase Status Display - Apenas em produção */}
@@ -3384,7 +3428,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecerão aqui
+                          As futuras manutenções aparecer��o aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -4461,7 +4505,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenção "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -5303,7 +5347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Selecionar voltagem
                                   </option>
                                   <option value="230V">
-                                    230V (monof📞sico)
+                                    230V (monof����sico)
                                   </option>
                                   <option value="400V">400V (trifásico)</option>
                                 </select>
@@ -5536,7 +5580,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observações sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -5808,7 +5852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           onChange={(e) => {
                             console.log(
-                              "🔍 Select cliente onChange:",
+                              "��� Select cliente onChange:",
                               e.target.value,
                             );
                             if (e.target.value === "novo") {
@@ -6494,7 +6538,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <input
                           type="text"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Ex: Furgão 1, Carrinha 2"
+                          placeholder="Ex: Furg��o 1, Carrinha 2"
                           value={maintenanceForm.vehicle}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -6836,7 +6880,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manutenç€
+                          manuten��€
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -6940,7 +6984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura�����ões
+                        Configura������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7003,7 +7047,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat📞rios do Sistema
+                            Relat����rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -7624,7 +7668,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     type="submit"
                                     className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
                                   >
-                                    Aceder às Configurações
+                                    Aceder às Configuraç��es
                                   </button>
                                 </form>
                               </div>
@@ -7708,7 +7752,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ���✅ ATENÇÃO: Esta opera✅ão é
+                                        ���✅ ATEN��ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -7820,7 +7864,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <DataInputTutorial />
                                   </div>
                                   <p className="text-green-700 text-sm">
-                                    Tutorial passo-a-passo para inserção de
+                                    Tutorial passo-a-passo para inser��ão de
                                     dados.
                                   </p>
                                 </div>
@@ -8006,7 +8050,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relatórios
+                          Relat���rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -8147,7 +8191,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>��� Informações contratuais</li>
+                        <li>���� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -8228,7 +8272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç🎉es</span>
+                          <span className="text-xs">Manutenções</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -8992,6 +9036,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 <div className="space-y-4">
                   {works
                     .filter((work) => {
+                      // Primeiro, verificar se a obra está atribuída ao utilizador atual
+                      const isAssigned = isWorkAssignedToCurrentUser(work);
+                      if (!isAssigned) return false;
+
+                      // Depois aplicar os filtros de status
                       if (activeWorkFilter === "all") return true;
                       if (activeWorkFilter === "no_sheet")
                         return (
@@ -9330,7 +9379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa🔥ões Básicas
+                          Informa🔥ões B��sicas
                         </h3>
                       </div>
 
@@ -9796,7 +9845,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </button>
                       <button
                         type="submit"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.preventDefault();
 
                           const form = (e.target as HTMLElement).closest(
@@ -9911,6 +9960,50 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           }
 
                           dataSync.updateWork(editingWork.id, updateData);
+
+                          // Notificar utilizadores atribuídos (novos ou todos)
+                          if (
+                            editAssignedUsers &&
+                            editAssignedUsers.length > 0
+                          ) {
+                            try {
+                              const { pushNotificationService } = await import(
+                                "./services/pushNotificationService"
+                              );
+
+                              // Comparar com utilizadores anteriormente atribuídos
+                              const previousUsers =
+                                editingWork.assignedUsers || [];
+                              const newUsers = editAssignedUsers.filter(
+                                (newUser) =>
+                                  !previousUsers.some(
+                                    (prevUser) => prevUser.id === newUser.id,
+                                  ),
+                              );
+
+                              // Se há novos utilizadores, notificar todos (novos + existentes para atualização)
+                              const usersToNotify =
+                                newUsers.length > 0 ? editAssignedUsers : [];
+
+                              for (const user of usersToNotify) {
+                                await pushNotificationService.notifyObraAssignment(
+                                  { ...updateData, id: editingWork.id },
+                                  String(user.id),
+                                );
+                              }
+
+                              if (newUsers.length > 0) {
+                                console.log(
+                                  `✅ Notificações enviadas para ${usersToNotify.length} utilizadores`,
+                                );
+                              }
+                            } catch (error) {
+                              console.error(
+                                "❌ Erro ao enviar notificações:",
+                                error,
+                              );
+                            }
+                          }
 
                           alert("Obra atualizada com sucesso!");
                           setEditingWork(null);
@@ -10251,7 +10344,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç€o">Manutenção</option>
+                          <option value="Manutenç€o">Manuten��ão</option>
                           <option value="Reparaç🎉">Reparação</option>
                         </select>
                       </div>
@@ -10348,7 +10441,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Observações
+                        Observaç��es
                       </label>
                       <textarea
                         defaultValue={editingMaintenance?.observations}
@@ -10382,7 +10475,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const scheduledDate = (inputs[0] as HTMLInputElement)
                             .value; // Data
                           const technician = (inputs[1] as HTMLInputElement)
-                            .value; // T🔥cnico
+                            .value; // T��cnico
                           const type = (inputs[2] as HTMLInputElement).value; // Tipo de Manutenção
                           const status = (inputs[3] as HTMLInputElement).value; // Estado
                           const estimatedDuration = (
@@ -10521,6 +10614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           id: currentUser.uid || "unknown",
                           name: currentUser.name || "Utilizador",
                           email: currentUser.email || "",
+                          role: currentUser.role || "viewer",
                         }
                       : undefined
                   }
@@ -11096,8 +11190,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          <StableModeIndicator />
-          <SimpleFirestoreStatus />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
           <div
@@ -11640,7 +11732,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "✓ Gerada"
+                                ? "��� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
@@ -12041,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç🎉es
+                        Manutenções
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -12058,7 +12150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manutenç��o
+                            Próxima Manutenção
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.nextMaintenance
@@ -12083,7 +12175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Cria✅ão */}
+                    {/* Data de Criação */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
@@ -12163,7 +12255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <AlertCircle className="h-8 w-8 text-red-600" />
                         </div>
                         <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderiza✅ão
+                          Erro de Renderização
                         </h1>
                         <p className="text-gray-600 mb-4">
                           Ocorreu um erro ao carregar a página. Por favor, tente
@@ -12174,7 +12266,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P���gina
+                            Recarregar Página
                           </button>
                           <button
                             onClick={() => {
