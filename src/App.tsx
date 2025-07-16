@@ -477,9 +477,6 @@ function App() {
       // Universal sync
       await universalSync.forceSyncAll?.();
 
-      // Trigger manual refresh
-      dataSync.triggerRefresh?.();
-
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
       console.error("��� Erro durante refresh do Dashboard:", error);
@@ -3297,7 +3294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   👤 Cliente:
                                 </span>
                                 <span className="text-sm text-gray-900">
-                                  {work.client || "N���o especificado"}
+                                  {work.client || "N��o especificado"}
                                 </span>
                               </div>
                               {work.contact && (
@@ -7110,7 +7107,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🔥 Trabalhos realizados</li>
                                 <li>🎉 Técnicos responsáveis</li>
-                                <li>• Datas e duraç���es</li>
+                                <li>• Datas e duraç✅es</li>
                                 <li>• Estados e observações</li>
                               </ul>
                             </div>
@@ -7747,7 +7744,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ���✅ ATENÇÃO: Esta opera✅ão é
+                                        ���✅ ATEN��ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8185,7 +8182,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>����� Hist✅rico de serviços</li>
+                        <li>���� Hist✅rico de serviços</li>
                         <li>��� Informações contratuais</li>
                       </ul>
                     </div>
@@ -8528,7 +8525,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  ����{" "}
+                                  🎉{" "}
                                   {client?.address ||
                                     "Endere��o não disponível"}
                                 </button>
