@@ -87,7 +87,6 @@ try {
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
   // Use simplified working app to fix white screen
-  import AppSimpleFixed from "./AppSimpleFixed";
   const AppComponent = AppSimpleFixed;
   console.log("📱 Using app:", "AppSimpleFixed (working version)");
 
