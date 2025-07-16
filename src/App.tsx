@@ -7998,6 +7998,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
 
                               <div className="space-y-4">
+                                {/* Duplicate Cleanup Status */}
+                                <DuplicateCleanupStatus />
+
                                 {/* Data Input Status */}
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
                                   <div className="text-purple-900 font-medium">
@@ -8251,7 +8254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>�������� Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
