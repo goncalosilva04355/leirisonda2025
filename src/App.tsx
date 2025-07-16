@@ -158,6 +158,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
+import "./utils/directDuplicateKill"; // ELIMINAÇÃO DIRETA E IMEDIATA DOS DUPLICADOS ESPECÍFICOS
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -873,7 +874,7 @@ function App() {
         return await addManutencao(data);
       }
     } catch (error) {
-      console.error("��� Erro no sistema de manutenções:", error);
+      console.error("❌ Erro no sistema de manutenções:", error);
       return await addManutencao(data);
     }
   };
@@ -1383,7 +1384,7 @@ function App() {
         const firestoreResult = false; // Temporariamente false
 
         if (firestoreResult) {
-          console.log("�� Passo 3: Firestore ativo e funcional!");
+          console.log("✅ Passo 3: Firestore ativo e funcional!");
 
           // Teste prático: tentar escrever e ler dados
           const db = getFirebaseFirestore();
@@ -3518,7 +3519,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu📞da"
+                                        ? "Conclu����da"
                                         : work.status}
                                 </span>
 
@@ -6177,7 +6178,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "���� User Permissions:",
+                                "🔍 User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -7212,7 +7213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat����������rios do Sistema
+                            Relat��������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -8351,7 +8352,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Clientes
+                          Relat��rio de Clientes
                         </h3>
                         <p className="text-sm text-gray-600">
                           Base de dados de clientes
@@ -9668,7 +9669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Técnicos Atribuídos */}
+                    {/* Técnicos Atribu��dos */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -11218,7 +11219,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 rememberMe,
               );
 
-              // console.log("🔐 Auth result:", result);
+              // console.log("�� Auth result:", result);
 
               if (result.success && result.user) {
                 // console.log("✅ Login successful for:", result.user.email);
