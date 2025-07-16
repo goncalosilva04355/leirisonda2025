@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Database, Wifi, WifiOff, RefreshCw, AlertCircle } from "lucide-react";
 import { getFirebaseFirestore } from "../firebase/leiriaConfig";
-import { testFirestoreConnection } from "../services/firestoreDataService";
+import { testFirestoreConnection } from "../services/firestoreDataServiceRest";
 
 export const SyncStatusIndicatorFixed: React.FC = () => {
   const [status, setStatus] = useState<
