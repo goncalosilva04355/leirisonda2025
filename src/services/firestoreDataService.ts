@@ -124,7 +124,7 @@ export class FirestoreDataService {
     formData: FormData,
     documentId?: string,
   ): Promise<string | null> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Silenciosamente retorna null - fallback para localStorage será usado
       return null;
     }
