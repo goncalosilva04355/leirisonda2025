@@ -1293,7 +1293,7 @@ function App() {
                   docSnap.data(),
                 );
                 console.log(
-                  "🎉 PASSO 3 COMPLETADO: Firestore totalmente funcional!",
+                  "�� PASSO 3 COMPLETADO: Firestore totalmente funcional!",
                 );
               }
             } catch (writeError) {
@@ -2406,7 +2406,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
   const generateCustomPDF = () => {
     alert(
-      "Funcionalidade de relatório personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
+      "Funcionalidade de relat��rio personalizado em desenvolvimento. Use os relatórios pré-definidos por agora.",
     );
   };
 
@@ -3474,7 +3474,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => navigateToSection("nova-manutencao")}
                             className="mt-3 px-3 py-1 bg-cyan-600 text-white text-xs rounded-lg hover:bg-cyan-700"
                           >
-                            Agendar Manutenção
+                            Agendar Manuten��ão
                           </button>
                         )}
                       </div>
@@ -4804,7 +4804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {workVehicles.map((vehicle, index) => (
                                 <div
-                                  key={index}
+                                  key={`vehicle-${vehicle}-${index}`}
                                   className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-gray-700">
@@ -6054,7 +6054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               console.log("🔍 Current User:", currentUser);
                               console.log("🎉 User Role:", currentUser?.role);
                               console.log(
-                                "🔍 User Permissions:",
+                                "��� User Permissions:",
                                 currentUser?.permissions,
                               );
                               console.log(
@@ -8130,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
-                        <li>• Histórico de manuten��ões</li>
+                        <li>• Histórico de manuten���ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
