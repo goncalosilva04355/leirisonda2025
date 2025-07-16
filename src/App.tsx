@@ -8,22 +8,22 @@
 // import "./utils/basicHealthCheck";
 
 // PREVENÇÃO DE ERROS GETIMMEDIATE
-import "./utils/preventGetImmediateError";
+// import "./utils/preventGetImmediateError";
 
 // HANDLER GLOBAL DE ERROS
-import "./utils/globalErrorHandler";
-import "./utils/safeFetch";
-import "./utils/safeFirestoreTestFixed";
-import "./utils/loadFailedDetector";
+// import "./utils/globalErrorHandler";
+// import "./utils/safeFetch";
+// import "./utils/safeFirestoreTestFixed";
+// import "./utils/loadFailedDetector";
 
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
-import "./utils/comprehensiveFirebaseTest";
-import "./utils/verifySaveToFirestore";
-import "./utils/verifyAutoSync";
-import "./utils/finalFirebaseVerification";
-import "./utils/firestoreDiagnosticMessage";
-import "./utils/safeFirestoreTest";
-import "./utils/ultraSafeTest";
+// import "./utils/comprehensiveFirebaseTest";
+// import "./utils/verifySaveToFirestore";
+// import "./utils/verifyAutoSync";
+// import "./utils/finalFirebaseVerification";
+// import "./utils/firestoreDiagnosticMessage";
+// import "./utils/safeFirestoreTest";
+// import "./utils/ultraSafeTest";
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -116,7 +116,7 @@ import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Se
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-// import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
+// import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -146,19 +146,19 @@ import { DataProtectionService } from "./utils/dataProtection";
 // Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
-import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
-import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
-import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
+// import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+// import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+// import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
+// import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+// import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import { useForceFirestore } from "./hooks/useForceFirestore"; // DESABILITADO - problemas SDK
 // import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
-import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
-import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
-import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
+// import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
+// import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
+// import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -168,20 +168,20 @@ import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import { useAutoSyncSimpleFixed as useAutoSyncSimple } from "./hooks/useAutoSyncSimpleFixed";
 // import { useAutoFirebaseFixFixed as useAutoFirebaseFix } from "./hooks/useAutoFirebaseFixFixed";
 // import { useAutoUserMigrationFixed as useAutoUserMigration } from "./hooks/useAutoUserMigrationFixed";
-import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
-import UserMigrationIndicator from "./components/UserMigrationIndicator";
+// import FirebaseAutoMonitor from "./components/FirebaseAutoMonitor";
+// import UserMigrationIndicator from "./components/UserMigrationIndicator";
 // Firebase components removed - Firebase works automatically in background
 
 // Diagnóstico automático para problemas de inserção de dados
 // import "./utils/datainput-diagnostic";
-import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
-import DataInputTutorial from "./components/DataInputTutorial";
+// import DataInputStatusIndicator from "./components/DataInputStatusIndicator";
+// import DataInputTutorial from "./components/DataInputTutorial";
 
 // Monitor de erros Firebase desativado durante desenvolvimento
 // import "./utils/firebaseErrorMonitor";
 
-import { userRestoreService } from "./services/userRestoreService";
-import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
+// import { userRestoreService } from "./services/userRestoreService";
+// import UserRestoreNotificationSimple from "./components/UserRestoreNotificationSimple";
 
 // Diagnóstico Firebase
 // import "./utils/firebaseDiagnostic";
@@ -301,7 +301,7 @@ function App() {
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
+    // userRestoreService.autoRestore();
 
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
@@ -310,26 +310,28 @@ function App() {
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
-        const status = await dataPersistenceManager.diagnoseDataPersistence();
+        // const status = await dataPersistenceManager.diagnoseDataPersistence();
 
-        if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
-          setPersistenceIssueDetected(true);
+        // if (!status.working) {
+        //   console.warn("€ Problema de persistência detectado:", status);
+        //   setPersistenceIssueDetected(true);
 
-          // Tentar reparar automaticamente
-          const repaired = await dataPersistenceManager.repairDataPersistence();
+        //   // Tentar reparar automaticamente
+        //   const repaired = await dataPersistenceManager.repairDataPersistence();
 
-          if (repaired) {
-            setPersistenceIssueDetected(false);
-            console.log("��� Persistência reparada automaticamente");
-          } else {
-            console.error(
-              "⚠️ N��o foi possível reparar a persistência automaticamente",
-            );
-          }
-        } else {
-          console.log("✅ Sistema de persistência está funcional");
-        }
+        //   if (repaired) {
+        //     setPersistenceIssueDetected(false);
+        //     console.log("��� Persistência reparada automaticamente");
+        //   } else {
+        //     console.error(
+        //       "⚠️ N��o foi possível reparar a persistência automaticamente",
+        //     );
+        //   }
+        // } else {
+        //   console.log("✅ Sistema de persistência está funcional");
+        // }
+
+        console.log("📱 Data persistence monitoring temporarily disabled");
       } catch (error) {
         console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
@@ -2000,7 +2002,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync está ativo após login
+        // Garantir que auto sync est�� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -4167,7 +4169,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenção</span>
+                      <span>Nova Manuten��ão</span>
                     </button>
                   </div>
                 </div>
@@ -6857,7 +6859,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenç✅o
+                          Fotografias da Manutenç���o
                         </h3>
                       </div>
 
@@ -7891,7 +7893,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relatório de Piscinas
+                                    Relat��rio de Piscinas
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista completa de piscinas
@@ -8079,7 +8081,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -9663,7 +9665,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações sobre a obra
+                            Observaç��es sobre a obra
                           </label>
                           <textarea
                             defaultValue={editingWork?.observations}
@@ -9871,7 +9873,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa���es
+                          ).value; // Observa�����es
 
                           // Prepare update data
                           let updateData: any = {
@@ -12316,7 +12318,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
-        {showMobileFirebaseFix && <MobileFirebaseFix />}
+        {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
 
         {/* App Status Indicator */}
         <AppStatusIndicator />
