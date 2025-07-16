@@ -210,7 +210,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       // Show last sync info
       if (dataSync?.lastSync) {
         tests.push(
-          `📅 Última sincronização: ${dataSync.lastSync.toLocaleString("pt-PT")}`,
+          `📅 Última sincronização: ${new Date(dataSync.lastSync).toLocaleString("pt-PT")}`,
         );
       }
 
@@ -500,8 +500,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Teste de Sincronização
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Verifique o funcionamento das funcionalidades de
-                  sincronização
+                  Verifique o funcionamento das funcionalidades de sincronização
                 </p>
               </div>
 
@@ -942,7 +941,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
 
               {/* FCM Setup Component */}
-              <FCMNotificationSetup currentUser={currentUser} />
+              <FCMNotificationSetup />
 
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

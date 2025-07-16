@@ -1,6 +1,7 @@
 // Serviço de autenticação direto que sempre aceita os emails do Gonçalo
 import { UserProfile } from "./localAuthService";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
+import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
 class DirectAuthService {
   // Lista fixa de emails autorizados (hardcoded para garantir que funciona)
@@ -66,10 +67,23 @@ class DirectAuthService {
         createdAt: new Date().toISOString(),
       };
 
-      // Persistir dados
+      // Persistir dados no localStorage E no Firestore
       try {
+        // Guardar localmente para sessão
         safeLocalStorage.setItem("currentUser", JSON.stringify(userProfile));
         safeLocalStorage.setItem("isAuthenticated", "true");
+
+        // SEMPRE guardar no Firestore
+        try {
+          await saveToFirestoreRest(
+            "users",
+            userProfile.id?.toString() || email,
+            userProfile,
+          );
+          console.log("✅ DirectAuth: Utilizador guardado no Firestore");
+        } catch (firestoreError) {
+          console.warn("⚠️ DirectAuth: Erro Firestore, mas login continua");
+        }
 
         if (rememberMe) {
           safeLocalStorage.setItem("rememberMe", "true");

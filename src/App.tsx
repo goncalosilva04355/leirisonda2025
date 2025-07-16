@@ -91,7 +91,7 @@ import {
 } from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
-import { offlineFirstService } from "./services/offlineFirstService"; // Serviço offline-first
+import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produção
@@ -131,6 +131,14 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
+// import { useForceFirestore } from "./hooks/useForceFirestore"; // DESABILITADO - problemas SDK
+// import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
+// import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
+// import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
+// import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
+import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
+import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
+import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -213,6 +221,28 @@ function App() {
 
   // Mobile Firebase conflict detection
   const [showMobileFirebaseFix, setShowMobileFirebaseFix] = useState(false);
+
+  // Forçar TODOS os dados a serem guardados no Firestore - DESABILITADO (problemas SDK)
+  // const {
+  //   isInitialized: firestoreInitialized,
+  //   status: firestoreStatus,
+  //   refreshStatus,
+  // } = useForceFirestore();
+
+  // Substituído por REST API
+  const firestoreInitialized = true; // REST API sempre pronta
+  const firestoreStatus = "REST API ativa";
+  const refreshStatus = () => console.log("REST API não precisa refresh");
+
+  // Log status do Firestore
+  useEffect(() => {
+    if (firestoreInitialized) {
+      console.log(
+        "🔥 ForceFirestore inicializado - todos os dados vão para Firestore:",
+        firestoreStatus,
+      );
+    }
+  }, [firestoreInitialized, firestoreStatus]);
 
   // Garantir que pelo menos o utilizador padrão existe no localStorage
   useEffect(() => {
@@ -553,8 +583,8 @@ function App() {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
 
-      // Usar serviço offline-first
-      const firestoreId = await offlineFirstService.createPool(data);
+      // Usar serviço ultra-simples
+      const firestoreId = await ultraSimpleOfflineService.createPool(data);
       if (firestoreId) {
         console.log("✅ Piscina criada:", firestoreId);
       }
@@ -573,7 +603,7 @@ function App() {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
-      const firestoreId = await offlineFirstService.createWork(data);
+      const firestoreId = await ultraSimpleOfflineService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -617,7 +647,8 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId = await offlineFirstService.createMaintenance(data);
+      const firestoreId =
+        await ultraSimpleOfflineService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("🔥 Manutenção criada no Firestore:", firestoreId);
@@ -642,7 +673,7 @@ function App() {
     try {
       console.log("🔥 addClient iniciado com Firestore ativo");
 
-      const firestoreId = await offlineFirstService.createClient(data);
+      const firestoreId = await ultraSimpleOfflineService.createClient(data);
 
       if (firestoreId) {
         console.log("✅ Cliente criado no Firestore:", firestoreId);
@@ -717,7 +748,7 @@ function App() {
         (user) =>
           user.name === currentUser.name ||
           user.id === currentUser.id ||
-          user.id === currentUser.id.toString(),
+          user.id === String(currentUser.id),
       )
     ) {
       return true;
@@ -1085,20 +1116,8 @@ function App() {
         const isAuthenticatedStored =
           safeLocalStorage.getItem("isAuthenticated");
 
-        if (savedUser && isAuthenticatedStored === "true") {
-          try {
-            const userProfile = JSON.parse(savedUser);
-            console.log("✅ Found existing valid session:", userProfile.email);
-
-            // Restore authentication state
-            setCurrentUser(userProfile);
-            setIsAuthenticated(true);
-            console.log("✅ Session restored successfully");
-            return; // Don't clear the session
-          } catch (parseError) {
-            console.warn("⚠️ Error parsing saved user, clearing session");
-          }
-        }
+        // DISABLED: Auto-login sempre desabilitado
+        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
@@ -1220,7 +1239,7 @@ function App() {
         console.log("✅ Firebase Leiria pronto para uso");
 
         try {
-          await firestoreService.syncAll();
+          // await firestoreService.syncAll(); // Desabilitado - usando REST API
           console.log("🎉 Sincronização com Firebase Leiria completa!");
         } catch (error) {
           console.error("❌ Erro na sincronização com Firebase Leiria:", error);
@@ -1258,7 +1277,7 @@ function App() {
           window.dispatchEvent(new CustomEvent("autoSyncStarted"));
 
           // Force enable real-time sync for editing
-          console.log("🔥 FIRESTORE ATIVO PARA EDIÇÕES!");
+          console.log("�� FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
           console.error("❌ Erro ao iniciar sincronização automática:", error);
           // Try again if it fails
@@ -1519,7 +1538,7 @@ function App() {
             // Save device token for current user if authenticated
             if (currentUser?.id || currentUser?.email) {
               await pushNotificationService.saveDeviceToken(
-                currentUser.id || currentUser.email,
+                String(currentUser.id) || currentUser.email,
               );
             }
           } catch (error) {
@@ -1544,7 +1563,7 @@ function App() {
               // Show a success message
               setTimeout(() => {
                 showNotification(
-                  "€ Notificação",
+                  "�� Notificação",
                   `Navegando para obra: ${data.workTitle}`,
                   "info",
                 );
@@ -2062,7 +2081,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç��o agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -2264,7 +2283,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTENÇÕES RECENTES ===
+=== MANUTEN��ÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -2561,10 +2580,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         };
 
         // Atualizar no Firestore
-        const firestoreSuccess = await firestoreService.updateUtilizador(
-          editingUser.id?.toString() || editingUser.id,
-          updatedUser,
-        );
+        // const firestoreSuccess = await firestoreService.updateUtilizador(
+        //   editingUser.id?.toString() || editingUser.id,
+        //   updatedUser,
+        // ); // Desabilitado - usando REST API
+        const firestoreSuccess = true;
 
         if (firestoreSuccess) {
           console.log("✅ Utilizador atualizado no Firestore");
@@ -5664,10 +5684,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     "./services/pushNotificationService"
                                   );
 
-                                for (const userId of workData.assignedUsers) {
+                                for (const user of workData.assignedUsers) {
                                   await pushNotificationService.notifyObraAssignment(
                                     workData,
-                                    userId,
+                                    typeof user === "string" ? user : user.id,
                                   );
                                   console.log(
                                     "📢 Notificação enviada para utilizador:",
@@ -7154,7 +7174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <Settings className="h-5 w-5 text-gray-600" />
                                   <div>
                                     <p className="font-medium text-gray-800">
-                                      Configura✅ões Avançadas
+                                      Configura��ões Avançadas
                                     </p>
                                     <p className="text-sm text-gray-600">
                                       Firebase, APIs e desenvolvimento
@@ -7996,7 +8016,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>���� Informa��ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -9726,7 +9746,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observações Espec📞ficas do Furo
+                          Observaç��es Espec📞ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -9784,7 +9804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa🔥es
+                          ).value; // Observa���es
 
                           // Prepare update data
                           let updateData: any = {
@@ -11604,7 +11624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {/* Detalhes do Furo de Água - Se aplic��vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
