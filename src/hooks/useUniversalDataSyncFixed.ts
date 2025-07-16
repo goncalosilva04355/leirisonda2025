@@ -820,6 +820,33 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         clientes: clientesFirestore.length,
       });
 
+      // Deduplicate data before using
+      const deduplicate = (array: any[], name: string) => {
+        const seenIds = new Set();
+        const unique = array.filter((item) => {
+          if (seenIds.has(item.id)) {
+            console.warn(
+              `🗑️ forceSyncAll: Removing duplicate ${name}:`,
+              item.id,
+            );
+            return false;
+          }
+          seenIds.add(item.id);
+          return true;
+        });
+        if (unique.length < array.length) {
+          console.log(
+            `✅ forceSyncAll: ${name} duplicates removed. Unique: ${unique.length}/${array.length}`,
+          );
+        }
+        return unique;
+      };
+
+      obrasFirestore = deduplicate(obrasFirestore, "obra");
+      manutencaoFirestore = deduplicate(manutencaoFirestore, "manutenção");
+      piscinasFirestore = deduplicate(piscinasFirestore, "piscina");
+      clientesFirestore = deduplicate(clientesFirestore, "cliente");
+
       // Atualizar localStorage
       safeSetLocalStorage("works", obrasFirestore);
       safeSetLocalStorage("maintenance", manutencaoFirestore);
