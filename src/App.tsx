@@ -434,7 +434,7 @@ function App() {
     }
   }, []);
 
-  // Debug logging disabled for production
+  // Debug logging ativo - desenvolvimento = produção
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
@@ -2229,7 +2229,7 @@ function App() {
                       await autoSyncService.ensureAutoSyncAfterLogin();
                     setAutoSyncActive(autoSyncStarted);
                     console.log(
-                      "���� Auto sync garantido após aguardar Firestore!",
+                      "��� Auto sync garantido após aguardar Firestore!",
                     );
                   } catch (error) {
                     console.error("❌ Erro ao garantir auto sync:", error);
@@ -2545,7 +2545,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN����ES RECENTES ===
+=== MANUTEN�����ES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -5231,7 +5231,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     user.role,
                                     "| Ativo:",
                                     user.active,
-                                    "| Já atribu🎉do:",
+                                    "| Já atribu��do:",
                                     alreadyAssigned,
                                     "| PASSA FILTRO:",
                                     !alreadyAssigned,
@@ -7006,7 +7006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç��es, recomendações, próxima manutenção..."
+                          placeholder="Observaç����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
