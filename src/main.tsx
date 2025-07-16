@@ -62,6 +62,8 @@ import AppProduction from "./AppProduction";
 import AppFixed from "./AppFixed";
 // App de teste para diagnosticar
 import AppTest from "./AppTest";
+// App de teste simples
+import AppSimpleTest from "./AppSimpleTest";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -84,11 +86,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the main App directly
-  const AppComponent = App;
+  // Use the simple test app to diagnose the white screen issue
+  const AppComponent = AppSimpleTest;
   console.log(
     "📱 Using app:",
-    "App (main application with full functionality)",
+    "AppSimpleTest (simple test to diagnose white screen)",
   );
 
   ReactDOM.createRoot(rootElement).render(
