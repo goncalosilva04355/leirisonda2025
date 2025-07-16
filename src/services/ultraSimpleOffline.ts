@@ -49,7 +49,7 @@ class UltraSimpleOfflineService {
   async createMaintenance(maintenanceData: any): Promise<string> {
     try {
       console.log("🔧 Criando manutenção...");
-      const maintenanceId = `maintenance-${Date.now()}`;
+      const maintenanceId = generateServiceId("maintenance");
       await saveToFirestoreRest("maintenance", maintenanceId, {
         ...maintenanceData,
         id: maintenanceId,
