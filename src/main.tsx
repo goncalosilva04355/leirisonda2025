@@ -86,9 +86,12 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use simplified working app to fix white screen
-  const AppComponent = AppSimpleFixed;
-  console.log("📱 Using app:", "AppSimpleFixed (working version)");
+  // Use the main App directly
+  const AppComponent = App;
+  console.log(
+    "📱 Using app:",
+    "App (main application with full functionality)",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
