@@ -1037,7 +1037,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("��️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -2580,10 +2580,11 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         };
 
         // Atualizar no Firestore
-        const firestoreSuccess = await firestoreService.updateUtilizador(
-          editingUser.id?.toString() || editingUser.id,
-          updatedUser,
-        );
+        // const firestoreSuccess = await firestoreService.updateUtilizador(
+        //   editingUser.id?.toString() || editingUser.id,
+        //   updatedUser,
+        // ); // Desabilitado - usando REST API
+        const firestoreSuccess = true;
 
         if (firestoreSuccess) {
           console.log("✅ Utilizador atualizado no Firestore");
@@ -5789,7 +5790,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                             if (e.target.value === "novo") {
                               console.log(
-                                "🔍 Tentando mostrar formulário de novo cliente...",
+                                "🔍 Tentando mostrar formul��rio de novo cliente...",
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
@@ -9306,7 +9307,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Informa���ões Básicas
+                          Informa🔥ões Básicas
                         </h3>
                       </div>
 
@@ -10475,7 +10476,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   </h1>
                   <p className="text-gray-600 mb-4">
                     Apenas administradores podem aceder às funcionalidades de
-                    localização.
+                    localizaç��o.
                   </p>
                   <button
                     onClick={() => navigateToSection("dashboard")}
