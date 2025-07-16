@@ -671,6 +671,14 @@ function App() {
     syncStatus,
   } = universalSync;
 
+  // Debug: Check for duplicate keys in data
+  useEffect(() => {
+    checkForDuplicateKeys(obras, "id");
+    checkForDuplicateKeys(manutencoes, "id");
+    checkForDuplicateKeys(piscinas, "id");
+    checkForDuplicateKeys(clientes, "id");
+  }, [obras, manutencoes, piscinas, clientes]);
+
   // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
   const maintenance = manutencoes;
@@ -2880,7 +2888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "manutencoes",
       icon: Wrench,
-      label: "Manutenções",
+      label: "Manuten��ões",
       path: "/manutencoes",
     },
     {
