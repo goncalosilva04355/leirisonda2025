@@ -159,6 +159,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
+import "./utils/debugDuplicates"; // Debug de duplicados
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -6709,7 +6710,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Water Values */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                        Valores da ��gua
+                        Valores da Água
                       </h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div>
@@ -10510,7 +10511,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura���ão Real (horas)
+                          Dura��ão Real (horas)
                         </label>
                         <input
                           type="number"
