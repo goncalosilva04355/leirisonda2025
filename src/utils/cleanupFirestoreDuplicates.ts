@@ -48,25 +48,30 @@ export const cleanupFirestoreDuplicates = async () => {
       return { success: true, cleaned: 0 };
     }
 
+    // Listar todos os IDs duplicados antes de eliminar
+    const duplicateIds = duplicates.map((d) => d.id);
+    console.log(`🎯 IDs que serão eliminados: ${duplicateIds.join(", ")}`);
+
     // Eliminar duplicados
     console.log(`🗑️ Eliminando ${duplicates.length} duplicados...`);
     let cleaned = 0;
 
     for (const duplicate of duplicates) {
       try {
+        console.log(`🗑️ Tentando eliminar: ${duplicate.id}...`);
         const deleted = await deleteFromFirestoreRest("obras", duplicate.id);
         if (deleted) {
           cleaned++;
-          console.log(`✅ Eliminado: ${duplicate.id}`);
+          console.log(`✅ ELIMINADO COM SUCESSO: ${duplicate.id}`);
         } else {
-          console.warn(`⚠️ Falha ao eliminar: ${duplicate.id}`);
+          console.warn(`⚠️ FALHA ao eliminar: ${duplicate.id}`);
         }
       } catch (error) {
-        console.error(`❌ Erro ao eliminar ${duplicate.id}:`, error);
+        console.error(`❌ ERRO ao eliminar ${duplicate.id}:`, error);
       }
 
       // Small delay to avoid rate limiting
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 200));
     }
 
     console.log(
