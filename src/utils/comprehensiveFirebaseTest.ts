@@ -90,17 +90,12 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
     }
 
     // 3. Testar SDK Firebase usando método seguro
-    console.log("3️⃣ Testando Firestore via método seguro...");
-    let sdkTest = await safeFirestoreTest();
+    console.log("3️⃣ Testando Firestore via método seguro corrigido...");
+    let sdkTest = await safeFirestoreTestFixed();
 
-    // If safe test has Load failed error, try ultra-safe test
-    if (
-      sdkTest.data?.error?.includes("Load failed") ||
-      sdkTest.message?.includes("Load failed")
-    ) {
-      console.log(
-        "🔒 Safe test teve Load failed - tentando ultra-safe test...",
-      );
+    // If still having issues, try ultra-safe test as final fallback
+    if (!sdkTest.success) {
+      console.log("🔒 Teste corrigido falhou - tentando ultra-safe test...");
       sdkTest = await ultraSafeTest();
     }
 
@@ -148,7 +143,7 @@ export async function runComprehensiveFirebaseTest(): Promise<ComprehensiveTestR
     }
 
     // 5. Testar sincronização automática
-    console.log("5��⃣ Testando sincronização automática...");
+    console.log("5️⃣ Testando sincronização automática...");
     try {
       if (!autoSyncService.isAutoSyncActive()) {
         await autoSyncService.startAutoSync();
