@@ -531,7 +531,7 @@ function App() {
     console.error("❌ Erro no pull-to-refresh:", error);
   }
 
-  // FIREBASE AUTO-CORREÇ��O - Monitorização automática
+  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
     checkOnUserAction: async () => {
       console.log("Firebase auto-fix disabled");
@@ -659,7 +659,7 @@ function App() {
   const works = obras;
   const clients = clientes;
 
-  // Calcular manuten��ões futuras
+  // Calcular manutenções futuras
   const today = new Date();
   const futureMaintenance = manutencoes.filter(
     (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
@@ -6875,7 +6875,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Estado da Manutenç����o
+                          Estado da Manutenç��o
                         </label>
                         <select
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -9662,7 +9662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="mt-2 space-y-1">
                               {editAssignedUsers.map((assignedUser, index) => (
                                 <div
-                                  key={index}
+                                  key={`edit-assigned-${assignedUser.id}-${index}`}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
@@ -9912,7 +9912,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             .value; // Morada
                           const startTime = (inputs[5] as HTMLInputElement)
                             .value; // Hora de Entrada
-                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Sa��da
+                          const endTime = (inputs[6] as HTMLInputElement).value; // Hora de Saída
                           const status = (inputs[7] as HTMLSelectElement).value; // Estado
                           const workSheetCompleted = (
                             inputs[8] as HTMLInputElement
