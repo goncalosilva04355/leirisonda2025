@@ -614,7 +614,7 @@ function App() {
   //       `🎉 AUTO-MIGRATION: ${userMigration.status.migrated} utilizadores migrados para Firestore!`,
   //     );
   //     console.log(
-  //       "�� AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
+  //       "🎉 AUTO-MIGRATION: Utilizadores agora funcionam em qualquer dispositivo/browser",
   //     );
   //   }
   // }, [userMigration.status.completed, userMigration.status.migrated]);
@@ -1161,7 +1161,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("��� Users updated event received, reloading...");
+      console.log("🎉 Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -2749,7 +2749,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       }
     } else {
       if (!enableMapsRedirect) {
-        console.warn("��€ Maps redirect is disabled");
+        console.warn("⚠€ Maps redirect is disabled");
       }
       if (!address) {
         console.warn("⚠€ No address provided");
@@ -2758,7 +2758,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   };
 
   const handleDeleteUser = (userId) => {
-    // BACKUP AUTOM���TICO antes de eliminar utilizador
+    // BACKUP AUTOM✅TICO antes de eliminar utilizador
     backupBeforeOperation("delete_user");
 
     // Check if it's the main user
@@ -9140,15 +9140,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Em Progresso (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "em_progresso" ||
-                            w.status === "in_progress",
-                        ).length
-                      }
-                      )
+                      Em Progresso ({worksCounts.inProgress})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("completed")}
