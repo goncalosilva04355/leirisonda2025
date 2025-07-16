@@ -17,6 +17,12 @@ export const usePullToRefresh = ({
 
   const startY = useRef<number>(0);
   const isActive = useRef<boolean>(false);
+  const onRefreshRef = useRef(onRefresh);
+
+  // Update ref when onRefresh changes
+  useEffect(() => {
+    onRefreshRef.current = onRefresh;
+  }, [onRefresh]);
 
   useEffect(() => {
     if (disabled) return;
