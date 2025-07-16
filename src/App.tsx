@@ -138,6 +138,7 @@ import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
 import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
+import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -2775,7 +2776,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     {
       id: "localizacoes",
       icon: MapPin,
-      label: "Localizações",
+      label: "Localiza��ões",
       path: "/localizacoes",
     },
   ];
@@ -4090,7 +4091,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manuten✅ões
+                          Manuten���ões
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
@@ -11577,7 +11578,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <p className="text-gray-900">
                               {selectedWork.budget
                                 ? `€${selectedWork.budget.toLocaleString("pt-PT")}`
-                                : "Não especificado"}
+                                : "N��o especificado"}
                             </p>
                           </div>
                           <div>
