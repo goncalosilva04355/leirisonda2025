@@ -1538,7 +1538,7 @@ function App() {
             // Save device token for current user if authenticated
             if (currentUser?.id || currentUser?.email) {
               await pushNotificationService.saveDeviceToken(
-                currentUser.id || currentUser.email,
+                String(currentUser.id) || currentUser.email,
               );
             }
           } catch (error) {
