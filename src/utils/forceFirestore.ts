@@ -152,28 +152,30 @@ export const deleteData = async (
 };
 
 // Inicializar imediatamente
-setTimeout(async () => {
-  try {
-    await forceInitFirestore();
-    console.log("🎉 FORÇA FIRESTORE: Pronto para uso!");
+// DESABILITADO - usando REST API
+// setTimeout(async () => {
+//   try {
+//     await forceInitFirestore();
+//     console.log("🎉 FORÇA FIRESTORE: Pronto para uso!");
 
-    // Disponibilizar globalmente
-    (window as any).forceFirestore = {
-      db,
-      app,
-      saveUser,
-      saveData,
-      getData,
-      deleteData,
-      isReady: () => isReady,
-    };
-  } catch (error: any) {
-    console.error(
-      "❌ FORÇA FIRESTORE: Falha na inicialização:",
-      error?.message || String(error),
-    );
-    console.error("🔍 Erro completo:", error);
-  }
-}, 500);
+//     // Disponibilizar globalmente
+//     (window as any).forceFirestore = {
+//       db,
+//       app,
+//       saveUser,
+//       saveData,
+//       getData,
+//       deleteData,
+//       isReady: () => isReady,
+//     };
+//   } catch (error: any) {
+//     console.error(
+//       "❌ FORÇA FIRESTORE: Falha na inicialização:",
+//       error?.message || String(error),
+//     );
+//     console.error("🔍 Erro completo:", error);
+//   }
+// }, 500);
+console.log("🚫 ForceFirestore: DESABILITADO - usando REST API");
 
 export default { saveUser, saveData, getData, deleteData };
