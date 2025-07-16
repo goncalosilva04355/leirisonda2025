@@ -944,6 +944,9 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               {/* FCM Setup Component */}
               <FCMNotificationSetup />
 
+              {/* Notification Debugger */}
+              <NotificationDebugger />
+
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 className="font-medium text-blue-900 mb-2">
