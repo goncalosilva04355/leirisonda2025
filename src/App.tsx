@@ -158,8 +158,9 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
-import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
-import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
+// SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
+// import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
+// import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -881,7 +882,7 @@ function App() {
   };
   const addClient = async (data: any) => {
     try {
-      console.log("🔥 addClient iniciado com Firestore ativo");
+      console.log("�� addClient iniciado com Firestore ativo");
 
       const firestoreId = await ultraSimpleOfflineService.createClient(data);
 
@@ -1170,7 +1171,7 @@ function App() {
 
     // Listen for user updates from other components
     const handleUsersUpdated = () => {
-      console.log("🎉 Users updated event received, reloading...");
+      console.log("���� Users updated event received, reloading...");
       try {
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
@@ -3174,7 +3175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Main Content */}
                     <div className="text-center mb-3">
                       <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                        Olá, {currentUser?.name || "Gonçalo Fonseca"}
+                        Ol��, {currentUser?.name || "Gonçalo Fonseca"}
                       </h1>
                       <p className="text-gray-800 text-sm font-medium">
                         {new Date().toLocaleDateString("pt-PT", {
@@ -5048,7 +5049,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "�� ERRO AO FAZER PARSE DOS USERS:",
+                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -6858,7 +6859,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <input
                               type="text"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                              placeholder="Ex: Cloro l����quido"
+                              placeholder="Ex: Cloro l��quido"
                             />
                           </div>
                           <div>
