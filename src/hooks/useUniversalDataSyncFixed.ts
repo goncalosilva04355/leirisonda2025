@@ -124,16 +124,22 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
 
         // Tentar carregar do Firestore primeiro
         const [
-          obrasFirestore,
-          manutencaoFirestore,
-          piscinasFirestore,
-          clientesFirestore,
+          obrasFirestoreRaw,
+          manutencaoFirestoreRaw,
+          piscinasFirestoreRaw,
+          clientesFirestoreRaw,
         ] = await Promise.all([
           readFromFirestoreRest("obras"),
           readFromFirestoreRest("manutencoes"),
           readFromFirestoreRest("piscinas"),
           readFromFirestoreRest("clientes"),
         ]);
+
+        // Use let so we can modify arrays for deduplication
+        let obrasFirestore = obrasFirestoreRaw;
+        let manutencaoFirestore = manutencaoFirestoreRaw;
+        let piscinasFirestore = piscinasFirestoreRaw;
+        let clientesFirestore = clientesFirestoreRaw;
 
         // Se temos dados do Firestore, usar esses
         if (
