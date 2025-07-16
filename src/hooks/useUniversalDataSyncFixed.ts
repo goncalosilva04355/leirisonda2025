@@ -4,13 +4,28 @@ import {
   saveToFirestoreRest,
 } from "../utils/firestoreRestApi";
 
-// Função para gerar IDs únicos e evitar colisões
+// Função SUPER ROBUSTA para gerar IDs únicos e evitar colisões
 let idCounter = 0;
+let lastTimestamp = 0;
+
 const generateUniqueId = (prefix: string): string => {
-  const timestamp = Date.now();
+  let timestamp = Date.now();
+
+  // Ensure timestamp is always increasing to prevent duplicates
+  if (timestamp <= lastTimestamp) {
+    timestamp = lastTimestamp + 1;
+  }
+  lastTimestamp = timestamp;
+
   const counter = ++idCounter;
   const random = Math.random().toString(36).substring(2, 9);
-  return `${prefix}-${timestamp}-${counter}-${random}`;
+  const extraRandom = Math.random().toString(36).substring(2, 5);
+
+  // Format: prefix-timestamp-counter-random-extraRandom
+  const uniqueId = `${prefix}-${timestamp}-${counter}-${random}-${extraRandom}`;
+
+  console.log(`🆔 ID único gerado: ${uniqueId}`);
+  return uniqueId;
 };
 
 export interface UniversalSyncState {
