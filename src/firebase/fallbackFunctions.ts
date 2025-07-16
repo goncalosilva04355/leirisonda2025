@@ -4,6 +4,7 @@ export const getFirebaseStatus = () => {
   return {
     connected: true,
     initialized: true,
+    ready: true,
     status: "active",
   };
 };
