@@ -77,12 +77,14 @@ if (FORCE_FIREBASE_PRODUCTION) {
         firebaseApp.name,
       );
       console.log("🔍 Project ID ativo:", firebaseApp.options.projectId);
-    } else {
+    } else if (config) {
       firebaseApp = getApp();
       console.log(
         "✅ Firebase já estava inicializado no Netlify",
         firebaseApp.name,
       );
+    } else {
+      console.log("⏸️ Firebase initialization skipped - no valid config");
     }
   } catch (error: any) {
     console.error("❌ Erro ao inicializar Firebase no Netlify:", error.message);
