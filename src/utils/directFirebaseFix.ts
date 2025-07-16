@@ -88,24 +88,25 @@ export const getDirectFirebaseApp = () => {
   return firebaseApp;
 };
 
-// Auto-inicializar
-if (typeof window !== "undefined") {
-  setTimeout(() => {
-    directFirebaseInit().then((result) => {
-      if (result.ready) {
-        console.log("🎉 Direct Firebase Init: SUCESSO!");
+// Auto-inicializar DESABILITADO - usando REST API
+// if (typeof window !== "undefined") {
+//   setTimeout(() => {
+//     directFirebaseInit().then((result) => {
+//       if (result.ready) {
+//         console.log("🎉 Direct Firebase Init: SUCESSO!");
 
-        // Disponibilizar globalmente para debug
-        (window as any).directFirebase = {
-          app: result.app,
-          db: result.db,
-          init: directFirebaseInit,
-        };
-      } else {
-        console.error("❌ Direct Firebase Init: FALHOU!", result.error);
-      }
-    });
-  }, 500);
-}
+//         // Disponibilizar globalmente para debug
+//         (window as any).directFirebase = {
+//           app: result.app,
+//           db: result.db,
+//           init: directFirebaseInit,
+//         };
+//       } else {
+//         console.error("❌ Direct Firebase Init: FALHOU!", result.error);
+//       }
+//     });
+//   }, 500);
+// }
+console.log("🚫 Direct Firebase Init: DESABILITADO - usando REST API");
 
 export default directFirebaseInit;
