@@ -658,6 +658,13 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                     ? "Gestor"
                                     : "Técnico"}
                             </span>
+                            <button
+                              onClick={() => setEditingUser(user)}
+                              className="text-blue-600 hover:text-blue-800 p-1"
+                              title="Editar utilizador"
+                            >
+                              <Edit className="h-4 w-4" />
+                            </button>
                             {user.email !== "gongonsilva@gmail.com" && (
                               <button
                                 onClick={() => handleDeleteUser(user)}
