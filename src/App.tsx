@@ -101,7 +101,7 @@ import { productionAutoSync } from "./services/productionAutoSync"; // Sincroniz
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
 // import "./utils/firebaseConnectionTest"; // Teste completo de conexão Firebase em produção
-// import "./firebase/initializationHelper"; // Helper robusto para inicializa��ão completa do Firebase
+// import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
@@ -132,9 +132,10 @@ import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator"
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 import { useForceFirestore } from "./hooks/useForceFirestore";
-import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR
-import "./utils/testForceFirestore"; // Teste que força funcionamento
-import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas
+// import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
+// import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
+// import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
+import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - FUNCIONA GARANTIDAMENTE
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
 // import "./utils/completeDataSync";
@@ -1374,7 +1375,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleções
+    // Adicionar listeners para todas as cole��ões
     const collections = [
       "obras",
       "piscinas",
@@ -1553,7 +1554,7 @@ function App() {
               // Show a success message
               setTimeout(() => {
                 showNotification(
-                  "€ Notificação",
+                  "�� Notificação",
                   `Navegando para obra: ${data.workTitle}`,
                   "info",
                 );
@@ -2071,7 +2072,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicação agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç��o agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -5285,7 +5286,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <textarea
                               rows={3}
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                              placeholder="Condiç��es do terreno, qualidade da água, dificuldades encontradas, etc..."
+                              placeholder="Condições do terreno, qualidade da água, dificuldades encontradas, etc..."
                             />
                           </div>
                         </div>
@@ -6663,7 +6664,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom����tico",
+                          "Enchimento autom�����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7851,7 +7852,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅ões
+                                    Hist��rico de interven✅ões
                                   </p>
                                 </div>
                               </div>
@@ -8005,7 +8006,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>�������� Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -11613,7 +11614,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplicável */}
+                      {/* Detalhes do Furo de Água - Se aplic��vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
