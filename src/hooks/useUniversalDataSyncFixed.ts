@@ -363,6 +363,23 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         );
 
         if (!piscinaExists) {
+          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+          console.log("🔥 Salvando piscina no Firestore:", piscina.id);
+          const firestoreSaved = await saveToFirestoreRest(
+            "piscinas",
+            piscina.id,
+            piscina,
+          );
+
+          if (firestoreSaved) {
+            console.log("✅ Piscina salva no Firestore com sucesso");
+          } else {
+            console.warn(
+              "⚠️ Falha ao salvar piscina no Firestore, continuando com localStorage",
+            );
+          }
+
+          // SEGUNDO: Atualizar localStorage (backup)
           const updatedPiscinas = [...existingPiscinas, piscina];
           safeSetLocalStorage("pools", updatedPiscinas);
 
