@@ -317,9 +317,11 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           visibleToAllUsers: true,
         };
 
-                // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
+        // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
         const existingObras = safeGetLocalStorage("works");
-        const localWorkExists = existingObras.some((w: any) => w.id === obra.id);
+        const localWorkExists = existingObras.some(
+          (w: any) => w.id === obra.id,
+        );
 
         // Also check in current state to prevent duplicates in memory
         const stateWorkExists = state.obras.some((w: any) => w.id === obra.id);
@@ -335,7 +337,9 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         // EXTRA SAFETY: Check in Firestore as well
         try {
           const firestoreObras = await readFromFirestoreRest("obras");
-          const firestoreWorkExists = firestoreObras.some((w: any) => w.id === obra.id);
+          const firestoreWorkExists = firestoreObras.some(
+            (w: any) => w.id === obra.id,
+          );
 
           if (firestoreWorkExists) {
             console.warn(
@@ -345,47 +349,49 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             return obra.id;
           }
         } catch (error) {
-          console.warn("⚠️ Não foi possível verificar duplicados no Firestore:", error);
-                }
+          console.warn(
+            "⚠️ Não foi possível verificar duplicados no Firestore:",
+            error,
+          );
+        }
 
         // Proceed with creation since no duplicates found
         // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
-          console.log("🔥 Salvando obra no Firestore:", obra.id);
-          const firestoreSaved = await saveToFirestoreRest(
-            "obras",
-            obra.id,
-            obra,
+        console.log("🔥 Salvando obra no Firestore:", obra.id);
+        const firestoreSaved = await saveToFirestoreRest(
+          "obras",
+          obra.id,
+          obra,
+        );
+
+        if (firestoreSaved) {
+          console.log("✅ Obra salva no Firestore com sucesso");
+        } else {
+          console.warn(
+            "⚠️ Falha ao salvar no Firestore, continuando com localStorage",
           );
-
-          if (firestoreSaved) {
-            console.log("✅ Obra salva no Firestore com sucesso");
-          } else {
-            console.warn(
-              "⚠️ Falha ao salvar no Firestore, continuando com localStorage",
-            );
-          }
-
-          // SEGUNDO: Atualizar localStorage (backup)
-          const updatedObras = [...existingObras, obra];
-          safeSetLocalStorage("works", updatedObras);
-
-          setState((prev) => ({
-            ...prev,
-            obras: updatedObras,
-            totalItems: prev.totalItems + 1,
-          }));
-
-          // Trigger update event (only on client side)
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(
-              new CustomEvent("obrasUpdated", {
-                detail: { data: updatedObras, collection: "obras" },
-              }),
-            );
-          }
         }
 
-        return id;
+        // SEGUNDO: Atualizar localStorage (backup)
+        const updatedObras = [...existingObras, obra];
+        safeSetLocalStorage("works", updatedObras);
+
+        setState((prev) => ({
+          ...prev,
+          obras: updatedObras,
+          totalItems: prev.totalItems + 1,
+        }));
+
+        // Trigger update event (only on client side)
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("obrasUpdated", {
+              detail: { data: updatedObras, collection: "obras" },
+            }),
+          );
+        }
+
+        return obra.id;
       } catch (error) {
         console.error("❌ Error adding obra:", error);
         throw error;
