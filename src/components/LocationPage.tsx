@@ -46,6 +46,12 @@ export const LocationPage: React.FC<LocationPageProps> = ({
 
       {/* User Location Map */}
       <UserLocationMap currentUser={currentUser} allUsers={allUsers} />
+
+      {/* Team Location Manager - Only for admins */}
+      {(currentUser?.role === "super_admin" ||
+        currentUser?.role === "admin") && (
+        <TeamLocationManager currentUser={currentUser} allUsers={allUsers} />
+      )}
     </div>
   );
 };
