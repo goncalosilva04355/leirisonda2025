@@ -88,7 +88,7 @@ export class FirestoreDataService {
 
   // Gravar dados de login (sem senha por segurança)
   async saveLoginData(formData: LoginFormData): Promise<string | null> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Silenciosamente retorna null - o aviso já foi mostrado em isAvailable()
       return null;
     }
