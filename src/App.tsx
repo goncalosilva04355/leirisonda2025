@@ -529,7 +529,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZA��ÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -566,7 +566,7 @@ function App() {
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
-      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
+      console.log("���� Phone dialer synchronized:", event.detail.enabled);
     };
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
@@ -1174,7 +1174,9 @@ function App() {
           safeLocalStorage.getItem("isAuthenticated");
 
         // DISABLED: Auto-login sempre desabilitado
-        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
+        console.log(
+          "��� Auto-login desabilitado - utilizador deve fazer login",
+        );
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
@@ -7118,7 +7120,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🔥 Trabalhos realizados</li>
                                 <li>🎉 Técnicos responsáveis</li>
                                 <li>• Datas e duraç✅es</li>
-                                <li>�� Estados e observações</li>
+                                <li>• Estados e observações</li>
                               </ul>
                             </div>
                             <button
@@ -8116,7 +8118,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="space-y-3 mb-4">
                       <p className="text-sm text-gray-600">
-                        <strong>{maintenance.length}</strong> manuten����
+                        <strong>{maintenance.length}</strong> manuten��
                         registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
@@ -11192,7 +11194,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     >
       <InstantSyncManagerSafe>
         <div className="min-h-screen bg-gray-50">
-          <StableModeIndicator />
           <SimpleFirestoreStatus />
           {/* Firebase works automatically in background - no UI elements */}
           {/* Sidebar */}
