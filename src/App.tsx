@@ -323,6 +323,23 @@ const showNotification = (
 };
 
 function App() {
+  console.log("🚀 App iniciando...");
+
+  // PROTEÇÃO CRÍTICA: Garantir que sempre há um fallback para renderização
+  const [renderFallback, setRenderFallback] = useState(false);
+
+  useEffect(() => {
+    // Se após 5 segundos ainda não renderizou nada, ativar fallback
+    const fallbackTimer = setTimeout(() => {
+      console.warn(
+        "⚠️ App pode ter problema de renderização, ativando fallback",
+      );
+      setRenderFallback(true);
+    }, 5000);
+
+    return () => clearTimeout(fallbackTimer);
+  }, []);
+
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
 
@@ -855,7 +872,7 @@ function App() {
     return clients.filter((c) => c.status === "Ativo").length;
   }, [clients]);
 
-  // Funç��es de compatibilidade simplificadas
+  // Fun����es de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -7057,7 +7074,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa✅ões Gerais
+                          Observa✅��es Gerais
                         </label>
                         <textarea
                           rows={4}
