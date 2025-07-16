@@ -116,7 +116,7 @@ import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 // import { autoSyncService } from "./services/autoSyncService";
 // import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-// import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
+// import "./utils/testFirestore"; // Passo 3: Teste autom���tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -438,7 +438,7 @@ function App() {
   const [advancedPasswordError, setAdvancedPasswordError] = useState("");
 
   // Função para determinar o modo de dados atual
-    const getDataMode = (): string => {
+  const getDataMode = (): string => {
     try {
       // const isFirestoreActive = isFirestoreReady();
       // if (isFirestoreActive) {
@@ -873,22 +873,22 @@ function App() {
       console.log("🔄 Loading users from localStorage...");
 
       try {
-                // SÓ carregar do Firestore se estiver autenticado
+        // SÓ carregar do Firestore se estiver autenticado
         // if (isAuthenticated && isFirestoreReady()) {
-          console.log("🔥 Carregando utilizadores do Firestore...");
+        //   console.log("🔥 Carregando utilizadores do Firestore...");
 
-          // Tentar carregar do Firestore
-          // const firestoreUsers = await firestoreService.getUtilizadores();
+        //   // Tentar carregar do Firestore
+        //   const firestoreUsers = await firestoreService.getUtilizadores();
 
-          // if (firestoreUsers.length > 0) {
-          //   console.log(
-          //     "✅ Utilizadores carregados do Firestore:",
-          //     firestoreUsers.length,
-          //   );
-          //   setUsers(firestoreUsers as any);
-          //   return;
-          // }
-        }
+        //   if (firestoreUsers.length > 0) {
+        //     console.log(
+        //       "✅ Utilizadores carregados do Firestore:",
+        //       firestoreUsers.length,
+        //     );
+        //     setUsers(firestoreUsers as any);
+        //     return;
+        //   }
+        // }
 
         // Fallback para localStorage se Firestore não tiver dados
         const savedUsers = safeLocalStorage.getItem("app-users");
@@ -2691,7 +2691,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         console.log(`👤 Criando utilizador ${userForm.name} no Firestore...`);
 
-                // Criar no Firestore primeiro
+        // Criar no Firestore primeiro
         // const firestoreId = await firestoreService.createUtilizador(newUser);
 
         // if (firestoreId) {
@@ -7008,7 +7008,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura���������ões
+                        Configura�����������es
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7759,7 +7759,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </p>
                                       <ul className="text-red-700 text-sm space-y-1 mb-4">
                                         <li>
-                                          📞 Todas as obras ({works.length}{" "}
+                                          ��� Todas as obras ({works.length}{" "}
                                           registos)
                                         </li>
                                         <li>
@@ -8303,7 +8303,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenções</span>
+                          <span className="text-xs">Manuten��ões</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
