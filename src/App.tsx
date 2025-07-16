@@ -162,6 +162,7 @@ import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicado
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
 import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
+import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 console.log(
   "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
 );
@@ -1356,7 +1357,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicializaç��o:", error);
+        console.error("❌ Erro na inicializaç����o:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -5320,7 +5321,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  N���vel da Água (m) *
+                                  N����vel da Água (m) *
                                 </label>
                                 <input
                                   type="number"
@@ -6901,7 +6902,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
                           "Enchimento autom����tico",
-                          "Limpeza linha de água",
+                          "Limpeza linha de ��gua",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
                           "Limpeza skimmers",
@@ -8328,7 +8329,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
-                        <li>€ Estados de progresso</li>
+                        <li>��� Estados de progresso</li>
                       </ul>
                     </div>
                     <button
@@ -11377,7 +11378,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Furos e Capta����ões de Água
+                        Furos e Capta��ões de Água
                       </p>
                     </div>
                   </div>
