@@ -572,7 +572,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇ��O CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -731,8 +731,8 @@ function App() {
     try {
       console.log("🔧 addMaintenance iniciado com Firestore ativo");
 
-      const firestoreId =
-        await ultraSimpleOfflineService.createMaintenance(data);
+      // const firestoreId =
+      //   await ultraSimpleOfflineService.createMaintenance(data);
 
       if (firestoreId) {
         console.log("🔥 Manutenção criada no Firestore:", firestoreId);
@@ -2024,7 +2024,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������ Navigating to dashboard");
+            console.log("������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -5271,7 +5271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     1¼ polegadas
                                   </option>
                                   <option key="1.5" value="1.5">
-                                    1�� polegadas
+                                    1½ polegadas
                                   </option>
                                   <option key="2" value="2">
                                     2 polegadas
@@ -5379,7 +5379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa������ções Específicas do Furo */}
+                          {/* Observa����ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -8222,7 +8222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>������ Informações contratuais</li>
+                        <li>���� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
