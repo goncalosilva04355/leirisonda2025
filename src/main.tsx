@@ -4,6 +4,9 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Production safety - prevent crashes
+import "./utils/productionSafety";
+
 // Adicionar error boundary e tratamento global de erros
 window.addEventListener("error", (event) => {
   console.error("❌ Global error:", event.error);
