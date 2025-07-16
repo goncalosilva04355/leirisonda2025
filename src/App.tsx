@@ -3347,7 +3347,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.contact && (
                                 <div className="flex items-center space-x-2">
                                   <span className="text-sm font-medium text-gray-600">
-                                    📞 Contacto:
+                                    ���� Contacto:
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -6787,7 +6787,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza skimmers",
                           "Verificação equipamentos",
                         ].map((task, index) => (
-                          <label key={index} className="flex items-center">
+                          <label
+                            key={`task-${task}-${index}`}
+                            className="flex items-center"
+                          >
                             <input
                               type="checkbox"
                               className="mr-2 text-green-600 focus:ring-green-500"
@@ -10404,7 +10407,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="scheduled">Agendado</option>
                           <option value="in_progress">Em Progresso</option>
-                          <option value="completed">Concluído</option>
+                          <option value="completed">Conclu��do</option>
                           <option value="cancelled">Cancelado</option>
                         </select>
                       </div>
@@ -11100,7 +11103,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("✅ Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
@@ -11207,7 +11210,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           </div>
         )}
 
-        {/* Admin Page - também funciona na p✅gina de login */}
+        {/* Admin Page - tamb��m funciona na p✅gina de login */}
         {isAdminAuthenticated && (
           <div className="fixed inset-0 bg-white z-50">
             <AdminPage
