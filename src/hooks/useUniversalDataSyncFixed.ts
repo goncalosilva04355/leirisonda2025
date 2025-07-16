@@ -302,7 +302,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
       window.addEventListener("storage", handleStorageChange);
       return () => window.removeEventListener("storage", handleStorageChange);
     }
-  }, [safeGetLocalStorage]);
+  }, []); // FIXED: Empty dependencies to prevent infinite re-renders
 
   // Add obra function
   const addObra = useCallback(
