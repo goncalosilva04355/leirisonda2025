@@ -62,46 +62,52 @@ const AppSimple: React.FC = () => {
   // Error state
   if (error) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #dc2626 0%, #991b1b 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        <div
-          style={{ textAlign: "center", maxWidth: "500px", padding: "2rem" }}
-        >
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>❌</div>
-          <div
-            style={{
-              fontSize: "1.5rem",
-              marginBottom: "1rem",
-              fontWeight: "bold",
-            }}
-          >
-            Erro na Aplicação
+      <div className="min-h-screen bg-blue-200 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          {/* Logo Leirisonda */}
+          <div className="text-center mb-8">
+            <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                alt="Leirisonda - Furos e Captações de Água, Lda"
+                className="w-full h-auto object-contain"
+                style={{ maxHeight: "80px" }}
+              />
+            </div>
           </div>
-          <div style={{ opacity: 0.8, marginBottom: "2rem" }}>{error}</div>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              background: "rgba(255, 255, 255, 0.2)",
-              color: "white",
-              border: "1px solid rgba(255, 255, 255, 0.3)",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.5rem",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: "bold",
-            }}
-          >
-            🔄 Recarregar
-          </button>
+
+          {/* Conteúdo do Erro */}
+          <div className="text-center space-y-6">
+            {/* Título */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                Erro na Aplicação
+              </h1>
+              <p className="text-gray-600 text-sm">
+                Sistema de Gestão de Piscinas
+              </p>
+            </div>
+
+            {/* Mensagem de erro */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-700 text-sm">{error}</p>
+            </div>
+
+            {/* Botão de recarga */}
+            <div className="space-y-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full bg-blue-300 text-white py-2 px-4 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
+              >
+                🔄 Recarregar Aplicação
+              </button>
+            </div>
+
+            {/* Informações adicionais */}
+            <div className="text-xs text-gray-400 text-center pt-4 border-t border-gray-100">
+              <p>Se o problema persistir, contacte o suporte</p>
+            </div>
+          </div>
         </div>
       </div>
     );
