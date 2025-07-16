@@ -29,6 +29,7 @@ import { AuthorizedUser } from "../config/authorizedUsers";
 import { useAuthorizedUsers } from "../hooks/useAuthorizedUsers";
 import { safeLocalStorage } from "../utils/storageUtils";
 import NotificationPermissionsManager from "./NotificationPermissionsManager";
+import { PersonalLocationSettings } from "./PersonalLocationSettings";
 
 interface UnifiedAdminPageProps {
   currentUser: any;
