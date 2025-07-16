@@ -1,30 +1,100 @@
+// App de teste simples para diagnosticar problema de tela branca
 import React from "react";
 
-const AppTest: React.FC = () => {
+export default function AppTest() {
+  console.log("🧪 AppTest renderizado com sucesso!");
+
   return (
     <div
       style={{
-        padding: "20px",
-        backgroundColor: "#f0f0f0",
         minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        fontFamily: "system-ui",
       }}
     >
-      <h1>🔧 Teste de Renderização</h1>
-      <p>Se vê esta mensagem, a aplicação React está a funcionar.</p>
-      <button
-        onClick={() => alert("Botão funciona!")}
+      <div
         style={{
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
+          background: "white",
+          padding: "2rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          maxWidth: "500px",
+          textAlign: "center",
         }}
       >
-        Testar Clique
-      </button>
+        <h1
+          style={{
+            color: "#059669",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+          }}
+        >
+          ✅ Leirisonda Ativo
+        </h1>
+        <p
+          style={{
+            color: "#6b7280",
+            marginBottom: "2rem",
+          }}
+        >
+          A aplicação está a funcionar corretamente!
+        </p>
+        <div
+          style={{
+            background: "#f0f9ff",
+            border: "1px solid #0ea5e9",
+            borderRadius: "0.5rem",
+            padding: "1rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <h3
+            style={{
+              color: "#0ea5e9",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Status do Sistema:
+          </h3>
+          <ul
+            style={{
+              textAlign: "left",
+              margin: 0,
+              paddingLeft: "1rem",
+              color: "#374151",
+            }}
+          >
+            <li>✅ React carregado</li>
+            <li>✅ Componente renderizado</li>
+            <li>✅ CSS funcionando</li>
+            <li>✅ JavaScript ativo</li>
+          </ul>
+        </div>
+        <button
+          onClick={() => {
+            console.log("🔄 Recarregando para app principal...");
+            window.location.reload();
+          }}
+          style={{
+            background: "#3b82f6",
+            color: "white",
+            padding: "0.75rem 1.5rem",
+            border: "none",
+            borderRadius: "0.5rem",
+            cursor: "pointer",
+            fontSize: "1rem",
+            fontWeight: "bold",
+          }}
+        >
+          Recarregar App Principal
+        </button>
+      </div>
     </div>
   );
-};
-
-export default AppTest;
+}
