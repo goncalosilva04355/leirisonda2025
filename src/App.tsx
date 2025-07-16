@@ -273,7 +273,7 @@ console.error = (...args) => {
 
 // Diagnóstico Firebase
 // import "./utils/firebaseDiagnostic";
-// Detecção inteligente de Firestore
+// Detecç��o inteligente de Firestore
 // import "./utils/smartFirestoreDetection";
 
 // Teste de login
@@ -335,7 +335,7 @@ function App() {
   (window as any).lastAppRenderTime = renderTime;
 
   // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false);
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
 
   useEffect(() => {
     const initMobileFirebase = async () => {
@@ -1283,7 +1283,7 @@ function App() {
   const toggleMapsRedirect = (enabled: boolean) => {
     setEnableMapsRedirect(enabled);
     safeLocalStorage.setItem("enableMapsRedirect", enabled.toString());
-    console.log("🗺️ Configuração Maps Redirect atualizada:", enabled);
+    console.log("����️ Configuração Maps Redirect atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1344,7 +1344,7 @@ function App() {
   });
 
   // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(false);
+  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
 
   useEffect(() => {
     console.log("🚀 App safety check...");
@@ -2205,7 +2205,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est���� ativo após login
+        // Garantir que auto sync est������ ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -2546,7 +2546,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN��ÕES RECENTES ===
+=== MANUTEN����ES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -4425,7 +4425,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <Wrench className="h-8 w-8 text-gray-400" />
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        Nenhuma manutenção registada
+                        Nenhuma manutenç��o registada
                       </h3>
                       <p className="text-gray-600 text-sm">
                         As manutenções aparecerão aqui quando forem criadas
@@ -7804,7 +7804,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instruç✅es
+                                      Instru��✅es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -8357,7 +8357,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Relat📞rio de Obras
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Projetos e construç✅es
+                          Projetos e construç��es
                         </p>
                       </div>
                     </div>
@@ -8439,7 +8439,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
-                        <li>• An✅lise de performance</li>
+                        <li>• An��lise de performance</li>
                       </ul>
                     </div>
                     <button
