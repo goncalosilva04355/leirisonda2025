@@ -830,7 +830,7 @@ function App() {
 
   // Debug logging removed to prevent re-render loops
 
-  // Proteç���o de dados críticos - NUNCA PERDER DADOS
+  // Proteç���o de dados cr��ticos - NUNCA PERDER DADOS
   const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
     useDataProtection();
 
@@ -7747,7 +7747,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                           registos)
                                         </li>
                                         <li>
-                                          🔥 Dados do Firebase e armazenamento
+                                          �� Dados do Firebase e armazenamento
                                           local
                                         </li>
                                       </ul>
@@ -8272,7 +8272,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             className="mr-2"
                             defaultChecked
                           />
-                          <span className="text-xs">Manutenç🎉es</span>
+                          <span className="text-xs">Manutenções</span>
                         </label>
                         <label className="flex items-center">
                           <input type="checkbox" className="mr-2" />
@@ -10336,7 +10336,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Tipo de Manuten��ão
+                          Tipo de Manutenção
                         </label>
                         <select
                           defaultValue={editingMaintenance?.type}
@@ -12133,7 +12133,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Manutenç🎉es
+                        Manutenções
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -12150,7 +12150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manutenç��o
+                            Próxima Manutenção
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.nextMaintenance
@@ -12175,7 +12175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Cria✅ão */}
+                    {/* Data de Criação */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
@@ -12255,7 +12255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <AlertCircle className="h-8 w-8 text-red-600" />
                         </div>
                         <h1 className="text-xl font-bold text-gray-900 mb-2">
-                          Erro de Renderiza✅ão
+                          Erro de Renderização
                         </h1>
                         <p className="text-gray-600 mb-4">
                           Ocorreu um erro ao carregar a página. Por favor, tente
