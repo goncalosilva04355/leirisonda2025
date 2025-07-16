@@ -53,7 +53,7 @@ async function waitForFirebaseApp(
   throw new Error("Firebase App não inicializou após aguardar");
 }
 
-// Função para verificar se Firestore está disponível no projeto
+// Fun��ão para verificar se Firestore está disponível no projeto
 async function checkFirestoreAvailability(app: any): Promise<boolean> {
   // Se já verificamos, retornar o resultado cached
   if (firestoreAvailabilityChecked) {
@@ -105,6 +105,13 @@ async function initializeFirestore(
     console.log(
       `💾 Tentando inicializar Firestore... (tentativa ${retryCount + 1}/${maxRetries + 1})`,
     );
+
+    // Verificar se Firebase tem apps disponíveis
+    const apps = getApps();
+    if (apps.length === 0) {
+      console.log("📱 Firebase não inicializado ainda, aguardando...");
+      throw new Error("Firebase App não inicializada");
+    }
 
     // Aguardar Firebase App estar pronto
     const app = await waitForFirebaseApp();
