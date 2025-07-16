@@ -1,7 +1,7 @@
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
 
-// FOR��AR INICIALIZAÇÃO FIREBASE SIMPLES
+// FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
 // import "./utils/simpleFirebaseInit";
 
 // VERIFICAÇÃO BÁSICA DE SAÚDE
@@ -158,6 +158,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
+import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
@@ -2488,7 +2489,7 @@ RESUMO EXECUTIVO:
 
 ESTAT📞STICAS:
 - Piscinas Ativas: ${pools.filter((p) => p.status === "Ativa").length}
-- Manutenç✅s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
+- Manutenç���s Concluídas: ${maintenance.filter((m) => m.status === "completed").length}
 - Obras Pendentes: ${works.filter((w) => w.status === "pending" || w.status === "pendente").length}
 
 PRÓXIMAS AÇÕES:
@@ -4169,7 +4170,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       onClick={() => setActiveSection("futuras-manutencoes")}
                       className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg font-medium"
                     >
-                      Futuras Manuten✅��es
+                      Futuras Manuten✅ões
                     </button>
                   </div>
                 </div>
@@ -10491,7 +10492,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Limpeza">Limpeza</option>
                           <option value="Tratamento">Tratamento</option>
-                          <option value="Manutenç��o">Manuten��ão</option>
+                          <option value="Manutenç€o">Manuten��ão</option>
                           <option value="Reparaç���">Reparação</option>
                         </select>
                       </div>
@@ -11029,7 +11030,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>����</span>
-                  <span>Observaç€s e pr��xima manutenção</span>
+                  <span>Observaç€s e pr✅xima manutenção</span>
                 </div>
               </div>
             </div>
@@ -11877,7 +11878,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.actualCost
-                                ? `��${selectedWork.actualCost.toLocaleString("pt-PT")}`
+                                ? `€${selectedWork.actualCost.toLocaleString("pt-PT")}`
                                 : "Não especificado"}
                             </p>
                           </div>
