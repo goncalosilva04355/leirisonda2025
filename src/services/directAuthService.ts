@@ -1,7 +1,7 @@
 // Serviço de autenticação direto que sempre aceita os emails do Gonçalo
 import { UserProfile } from "./localAuthService";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
-import { saveToFirestore } from "../utils/ultraSimpleFirestore";
+import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
 class DirectAuthService {
   // Lista fixa de emails autorizados (hardcoded para garantir que funciona)
