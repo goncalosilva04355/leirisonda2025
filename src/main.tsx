@@ -4,6 +4,23 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Adicionar error boundary e tratamento global de erros
+window.addEventListener("error", (event) => {
+  console.error("❌ Global error:", event.error);
+  console.error("❌ Error details:", {
+    message: event.message,
+    filename: event.filename,
+    lineno: event.lineno,
+    colno: event.colno,
+    stack: event.error?.stack,
+  });
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("❌ Unhandled promise rejection:", event.reason);
+  console.error("❌ Promise:", event.promise);
+});
+
 // App original reparado
 import App from "./App";
 // App mínimo para teste
