@@ -1414,7 +1414,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "��€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -8250,7 +8250,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
-                        <li>• Próximas interven��ões</li>
+                        <li>• Pr��ximas interven��ões</li>
                       </ul>
                     </div>
                     <button
@@ -9160,16 +9160,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Sem Folha de Obra (
-                      {
-                        works.filter(
-                          (w) =>
-                            !w.folhaGerada &&
-                            w.status !== "completed" &&
-                            w.status !== "concluida",
-                        ).length
-                      }
-                      )
+                      Sem Folha de Obra ({worksCounts.noSheet})
                     </button>
                   </div>
                 </div>
