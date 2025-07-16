@@ -953,20 +953,20 @@ function App() {
           setUsers(parsedUsers);
 
           // Sincronizar com Firestore se disponível
-          if (isFirestoreReady()) {
-            console.log(
-              "🔄 Sincronizando utilizadores locais para Firestore...",
-            );
-            for (const user of parsedUsers) {
-              if (!(user as any).firestoreId) {
-                const firestoreId =
-                  await firestoreService.createUtilizador(user);
-                if (firestoreId) {
-                  (user as any).firestoreId = firestoreId;
-                }
-              }
-            }
-          }
+          // if (isFirestoreReady()) {
+          //   console.log(
+          //     "🔄 Sincronizando utilizadores locais para Firestore...",
+          //   );
+          //   for (const user of parsedUsers) {
+          //     if (!(user as any).firestoreId) {
+          //       const firestoreId =
+          //         await firestoreService.createUtilizador(user);
+          //       if (firestoreId) {
+          //         (user as any).firestoreId = firestoreId;
+          //       }
+          //     }
+          //   }
+          // }
         } else {
           console.log(
             "📝 No saved users found, initializing with default users",
@@ -4529,7 +4529,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <button
                                 onClick={() =>
                                   confirmDelete(
-                                    `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
+                                    `Tem a certeza que deseja apagar a manutenç���o "${maint.type}" da ${maint.poolName}?`,
                                     () => dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
@@ -7634,7 +7634,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       </li>
                                       <li>
                                         • A marcaç€ automática funciona melhor
-                                        em dispositivos móveis
+                                        em dispositivos m��veis
                                       </li>
                                       <li>
                                         €O Google Maps abre numa nova janela/tab
@@ -8114,7 +8114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>������� Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>��� Próximas intervenções</li>
                       </ul>
