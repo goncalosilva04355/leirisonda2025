@@ -1135,6 +1135,9 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                   </p>
                 </div>
 
+                {/* Orphan User Cleanup */}
+                <OrphanUserCleanup />
+
                 {/* Data Management */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <div className="flex items-center mb-4">
