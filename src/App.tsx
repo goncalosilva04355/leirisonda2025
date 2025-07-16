@@ -708,7 +708,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺�� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -1562,7 +1562,7 @@ function App() {
     return () => {
       autoSyncService.stopAutoSync();
     };
-  }, [isAuthenticated]); // Só executa quando faz login
+  }, [isAuthenticated, mobileFirebaseReady]); // Só executa quando faz login E Firebase está pronto
 
   // Listeners para atualizações automáticas da UI
   useEffect(() => {
