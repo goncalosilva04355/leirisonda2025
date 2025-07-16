@@ -104,18 +104,18 @@ import {
 
 import { syncManager } from "./utils/syncManager";
 import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import {
-  isFirebaseReady,
-  isFirestoreReady,
-  getFirebaseFirestore,
-} from "./firebase/leiriaConfig";
+// import {
+//   isFirebaseReady,
+//   isFirestoreReady,
+//   getFirebaseFirestore,
+// } from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç����o
-// import "./utils/testFirebaseBasic"; // Passo 1: Teste autom��tico Firebase básico
+// import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
@@ -12124,7 +12124,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Especifica��✅es T��cnicas */}
+                    {/* Especifica��✅es Técnicas */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Especificações Técnicas
