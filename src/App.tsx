@@ -116,7 +116,7 @@ import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Se
 import { autoSyncService } from "./services/autoSyncService";
 import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
-// import "./utils/testFirestore"; // Passo 3: Teste automático Firestore - comentado temporariamente
+// import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // import "./utils/permanentMockCleanup"; // Limpeza permanente de dados mock
@@ -300,7 +300,7 @@ function App() {
 
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
-    // Restaurar utilizadores automaticamente se necessário
+        // Restaurar utilizadores automaticamente se necessário
     // userRestoreService.autoRestore();
 
     // Monitorização automática de persistência de dados
@@ -309,15 +309,15 @@ function App() {
         // Aguardar um pouco antes de iniciar verificação
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
-        // Verificar estado da persistência
-        const status = await dataPersistenceManager.diagnoseDataPersistence();
+                // Verificar estado da persistência
+        // const status = await dataPersistenceManager.diagnoseDataPersistence();
 
-        if (!status.working) {
-          console.warn("€ Problema de persistência detectado:", status);
-          setPersistenceIssueDetected(true);
+        // if (!status.working) {
+        //   console.warn("€ Problema de persistência detectado:", status);
+        //   setPersistenceIssueDetected(true);
 
-          // Tentar reparar automaticamente
-          const repaired = await dataPersistenceManager.repairDataPersistence();
+        //   // Tentar reparar automaticamente
+        //   const repaired = await dataPersistenceManager.repairDataPersistence();
 
           if (repaired) {
             setPersistenceIssueDetected(false);
@@ -4167,7 +4167,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manutenção</span>
+                      <span>Nova Manuten��ão</span>
                     </button>
                   </div>
                 </div>
@@ -6857,7 +6857,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Eye className="h-4 w-4 text-green-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Fotografias da Manutenç✅o
+                          Fotografias da Manutenç���o
                         </h3>
                       </div>
 
@@ -8079,7 +8079,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
-                        <li>• Histórico de manutenções</li>
+                        <li>• Histórico de manuten��ões</li>
                         <li>• Próximas intervenções</li>
                       </ul>
                     </div>
@@ -9663,7 +9663,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações sobre a obra
+                            Observaç��es sobre a obra
                           </label>
                           <textarea
                             defaultValue={editingWork?.observations}
@@ -12315,7 +12315,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           )}
         </div>
 
-        {/* Mobile Firebase Fix - Show when conflicts detected */}
+                {/* Mobile Firebase Fix - Show when conflicts detected */}
         {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
 
         {/* App Status Indicator */}
