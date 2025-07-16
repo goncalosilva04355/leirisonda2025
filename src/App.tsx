@@ -1354,6 +1354,30 @@ function App() {
     }, 100);
   }, []);
 
+  // PROTEÇÃO CRÍTICA: Se por algum motivo os hooks falharem, garantir que sempre renderize algo
+  if (!isAppReady) {
+    console.log("⏳ App still initializing, showing loading screen");
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontFamily: "system-ui, -apple-system, sans-serif",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏊‍♂️</div>
+          <h1 style={{ margin: "0 0 1rem 0", fontSize: "2rem" }}>Leirisonda</h1>
+          <p style={{ margin: 0, opacity: 0.8 }}>Inicializando aplicação...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Initialize authentication state with auto-login check
   useEffect(() => {
     console.log("�� SECURITY: App initialization started");
@@ -10984,7 +11008,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>�������</span>
+                  <span>���������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -12191,7 +12215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            🔥🎉 {selectedPool.location}
+                            ��🎉 {selectedPool.location}
                           </button>
                         </div>
                       </div>
