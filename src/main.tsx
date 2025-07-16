@@ -64,6 +64,10 @@ import AppProduction from "./AppProduction";
 import AppFixed from "./AppFixed";
 // App de teste para diagnosticar
 import AppTest from "./AppTest";
+// App minimal para teste
+import AppMinimalTest from "./AppMinimalTest";
+// App limpo para produção
+import AppCleanProduction from "./AppCleanProduction";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader

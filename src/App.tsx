@@ -371,7 +371,7 @@ function App() {
   //   refreshStatus,
   // } = useForceFirestore();
 
-  // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
+  // Substitu��do por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
   const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
   const refreshStatus = () => console.log("REST API n��o precisa refresh");
@@ -444,7 +444,7 @@ function App() {
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificação
+        // Aguardar um pouco antes de iniciar verificaç��o
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -617,7 +617,7 @@ function App() {
 
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
-      console.error("���� Erro durante refresh do Dashboard:", error);
+      console.error("������ Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
     }
   }, [universalSync]);
@@ -1269,7 +1269,7 @@ function App() {
   const togglePhoneDialer = (enabled: boolean) => {
     setEnablePhoneDialer(enabled);
     safeLocalStorage.setItem("enablePhoneDialer", enabled.toString());
-    console.log("📞 Configuração Phone Dialer atualizada:", enabled);
+    console.log("���� Configuração Phone Dialer atualizada:", enabled);
 
     // Dispatch event for other components
     window.dispatchEvent(
@@ -1458,7 +1458,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
+                "���€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -1524,7 +1524,7 @@ function App() {
     }
 
     const initAutoSync = async () => {
-      // Aguardar Firestore estar pronto APÓS LOGIN
+      // Aguardar Firestore estar pronto AP��S LOGIN
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       if (isFirestoreReady()) {
@@ -1619,7 +1619,7 @@ function App() {
             setAutoSyncActive(true);
             console.log("✅ Auto sync garantido após login!");
           } else {
-            console.warn("⚠️ Falha ao garantir auto sync após login");
+            console.warn("⚠️ Falha ao garantir auto sync ap��s login");
             setAutoSyncActive(false);
           }
         } else {
@@ -1646,7 +1646,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç����es
+    // Adicionar listeners para todas as coleç������es
     const collections = [
       "obras",
       "piscinas",
@@ -2195,7 +2195,7 @@ function App() {
           // Handle any pending hash navigation after login
           const hash = window.location.hash.substring(1);
           if (hash && hash !== "login") {
-            console.log("🔄 Navigating to hash section:", hash);
+            console.log("���� Navigating to hash section:", hash);
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
@@ -3410,7 +3410,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar TODAS as obras atribu✅das ao utilizador atual (excluir concluídas)
+                          // Filtrar TODAS as obras atribu��das ao utilizador atual (excluir concluídas)
                           const assignedWorks = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -3681,7 +3681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       {maint.poolName}
                                     </h3>
                                     <div className="flex items-center space-x-1 text-gray-600 text-sm">
-                                      <span>🔧</span>
+                                      <span>��</span>
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
@@ -5588,7 +5588,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç✅es sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -7457,77 +7457,20 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {safeActiveAdminTab === "utilizadores" &&
-                      (currentUser?.role === "super_admin" ||
-                        currentUser?.role === "admin") && (
-                        <div className="space-y-6">
-                          <div>
-                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Gestão de Utilizadores
-                            </h2>
-                            <p className="text-gray-600 mb-6">
-                              Para criar e gerir utilizadores, utilize o menu de
-                              administração.
-                            </p>
-                          </div>
-
-                          <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                            <div className="flex items-start space-x-3">
-                              <div className="bg-blue-100 rounded-full p-2">
-                                <Users className="h-5 w-5 text-blue-600" />
-                              </div>
-                              <div className="flex-1">
-                                <h3 className="text-lg font-medium text-blue-900 mb-2">
-                                  Gestão de Utilizadores Movida
-                                </h3>
-                                <p className="text-blue-700 mb-4">
-                                  A gestão de utilizadores foi consolidada no
-                                  menu de administração para evitar duplicações
-                                  e melhorar a experiência.
-                                </p>
-                                <button
-                                  onClick={() => {
-                                    setShowAdminLogin(true);
-                                  }}
-                                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
-                                >
-                                  <Shield className="h-4 w-4" />
-                                  <span>Ir para Administração</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
+                    {safeActiveAdminTab === "utilizadores" && (
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                          Gestão de Utilizadores
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                          Adicionar, editar e gerir utilizadores do sistema.
+                        </p>
+                        <div className="text-center text-gray-500">
+                          <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                          <p>Gestão de utilizadores em desenvolvimento</p>
                         </div>
-                      )}
-                  </div>
-                </div>
-                ) : ( /* Simple configuration for non-admin users */
-                <div className="space-y-6">
-                  {/* System Information */}
-                  <div className="bg-white rounded-lg p-6 shadow-sm">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                      Informações do Sistema
-                    </h3>
-                    <div className="grid gap-3">
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Vers🎉o</span>
-                        <span className="font-medium">1.0.0</span>
                       </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Utilizador Ativo</span>
-                        <span className="font-medium">{currentUser?.name}</span>
-                      </div>
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="text-gray-600">Perfil</span>
-                        <span className="font-medium capitalize">
-                          {currentUser?.role?.replace("_", " ")}
-                        </span>
-                      </div>
-                      <div className="flex justify-between py-2">
-                        <span className="text-gray-600">Modo de Dados</span>
-                        <span className="font-medium">{getDataMode()}</span>
-                      </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -8034,7 +7977,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                               </div>
                               <p className="text-gray-600 mb-6">
-                                Ferramentas de diagnóstico e correção para
+                                Ferramentas de diagn��stico e correção para
                                 problemas do sistema.
                               </p>
 
@@ -11041,7 +10984,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               </h4>
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
-                  <span>�����</span>
+                  <span>�������</span>
                   <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -11997,7 +11940,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 Tipo de Coluna
                               </label>
                               <p className="text-gray-900">
-                                {selectedWork.columnType || "Não especificado"}
+                                {selectedWork.columnType || "N��o especificado"}
                               </p>
                             </div>
                             <div>
@@ -12257,7 +12200,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa🎉ões do Cliente
+                        Informa��ões do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>

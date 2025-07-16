@@ -3,7 +3,7 @@ import { Database } from "lucide-react";
 import {
   saveLoginAttempt,
   testFirestoreConnection,
-} from "../services/firestoreDataService";
+} from "../services/firestoreDataServiceRest";
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 import { LoginHints } from "../components/LoginHints";
 import NetlifyEnvChecker from "../components/NetlifyEnvChecker";

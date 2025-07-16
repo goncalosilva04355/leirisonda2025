@@ -59,28 +59,33 @@ async function waitForFirebaseApp(
     }
   }
 
-  console.error("❌ Firebase App não inicializou após todas as tentativas");
+  console.warn("⚠️ Firebase App não inicializou após todas as tentativas");
   console.log("🔧 Tentando inicialização de emergência...");
 
   // Tentativa de emergência - inicializar Firebase se ainda não foi
   try {
     const { initializeApp } = await import("firebase/app");
-    const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+    const { getFirebaseConfig } = await import("../config/firebaseEnv");
 
-    const config = getLegacyFirebaseConfig();
+    const config = getFirebaseConfig();
     if (config && config.projectId && config.apiKey) {
       console.log("🚀 Tentando inicialização de emergência do Firebase...");
       const emergencyApp = initializeApp(config, `emergency-${Date.now()}`);
       console.log("✅ Firebase inicializado em modo de emergência");
       return emergencyApp;
+    } else {
+      console.warn("⚠️ Configuração Firebase inválida");
+      return null;
     }
   } catch (emergencyError) {
-    console.error("❌ Falha na inicialização de emergência:", emergencyError);
+    console.warn("⚠️ Falha na inicialização de emergência:", emergencyError);
+    return null;
   }
 
-  throw new Error(
-    "Firebase App não inicializou após aguardar e tentativas de emergência",
+  console.warn(
+    "⚠️ Firebase App não inicializou após aguardar e tentativas de emergência",
   );
+  return null;
 }
 
 // Função para verificar se Firestore está disponível no projeto
@@ -139,6 +144,11 @@ async function initializeFirestore(
     // Aguardar Firebase App estar pronto
     const app = await waitForFirebaseApp();
 
+    if (!app) {
+      console.warn("⚠️ Firebase App não disponível, continuando sem Firestore");
+      return null;
+    }
+
     console.log("🎆 Firebase App confirmada:", {
       name: app.name,
       projectId: app.options.projectId,
@@ -168,21 +178,19 @@ async function initializeFirestore(
 
     return db;
   } catch (error: any) {
-    console.error(
-      `❌ Erro ao inicializar Firestore (tentativa ${retryCount + 1}):`,
+    console.warn(
+      `⚠️ Erro ao inicializar Firestore (tentativa ${retryCount + 1}):`,
       error.message,
     );
-    console.error("🔍 Error code:", error.code);
+    console.warn("🔍 Error code:", error.code);
 
     // Se é erro de Firestore não disponível, não tentar novamente
     if (
       error.code === "firestore/unavailable" ||
       error.message.includes("Service firestore is not available")
     ) {
-      console.error(
-        "❌ Firestore não está habilitado - não tentando novamente",
-      );
-      console.error(
+      console.warn("⚠️ Firestore não está habilitado - não tentando novamente");
+      console.warn(
         "💡 A aplicação continuará funcionando com localStorage apenas",
       );
       return null;
@@ -303,7 +311,7 @@ export async function forceFirestoreInit(): Promise<boolean> {
   console.log("🔄 Forçando inicialização...");
 
   try {
-    console.log("🔄 Forçando inicialização Firestore...");
+    console.log("🔄 Forçando inicializaç��o Firestore...");
     firestoreInstance = await initializeFirestore();
 
     if (firestoreInstance) {
@@ -326,7 +334,7 @@ export function clearFirestoreInstance(): void {
   console.log("🧹 Instância Firestore limpa");
 }
 
-// Função para ativar modo local (desativada)
+// Funç��o para ativar modo local (desativada)
 export function enableLocalMode(): void {
   console.log("⚠️ Modo local desativado - usando Firebase ativo");
   console.log("🔥 Firebase/Firestore totalmente funcionais");

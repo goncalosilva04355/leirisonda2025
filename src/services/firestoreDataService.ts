@@ -1,17 +1,9 @@
-// Serviço para gravação de dados no Firebase Firestore
+// Serviço para gravação de dados no Firebase Firestore via REST API
 import {
-  collection,
-  addDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-  Timestamp,
-  serverTimestamp,
-} from "firebase/firestore";
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+  saveToFirestoreRest,
+  readFromFirestoreRest,
+  deleteFromFirestoreRest,
+} from "../utils/firestoreRestApi";
 
 // Interface para os dados do formulário de login
 interface LoginFormData {
@@ -28,13 +20,13 @@ interface FormData {
   timestamp?: Timestamp;
 }
 
-// Classe principal do serviço
+// Classe principal do serviço usando REST API
 export class FirestoreDataService {
   private static instance: FirestoreDataService;
-  private db: any = null;
+  private warningShown: boolean = false;
 
   private constructor() {
-    this.initializeDb();
+    // REST API não precisa inicialização
   }
 
   // Singleton para garantir uma única instância
@@ -45,41 +37,16 @@ export class FirestoreDataService {
     return FirestoreDataService.instance;
   }
 
-  // Inicializar conexão com Firestore
-  private initializeDb() {
-    try {
-      this.db = getFirebaseFirestore();
-      if (this.db) {
-        console.log("✅ FirestoreDataService: Conexão estabelecida");
-      } else {
-        console.warn("⚠️ FirestoreDataService: Firestore não disponível");
-      }
-    } catch (error) {
-      console.error("❌ FirestoreDataService: Erro na inicialização:", error);
-    }
-  }
-
-  // Verificar se Firestore está disponível
-  private isAvailable(): boolean {
-    // Tentar inicializar se ainda não foi feito
-    if (this.db === null) {
-      this.initializeDb();
-    }
-
-    if (this.db === null && !this.warningShown) {
-      console.info(
-        "📱 Firestore não disponível - usando localStorage como armazenamento principal",
-      );
-      this.warningShown = true;
-    }
-    return this.db !== null;
+  // REST API está sempre disponível
+  private async isAvailable(): Promise<boolean> {
+    return true; // REST API não depende de inicialização SDK
   }
 
   private warningShown = false;
 
   // Gravar dados de login (sem senha por segurança)
   async saveLoginData(formData: LoginFormData): Promise<string | null> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Silenciosamente retorna null - o aviso já foi mostrado em isAvailable()
       return null;
     }
@@ -115,7 +82,7 @@ export class FirestoreDataService {
     formData: FormData,
     documentId?: string,
   ): Promise<string | null> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Silenciosamente retorna null - fallback para localStorage será usado
       return null;
     }
@@ -282,7 +249,7 @@ export class FirestoreDataService {
 
   // Método de teste para verificar conectividade
   async testConnection(): Promise<boolean> {
-    if (!this.isAvailable()) {
+    if (!(await this.isAvailable())) {
       // Para teste, mostramos uma mensagem mais detalhada
       console.info(
         "🔍 Firestore não disponível para teste - localStorage está funcionando",
@@ -366,6 +333,12 @@ export const deleteFirestoreDocument = (
   return firestoreService.deleteDocument(collectionName, documentId);
 };
 
-export const testFirestoreConnection = () => {
-  return firestoreService.testConnection();
+// Função segura para teste de conexão Firestore
+export const testFirestoreConnection = async (): Promise<boolean> => {
+  try {
+    return await firestoreService.testConnection();
+  } catch (error) {
+    console.warn("⚠️ Erro no teste de conexão Firestore:", error);
+    return false;
+  }
 };
