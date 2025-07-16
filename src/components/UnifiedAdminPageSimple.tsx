@@ -346,9 +346,12 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                         : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                     }`}
                   >
-                    <div className="flex items-center space-x-2">
-                      <Icon className="h-5 w-5" />
-                      <span>{tab.name}</span>
+                    <div className="flex items-center space-x-2 relative">
+                      <Icon className="h-5 w-5 flex-shrink-0" />
+                      <span className="whitespace-nowrap">{tab.name}</span>
+                      {activeTab === tab.id && (
+                        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-blue-500 rounded-full"></div>
+                      )}
                     </div>
                   </button>
                 );
