@@ -10,6 +10,8 @@ import App from "./App";
 import AppMinimal from "./AppMinimal";
 // App diagnóstico
 import AppDiagnostic from "./AppDiagnostic";
+// App funcional garantido
+import AppWorking from "./AppWorking";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
