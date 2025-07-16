@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import SplashPage from "./pages/SplashPage";
 
 const AppSimple: React.FC = () => {
   console.log("🚀 AppSimple renderizando...");
@@ -295,7 +296,7 @@ const AppSimple: React.FC = () => {
                 borderRadius: "0.5rem",
               }}
             >
-              <strong>🌐 Ambiente:</strong> {import.meta.env.MODE}
+              <strong>�� Ambiente:</strong> {import.meta.env.MODE}
             </div>
           </div>
 
