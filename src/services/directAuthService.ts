@@ -57,30 +57,53 @@ class DirectAuthService {
         };
       }
 
-      // Verificar password (muito permissiva)
-      const isPasswordValid =
-        password === "123456" ||
-        password === "123" ||
-        password === "19867gsf" ||
-        password.length >= 3; // Qualquer password com 3+ caracteres
+      // Verificar password
+      let isPasswordValid = false;
+      let userProfile: UserProfile;
 
-      if (!isPasswordValid) {
-        console.warn("❌ Password muito curta para:", email);
+      if (isHardcodedEmail) {
+        // Para emails hardcoded, usar password permissiva
+        isPasswordValid =
+          password === "123456" ||
+          password === "123" ||
+          password === "19867gsf" ||
+          password.length >= 3;
+
+        userProfile = {
+          uid: `direct_${Date.now()}`,
+          email: normalizedEmail,
+          name: "Gonçalo Fonseca",
+          role: "super_admin",
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+      } else if (authorizedUser) {
+        // Para utilizadores criados, verificar password exata
+        isPasswordValid = authorizedUser.password === password;
+
+        userProfile = {
+          uid: authorizedUser.id?.toString() || `user_${Date.now()}`,
+          email: normalizedEmail,
+          name: authorizedUser.name,
+          role: authorizedUser.role || "technician",
+          active: authorizedUser.active,
+          permissions: authorizedUser.permissions,
+          createdAt: authorizedUser.createdAt || new Date().toISOString(),
+        };
+      } else {
         return {
           success: false,
-          error: `Password deve ter pelo menos 3 caracteres. Tente: 123, 123456 ou 19867gsf`,
+          error: "Erro de autenticação",
         };
       }
 
-      // Criar perfil do utilizador
-      const userProfile: UserProfile = {
-        uid: `direct_${Date.now()}`,
-        email: normalizedEmail,
-        name: "Gonçalo Fonseca",
-        role: "super_admin",
-        active: true,
-        createdAt: new Date().toISOString(),
-      };
+      if (!isPasswordValid) {
+        console.warn("❌ Password incorreta para:", email);
+        return {
+          success: false,
+          error: "Password incorreta",
+        };
+      }
 
       // Persistir dados no localStorage E no Firestore
       try {
@@ -115,7 +138,7 @@ class DirectAuthService {
 
         console.log("✅ DirectAuth: Login successful for:", email);
 
-        // Disparar evento para ativar auto sync ap��s login
+        // Disparar evento para ativar auto sync após login
         setTimeout(() => {
           console.log("🔄 Disparando evento de login para ativar auto sync...");
           window.dispatchEvent(
