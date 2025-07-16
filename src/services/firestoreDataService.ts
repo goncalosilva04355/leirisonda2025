@@ -342,7 +342,3 @@ export const testFirestoreConnection = async (): Promise<boolean> => {
     return false;
   }
 };
-
-export const testFirestoreConnection = () => {
-  return firestoreService.testConnection();
-};
