@@ -177,7 +177,7 @@ import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // import "./utils/debugDuplicates"; // Debug de duplicados
 // import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
-// import "./utils/startupDuplicateCheck"; // Verificação e limpeza autom��tica no startup
+// import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
 console.log(
   "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
@@ -337,6 +337,20 @@ function App() {
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false); // Firebase desativo até login
 
   // Firebase será inicializado apenas após login bem-sucedido
+  const initializeFirebaseAfterLogin = async () => {
+    try {
+      console.log("🔥 Inicializando Firebase APÓS login...");
+      await initializeFirebaseMobile();
+      setMobileFirebaseReady(true);
+      console.log("✅ Firebase inicializado com sucesso após login!");
+    } catch (error) {
+      console.warn(
+        "⚠️ Firebase falhou após login, continuando em modo local:",
+        error,
+      );
+      setMobileFirebaseReady(false); // Manter como false se falhar
+    }
+  };
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -7053,7 +7067,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </h4>
                         <p className="text-gray-600 text-sm mb-4">
                           Arraste e solte ou clique para selecionar fotos da
-                          manuten���€
+                          manuten��€
                         </p>
                         <p className="text-gray-500 text-xs mb-4">
                           {uploadedPhotos.length}/20 fotografias
@@ -7160,7 +7174,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Configura������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
-                        Configuraç��es do sistema, relatórios e utilizadores
+                        Configurações do sistema, relatórios e utilizadores
                       </p>
                     </div>
                   </div>
@@ -10195,7 +10209,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         >
                           <option value="Ativa">Ativa</option>
                           <option value="Inativa">Inativa</option>
-                          <option value="Em Manutenção">Em Manutenção</option>
+                          <option value="Em Manutenç��o">Em Manutenção</option>
                         </select>
                       </div>
                       <div>
