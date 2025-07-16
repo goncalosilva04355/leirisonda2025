@@ -331,9 +331,9 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         </div>
 
         {/* Tabs Navigation */}
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm relative">
           <div className="border-b border-gray-200">
-            <nav className="flex px-6">
+            <nav className="flex px-6 overflow-x-auto">
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 return (
