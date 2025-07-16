@@ -1414,7 +1414,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "��€ Passo 3: Erro nas operaç€es Firestore:",
+                "⚠€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -1602,7 +1602,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç����es
+    // Adicionar listeners para todas as coleç�����es
     const collections = [
       "obras",
       "piscinas",
@@ -7837,7 +7837,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Configurações Avançadas
                                   </h4>
                                   <p className="text-purple-700 text-sm mb-3">
-                                    Acesso às configurações avançadas do sistema
+                                    Acesso às configurações avan��adas do
+                                    sistema
                                   </p>
                                   <button
                                     onClick={() => {
@@ -8250,7 +8251,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>🔍 Estado e localização</li>
                         <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
-                        <li>• Pr��ximas interven��ões</li>
+                        <li>• Próximas interven��ões</li>
                       </ul>
                     </div>
                     <button
@@ -8585,7 +8586,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Clientes Ativos
                         </p>
                         <p className="text-2xl font-bold text-gray-900">
-                          {clients.filter((c) => c.status === "Ativo").length}
+                          {activeClientsCount}
                         </p>
                       </div>
                     </div>
