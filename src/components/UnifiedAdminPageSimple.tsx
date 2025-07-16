@@ -50,7 +50,7 @@ interface UnifiedAdminPageProps {
   handleDataCleanup: () => void;
   cleanupLoading: boolean;
   cleanupError: string | null;
-  // Função para gerar relatórios
+  // Função para gerar relat��rios
   generateReport?: (type: string) => void;
 }
 
@@ -547,7 +547,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
 
             {/* Utilizadores Tab */}
             {activeTab === "utilizadores" && (
-              <div className="space-y-6">
+              <div className="space-y-6 relative">
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-semibold text-gray-900">
