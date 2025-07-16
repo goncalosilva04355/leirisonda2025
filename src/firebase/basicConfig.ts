@@ -66,10 +66,10 @@ if (FORCE_FIREBASE_PRODUCTION) {
       console.log(
         "📝 Continuando sem Firebase - app funcionará com localStorage",
       );
-      return; // Exit early, don't try to initialize Firebase
+      config = null; // Signal that config failed
     }
 
-    if (getApps().length === 0) {
+    if (config && getApps().length === 0) {
       console.log("🎆 Inicializando nova Firebase App...");
       firebaseApp = initializeApp(config);
       console.log(
