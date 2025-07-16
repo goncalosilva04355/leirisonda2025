@@ -343,7 +343,7 @@ function App() {
         console.log(
           "�� Inicializando Firebase Mobile para prevenir tela branca...",
         );
-        await initializeFirebaseMobile();
+        // await initializeFirebaseMobile(); // Temporariamente comentado
         setMobileFirebaseReady(true);
         console.log("✅ Firebase Mobile inicializado com sucesso!");
       } catch (error) {
