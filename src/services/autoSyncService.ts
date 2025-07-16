@@ -146,7 +146,7 @@ export class AutoSyncService {
     }
   }
 
-  // Sincronização manual de uma coleç��o específica
+  // Sincronização manual de uma coleção específica
   async syncCollection(
     collectionName: string,
     localStorageKey: string,
@@ -316,6 +316,17 @@ export class AutoSyncService {
     };
 
     return mapping[collectionName] || null;
+  }
+
+  // Helper method to get data from localStorage
+  private getLocalStorageData(localStorageKey: string): any[] {
+    try {
+      const data = localStorage.getItem(localStorageKey);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.warn(`⚠️ Erro ao ler ${localStorageKey} do localStorage:`, error);
+      return [];
+    }
   }
 }
 
