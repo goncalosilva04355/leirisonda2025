@@ -323,23 +323,6 @@ const showNotification = (
 };
 
 function App() {
-  console.log("🚀 App iniciando...");
-
-  // PROTEÇÃO CRÍTICA: Garantir que sempre há um fallback para renderização
-  const [renderFallback, setRenderFallback] = useState(false);
-
-  useEffect(() => {
-    // Se após 5 segundos ainda não renderizou nada, ativar fallback
-    const fallbackTimer = setTimeout(() => {
-      console.warn(
-        "⚠️ App pode ter problema de renderização, ativando fallback",
-      );
-      setRenderFallback(true);
-    }, 5000);
-
-    return () => clearTimeout(fallbackTimer);
-  }, []);
-
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
 
@@ -618,40 +601,8 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  let universalSync;
-  let dataSync;
-
-  try {
-    universalSync = useUniversalDataSync();
-    dataSync = useDataSyncSimple();
-  } catch (error) {
-    console.error("❌ Erro nos hooks de sincronização:", error);
-    // Fallback para dados vazios para evitar tela branca
-    universalSync = {
-      obras: [],
-      manutencoes: [],
-      piscinas: [],
-      clientes: [],
-      isLoading: false,
-      lastSync: null,
-      error: null,
-      addObra: () => Promise.resolve(),
-      addManutencao: () => Promise.resolve(),
-      addPiscina: () => Promise.resolve(),
-      addCliente: () => Promise.resolve(),
-      updateObra: () => Promise.resolve(),
-      updateManutencao: () => Promise.resolve(),
-      updatePiscina: () => Promise.resolve(),
-      updateCliente: () => Promise.resolve(),
-      deleteObra: () => Promise.resolve(),
-      deleteManutencao: () => Promise.resolve(),
-      deletePiscina: () => Promise.resolve(),
-      deleteCliente: () => Promise.resolve(),
-      forceSyncAll: () => Promise.resolve(),
-      syncStatus: "offline",
-    };
-    dataSync = { isLoading: false, error: null };
-  }
+  const universalSync = useUniversalDataSync();
+  const dataSync = useDataSyncSimple();
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -872,7 +823,7 @@ function App() {
     return clients.filter((c) => c.status === "Ativo").length;
   }, [clients]);
 
-  // Fun����es de compatibilidade simplificadas
+  // Funç��es de compatibilidade simplificadas
   const addPool = async (data: any) => {
     try {
       console.log("🏊 addPool iniciado com Firestore ativo");
@@ -1402,30 +1353,6 @@ function App() {
       console.log("✅ App ready to render");
     }, 100);
   }, []);
-
-  // PROTEÇÃO CRÍTICA: Se por algum motivo os hooks falharem, garantir que sempre renderize algo
-  if (!isAppReady) {
-    console.log("⏳ App still initializing, showing loading screen");
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏊‍♂️</div>
-          <h1 style={{ margin: "0 0 1rem 0", fontSize: "2rem" }}>Leirisonda</h1>
-          <p style={{ margin: 0, opacity: 0.8 }}>Inicializando aplicação...</p>
-        </div>
-      </div>
-    );
-  }
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
@@ -4657,7 +4584,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manuten�����es
+                          Futuras Manuten����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -5415,7 +5342,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* Mediç✅es do Furo */}
                           <div>
                             <h4 className="text-md font-medium text-gray-900 mb-4">
-                              Medi��ões do Furo
+                              Medições do Furo
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                               <div>
@@ -7074,7 +7001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observa✅��es Gerais
+                          Observa✅ões Gerais
                         </label>
                         <textarea
                           rows={4}
@@ -7806,7 +7733,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <p className="text-green-600 text-xs">
                                       Estado:{" "}
                                       {enableMapsRedirect
-                                        ? "�� Ativo"
+                                        ? "🔥 Ativo"
                                         : "⭕ Inativo"}
                                     </p>
                                   </div>
@@ -11402,50 +11329,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   }
 
-  // PROTEÇÃO FINAL: Se renderFallback estiver ativo ou houver problemas, mostrar versão simplificada
-  if (renderFallback) {
-    console.log("🛡️ Renderizando versão de fallback para evitar tela branca");
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          padding: "20px",
-        }}
-      >
-        <div style={{ textAlign: "center", maxWidth: "400px" }}>
-          <div style={{ fontSize: "4rem", marginBottom: "2rem" }}>🏊‍♂️</div>
-          <h1 style={{ margin: "0 0 1rem 0", fontSize: "2.5rem" }}>
-            Leirisonda
-          </h1>
-          <p style={{ margin: "0 0 2rem 0", opacity: 0.9, fontSize: "1.1rem" }}>
-            Sistema de Gestão de Piscinas
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              background: "rgba(255,255,255,0.2)",
-              border: "1px solid rgba(255,255,255,0.3)",
-              color: "white",
-              padding: "12px 24px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "1rem",
-              fontWeight: "500",
-            }}
-          >
-            Recarregar Aplicação
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <AutoSyncProviderSafe
       enabled={true}
@@ -12005,7 +11888,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic������vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">

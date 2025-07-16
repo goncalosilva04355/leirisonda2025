@@ -92,9 +92,7 @@ try {
 
   // SEMPRE usar App principal - desenvolvimento = produção
   const AppComponent = App;
-  console.log(
-    "📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo com proteções anti-tela-branca",
-  );
+  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
