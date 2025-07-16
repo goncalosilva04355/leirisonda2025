@@ -133,7 +133,11 @@ const AppSimple: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <LoginPage
-        onLogin={(email: string, password: string) => {
+        onLogin={async (
+          email: string,
+          password: string,
+          rememberMe?: boolean,
+        ) => {
           console.log("🔑 Tentativa de login:", email);
 
           // Hardcoded login for demo
@@ -152,15 +156,12 @@ const AppSimple: React.FC = () => {
             localStorage.setItem("isAuthenticated", "true");
 
             console.log("✅ Login bem-sucedido");
-            return Promise.resolve({ success: true, user });
           } else {
             console.log("❌ Credenciais inválidas");
-            return Promise.resolve({
-              success: false,
-              error: "Credenciais inválidas",
-            });
+            throw new Error("Credenciais inválidas");
           }
         }}
+        loginError={error || ""}
       />
     );
   }
