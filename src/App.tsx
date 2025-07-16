@@ -572,7 +572,7 @@ function App() {
   //   universalSync.syncStatus,
   // ]);
 
-  // PROTEÇÃO CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
+  // PROTEÇ��O CRÍTICA: PRIMEIRA LINHA DE DEFESA - Temporariamente desabilitada para melhorar performance
   useEffect(() => {
     console.log(
       "🛡️ Data protection initialized (checks disabled for performance)",
@@ -687,7 +687,7 @@ function App() {
       console.log("🔧 addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
-      const firestoreId = await ultraSimpleOfflineService.createWork(data);
+      // const firestoreId = await ultraSimpleOfflineService.createWork(data);
 
       if (firestoreId) {
         console.log("✅ Obra criada no Firestore:", firestoreId);
@@ -1330,7 +1330,7 @@ function App() {
             "❌ Erro na sincronizaç��o com Firebase Leiria:",
             error,
           );
-          console.log("�� Aplicaç��o continua funcional em modo offline");
+          console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
@@ -5271,7 +5271,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     1¼ polegadas
                                   </option>
                                   <option key="1.5" value="1.5">
-                                    1½ polegadas
+                                    1�� polegadas
                                   </option>
                                   <option key="2" value="2">
                                     2 polegadas
@@ -5379,7 +5379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           </div>
 
-                          {/* Observa����ções Específicas do Furo */}
+                          {/* Observa������ções Específicas do Furo */}
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
                               Observações Específicas do Furo
@@ -7175,7 +7175,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
-                                <li>�� Clientes e localizações</li>
+                                <li>• Clientes e localizações</li>
                               </ul>
                             </div>
                             <button
@@ -8222,7 +8222,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>���� Hist✅rico de serviços</li>
-                        <li>���� Informações contratuais</li>
+                        <li>������ Informações contratuais</li>
                       </ul>
                     </div>
                     <button
