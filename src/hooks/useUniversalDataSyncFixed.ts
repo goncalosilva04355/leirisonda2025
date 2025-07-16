@@ -568,9 +568,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deleteManutencao = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteManutencao called:", id);
-  }, []);
+  const deleteManutencao = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando manutenção:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "manutencoes",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Manutenção eliminada do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingManutencoes = safeGetLocalStorage("maintenance");
+        const updatedManutencoes = existingManutencoes.filter(
+          (maint: any) => maint.id !== id,
+        );
+        safeSetLocalStorage("maintenance", updatedManutencoes);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          manutencoes: updatedManutencoes,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("manutencoesUpdated", {
+              detail: { data: updatedManutencoes, collection: "manutencoes" },
+            }),
+          );
+        }
+
+        console.log("✅ Manutenção eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar manutenção:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updatePiscina = useCallback(
     async (id: string, data: any): Promise<void> => {
