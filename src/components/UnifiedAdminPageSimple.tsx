@@ -190,7 +190,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
         );
         await updateUsers(updatedUsers);
 
-        // Remover também dos utilizadores da aplicação
+        // Remover também dos utilizadores da aplica��ão
         const existingAppUsers = JSON.parse(
           safeLocalStorage.getItem("app-users") || "[]",
         );
@@ -871,6 +871,32 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                           </button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Quick Access to Orphan Cleanup */}
+                {currentUser?.role === "super_admin" && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Trash2 className="h-5 w-5 text-yellow-600" />
+                        <div>
+                          <h4 className="font-medium text-yellow-900">
+                            Limpeza de Utilizadores Órfãos
+                          </h4>
+                          <p className="text-sm text-yellow-700">
+                            Remove utilizadores inexistentes das obras
+                            atribuídas
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setActiveTab("sistema")}
+                        className="px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+                      >
+                        Aceder
+                      </button>
                     </div>
                   </div>
                 )}
