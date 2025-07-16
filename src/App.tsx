@@ -10,6 +10,11 @@
 // PREVENÇÃO DE ERROS GETIMMEDIATE
 import "./utils/preventGetImmediateError";
 
+// HANDLER GLOBAL DE ERROS
+import "./utils/globalErrorHandler";
+import "./utils/safeFetch";
+import "./utils/safeFirestoreTestFixed";
+
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
 import "./utils/comprehensiveFirebaseTest";
 import "./utils/verifySaveToFirestore";
@@ -1113,7 +1118,7 @@ function App() {
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
-    console.log("🔒 SECURITY: App initialization started");
+    console.log("�� SECURITY: App initialization started");
 
     // SECURITY: Force complete logout on app start
     const initializeAuth = async () => {
@@ -1293,7 +1298,7 @@ function App() {
           // Force enable real-time sync for editing
           console.log("�� FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
-          console.error("❌ Erro ao iniciar sincronização automática:", error);
+          console.error("�� Erro ao iniciar sincronização automática:", error);
           // Try again if it fails
           setTimeout(async () => {
             try {
@@ -1557,7 +1562,7 @@ function App() {
             }
           } catch (error) {
             console.warn(
-              "⚠️ Erro ao inicializar serviço de notificações:",
+              "⚠�� Erro ao inicializar serviço de notificações:",
               error,
             );
           }
@@ -1835,7 +1840,7 @@ function App() {
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
-        console.log("��� Login successful for:", result.user.email);
+        console.log("✅ Login successful for:", result.user.email);
 
         // Set user state and authentication
         setCurrentUser(result.user);
@@ -2260,7 +2265,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT��RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -3321,7 +3326,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <Eye className="h-4 w-4" />
                                   </button>
 
-                                  {/* Botão Iniciar Obra (só se pendente) */}
+                                  {/* Botão Iniciar Obra (s�� se pendente) */}
                                   {work.status === "pending" && (
                                     <button
                                       onClick={(e) => {
@@ -7097,7 +7102,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>🏗️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
-                                <li>• Prazos e or��amentos</li>
+                                <li>• Prazos e or���amentos</li>
                                 <li>• Clientes e localizações</li>
                               </ul>
                             </div>
@@ -8030,7 +8035,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa���ões de clientes</li>
+                        <li>������ Informa��ões de clientes</li>
                         <li>• Histórico de manutenções</li>
                         <li>• Próximas intervenções</li>
                       </ul>
@@ -9605,7 +9610,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             defaultValue={editingWork?.workPerformed}
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descri��ão do trabalho realizado..."
+                            placeholder="Descrição do trabalho realizado..."
                           />
                         </div>
                         <div>
