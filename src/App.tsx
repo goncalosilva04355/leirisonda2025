@@ -156,7 +156,10 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
-import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO
+import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
+console.log(
+  "🔥 App.tsx: REST API do Firestore carregado para desenvolvimento = produção",
+);
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
@@ -8208,7 +8211,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>���� Hist✅rico de serviços</li>
+                        <li>������ Hist✅rico de serviços</li>
                         <li>���� Informações contratuais</li>
                       </ul>
                     </div>
