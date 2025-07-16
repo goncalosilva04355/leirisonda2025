@@ -4,8 +4,8 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
-// Voltar ao App original
-import App from "./App";
+// Teste simples para verificar CSS
+import TestApp from "./TestApp";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
