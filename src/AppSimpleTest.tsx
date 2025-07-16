@@ -1,58 +1,49 @@
 import React from "react";
 
 function AppSimpleTest() {
-  console.log("🧪 AppSimpleTest rendering...");
-
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        backgroundColor: "#f3f4f6",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: "2rem",
-          borderRadius: "0.5rem",
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-          textAlign: "center",
-          maxWidth: "400px",
-        }}
-      >
-        <h1
-          style={{
-            color: "#1f2937",
-            fontSize: "1.5rem",
-            marginBottom: "1rem",
-            fontWeight: "bold",
-          }}
-        >
-          🏊‍♂️ Leirisonda - Teste
-        </h1>
+    <div className="min-h-screen bg-blue-200 flex items-center justify-center p-4">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-blue-600 mb-2">Leirisonda</h1>
+          <p className="text-gray-600">Sistema de Gestão de Piscinas</p>
+        </div>
 
-        <p style={{ color: "#6b7280", marginBottom: "1rem" }}>
-          Aplicação está a funcionar corretamente!
-        </p>
+        <form className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="exemplo@email.com"
+            />
+          </div>
 
-        <p
-          style={{
-            color: "#10b981",
-            fontSize: "0.875rem",
-            fontWeight: "600",
-          }}
-        >
-          ✅ Sistema Operacional
-        </p>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Palavra-passe
+            </label>
+            <input
+              type="password"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Digite sua senha"
+            />
+          </div>
 
-        <div
-          style={{ marginTop: "1rem", fontSize: "0.75rem", color: "#9ca3af" }}
-        >
-          Timestamp: {new Date().toLocaleString("pt-PT")}
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+          >
+            Entrar
+          </button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+            ✅ CSS está funcionando!
+          </div>
         </div>
       </div>
     </div>

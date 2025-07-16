@@ -334,25 +334,27 @@ function App() {
   }
   (window as any).lastAppRenderTime = renderTime;
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - NÃO BLOQUEIA RENDERIZAÇÃO
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(false);
 
   useEffect(() => {
     const initMobileFirebase = async () => {
       try {
-        console.log("🔥 Inicializando Firebase Mobile em background...");
+        console.log(
+          "�� Inicializando Firebase Mobile para prevenir tela branca...",
+        );
         await initializeFirebaseMobile();
+        setMobileFirebaseReady(true);
         console.log("✅ Firebase Mobile inicializado com sucesso!");
       } catch (error) {
         console.warn(
           "⚠️ Firebase Mobile falhou, continuando em modo local:",
           error,
         );
-        // Aplicação continua funcionando normalmente
+        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
       }
     };
 
-    // Executar em background sem bloquear
     initMobileFirebase();
   }, []);
 
@@ -598,36 +600,10 @@ function App() {
   const [persistenceIssueDetected, setPersistenceIssueDetected] =
     useState(false);
 
-    // SINCRONIZAÇÃO UNIVERSAL - Temporariamente comentado para diagnóstico
+  // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  // const universalSync = useUniversalDataSync();
+  const universalSync = useUniversalDataSync();
   const dataSync = useDataSyncSimple();
-
-  // Mock universal sync para evitar erros
-  const universalSync = {
-    obras: [],
-    manutencoes: [],
-    piscinas: [],
-    clientes: [],
-    isLoading: false,
-    lastSync: new Date().toISOString(),
-    error: null,
-    addObra: async () => {},
-    addManutencao: async () => {},
-    addPiscina: async () => {},
-    addCliente: async () => {},
-    updateObra: async () => {},
-    updateManutencao: async () => {},
-    updatePiscina: async () => {},
-    updateCliente: async () => {},
-    deleteObra: async () => {},
-    deleteManutencao: async () => {},
-    deletePiscina: async () => {},
-    deleteCliente: async () => {},
-    forceSyncAll: async () => {},
-    syncStatus: 'idle',
-    totalItems: 0
-  };
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -1046,15 +1022,8 @@ function App() {
   // Debug logging removed to prevent re-render loops
 
   // Proteç���o de dados críticos - NUNCA PERDER DADOS
-    // Temporariamente comentado para diagnóstico da tela branca
-  // const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
-  //   useDataProtection();
-
-  // Mock para evitar erros
-  const isProtected = true;
-  const dataRestored = false;
-  const backupBeforeOperation = async () => {};
-  const checkIntegrity = async () => true;
+  const { isProtected, dataRestored, backupBeforeOperation, checkIntegrity } =
+    useDataProtection();
 
   // Keep local users state for user management
   const [users, setUsers] = useState(initialUsers);
@@ -1083,7 +1052,7 @@ function App() {
           }
         }
 
-        // Fallback para localStorage se Firestore n��o tiver dados
+        // Fallback para localStorage se Firestore não tiver dados
         const savedUsers = safeLocalStorage.getItem("app-users");
         if (savedUsers) {
           const parsedUsers = JSON.parse(savedUsers);
@@ -1375,7 +1344,7 @@ function App() {
   });
 
   // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
+  const [isAppReady, setIsAppReady] = useState(false);
 
   useEffect(() => {
     console.log("🚀 App safety check...");
@@ -1540,7 +1509,7 @@ function App() {
           console.log("�� Aplicação continua funcional em modo offline");
         }
       } else {
-        console.log("���� Firebase Leiria não disponível - modo offline ativo");
+        console.log("📱 Firebase Leiria não disponível - modo offline ativo");
         console.log("�� Dados serão salvos apenas no localStorage");
       }
     };
@@ -1619,7 +1588,7 @@ function App() {
       //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
-      // Forçar re-render dos dados universais se necess��rio
+      // Forçar re-render dos dados universais se necessário
       if (collection === "obras") {
         // Trigger re-fetch das obras
         window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
@@ -2887,7 +2856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`�� Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -3077,52 +3046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     },
   ];
 
-    const renderContent = () => {
-    // Versão simplificada para diagnóstico
-    if (!isAuthenticated) {
-      return (
-        <div style={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#f3f4f6'
-        }}>
-          <div style={{
-            backgroundColor: 'white',
-            padding: '2rem',
-            borderRadius: '0.5rem',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-          }}>
-            <h1 style={{ color: '#1f2937', marginBottom: '1rem' }}>Leirisonda</h1>
-            <p style={{ color: '#6b7280' }}>Por favor, faça login para continuar.</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f3f4f6'
-      }}>
-        <div style={{
-          backgroundColor: 'white',
-          padding: '2rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-        }}>
-          <h1 style={{ color: '#1f2937', marginBottom: '1rem' }}>Dashboard</h1>
-          <p style={{ color: '#6b7280' }}>Bem-vindo, {currentUser?.name}!</p>
-        </div>
-      </div>
-    );
-
-    /* Comentário original:
-    const renderContentOriginal = () => {
+  const renderContent = () => {
     // Show login page when user not authenticated
     if (!currentUser || !isAuthenticated) {
       return (
@@ -5189,7 +5113,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {!usersLoaded && (
                             <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                               <p className="text-sm text-blue-800">
-                                ���� Carregando utilizadores...
+                                🔄 Carregando utilizadores...
                               </p>
                             </div>
                           )}
@@ -8339,7 +8263,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat�����rios
+                          Relat���rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -12370,7 +12294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            ���� {selectedPool.clientPhone || "Não especificado"}
+                            📞 {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
