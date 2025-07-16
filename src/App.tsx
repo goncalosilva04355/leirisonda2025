@@ -821,7 +821,7 @@ function App() {
               "✅ Utilizadores carregados do Firestore:",
               firestoreUsers.length,
             );
-            setUsers(firestoreUsers);
+            setUsers(firestoreUsers as any);
             return;
           }
         }
@@ -1923,7 +1923,7 @@ function App() {
       const result = await authService.login(
         loginForm.email,
         loginForm.password,
-        false, // rememberMe será gerido pelo LoginPageFixed
+        false, // rememberMe ser�� gerido pelo LoginPageFixed
       );
 
       console.log("🔥 Auth result:", result);
