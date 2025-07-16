@@ -1372,7 +1372,7 @@ function App() {
           // Force enable real-time sync for editing
           console.log("�� FIRESTORE ATIVO PARA EDIÇÕES!");
         } catch (error) {
-          console.error("�� Erro ao iniciar sincronização automática:", error);
+          console.error("�� Erro ao iniciar sincronizaç��o automática:", error);
           // Try again if it fails
           setTimeout(async () => {
             try {
@@ -2174,7 +2174,7 @@ function App() {
     ) {
       try {
         await cleanAllData();
-        alert("Dados eliminados com sucesso! Aplicaç��o agora está limpa.");
+        alert("Dados eliminados com sucesso! Aplicaç����o agora está limpa.");
         setShowDataCleanup(false);
       } catch (error) {
         console.error("Erro na limpeza:", error);
@@ -3204,7 +3204,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir concluídas)
+                          // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir conclu��das)
                           const worksWithoutSheets = works.filter((w) => {
                             const isNotCompleted =
                               w.status !== "completed" &&
@@ -12387,6 +12387,13 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         {/* App Status Indicator */}
         <AppStatusIndicator />
+
+        {/* REST API Status Indicator for Development = Production */}
+        {restApiStatus === "ativo" && (
+          <div className="fixed bottom-4 right-4 bg-green-500 text-white px-3 py-1 rounded-md text-xs font-medium shadow-md z-50">
+            🌐 REST API ativo (dev=prod)
+          </div>
+        )}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
