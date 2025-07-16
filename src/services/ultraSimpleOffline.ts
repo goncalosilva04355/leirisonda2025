@@ -1,4 +1,4 @@
-import { saveData } from "../utils/forceFirestore";
+import { saveToFirestore } from "../utils/ultraSimpleFirestore";
 
 class UltraSimpleOfflineService {
   async createWork(workData: any): Promise<string> {
