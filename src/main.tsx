@@ -60,6 +60,8 @@ import AppWorking from "./AppWorking";
 import AppProduction from "./AppProduction";
 // App corrigido sem loops
 import AppFixed from "./AppFixed";
+// App de teste para diagnosticar
+import AppTest from "./AppTest";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
