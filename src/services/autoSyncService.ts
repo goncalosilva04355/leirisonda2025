@@ -146,7 +146,7 @@ export class AutoSyncService {
     }
   }
 
-  // Sincronização manual de uma coleção específica
+  // Sincronização manual de uma coleç��o específica
   async syncCollection(
     collectionName: string,
     localStorageKey: string,
@@ -167,11 +167,41 @@ export class AutoSyncService {
       console.log(
         `✅ ${collectionName} sincronizado manualmente: ${data.length} itens`,
       );
-    } catch (error) {
-      console.error(
-        `❌ Erro na sincronização manual de ${collectionName}:`,
-        error,
-      );
+    } catch (error: any) {
+      // Check if it's a Firestore unavailability error
+      if (
+        error.message?.includes("getImmediate") ||
+        error.code === "firestore/unavailable" ||
+        error.message?.includes("Service firestore is not available")
+      ) {
+        console.warn(
+          `⚠️ Firestore não disponível para ${collectionName} - usando dados locais`,
+        );
+
+        // Try to get data from localStorage as fallback
+        const localData = this.getLocalStorageData(localStorageKey);
+        if (localData.length > 0) {
+          console.log(
+            `📱 ${collectionName} carregado do localStorage: ${localData.length} itens`,
+          );
+
+          // Dispatch event with local data
+          window.dispatchEvent(
+            new CustomEvent(`${collectionName}Updated`, {
+              detail: {
+                data: localData,
+                collection: collectionName,
+                source: "localStorage",
+              },
+            }),
+          );
+        }
+      } else {
+        console.error(
+          `❌ Erro na sincronização manual de ${collectionName}:`,
+          error.message || error,
+        );
+      }
     }
   }
 
