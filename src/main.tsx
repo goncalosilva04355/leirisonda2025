@@ -64,26 +64,15 @@ try {
     !!document.querySelector('style, link[rel="stylesheet"]'),
   );
 
-  // Use production app for Netlify deployment
-  const isProduction = import.meta.env.PROD;
-  console.log("🔍 Environment check:", {
-    isProduction,
-    mode: import.meta.env.MODE,
-  });
+  console.log("�� Loading full application...");
 
-  if (isProduction) {
-    console.log("🚀 Loading production app...");
-    ReactDOM.createRoot(rootElement).render(<AppProduction />);
-  } else {
-    console.log("🔧 Loading development app...");
-    ReactDOM.createRoot(rootElement).render(
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
       <ErrorBoundary>
-        <AppLoader>
-          <App />
-        </AppLoader>
-      </ErrorBoundary>,
-    );
-  }
+        <App />
+      </ErrorBoundary>
+    </React.StrictMode>,
+  );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
