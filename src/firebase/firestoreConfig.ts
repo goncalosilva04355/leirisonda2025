@@ -59,23 +59,27 @@ async function waitForFirebaseApp(
     }
   }
 
-  console.error("❌ Firebase App não inicializou após todas as tentativas");
+  console.warn("⚠️ Firebase App não inicializou após todas as tentativas");
   console.log("🔧 Tentando inicialização de emergência...");
 
   // Tentativa de emergência - inicializar Firebase se ainda não foi
   try {
     const { initializeApp } = await import("firebase/app");
-    const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+    const { getFirebaseConfig } = await import("../config/firebaseEnv");
 
-    const config = getLegacyFirebaseConfig();
+    const config = getFirebaseConfig();
     if (config && config.projectId && config.apiKey) {
       console.log("🚀 Tentando inicialização de emergência do Firebase...");
       const emergencyApp = initializeApp(config, `emergency-${Date.now()}`);
       console.log("✅ Firebase inicializado em modo de emergência");
       return emergencyApp;
+    } else {
+      console.warn("⚠️ Configuração Firebase inválida");
+      return null;
     }
   } catch (emergencyError) {
-    console.error("❌ Falha na inicialização de emergência:", emergencyError);
+    console.warn("⚠️ Falha na inicialização de emergência:", emergencyError);
+    return null;
   }
 
   throw new Error(
@@ -326,7 +330,7 @@ export function clearFirestoreInstance(): void {
   console.log("🧹 Instância Firestore limpa");
 }
 
-// Função para ativar modo local (desativada)
+// Funç��o para ativar modo local (desativada)
 export function enableLocalMode(): void {
   console.log("⚠️ Modo local desativado - usando Firebase ativo");
   console.log("🔥 Firebase/Firestore totalmente funcionais");
