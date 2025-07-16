@@ -29,16 +29,31 @@ class DirectAuthService {
       // Normalizar email
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Verificar se email está na lista autorizada (hardcoded)
-      const isAuthorizedEmail =
-        this.AUTHORIZED_EMAILS.includes(normalizedEmail);
+      // Primeiro verificar emails hardcoded (para compatibilidade)
+      const isHardcodedEmail = this.AUTHORIZED_EMAILS.includes(normalizedEmail);
 
-      if (!isAuthorizedEmail) {
-        console.warn("❌ Email não está na lista autorizada:", email);
-        console.log("📋 Emails autorizados:", this.AUTHORIZED_EMAILS);
+      // Também verificar utilizadores criados no sistema
+      const savedUsers = safeLocalStorage.getItem("app-users");
+      let authorizedUser = null;
+
+      if (savedUsers) {
+        try {
+          const users = JSON.parse(savedUsers);
+          authorizedUser = users.find(
+            (user: any) =>
+              user.email?.toLowerCase().trim() === normalizedEmail &&
+              user.active,
+          );
+        } catch (error) {
+          console.warn("❌ Erro ao carregar utilizadores:", error);
+        }
+      }
+
+      if (!isHardcodedEmail && !authorizedUser) {
+        console.warn("❌ Email não encontrado no sistema:", email);
         return {
           success: false,
-          error: `Email não autorizado. Use: ${this.AUTHORIZED_EMAILS.join(" ou ")}`,
+          error: "Email não encontrado ou utilizador inativo",
         };
       }
 
@@ -100,7 +115,7 @@ class DirectAuthService {
 
         console.log("✅ DirectAuth: Login successful for:", email);
 
-        // Disparar evento para ativar auto sync após login
+        // Disparar evento para ativar auto sync ap��s login
         setTimeout(() => {
           console.log("🔄 Disparando evento de login para ativar auto sync...");
           window.dispatchEvent(
