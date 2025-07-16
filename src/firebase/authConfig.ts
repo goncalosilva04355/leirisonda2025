@@ -48,10 +48,7 @@ export function isFirebaseAuthReady(): boolean {
   return firebaseAuth !== null;
 }
 
-// Inicializar Auth automaticamente
-setTimeout(() => {
-  initializeFirebaseAuth();
-}, 500);
+// Auto-inicialização removida - será inicializado apenas após login
 
 // Exportações
 export { firebaseAuth };
