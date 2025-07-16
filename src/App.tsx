@@ -8,22 +8,22 @@
 // import "./utils/basicHealthCheck";
 
 // PREVENÇÃO DE ERROS GETIMMEDIATE
-import "./utils/preventGetImmediateError";
+// import "./utils/preventGetImmediateError";
 
 // HANDLER GLOBAL DE ERROS
-import "./utils/globalErrorHandler";
-import "./utils/safeFetch";
-import "./utils/safeFirestoreTestFixed";
-import "./utils/loadFailedDetector";
+// import "./utils/globalErrorHandler";
+// import "./utils/safeFetch";
+// import "./utils/safeFirestoreTestFixed";
+// import "./utils/loadFailedDetector";
 
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
-import "./utils/comprehensiveFirebaseTest";
-import "./utils/verifySaveToFirestore";
-import "./utils/verifyAutoSync";
-import "./utils/finalFirebaseVerification";
-import "./utils/firestoreDiagnosticMessage";
-import "./utils/safeFirestoreTest";
-import "./utils/ultraSafeTest";
+// import "./utils/comprehensiveFirebaseTest";
+// import "./utils/verifySaveToFirestore";
+// import "./utils/verifyAutoSync";
+// import "./utils/finalFirebaseVerification";
+// import "./utils/firestoreDiagnosticMessage";
+// import "./utils/safeFirestoreTest";
+// import "./utils/ultraSafeTest";
 
 import React, { useState, useEffect, useCallback } from "react";
 import {
@@ -2000,7 +2000,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync está ativo após login
+        // Garantir que auto sync est�� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
