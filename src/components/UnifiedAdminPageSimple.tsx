@@ -305,8 +305,8 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="px-4 py-4 space-y-6">
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="px-4 py-4 space-y-6 max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-lg p-4 shadow-sm">
           <div className="flex items-center justify-between">
