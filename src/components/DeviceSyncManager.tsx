@@ -10,11 +10,11 @@ import {
   WifiOff,
   Settings,
 } from "lucide-react";
+import { isFirebaseReady } from "../firebase/config";
 import {
-  isFirebaseReady,
   getFirebaseStatus,
   reinitializeFirebase,
-} from "../firebase/config";
+} from "../firebase/fallbackFunctions";
 import { UserSyncManager } from "../utils/userSyncManager";
 import { fullSyncService } from "../services/fullSyncService";
 
