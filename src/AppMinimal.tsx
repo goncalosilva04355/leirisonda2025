@@ -1,55 +1,65 @@
-import React, { useState } from "react";
-import { LoginPageFixed } from "./pages/LoginPageFixed";
+import React from "react";
 
-function AppMinimal() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loginError, setLoginError] = useState("");
-
-  const handleLogin = async (
-    email: string,
-    password: string,
-    rememberMe?: boolean,
-  ) => {
-    try {
-      console.log("Login attempt:", email);
-      // Simulação de login simples
-      if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-        setIsAuthenticated(true);
-        setLoginError("");
-      } else {
-        setLoginError("Credenciais inválidas");
-      }
-    } catch (error) {
-      setLoginError("Erro no login");
-    }
-  };
-
-  if (isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-          <h1 className="text-2xl font-bold text-green-600 mb-4">
-            ✅ Login realizado com sucesso!
-          </h1>
-          <p className="text-gray-700">Bem-vindo ao sistema Leirisonda</p>
-          <button
-            onClick={() => setIsAuthenticated(false)}
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Sair
-          </button>
-        </div>
-      </div>
-    );
-  }
-
+export default function AppMinimal() {
   return (
-    <LoginPageFixed
-      onLogin={handleLogin}
-      loginError={loginError}
-      isLoading={false}
-    />
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f3f4f6",
+        fontFamily: "system-ui",
+        padding: "1rem",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          padding: "2rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          textAlign: "center",
+          maxWidth: "400px",
+        }}
+      >
+        <h1
+          style={{
+            color: "#1f2937",
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+          }}
+        >
+          Leirisonda
+        </h1>
+        <p style={{ color: "#6b7280", marginBottom: "1.5rem" }}>
+          Sistema de Gestão de Piscinas
+        </p>
+        <div
+          style={{
+            backgroundColor: "#3b82f6",
+            color: "white",
+            padding: "0.75rem 1.5rem",
+            borderRadius: "0.375rem",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "0.875rem",
+            fontWeight: "500",
+          }}
+        >
+          Aplicação está a funcionar!
+        </div>
+        <p
+          style={{
+            color: "#9ca3af",
+            fontSize: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          Versão de teste - {new Date().toLocaleString("pt-PT")}
+        </p>
+      </div>
+    </div>
   );
 }
-
-export default AppMinimal;

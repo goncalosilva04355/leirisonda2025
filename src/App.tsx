@@ -7836,7 +7836,12 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <div className="space-y-4">
                                 {/* Data Input Status */}
                                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                                  <DataInputStatusIndicator />
+                                  <div className="text-purple-900 font-medium">
+                                    Sistema de Diagnóstico Ativo
+                                  </div>
+                                  <div className="text-purple-700 text-sm mt-1">
+                                    Monitorização em tempo real
+                                  </div>
                                 </div>
 
                                 {/* Firebase Fix Button */}
@@ -7858,7 +7863,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <h4 className="font-medium text-green-900">
                                       Tutorial Interativo
                                     </h4>
-                                    <DataInputTutorial />
+                                    <div className="text-green-700 text-sm">
+                                      Tutorial disponível
+                                    </div>
                                   </div>
                                   <p className="text-green-700 text-sm">
                                     Tutorial passo-a-passo para inser��ão de

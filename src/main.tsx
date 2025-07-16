@@ -6,6 +6,12 @@ console.log("🚀 Inicializando aplicação...");
 
 // App original reparado
 import App from "./App";
+// App mínimo para teste
+import AppMinimal from "./AppMinimal";
+// App diagnóstico
+import AppDiagnostic from "./AppDiagnostic";
+// App funcional garantido
+import AppWorking from "./AppWorking";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
