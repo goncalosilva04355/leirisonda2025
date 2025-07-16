@@ -436,7 +436,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addCliente = useCallback(
     async (clienteData: any): Promise<string> => {
       try {
-        const id = clienteData.id || `cliente-${Date.now()}-${Math.random()}`;
+        const id = clienteData.id || generateUniqueId("cliente");
         const cliente = {
           ...clienteData,
           id,
