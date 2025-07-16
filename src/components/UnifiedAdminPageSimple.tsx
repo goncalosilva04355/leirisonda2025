@@ -614,6 +614,172 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                   </div>
                 )}
 
+                {/* Edit User Modal */}
+                {editingUser && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                      <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          Editar Utilizador: {editingUser.name}
+                        </h3>
+                        <button
+                          onClick={() => setEditingUser(null)}
+                          className="text-gray-400 hover:text-gray-600"
+                        >
+                          <X className="h-6 w-6" />
+                        </button>
+                      </div>
+
+                      <div className="space-y-6">
+                        {/* Basic Info */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Nome
+                            </label>
+                            <input
+                              type="text"
+                              value={editingUser.name}
+                              onChange={(e) =>
+                                setEditingUser({
+                                  ...editingUser,
+                                  name: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Email
+                            </label>
+                            <input
+                              type="email"
+                              value={editingUser.email}
+                              onChange={(e) =>
+                                setEditingUser({
+                                  ...editingUser,
+                                  email: e.target.value,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Função
+                            </label>
+                            <select
+                              value={editingUser.role}
+                              onChange={(e) =>
+                                setEditingUser({
+                                  ...editingUser,
+                                  role: e.target.value as any,
+                                })
+                              }
+                              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            >
+                              <option value="technician">Técnico</option>
+                              <option value="manager">Gestor</option>
+                              <option value="admin">Administrador</option>
+                              {currentUser?.role === "super_admin" && (
+                                <option value="super_admin">
+                                  Super Administrador
+                                </option>
+                              )}
+                            </select>
+                          </div>
+                        </div>
+
+                        {/* Permissions */}
+                        <div>
+                          <h4 className="text-md font-semibold text-gray-900 mb-4">
+                            Permissões Detalhadas
+                          </h4>
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {[
+                              { key: "obras", label: "Obras" },
+                              { key: "piscinas", label: "Piscinas" },
+                              { key: "manutencoes", label: "Manutenções" },
+                              { key: "utilizadores", label: "Utilizadores" },
+                              { key: "relatorios", label: "Relatórios" },
+                              { key: "clientes", label: "Clientes" },
+                            ].map(({ key, label }) => (
+                              <div
+                                key={key}
+                                className="border border-gray-200 rounded-lg p-4"
+                              >
+                                <h5 className="font-medium text-gray-900 mb-3">
+                                  {label}
+                                </h5>
+                                <div className="grid grid-cols-2 gap-2">
+                                  {["view", "create", "edit", "delete"].map(
+                                    (action) => (
+                                      <label
+                                        key={action}
+                                        className="flex items-center space-x-2"
+                                      >
+                                        <input
+                                          type="checkbox"
+                                          checked={
+                                            editingUser.permissions?.[key]?.[
+                                              action
+                                            ] || false
+                                          }
+                                          onChange={(e) => {
+                                            const permissions = {
+                                              ...editingUser.permissions,
+                                            };
+                                            if (!permissions[key])
+                                              permissions[key] = {};
+                                            permissions[key][action] =
+                                              e.target.checked;
+                                            setEditingUser({
+                                              ...editingUser,
+                                              permissions,
+                                            });
+                                          }}
+                                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span className="text-sm text-gray-700 capitalize">
+                                          {action === "view"
+                                            ? "Ver"
+                                            : action === "create"
+                                              ? "Criar"
+                                              : action === "edit"
+                                                ? "Editar"
+                                                : "Eliminar"}
+                                        </span>
+                                      </label>
+                                    ),
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="flex justify-end space-x-3 pt-6 border-t">
+                          <button
+                            onClick={() => setEditingUser(null)}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={() => handleUpdateUser(editingUser)}
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
+                          >
+                            <Save className="h-4 w-4" />
+                            <span>Guardar Alterações</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Users List */}
                 <div className="bg-white rounded-lg shadow-sm overflow-hidden">
                   <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
