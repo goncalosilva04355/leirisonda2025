@@ -31,6 +31,8 @@ import AppDiagnostic from "./AppDiagnostic";
 import AppWorking from "./AppWorking";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
+// App Loader
+import AppLoader from "./components/AppLoader";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
