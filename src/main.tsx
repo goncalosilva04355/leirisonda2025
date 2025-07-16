@@ -64,6 +64,8 @@ import AppProduction from "./AppProduction";
 import AppFixed from "./AppFixed";
 // App de teste para diagnosticar
 import AppTest from "./AppTest";
+// App minimal para teste
+import AppMinimalTest from "./AppMinimalTest";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
@@ -86,11 +88,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Use the main App directly
-  const AppComponent = App;
+  // TEMPORÁRIO: Use AppMinimalTest para diagnóstico
+  const AppComponent = AppMinimalTest;
   console.log(
     "📱 Using app:",
-    "App (main application with full functionality)",
+    "AppMinimalTest (minimal test version for debugging)",
   );
 
   ReactDOM.createRoot(rootElement).render(
