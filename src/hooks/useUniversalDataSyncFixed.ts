@@ -629,9 +629,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
     [],
   );
 
-  const deletePiscina = useCallback(async (id: string): Promise<void> => {
-    console.log("deletePiscina called:", id);
-  }, []);
+  const deletePiscina = useCallback(
+    async (id: string): Promise<void> => {
+      try {
+        console.log("🗑️ Eliminando piscina:", id);
+
+        // PRIMEIRO: Eliminar do Firestore
+        try {
+          const { deleteFromFirestoreRest } = await import(
+            "../utils/firestoreRestApi"
+          );
+          const firestoreDeleted = await deleteFromFirestoreRest(
+            "piscinas",
+            id,
+          );
+
+          if (firestoreDeleted) {
+            console.log("✅ Piscina eliminada do Firestore com sucesso");
+          }
+        } catch (firestoreError) {
+          console.warn("⚠️ Erro no Firestore:", firestoreError);
+        }
+
+        // SEGUNDO: Eliminar do localStorage
+        const existingPiscinas = safeGetLocalStorage("pools");
+        const updatedPiscinas = existingPiscinas.filter(
+          (piscina: any) => piscina.id !== id,
+        );
+        safeSetLocalStorage("pools", updatedPiscinas);
+
+        // TERCEIRO: Atualizar estado
+        setState((prev) => ({
+          ...prev,
+          piscinas: updatedPiscinas,
+          totalItems: prev.totalItems - 1,
+        }));
+
+        // Trigger update event
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(
+            new CustomEvent("piscinasUpdated", {
+              detail: { data: updatedPiscinas, collection: "piscinas" },
+            }),
+          );
+        }
+
+        console.log("✅ Piscina eliminada com sucesso:", id);
+      } catch (error) {
+        console.error("❌ Erro ao eliminar piscina:", error);
+        throw error;
+      }
+    },
+    [safeGetLocalStorage, safeSetLocalStorage],
+  );
 
   const updateCliente = useCallback(
     async (id: string, data: any): Promise<void> => {
