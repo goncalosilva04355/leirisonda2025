@@ -160,7 +160,6 @@ import { DataProtectionService } from "./utils/dataProtection";
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/directDuplicateKill"; // ELIMINAÇÃO DIRETA E IMEDIATA DOS DUPLICADOS ESPECÍFICOS
 import "./utils/continuousCleanup"; // LIMPEZA CONTÍNUA ATÉ ELIMINAÇÃO COMPLETA
-import "./utils/visualCleanupLogger"; // LOG VISUAL EM TEMPO REAL
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -1550,7 +1549,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -2361,7 +2360,7 @@ ${pools
   .map(
     (pool, index) => `
 ${index + 1}. ${pool.name}
-   Localizaç€: ${pool.location}
+   Localizaç���: ${pool.location}
    Cliente: ${pool.client}
    Tipo: ${pool.type}
    Estado: ${pool.status}
@@ -3206,7 +3205,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
                         {(() => {
-                          // Filtrar obras pendentes atribuídas ao utilizador atual
+                          // Filtrar obras pendentes atribu��das ao utilizador atual
                           const pendingWorks = works.filter((w) => {
                             const isPending =
                               w.status === "pending" || w.status === "pendente";
@@ -5549,7 +5548,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Observações
+                            Observa��ões
                           </label>
                           <textarea
                             rows={3}
@@ -6905,7 +6904,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de filtros",
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
-                          "Verificação alimentaç��o",
+                          "Verificação alimentação",
                           "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
@@ -7773,7 +7772,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
-                                        ��� As definiç✅es são guardadas
+                                        • As definiç✅es são guardadas
                                         localmente no dispositivo
                                       </li>
                                       <li>
@@ -12296,7 +12295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <p className="text-gray-900">
                             {selectedPool.depth
                               ? `${selectedPool.depth} m`
-                              : "N��o especificado"}
+                              : "Não especificado"}
                           </p>
                         </div>
                       </div>
