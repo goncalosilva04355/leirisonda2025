@@ -155,56 +155,59 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             clientes: clientesFirestore.length,
           });
 
-          // Debug: Check for duplicate IDs in Firestore data and REMOVE duplicates
-          const obraIds = obrasFirestore.map((o) => o.id);
-          const duplicateObraIds = obraIds.filter(
-            (id, index) => obraIds.indexOf(id) !== index,
-          );
-          if (duplicateObraIds.length > 0) {
-            console.error(
-              "🚨 DUPLICATE OBRA IDS FROM FIRESTORE:",
-              duplicateObraIds,
-            );
-            console.error("🚨 Full obras data:", obrasFirestore);
+          // ROBUST DEDUPLICATION - Remove ALL duplicates IMMEDIATELY
+          const deduplicateRobust = (array: any[], name: string) => {
+            if (!Array.isArray(array) || array.length === 0) return array;
 
-            // REMOVE DUPLICATES: Keep only the first occurrence of each ID
             const seenIds = new Set();
-            obrasFirestore = obrasFirestore.filter((obra) => {
-              if (seenIds.has(obra.id)) {
-                console.warn("🗑️ Removing duplicate obra:", obra.id);
-                return false;
-              }
-              seenIds.add(obra.id);
-              return true;
-            });
-            console.log(
-              "✅ Duplicates removed. Unique obras:",
-              obrasFirestore.length,
-            );
-          }
-
-          // Also deduplicate other collections
-          const deduplicate = (array: any[], name: string) => {
-            const seenIds = new Set();
+            const duplicateIds = [];
             const unique = array.filter((item) => {
-              if (seenIds.has(item.id)) {
-                console.warn(`🗑️ Removing duplicate ${name}:`, item.id);
+              if (!item || !item.id) {
+                console.warn(`⚠️ Item sem ID em ${name}, removendo:`, item);
                 return false;
               }
+
+              if (seenIds.has(item.id)) {
+                duplicateIds.push(item.id);
+                console.warn(
+                  `🗑️ DUPLICATE ${name.toUpperCase()} REMOVED:`,
+                  item.id,
+                );
+                return false;
+              }
+
               seenIds.add(item.id);
               return true;
             });
-            if (unique.length < array.length) {
+
+            if (duplicateIds.length > 0) {
+              console.error(
+                `🚨 ${name.toUpperCase()} DUPLICATES FOUND AND REMOVED:`,
+                duplicateIds,
+              );
               console.log(
-                `✅ ${name} duplicates removed. Unique: ${unique.length}/${array.length}`,
+                `✅ ${name} cleaned: ${unique.length}/${array.length} (removed ${duplicateIds.length})`,
               );
             }
+
             return unique;
           };
 
-          manutencaoFirestore = deduplicate(manutencaoFirestore, "manutenção");
-          piscinasFirestore = deduplicate(piscinasFirestore, "piscina");
-          clientesFirestore = deduplicate(clientesFirestore, "cliente");
+          // Apply ROBUST deduplication to ALL collections
+          obrasFirestore = deduplicateRobust(obrasFirestore, "obra");
+          manutencaoFirestore = deduplicateRobust(
+            manutencaoFirestore,
+            "manutenção",
+          );
+          piscinasFirestore = deduplicateRobust(piscinasFirestore, "piscina");
+          clientesFirestore = deduplicateRobust(clientesFirestore, "cliente");
+
+          console.log("🎯 ALL DATA DEDUPLICATED - FINAL COUNTS:", {
+            obras: obrasFirestore.length,
+            manutencoes: manutencaoFirestore.length,
+            piscinas: piscinasFirestore.length,
+            clientes: clientesFirestore.length,
+          });
 
           // Também salvar no localStorage para backup
           safeSetLocalStorage("works", obrasFirestore);
