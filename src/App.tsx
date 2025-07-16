@@ -159,6 +159,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
 import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
+import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
 import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 import "./utils/debugDuplicates"; // Debug de duplicados
@@ -2163,7 +2164,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("��������� Navigating to dashboard");
+            console.log("������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -5047,7 +5048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 );
                               } catch (e) {
                                 console.error(
-                                  "❌ ERRO AO FAZER PARSE DOS USERS:",
+                                  "�� ERRO AO FAZER PARSE DOS USERS:",
                                   e,
                                 );
                               }
@@ -6213,7 +6214,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "����� Cliente adicionado com sucesso:",
+                                    "��� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -6857,7 +6858,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <input
                               type="text"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                              placeholder="Ex: Cloro l��quido"
+                              placeholder="Ex: Cloro l����quido"
                             />
                           </div>
                           <div>
