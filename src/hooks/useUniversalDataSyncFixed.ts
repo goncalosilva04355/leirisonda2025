@@ -310,8 +310,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
       try {
-        const id =
-          manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
+        const id = manutencaoData.id || generateUniqueId("manutencao");
         const manutencao = {
           ...manutencaoData,
           id,
