@@ -745,11 +745,13 @@ function App() {
   const works = obras;
   const clients = clientes;
 
-  // Calcular manutenções futuras
-  const today = new Date();
-  const futureMaintenance = manutencoes.filter(
-    (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
-  );
+  // Calcular manutenções futuras - OTIMIZADO COM useMemo
+  const futureMaintenance = useMemo(() => {
+    const today = new Date();
+    return manutencoes.filter(
+      (m) => m.scheduledDate && new Date(m.scheduledDate) >= today,
+    );
+  }, [manutencoes]);
 
   // Funç��es de compatibilidade simplificadas
   const addPool = async (data: any) => {
@@ -1302,7 +1304,9 @@ function App() {
           safeLocalStorage.getItem("isAuthenticated");
 
         // DISABLED: Auto-login sempre desabilitado
-        console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
+        console.log(
+          "��� Auto-login desabilitado - utilizador deve fazer login",
+        );
 
         // If no valid session, start fresh
         console.log("����� No valid session found, starting fresh");
