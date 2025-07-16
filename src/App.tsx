@@ -254,10 +254,26 @@ function App() {
   //   refreshStatus,
   // } = useForceFirestore();
 
-  // Substituído por REST API
+  // Substituído por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
-  const firestoreStatus = "REST API ativa";
+  const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
   const refreshStatus = () => console.log("REST API não precisa refresh");
+
+  // Verificar se REST API está funcionando
+  const [restApiStatus, setRestApiStatus] = useState("aguardando");
+
+  useEffect(() => {
+    // Verificar REST API após 1 segundo
+    setTimeout(() => {
+      if ((window as any).firestoreRestApi) {
+        setRestApiStatus("ativo");
+        console.log("✅ REST API verificado e ativo no desenvolvimento!");
+      } else {
+        setRestApiStatus("aguardando");
+        console.log("⏳ REST API ainda não verificado...");
+      }
+    }, 1000);
+  }, []);
 
   // Log status do Firestore
   useEffect(() => {
@@ -5414,7 +5430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Descrição do trabalho realizado..."
+                            placeholder="Descri��ão do trabalho realizado..."
                           />
                         </div>
                       </div>
@@ -8211,7 +8227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>������ Hist✅rico de serviços</li>
+                        <li>���� Hist✅rico de serviços</li>
                         <li>���� Informações contratuais</li>
                       </ul>
                     </div>
