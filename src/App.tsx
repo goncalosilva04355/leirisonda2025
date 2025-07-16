@@ -135,7 +135,8 @@ import { useForceFirestore } from "./hooks/useForceFirestore";
 // import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
-import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - FUNCIONA GARANTIDAMENTE
+// import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
+import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK)
 import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/testDataPersistence";
 // import "./utils/testFirebaseUserSync";
@@ -1112,7 +1113,7 @@ function App() {
         console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
-        console.log("����� No valid session found, starting fresh");
+        console.log("������ No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -1262,7 +1263,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
+          console.log("✅ Sincronizaç��o automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2134,7 +2135,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
     `;
     downloadPDF(
       content,
@@ -3280,7 +3281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu📞da"
+                                        ? "Conclu����da"
                                         : work.status}
                                 </span>
 
@@ -12006,7 +12007,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Manutenç��es */}
+                    {/* Manutenções */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
                         Manutenç🎉es
