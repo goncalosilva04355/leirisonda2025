@@ -2329,7 +2329,7 @@ ${index + 1}. ${pool.name} (${pool.client})
   )
   .join("")}
 
-=== MANUTEN����ÕES RECENTES ===
+=== MANUTEN��ÕES RECENTES ===
 ${maintenance
   .slice(-5)
   .map(
@@ -2942,11 +2942,10 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       switch (activeSection) {
                 case "dashboard":
           return (
-            <div className="min-h-screen bg-gray-50">
-                                          <PullToRefresh onRefresh={handleDashboardRefresh}>
-                {/* Dashboard Content - Mobile First Design */}
-                <div className="px-4 py-4 space-y-4">
-                  {/* Firebase Status Display - Apenas em produção */}
+                        <div className="min-h-screen bg-gray-50">
+              {/* Dashboard Content - Mobile First Design */}
+              <div className="px-4 py-4 space-y-4">
+                {/* Firebase Status Display - Apenas em produção */}
                 {(typeof import.meta === "undefined" ||
                   !import.meta.env ||
                   !import.meta.env.DEV) && (
@@ -7589,7 +7588,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         localmente no dispositivo
                                       </li>
                                       <li>
-                                        • A marcaç€ automática funciona melhor
+                                        • A marcaç��� automática funciona melhor
                                         em dispositivos móveis
                                       </li>
                                       <li>
@@ -11576,7 +11575,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             : selectedWork.status === "in_progress"
                               ? "Em Progresso"
                               : selectedWork.status === "completed"
-                                ? "Conclu��da"
+                                ? "Concluída"
                                 : selectedWork.status}
                         </span>
                       </div>
