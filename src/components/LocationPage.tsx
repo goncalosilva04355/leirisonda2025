@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { UserLocationMap } from "./UserLocationMap";
+import TeamLocationManager from "./TeamLocationManager";
 
 interface LocationPageProps {
   onBack?: () => void;
