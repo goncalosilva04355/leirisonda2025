@@ -48,16 +48,23 @@ export class FirestoreDataService {
   }
 
   // Inicializar conexão com Firestore
-  private initializeDb() {
+  private async initializeDb() {
+    if (this.initializationAttempted) {
+      return; // Evitar múltiplas tentativas
+    }
+
+    this.initializationAttempted = true;
+
     try {
-      this.db = getFirebaseFirestore();
+      this.db = await getFirebaseFirestore();
       if (this.db) {
         console.log("✅ FirestoreDataService: Conexão estabelecida");
       } else {
         console.warn("⚠️ FirestoreDataService: Firestore não disponível");
       }
     } catch (error) {
-      console.error("❌ FirestoreDataService: Erro na inicialização:", error);
+      console.warn("⚠️ FirestoreDataService: Erro na inicialização:", error);
+      this.db = null;
     }
   }
 
@@ -149,7 +156,7 @@ export class FirestoreDataService {
           dataWithTimestamp,
         );
         console.log(
-          `✅ Dados gravados na coleção "${collectionName}" com ID: ${docRef.id}`,
+          `✅ Dados gravados na cole��ão "${collectionName}" com ID: ${docRef.id}`,
         );
       }
 
