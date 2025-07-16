@@ -375,6 +375,16 @@ export const deleteFirestoreDocument = (
   return firestoreService.deleteDocument(collectionName, documentId);
 };
 
+// Função segura para teste de conexão Firestore
+export const testFirestoreConnection = async (): Promise<boolean> => {
+  try {
+    return await firestoreService.testConnection();
+  } catch (error) {
+    console.warn("⚠️ Erro no teste de conexão Firestore:", error);
+    return false;
+  }
+};
+
 export const testFirestoreConnection = () => {
   return firestoreService.testConnection();
 };
