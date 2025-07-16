@@ -55,6 +55,21 @@ export class PushNotificationService {
 
       try {
         const app = getApp();
+
+        // Verificar se as configurações Firebase estão válidas
+        const config = app.options;
+        if (
+          !config.messagingSenderId ||
+          config.messagingSenderId === "your_sender_id" ||
+          config.messagingSenderId === ""
+        ) {
+          console.warn(
+            "⚠️ Firebase messaging não configurado corretamente - usando apenas notificações locais",
+          );
+          this.isSupported = true;
+          return true;
+        }
+
         this.messaging = getMessaging(app);
         console.log("✅ Firebase Messaging inicializado");
       } catch (messagingError) {
@@ -62,6 +77,8 @@ export class PushNotificationService {
           "⚠️ Erro ao inicializar Firebase Messaging - usando apenas notificações locais:",
           messagingError,
         );
+        // Don't rethrow the error, just continue without Firebase messaging
+        this.messaging = null;
       }
 
       this.isSupported = true;
