@@ -10,6 +10,7 @@
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
 import "./utils/comprehensiveFirebaseTest";
 import "./utils/verifySaveToFirestore";
+import "./utils/verifyAutoSync";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -211,7 +212,7 @@ const initialUsers = [
   },
 ];
 
-// Função showNotification temporária
+// Função showNotification tempor��ria
 const showNotification = (
   title: string,
   message: string,
@@ -1293,7 +1294,7 @@ function App() {
               setAutoSyncActive(true);
               console.log("✅ AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
-              console.error("��� Erro na segunda tentativa:", retryError);
+              console.error("❌ Erro na segunda tentativa:", retryError);
             }
           }, 5000);
         }
@@ -3399,7 +3400,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh🎉";
+                            timeText = "Amanh���";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -3425,7 +3426,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>���</span>
+                                      <span>����</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -4252,7 +4253,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    📍 {maint.location}
+                                    ���� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7219,7 +7220,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                                 <p className="text-blue-700 mb-4">
                                   A gestão de utilizadores foi consolidada no
-                                  menu de administração para evitar duplicações
+                                  menu de administração para evitar duplicaç��es
                                   e melhorar a experiência.
                                 </p>
                                 <button
@@ -10254,7 +10255,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Dura��ão Estimada (horas)
+                          Duração Estimada (horas)
                         </label>
                         <input
                           type="number"
