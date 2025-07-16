@@ -47,7 +47,9 @@ import InstallPromptSimple from "./components/InstallPromptSimple";
 import { LocationPage } from "./components/LocationPage";
 import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
 import SyncStatusIndicator from "./components/SyncStatusIndicator";
+import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
 import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
 import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
@@ -311,7 +313,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persistência:", error);
+        console.error("❌ Erro na monitorização de persist��ncia:", error);
       }
     };
 
