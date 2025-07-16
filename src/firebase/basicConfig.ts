@@ -8,7 +8,8 @@ const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - REATIVADO PARA DEV E PROD
+const FORCE_FIREBASE_PRODUCTION =
+  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true";
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
@@ -33,8 +34,8 @@ if (!IS_NETLIFY_BUILD && import.meta.env.VITE_FORCE_FIREBASE !== "true") {
   console.log("✅ Suas variáveis VITE_FIREBASE_* do Netlify serão usadas");
 }
 
-// Inicializar Firebase SEMPRE (desenvolvimento e produção)
-if (true) {
+// Inicializar Firebase apenas em produção (Netlify) ou se forçado
+if (FORCE_FIREBASE_PRODUCTION) {
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
     const config = getFirebaseConfig();
@@ -113,7 +114,7 @@ export async function getFirebaseAppAsync(): Promise<FirebaseApp | null> {
 
 // Função para verificar se Firebase está pronto
 export function isFirebaseReady(): boolean {
-  return true; // SEMPRE pronto - Firebase forçado ativo
+  return FORCE_FIREBASE_PRODUCTION && firebaseApp !== null;
 }
 
 // Função para obter db seguro - usar firestoreConfig diretamente
