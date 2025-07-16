@@ -328,16 +328,35 @@ export class PushNotificationService {
     console.log("🚀 Iniciando serviço de notificações...");
 
     const initialized = await this.initialize();
-    if (!initialized) return;
+    if (!initialized) {
+      console.warn("⚠️ Falha na inicialização - serviço não será iniciado");
+      return;
+    }
 
-    this.setupForegroundMessageListener();
+    // Setup listeners (com tolerância a erros)
+    try {
+      this.setupForegroundMessageListener();
+      console.log("✅ Listeners de mensagem configurados");
+    } catch (error) {
+      console.warn(
+        "⚠️ Erro ao configurar listeners, continuando sem eles:",
+        error,
+      );
+    }
 
     // Verificar notificações pendentes periodicamente
     setInterval(() => {
-      this.checkPendingNotifications();
+      try {
+        this.checkPendingNotifications();
+      } catch (error) {
+        console.error("❌ Erro ao verificar notificações pendentes:", error);
+      }
     }, 30000); // A cada 30 segundos
 
-    console.log("✅ Serviço de notificações ativo");
+    console.log("✅ Serviço de notificações ativo e funcionando");
+
+    // Teste automático de permissões
+    console.log(`📋 Estado atual das permissões: ${Notification.permission}`);
   }
 }
 
