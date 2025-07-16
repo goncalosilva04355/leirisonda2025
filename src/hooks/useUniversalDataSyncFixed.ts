@@ -317,11 +317,9 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           visibleToAllUsers: true,
         };
 
-        // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
+                // DOUBLE CHECK: Verificar duplicados em localStorage E Firestore
         const existingObras = safeGetLocalStorage("works");
-        const localWorkExists = existingObras.some(
-          (w: any) => w.id === obra.id,
-        );
+        const localWorkExists = existingObras.some((w: any) => w.id === obra.id);
 
         // Also check in current state to prevent duplicates in memory
         const stateWorkExists = state.obras.some((w: any) => w.id === obra.id);
@@ -337,9 +335,7 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         // EXTRA SAFETY: Check in Firestore as well
         try {
           const firestoreObras = await readFromFirestoreRest("obras");
-          const firestoreWorkExists = firestoreObras.some(
-            (w: any) => w.id === obra.id,
-          );
+          const firestoreWorkExists = firestoreObras.some((w: any) => w.id === obra.id);
 
           if (firestoreWorkExists) {
             console.warn(
@@ -349,13 +345,10 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
             return obra.id;
           }
         } catch (error) {
-          console.warn(
-            "⚠️ Não foi possível verificar duplicados no Firestore:",
-            error,
-          );
+          console.warn("⚠️ Não foi possível verificar duplicados no Firestore:", error);
         }
 
-        if (!workExists) {
+                // Proceed with creation since no duplicates found
           // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
           console.log("🔥 Salvando obra no Firestore:", obra.id);
           const firestoreSaved = await saveToFirestoreRest(
