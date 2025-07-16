@@ -51,8 +51,9 @@ if (typeof window !== "undefined") {
   });
 }
 
-// Inicializar Firebase apenas em produção (Netlify) ou se forçado
-if (FORCE_FIREBASE_PRODUCTION) {
+// Inicialização movida para após login - não inicializar automaticamente
+if (false) {
+  // Disabled auto-initialization
   try {
     console.log("🔥 Iniciando Firebase no ambiente de produção (Netlify)...");
 
@@ -60,7 +61,7 @@ if (FORCE_FIREBASE_PRODUCTION) {
     try {
       config = getFirebaseConfig();
       console.log("🔧 Firebase Project:", config.projectId);
-      console.log("🌐 Netlify Build:", IS_NETLIFY_BUILD);
+      console.log("�� Netlify Build:", IS_NETLIFY_BUILD);
     } catch (configError) {
       console.error("❌ Erro ao obter config Firebase:", configError);
       console.log(
