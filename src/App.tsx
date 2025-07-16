@@ -1189,7 +1189,7 @@ function App() {
         safeLocalStorage.removeItem("test-data");
         safeLocalStorage.removeItem("sample-data");
 
-        console.log("��� App initialization completed");
+        console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
         console.error("❌ Erro na inicialização:", error);
@@ -2651,7 +2651,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -5575,7 +5575,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Observa����es sobre a obra"]',
+                                'textarea[placeholder*="Observa��ões sobre a obra"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const budget =
@@ -6054,7 +6054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     error,
                                   );
                                   alert(
-                                    "��� Erro ao adicionar cliente: " + error,
+                                    "����� Erro ao adicionar cliente: " + error,
                                   );
                                   return;
                                 }
@@ -8632,7 +8632,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <option value="empresa">Empresa</option>
                             <option value="condominio">Condomínio</option>
                             <option value="hotel">Hotel / Turismo</option>
-                            <option value="publico">Entidade P����blica</option>
+                            <option value="publico">Entidade P📞blica</option>
                           </select>
                         </div>
                       </div>
@@ -11930,7 +11930,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         onClick={() => {
                           if (
                             window.confirm(
-                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta a��ão não pode ser desfeita.`,
+                              `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
                             dataSync.deleteWork(selectedWork.id);
@@ -12316,7 +12316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         </div>
 
         {/* Mobile Firebase Fix - Show when conflicts detected */}
-        {showMobileFirebaseFix && <MobileFirebaseFix />}
+        {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
 
         {/* App Status Indicator */}
         <AppStatusIndicator />
