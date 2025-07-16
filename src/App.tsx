@@ -1308,7 +1308,7 @@ function App() {
           }
         } else {
           console.log(
-            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+            "⚠��� Passo 3: Firestore não disponível, usando localStorage",
           );
         }
       } catch (error) {
@@ -2493,7 +2493,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     const files = Array.from(e.dataTransfer.files);
     files.forEach((file) => {
       const newPhoto = {
-        id: Date.now() + Math.random(),
+        id: generateUniqueId("photo"),
         name: file.name,
         url: URL.createObjectURL(file),
         file: file,
