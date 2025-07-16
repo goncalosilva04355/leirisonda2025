@@ -90,9 +90,11 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
+  // USAR AppCleanProduction em produção para evitar tela branca
+  const AppComponent = AppCleanProduction;
+  console.log(
+    "📱 PRODUÇÃO: Usando AppCleanProduction (aplicação simplificada)",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
