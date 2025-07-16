@@ -67,7 +67,7 @@ class UltraSimpleOfflineService {
   async createClient(clientData: any): Promise<string> {
     try {
       console.log("👤 Criando cliente...");
-      const clientId = `client-${Date.now()}`;
+      const clientId = generateServiceId("client");
       await saveToFirestoreRest("clients", clientId, {
         ...clientData,
         id: clientId,
