@@ -13,7 +13,7 @@ if (!rootElement) {
 }
 
 try {
-  ReactDOM.createRoot(rootElement).render(<App />);
+  ReactDOM.createRoot(rootElement).render(<AppMinimal />);
   console.log("✅ Aplicação renderizada!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
