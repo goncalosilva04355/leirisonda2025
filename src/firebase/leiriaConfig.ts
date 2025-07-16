@@ -24,8 +24,7 @@ let auth: Auth | null = null;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIREBASE_PRODUCTION =
-  IS_NETLIFY_BUILD || import.meta.env.VITE_FORCE_FIREBASE === "true" || true; // SEMPRE ATIVO
+const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PRODUÇÃO
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {

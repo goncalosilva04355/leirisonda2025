@@ -42,8 +42,6 @@ export class FirestoreDataService {
     return true; // REST API não depende de inicialização SDK
   }
 
-  private warningShown = false;
-
   // Gravar dados de login (sem senha por segurança)
   async saveLoginData(formData: LoginFormData): Promise<string | null> {
     if (!(await this.isAvailable())) {

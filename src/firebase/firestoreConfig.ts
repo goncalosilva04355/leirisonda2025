@@ -8,12 +8,12 @@ import {
 } from "firebase/firestore";
 import { getApps, getApp } from "firebase/app";
 
-// Estado: Firestore inteligente - só ativa se disponível
+// Estado: Firestore inteligente - s�� ativa se disponível
 const LOCAL_MODE = import.meta.env.DEV;
 const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true";
-const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO - DEV E PROD
+const FORCE_FIRESTORE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PRODUÇÃO
 
 // Flag para controlar se já verificamos a disponibilidade do Firestore
 let firestoreAvailabilityChecked = false;
