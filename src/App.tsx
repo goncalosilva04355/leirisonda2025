@@ -301,7 +301,7 @@ function App() {
   // Monitoramento de integridade de dados e restauração de utilizadores
   useEffect(() => {
     // Restaurar utilizadores automaticamente se necessário
-    userRestoreService.autoRestore();
+    // userRestoreService.autoRestore();
 
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
@@ -2651,7 +2651,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -6054,7 +6054,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     error,
                                   );
                                   alert(
-                                    "����� Erro ao adicionar cliente: " + error,
+                                    "��� Erro ao adicionar cliente: " + error,
                                   );
                                   return;
                                 }
