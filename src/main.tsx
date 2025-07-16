@@ -49,6 +49,8 @@ import AppDiagnostic from "./AppDiagnostic";
 import AppDebug from "./AppDebug";
 // App simples e robusto
 import AppSimple from "./AppSimple";
+// App com sistema de fallback inteligente
+import AppWithFallback from "./AppWithFallback";
 // App funcional garantido
 import AppWorking from "./AppWorking";
 // App simplificado para produção
