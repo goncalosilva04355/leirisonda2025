@@ -573,7 +573,7 @@ function App() {
 
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
-      console.error("��� Erro durante refresh do Dashboard:", error);
+      console.error("���� Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
     }
   }, [universalSync]);
@@ -9150,15 +9150,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           : "border-transparent text-gray-500 hover:text-gray-700"
                       }`}
                     >
-                      Concluídas (
-                      {
-                        works.filter(
-                          (w) =>
-                            w.status === "concluida" ||
-                            w.status === "completed",
-                        ).length
-                      }
-                      )
+                      Concluídas ({worksCounts.completed})
                     </button>
                     <button
                       onClick={() => setActiveWorkFilter("no_sheet")}
