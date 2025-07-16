@@ -235,6 +235,8 @@ const showNotification = (
 };
 
 function App() {
+  console.log("🚀 App component rendering...");
+
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -2045,7 +2047,7 @@ function App() {
         setLoginError("Login incorreto");
       }
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("�� Login error:", error);
       setLoginError("Login incorreto");
     }
   };
@@ -7044,7 +7046,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat����rios do Sistema
+                            Relat������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -12179,7 +12181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     )}
 
-                    {/* Data de Criação */}
+                    {/* Data de Criaç��o */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
                         Data de Registo
