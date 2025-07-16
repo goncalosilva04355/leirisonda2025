@@ -487,6 +487,13 @@ function App() {
     }
   };
 
+  // Pull-to-refresh hook
+  const pullToRefresh = usePullToRefresh({
+    onRefresh: handleDashboardRefresh,
+    threshold: 60,
+    disabled: activeSection !== "dashboard" || isLoginCheckComplete === false,
+  });
+
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
     checkOnUserAction: async () => {
@@ -1331,7 +1338,7 @@ function App() {
             try {
               await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
-              console.log("✅ AutoSync ativado na segunda tentativa!");
+              console.log("�� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
               console.error("❌ Erro na segunda tentativa:", retryError);
             }
@@ -8029,7 +8036,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat��rios
+                          Relat���rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
