@@ -528,7 +528,7 @@ function App() {
     console.error("❌ Erro no pull-to-refresh:", error);
   }
 
-  // FIREBASE AUTO-CORREÇÃO - Monitorização automática
+  // FIREBASE AUTO-CORRE��ÃO - Monitorização automática
   const firebaseAutoFix = {
     checkOnUserAction: async () => {
       console.log("Firebase auto-fix disabled");
@@ -1022,14 +1022,14 @@ function App() {
           safeLocalStorage.setItem("app-users", JSON.stringify(defaultUsers));
 
           // Criar no Firestore também
-          if (isFirestoreReady()) {
-            for (const user of defaultUsers) {
-              const firestoreId = await firestoreService.createUtilizador(user);
-              if (firestoreId) {
-                (user as any).firestoreId = firestoreId;
-              }
-            }
-          }
+          // if (isFirestoreReady()) {
+          //   for (const user of defaultUsers) {
+          //     const firestoreId = await firestoreService.createUtilizador(user);
+          //     if (firestoreId) {
+          //       (user as any).firestoreId = firestoreId;
+          //     }
+          //   }
+          // }
         }
       } catch (error) {
         console.error("❌ Error loading users:", error);
@@ -5401,7 +5401,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Building2 className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Observa����es e Trabalho
+                          Observa������es e Trabalho
                         </h3>
                       </div>
 
@@ -7008,7 +7008,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura��������ões
+                        Configura���������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7127,7 +7127,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenç����es
+                                  Hist📞rico de intervenç�����es
                                 </p>
                               </div>
                             </div>
@@ -8797,7 +8797,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Notas e Observaç🔥🔥es
+                            Notas e Observaç🔥����es
                           </label>
                           <textarea
                             rows={4}
