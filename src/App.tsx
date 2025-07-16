@@ -12058,7 +12058,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               `Tem a certeza que deseja apagar a obra "${selectedWork.title || selectedWork.client}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
-                            dataSync.deleteWork(selectedWork.id);
+                            deleteObra(selectedWork.id);
                             showNotification(
                               "Obra Eliminada",
                               `A obra "${selectedWork.title || selectedWork.client}" foi eliminada com sucesso`,
