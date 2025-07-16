@@ -7,6 +7,9 @@
 // VERIFICAÇÃO BÁSICA DE SAÚDE
 // import "./utils/basicHealthCheck";
 
+// PREVENÇÃO DE ERROS GETIMMEDIATE
+import "./utils/preventGetImmediateError";
+
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
 import "./utils/comprehensiveFirebaseTest";
 import "./utils/verifySaveToFirestore";
@@ -830,7 +833,7 @@ function App() {
           );
 
           if (!hasGoncalo) {
-            console.log("���� Adicionando Gonçalo Fonseca aos utilizadores");
+            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
             parsedUsers.push({
               id: 1,
               name: "Gonçalo Fonseca",
@@ -8561,7 +8564,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Nome / Raz��o Social *
+                            Nome / Razão Social *
                           </label>
                           <input
                             type="text"
@@ -11627,7 +11630,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "✓ Gerada"
+                                ? "�� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
@@ -12045,7 +12048,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Próxima Manuten����o
+                            Próxima Manutenç��o
                           </label>
                           <p className="text-gray-900">
                             {selectedPool.nextMaintenance
@@ -12161,7 +12164,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             onClick={() => window.location.reload()}
                             className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
                           >
-                            Recarregar P����gina
+                            Recarregar P���gina
                           </button>
                           <button
                             onClick={() => {
