@@ -203,6 +203,36 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
               console.log(
                 `✅ ${name} cleaned: ${unique.length}/${array.length} (removed ${duplicateIds.length})`,
               );
+
+              // FORÇA: Eliminar duplicados do Firestore também
+              if (name === "obra") {
+                console.log(
+                  "🔥 FORÇANDO ELIMINAÇÃO DOS DUPLICADOS NO FIRESTORE...",
+                );
+                duplicateIds.forEach(async (duplicateId) => {
+                  try {
+                    console.log(
+                      `🗑️ Tentando eliminar do Firestore: ${duplicateId}`,
+                    );
+                    const deleted = await deleteFromFirestoreRest(
+                      "obras",
+                      duplicateId,
+                    );
+                    if (deleted) {
+                      console.log(`✅ ELIMINADO DO FIRESTORE: ${duplicateId}`);
+                    } else {
+                      console.warn(
+                        `⚠️ FALHA ao eliminar do Firestore: ${duplicateId}`,
+                      );
+                    }
+                  } catch (error) {
+                    console.error(
+                      `❌ ERRO ao eliminar ${duplicateId} do Firestore:`,
+                      error,
+                    );
+                  }
+                });
+              }
             }
 
             return unique;
