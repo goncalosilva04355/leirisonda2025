@@ -346,10 +346,10 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           }
         } catch (error) {
           console.warn("⚠️ Não foi possível verificar duplicados no Firestore:", error);
-        }
+                }
 
-                // Proceed with creation since no duplicates found
-          // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
+        // Proceed with creation since no duplicates found
+        // PRIMEIRO: Salvar no Firestore (desenvolvimento = produção)
           console.log("🔥 Salvando obra no Firestore:", obra.id);
           const firestoreSaved = await saveToFirestoreRest(
             "obras",
