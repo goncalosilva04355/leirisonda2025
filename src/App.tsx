@@ -146,11 +146,11 @@ import { DataProtectionService } from "./utils/dataProtection";
 // Testes de regras Firebase removidos para evitar conflitos
 
 // Sistema de diagnóstico de persistência
-import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
-import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
-import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
-import { dataPersistenceManager } from "./utils/dataPersistenceFix";
-import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
+// import { DataPersistenceDiagnostic } from "./components/DataPersistenceDiagnostic";
+// import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
+// import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
+// import { dataPersistenceManager } from "./utils/dataPersistenceFix";
+// import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import { useForceFirestore } from "./hooks/useForceFirestore"; // DESABILITADO - problemas SDK
 // import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
@@ -9871,7 +9871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa���es
+                          ).value; // Observa�����es
 
                           // Prepare update data
                           let updateData: any = {
