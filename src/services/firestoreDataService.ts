@@ -1,17 +1,9 @@
-// Serviço para gravação de dados no Firebase Firestore
+// Serviço para gravação de dados no Firebase Firestore via REST API
 import {
-  collection,
-  addDoc,
-  doc,
-  setDoc,
-  updateDoc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-  Timestamp,
-  serverTimestamp,
-} from "firebase/firestore";
-import { getFirebaseFirestore } from "../firebase/firestoreConfig";
+  saveToFirestoreRest,
+  readFromFirestoreRest,
+  deleteFromFirestoreRest,
+} from "../utils/firestoreRestApi";
 
 // Interface para os dados do formulário de login
 interface LoginFormData {
