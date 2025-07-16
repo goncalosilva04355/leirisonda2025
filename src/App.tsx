@@ -445,7 +445,7 @@ function App() {
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificação
+        // Aguardar um pouco antes de iniciar verificaç��o
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -618,7 +618,7 @@ function App() {
 
       console.log("✅ Dashboard atualizado com sucesso!");
     } catch (error) {
-      console.error("���� Erro durante refresh do Dashboard:", error);
+      console.error("������ Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
     }
   }, [universalSync]);
@@ -7478,46 +7478,9 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             </div>
           );
 
-        default:
+                default:
           return null;
       }
-    })()}
-
-    {/* Admin area - separate from main app */}
-    {showAdminLogin && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 w-full max-w-md">
-          {!isAdminAuthenticated ? (
-            <AdminLogin
-              onLogin={() => {
-                setIsAdminAuthenticated(true);
-                setShowAdminLogin(false);
-              }}
-              onCancel={() => setShowAdminLogin(false)}
-            />
-          ) : (
-            <AdminPage
-              currentUser={currentUser}
-              onLogout={() => {
-                setIsAdminAuthenticated(false);
-                setShowAdminLogin(false);
-              }}
-            />
-          )}
-        </div>
-      )}
-
-      {/* Mobile Firebase Fix - Show when conflicts detected */}
-      {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
-
-      {/* App Status Indicator */}
-      <AppStatusIndicator />
-    </InstantSyncManagerSafe>
-  </AutoSyncProviderSafe>
-);
-}
-                                    </p>
-                                  </div>
                                 </div>
                               </button>
                             </div>
@@ -12066,7 +12029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 Tipo de Coluna
                               </label>
                               <p className="text-gray-900">
-                                {selectedWork.columnType || "Não especificado"}
+                                {selectedWork.columnType || "N��o especificado"}
                               </p>
                             </div>
                             <div>
