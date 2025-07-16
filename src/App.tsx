@@ -4398,7 +4398,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ���� {maint.location}
+                                    ����� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7719,7 +7719,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <div className="flex items-center mb-4">
                               <Shield className="h-6 w-6 text-yellow-600 mr-3" />
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Configurações Avançadas
+                                Configurações Avan��adas
                               </h3>
                             </div>
                             <p className="text-gray-600 mb-6">
@@ -9363,7 +9363,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a obra "${work.title}"?`,
-                                    () => dataSync.deleteWork(work.id),
+                                    () => deleteObra(work.id),
                                   )
                                 }
                                 className="p-3 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg border border-red-200 transition-colors"
