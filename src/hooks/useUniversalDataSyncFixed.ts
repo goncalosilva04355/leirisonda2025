@@ -462,8 +462,63 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
   }, []);
 
   const forceSyncAll = useCallback(async (): Promise<void> => {
-    console.log("🔄 forceSyncAll called");
-  }, []);
+    console.log("🔄 forceSyncAll: Forçando sincronização com Firestore...");
+    setState((prev) => ({ ...prev, isLoading: true, syncStatus: "syncing" }));
+
+    try {
+      // Recarregar todos os dados do Firestore
+      const [
+        obrasFirestore,
+        manutencaoFirestore,
+        piscinasFirestore,
+        clientesFirestore,
+      ] = await Promise.all([
+        readFromFirestoreRest("obras"),
+        readFromFirestoreRest("manutencoes"),
+        readFromFirestoreRest("piscinas"),
+        readFromFirestoreRest("clientes"),
+      ]);
+
+      console.log("✅ forceSyncAll: Dados atualizados do Firestore:", {
+        obras: obrasFirestore.length,
+        manutencoes: manutencaoFirestore.length,
+        piscinas: piscinasFirestore.length,
+        clientes: clientesFirestore.length,
+      });
+
+      // Atualizar localStorage
+      safeSetLocalStorage("works", obrasFirestore);
+      safeSetLocalStorage("maintenance", manutencaoFirestore);
+      safeSetLocalStorage("pools", piscinasFirestore);
+      safeSetLocalStorage("clients", clientesFirestore);
+
+      // Atualizar estado
+      setState({
+        obras: obrasFirestore,
+        manutencoes: manutencaoFirestore,
+        piscinas: piscinasFirestore,
+        clientes: clientesFirestore,
+        totalItems:
+          obrasFirestore.length +
+          manutencaoFirestore.length +
+          piscinasFirestore.length +
+          clientesFirestore.length,
+        lastSync: new Date().toISOString(),
+        isGloballyShared: true,
+        isLoading: false,
+        error: null,
+        syncStatus: "connected",
+      });
+    } catch (error) {
+      console.error("❌ forceSyncAll: Erro na sincronização:", error);
+      setState((prev) => ({
+        ...prev,
+        error: "Erro na sincronização",
+        isLoading: false,
+        syncStatus: "error",
+      }));
+    }
+  }, [safeGetLocalStorage, safeSetLocalStorage]);
 
   const resetSync = useCallback(async (): Promise<void> => {
     console.log("🔄 resetSync called");
