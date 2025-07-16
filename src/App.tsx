@@ -2166,6 +2166,9 @@ function App() {
         safeLocalStorage.setItem("currentUser", JSON.stringify(result.user));
         safeLocalStorage.setItem("isAuthenticated", "true");
 
+        // Inicializar Firebase após login bem-sucedido
+        await initializeFirebaseAfterLogin();
+
         // Clear login form
         setLoginForm({ email: "", password: "" });
 
@@ -8210,7 +8213,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Relatório de Piscinas
+                          Relat��rio de Piscinas
                         </h3>
                         <p className="text-sm text-gray-600">
                           Lista completa de piscinas
@@ -8363,7 +8366,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         Relatório consolidado de todo o sistema
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>����� Resumo executivo</li>
+                        <li>������ Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
                         <li>• An��lise de performance</li>
