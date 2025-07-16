@@ -16,13 +16,25 @@ export const cleanupFirestoreDuplicates = async () => {
     const duplicates: any[] = [];
     const unique: any[] = [];
 
-    obras.forEach((obra) => {
+    // Sort by creation time to keep the oldest
+    const sortedObras = obras.sort((a, b) => {
+      const timeA = new Date(a.createdAt || a.updatedAt || 0).getTime();
+      const timeB = new Date(b.createdAt || b.updatedAt || 0).getTime();
+      return timeA - timeB;
+    });
+
+    sortedObras.forEach((obra) => {
       if (seenIds.has(obra.id)) {
         duplicates.push(obra);
-        console.warn(`🚨 Duplicado encontrado: ${obra.id}`);
+        console.warn(
+          `🚨 DUPLICADO (será eliminado): ${obra.id} - ${obra.createdAt || obra.updatedAt || "no-date"}`,
+        );
       } else {
         seenIds.add(obra.id);
         unique.push(obra);
+        console.log(
+          `✅ Único mantido: ${obra.id} - ${obra.createdAt || obra.updatedAt || "no-date"}`,
+        );
       }
     });
 
