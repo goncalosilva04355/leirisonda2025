@@ -117,6 +117,39 @@ export function isFirebaseReady(): boolean {
   return firebaseApp !== null;
 }
 
+// Função para obter auth seguro
+export function getAuth() {
+  try {
+    if (!firebaseApp) {
+      console.error("🔐 Firebase App não inicializada para Auth");
+      return null;
+    }
+    const { getAuth: getFirebaseAuth } = require("firebase/auth");
+    return getFirebaseAuth(firebaseApp);
+  } catch (error: any) {
+    console.error("🔐 Erro ao obter Auth:", error.message);
+    return null;
+  }
+}
+
+// Funções de compatibilidade
+export const getAuthService = async () => {
+  return getAuth();
+};
+
+export const getDBAsync = async () => {
+  // Implementar quando necessário
+  return null;
+};
+
+export const attemptFirestoreInit = async () => {
+  return getFirebaseApp();
+};
+
+export const waitForFirebaseInit = () => Promise.resolve(firebaseApp !== null);
+export const isFirebaseAuthAvailable = () => firebaseApp !== null;
+export const isFirebaseFirestoreAvailable = () => firebaseApp !== null;
+
 // Export principal
 export { firebaseApp };
 export default firebaseApp;
