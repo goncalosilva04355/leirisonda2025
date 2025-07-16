@@ -131,7 +131,7 @@ import { DataPersistenceAlert } from "./components/DataPersistenceAlert";
 import { DataPersistenceIndicator } from "./components/DataPersistenceIndicator";
 import { dataPersistenceManager } from "./utils/dataPersistenceFix";
 import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
-import { useForceFirestore } from "./hooks/useForceFirestore";
+// import { useForceFirestore } from "./hooks/useForceFirestore"; // DESABILITADO - problemas SDK
 // import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
@@ -512,7 +512,7 @@ function App() {
         "enableMapsRedirect",
         event.detail.enabled.toString(),
       );
-      console.log("🗺📞 Maps redirect synchronized:", event.detail.enabled);
+      console.log("🗺��� Maps redirect synchronized:", event.detail.enabled);
     };
 
     window.addEventListener(
@@ -1113,7 +1113,7 @@ function App() {
         console.log("🔐 Auto-login desabilitado - utilizador deve fazer login");
 
         // If no valid session, start fresh
-        console.log("������ No valid session found, starting fresh");
+        console.log("����� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -1263,7 +1263,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronizaç��o automática TOTALMENTE ATIVA!");
+          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2135,7 +2135,7 @@ ${index + 1}. ${pool.name}
   )
   .join("\n")}
 
-© ${new Date().getFullYear()} Leirisonda - Sistema de Gest��o
+© ${new Date().getFullYear()} Leirisonda - Sistema de Gestão
     `;
     downloadPDF(
       content,
@@ -3281,7 +3281,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     : work.status === "in_progress"
                                       ? "Em Progresso"
                                       : work.status === "completed"
-                                        ? "Conclu����da"
+                                        ? "Conclu📞da"
                                         : work.status}
                                 </span>
 
@@ -11964,7 +11964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               !enablePhoneDialer || !selectedPool.clientPhone
                             }
                           >
-                            📞 {selectedPool.clientPhone || "Não especificado"}
+                            �� {selectedPool.clientPhone || "Não especificado"}
                           </button>
                         </div>
                       </div>
@@ -11991,7 +11991,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             Dimensões
                           </label>
                           <p className="text-gray-900">
-                            {selectedPool.dimensions || "Não especificado"}
+                            {selectedPool.dimensions || "N��o especificado"}
                           </p>
                         </div>
                         <div>
