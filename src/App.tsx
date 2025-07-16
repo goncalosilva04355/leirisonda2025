@@ -64,16 +64,16 @@ import {
 // import InstallPromptSimple from "./components/InstallPromptSimple";
 // UserPermissionsManager removido - consolidado no UserManager do painel admin
 
-import { LocationPage } from "./components/LocationPage";
-import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-import SyncStatusIndicator from "./components/SyncStatusIndicator";
-import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
-import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
-import { simplifiedSyncService } from "./services/simplifiedSyncService";
+// import { LocationPage } from "./components/LocationPage";
+// import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+// import SyncStatusIndicator from "./components/SyncStatusIndicator";
+// import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
+// import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+// import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
-import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
-import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
-import FirestoreTest from "./components/FirestoreTest";
+// import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
+// import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
+// import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
 // import "./utils/clearModalStates";
@@ -2653,7 +2653,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         // Atualizar estado local
         setUsers(users.map((u) => (u.id === editingUser.id ? updatedUser : u)));
 
-        console.log(`✅ Utilizador ${userForm.name} atualizado com sucesso`);
+        console.log(`��� Utilizador ${userForm.name} atualizado com sucesso`);
       } else {
         // Add new user
         const newUser = {
@@ -5571,7 +5571,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const description =
                             (
                               form.querySelector(
-                                'textarea[placeholder*="Descriç��o"]',
+                                'textarea[placeholder*="Descrição"]',
                               ) as HTMLTextAreaElement
                             )?.value || "";
                           const observations =
@@ -11576,7 +11576,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             ? new Date(selectedWork.endTime).toLocaleString(
                                 "pt-PT",
                               )
-                            : "N���o especificado"}
+                            : "N��o especificado"}
                         </p>
                       </div>
                       <div>
