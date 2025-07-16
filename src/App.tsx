@@ -11,6 +11,7 @@
 import "./utils/comprehensiveFirebaseTest";
 import "./utils/verifySaveToFirestore";
 import "./utils/verifyAutoSync";
+import "./utils/finalFirebaseVerification";
 
 import React, { useState, useEffect } from "react";
 import {
@@ -212,7 +213,7 @@ const initialUsers = [
   },
 ];
 
-// Função showNotification tempor��ria
+// Função showNotification temporária
 const showNotification = (
   title: string,
   message: string,
@@ -318,7 +319,7 @@ function App() {
           console.log("✅ Sistema de persistência está funcional");
         }
       } catch (error) {
-        console.error("❌ Erro na monitorização de persist��ncia:", error);
+        console.error("❌ Erro na monitorização de persist���ncia:", error);
       }
     };
 
@@ -3400,7 +3401,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           if (diffDays === 0) {
                             timeText = "Hoje";
                           } else if (diffDays === 1) {
-                            timeText = "Amanh���";
+                            timeText = "Amanh🎉";
                           } else if (diffDays > 0) {
                             timeText = `Em ${diffDays} dias`;
                           } else {
@@ -3426,7 +3427,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       <span>{maint.type}</span>
                                     </div>
                                     <div className="flex items-center space-x-1 text-gray-500 text-sm">
-                                      <span>����</span>
+                                      <span>���</span>
                                       <span>{timeText}</span>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -4253,7 +4254,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ���� {maint.location}
+                                    📍 {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7220,7 +7221,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </h3>
                                 <p className="text-blue-700 mb-4">
                                   A gestão de utilizadores foi consolidada no
-                                  menu de administração para evitar duplicaç��es
+                                  menu de administração para evitar duplicações
                                   e melhorar a experiência.
                                 </p>
                                 <button
