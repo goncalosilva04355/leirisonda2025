@@ -485,11 +485,21 @@ function App() {
   }, [universalSync]);
 
   // Pull-to-refresh hook
-  const pullToRefresh = usePullToRefresh({
-    onRefresh: handleDashboardRefresh,
-    threshold: 60,
-    disabled: activeSection !== "dashboard",
-  });
+  let pullToRefresh = {
+    isRefreshing: false,
+    pullDistance: 0,
+    showIndicator: false,
+    canRefresh: false,
+  };
+  try {
+    pullToRefresh = usePullToRefresh({
+      onRefresh: handleDashboardRefresh,
+      threshold: 60,
+      disabled: activeSection !== "dashboard",
+    });
+  } catch (error) {
+    console.error("❌ Erro no pull-to-refresh:", error);
+  }
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
@@ -1987,7 +1997,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("���� Navigating to dashboard");
+            console.log("������ Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -7039,7 +7049,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat📞rios do Sistema
+                            Relat����rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
