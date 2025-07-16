@@ -693,10 +693,24 @@ function App() {
 
   // Debug: Check for duplicate keys in data
   useEffect(() => {
+    console.log("🔍 Verificando dados carregados:", {
+      obras: obras.length,
+      manutencoes: manutencoes.length,
+      piscinas: piscinas.length,
+      clientes: clientes.length,
+    });
+
     checkForDuplicateKeys(obras, "id");
     checkForDuplicateKeys(manutencoes, "id");
     checkForDuplicateKeys(piscinas, "id");
     checkForDuplicateKeys(clientes, "id");
+
+    // Check for timestamp-based IDs that might be duplicating
+    obras.forEach((obra) => {
+      if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
+        console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
+      }
+    });
   }, [obras, manutencoes, piscinas, clientes]);
 
   // Mapear dados universais para compatibilidade com código existente
@@ -953,7 +967,7 @@ function App() {
           );
 
           if (!hasGoncalo) {
-            console.log("🔧 Adicionando Gonçalo Fonseca aos utilizadores");
+            console.log("���� Adicionando Gonçalo Fonseca aos utilizadores");
             parsedUsers.push({
               id: 1,
               name: "Gonçalo Fonseca",
