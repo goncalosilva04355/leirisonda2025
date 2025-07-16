@@ -1,19 +1,19 @@
-// Configuração Firebase única e limpa - projeto Leiria apenas
+// Configuração Firebase única e limpa - projeto leiria-1cfc9
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
 
-// Configuração única do projeto Leiria25
+// Configuração única do projeto leiria-1cfc9 (CORRETO)
 const leiriaFirebaseConfig = {
-  apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
-  authDomain: "leiria25.firebaseapp.com",
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
-    "https://leiria25-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "Leiria25",
-  storageBucket: "leiria25.firebasestorage.app",
-  messagingSenderId: "947851234567",
-  appId: "1:947851234567:web:abcd1234567890abcd1234",
-  measurementId: "G-ABCD123456",
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
 };
 
 let app: FirebaseApp | null = null;
@@ -32,7 +32,7 @@ function initializeLeiria(): boolean {
   // Respeitar configurações de ambiente
   if (!FORCE_FIREBASE_PRODUCTION) {
     console.log(
-      "🚫 Firebase Leiria não inicializado - modo desenvolvimento ativo",
+      "🚫 Firebase leiria-1cfc9 não inicializado - modo desenvolvimento ativo",
     );
     console.log("📝 Para testar Firebase localmente: VITE_FORCE_FIREBASE=true");
     return false;
@@ -47,17 +47,17 @@ function initializeLeiria(): boolean {
       app = existingApps[0];
     } else {
       // Criar nova app
-      app = initializeApp(leiriaFirebaseConfig, "leiria-app");
+      app = initializeApp(leiriaFirebaseConfig, "leiria-1cfc9-app");
     }
 
     // Inicializar serviços
     db = getFirestore(app);
     auth = getAuth(app);
 
-    console.log("✅ Firebase Leiria inicializado com sucesso");
+    console.log("✅ Firebase leiria-1cfc9 inicializado com sucesso");
     return true;
   } catch (error) {
-    console.warn("⚠️ Firebase Leiria não disponível, usando modo local");
+    console.warn("⚠️ Firebase leiria-1cfc9 não disponível, usando modo local");
     return false;
   }
 }
