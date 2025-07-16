@@ -78,7 +78,7 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <ErrorBoundary>
-        <App />
+        <AppSimple />
       </ErrorBoundary>
     </React.StrictMode>,
   );
