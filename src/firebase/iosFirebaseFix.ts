@@ -77,13 +77,14 @@ export class IOSFirebaseFix {
       const { getAuth, connectAuthEmulator } = await import("firebase/auth");
 
       const config = {
-        apiKey: "AIzaSyC7BHkdQSdAoTzjM39vm90C9yejcoOPCjE",
-        authDomain: "leirisonda-16f8b.firebaseapp.com",
-        projectId: "leirisonda-16f8b",
-        storageBucket: "leirisonda-16f8b.firebasestorage.app",
-        messagingSenderId: "540456875574",
-        appId: "1:540456875574:web:8a8fd4870cb4c943a40a97",
-        measurementId: "G-R9W43EHH2C",
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+        messagingSenderId:
+          import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
       };
 
       // Create fresh app with unique name
