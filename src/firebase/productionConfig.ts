@@ -23,17 +23,17 @@ try {
     console.log("✅ Configuração carregada com sucesso");
   } catch (configError) {
     console.error("❌ Erro ao obter config Firebase:", configError);
-    // Usar configuração fixa como fallback
+    // Usar configuração de ambiente como fallback
     config = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      databaseURL:
-        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+      messagingSenderId:
+        import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
     };
     console.log("🔧 Usando configuração fixa como fallback");
   }
@@ -56,15 +56,15 @@ try {
   // Tentar novamente com configuração fixa
   try {
     const fallbackConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      databaseURL:
-        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+      messagingSenderId:
+        import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
     };
 
     if (getApps().length === 0) {
@@ -86,15 +86,15 @@ export function getFirebaseApp(): FirebaseApp | null {
         config = getFirebaseConfig();
       } catch {
         config = {
-          apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-          authDomain: "leiria-1cfc9.firebaseapp.com",
-          databaseURL:
-            "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "leiria-1cfc9",
-          storageBucket: "leiria-1cfc9.firebasestorage.app",
-          messagingSenderId: "632599887141",
-          appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-          measurementId: "G-Q2QWQVH60L",
+          apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+          authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+          databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+          projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+          storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+          messagingSenderId:
+            import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+          appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+          measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
         };
       }
 
