@@ -162,9 +162,12 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
       // 6. Check User Permissions
       if (currentUser) {
         try {
-          const userDoc = doc(db, "users", currentUser.uid);
+          const userDoc = doc(getFirestoreInstance(), "users", currentUser.uid);
           const userSnapshot = await getDocs(
-            query(collection(db, "users"), orderBy("createdAt", "desc")),
+            query(
+              collection(getFirestoreInstance(), "users"),
+              orderBy("createdAt", "desc"),
+            ),
           );
 
           results.push({
@@ -231,7 +234,11 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
       for (const pool of localData.pools) {
         try {
           await setDoc(
-            doc(db, "pools", pool.id || `pool-${Date.now()}-${Math.random()}`),
+            doc(
+              getFirestoreInstance(),
+              "pools",
+              pool.id || `pool-${Date.now()}-${Math.random()}`,
+            ),
             {
               ...pool,
               sharedGlobally: true,
@@ -250,7 +257,11 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
       for (const work of localData.works) {
         try {
           await setDoc(
-            doc(db, "works", work.id || `work-${Date.now()}-${Math.random()}`),
+            doc(
+              getFirestoreInstance(),
+              "works",
+              work.id || `work-${Date.now()}-${Math.random()}`,
+            ),
             {
               ...work,
               sharedGlobally: true,
