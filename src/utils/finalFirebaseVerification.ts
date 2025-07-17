@@ -228,8 +228,7 @@ setTimeout(async () => {
     (window as any).finalFirebaseVerification = result;
     (window as any).firebaseReport = report;
 
-    // Mostrar status na página
-    document.title = "Leirisonda - Firebase OK ✅";
+    // Status OK - Firebase functioning properly
   } else {
     console.error("🚨 VERIFICAÇÃO FINAL COM PROBLEMAS");
     console.error("Detalhes:", result.details);
