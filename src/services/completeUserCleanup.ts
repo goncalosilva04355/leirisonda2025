@@ -20,7 +20,7 @@ export interface CompleteCleanupResult {
   };
 }
 
-interface CleanupAnalysis {
+export interface CleanupAnalysis {
   hasUserData: boolean;
   details: {
     localStorageKeys: string[];
