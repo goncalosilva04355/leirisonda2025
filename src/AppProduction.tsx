@@ -156,19 +156,7 @@ function AppProduction() {
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>Versão de Produção Simplificada</p>
-            <p className="mt-2">
-              <button
-                onClick={() => {
-                  localStorage.setItem("forceAdvancedApp", "true");
-                  localStorage.removeItem("forceSimpleApp");
-                  window.location.reload();
-                }}
-                className="text-blue-600 hover:underline"
-              >
-                Carregar Versão Completa
-              </button>
-            </p>
+            <p>Sistema Leirisonda</p>
           </div>
         </div>
       </div>
@@ -263,22 +251,12 @@ function AppProduction() {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-blue-800">
-              Versão de produção simplificada ativa. A aplicação está
-              funcionando corretamente.
+              Sistema Leirisonda ativo. A aplicação está funcionando
+              corretamente.
             </p>
             <p className="text-blue-600 mt-2 text-sm">
-              Para aceder a todas as funcionalidades, clique no botão abaixo:
+              Todas as funcionalidades estão disponíveis.
             </p>
-            <button
-              onClick={() => {
-                localStorage.setItem("forceAdvancedApp", "true");
-                localStorage.removeItem("forceSimpleApp");
-                window.location.reload();
-              }}
-              className="mt-3 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-            >
-              Carregar Aplicação Completa
-            </button>
           </div>
         </div>
       </main>

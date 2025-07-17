@@ -1,0 +1,4 @@
+v2.1.0-main-app-always-loaded
+Timestamp: 2025-07-17-18:50
+Build: OK
+Cache: CLEAR_REQUIRED
