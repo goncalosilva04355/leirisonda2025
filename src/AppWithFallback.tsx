@@ -2,10 +2,10 @@ import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppSimple from "./AppSimple";
 import SplashPage from "./pages/SplashPage";
-import AppMinimalTest from "./AppMinimalTest";
+import MainApp from "./App";
 
-// Direct import instead of lazy loading for debugging
-const App = AppMinimalTest;
+// Direct import instead of lazy loading to fix loading issues
+const App = MainApp;
 
 const AppWithFallback: React.FC = () => {
   const [useSimpleApp, setUseSimpleApp] = useState(false);
