@@ -1,4 +1,4 @@
-// Configuração Firebase robusta - garantia de funcionamento
+// Secure Firebase Configuration - robust initialization
 import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app";
 import {
   getFirestore,
@@ -6,19 +6,24 @@ import {
   connectFirestoreEmulator,
 } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
+import { getSecureFirebaseConfig } from "../config/firebaseEnvSecure";
 
-// Configuração funcional do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "947851234567",
-  appId: "1:947851234567:web:abcd1234567890abcd1234",
-  measurementId: "G-ABCD123456",
-};
+// Get configuration from environment variables
+let firebaseConfig: any;
+try {
+  firebaseConfig = getSecureFirebaseConfig();
+} catch (error) {
+  console.warn("⚠️ Firebase configuration not available, using demo mode");
+  // Fallback to demo configuration for development
+  firebaseConfig = {
+    apiKey: "demo-key",
+    authDomain: "demo-project.firebaseapp.com",
+    projectId: "demo-project",
+    storageBucket: "demo-project.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:123456789:web:demo",
+  };
+}
 
 let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
