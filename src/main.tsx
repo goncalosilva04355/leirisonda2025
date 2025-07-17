@@ -236,37 +236,24 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // Check environment and force simple mode for production
-    const isProd = import.meta.env.PROD;
-    const urlParams = new URLSearchParams(window.location.search);
-    const forceSimple =
-      urlParams.get("simple") === "true" ||
-      localStorage.getItem("forceSimpleMode") === "true" ||
-      isProd; // ALWAYS use simple in production
+    // Force ultra simple mode to fix loading issues
+    console.log("📱 Carregando versão ultra simples (CORREÇÃO URGENTE)...");
 
     let AppComponent;
 
-    if (forceSimple) {
-      console.log("📱 Carregando versão simplificada (ANTI-TELA-BRANCA)...");
+    try {
+      const { default: AppUltraSimple } = await import("./AppUltraSimple");
+      AppComponent = AppUltraSimple;
+      console.log("✅ AppUltraSimple carregada com sucesso");
+    } catch (ultraSimpleError) {
+      console.error("❌ Erro ao carregar AppUltraSimple:", ultraSimpleError);
       try {
         const { default: AppSimple } = await import("./AppSimple");
         AppComponent = AppSimple;
-        console.log("✅ AppSimple carregada com sucesso");
+        console.log("✅ AppSimple carregada como fallback");
       } catch (simpleError) {
         console.error("❌ Erro ao carregar AppSimple:", simpleError);
-        throw new Error("Falha ao carregar versão simplificada");
-      }
-    } else {
-      console.log("🚀 Tentando carregar versão completa...");
-      try {
-        const { default: App } = await import("./App");
-        AppComponent = App;
-        console.log("✅ App completa carregada com sucesso");
-      } catch (advancedError) {
-        console.error("❌ Erro ao carregar App completa:", advancedError);
-        console.log("📱 Fallback para versão simplificada...");
-        const { default: AppSimple } = await import("./AppSimple");
-        AppComponent = AppSimple;
+        throw new Error("Falha ao carregar qualquer versão da aplicação");
       }
     }
 
