@@ -8,6 +8,10 @@ import {
   validateFirestoreAccess,
 } from "./firebaseProjectValidator";
 import { diagnose403Error } from "./firebase403Diagnostic";
+import {
+  showQuickSetupInstructions,
+  isSetupNeeded,
+} from "./firebaseQuickSetup";
 
 const config = getRestApiConfig();
 const PROJECT_ID = config.projectId;
@@ -314,7 +318,13 @@ export const readFromFirestoreRest = async (
       // Run full diagnostic on first 403 error
       if (!window.firebase403DiagnosticRun) {
         window.firebase403DiagnosticRun = true;
-        setTimeout(() => diagnose403Error(), 100); // Slight delay for cleaner output
+        setTimeout(() => {
+          if (isSetupNeeded()) {
+            showQuickSetupInstructions();
+          } else {
+            diagnose403Error();
+          }
+        }, 100); // Slight delay for cleaner output
       }
 
       return [];
