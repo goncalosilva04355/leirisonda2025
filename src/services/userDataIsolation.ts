@@ -44,7 +44,7 @@ export class UserDataIsolationService {
     try {
       const auth = await getAuthService();
       if (auth) {
-        // Escutar mudanças de autenticação
+        // Escutar mudanças de autentica��ão
         auth.onAuthStateChanged((user) => {
           if (user) {
             this.currentUserId = user.uid;
@@ -103,7 +103,7 @@ export class UserDataIsolationService {
         canRead: true,
         canWrite: true,
         canDelete: true,
-        reason: "Utilizador �� o proprietário dos dados",
+        reason: "Utilizador é o proprietário dos dados",
       };
     } else {
       // Para dados novos com dono, aplicar isolamento
@@ -129,7 +129,7 @@ export class UserDataIsolationService {
     const possibleOwnerFields = ["createdByUser", "userId", "ownerId"];
 
     return query(
-      collection(db, collectionName),
+      collection(getFirestoreInstance(), collectionName),
       where("createdByUser", "==", this.currentUserId),
     );
   }
@@ -277,7 +277,10 @@ export class UserDataIsolationService {
       // Verificar se o documento existe e pertence ao utilizador
       const docRef = doc(db, collectionName, documentId);
       const docSnapshot = await getDocs(
-        query(collection(db, collectionName), where("id", "==", documentId)),
+        query(
+          collection(getFirestoreInstance(), collectionName),
+          where("id", "==", documentId),
+        ),
       );
 
       if (docSnapshot.empty) {
@@ -329,7 +332,10 @@ export class UserDataIsolationService {
     try {
       // Verificar propriedade antes de remover
       const docSnapshot = await getDocs(
-        query(collection(db, collectionName), where("id", "==", documentId)),
+        query(
+          collection(getFirestoreInstance(), collectionName),
+          where("id", "==", documentId),
+        ),
       );
 
       if (docSnapshot.empty) {
