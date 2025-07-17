@@ -255,65 +255,9 @@ try {
 
   // SEMPRE carregar app principal, tanto em desenvolvimento como produção
   if (shouldUseSafeMode()) {
-    // Desenvolvimento: usar lógica existente
-    const isProduction = import.meta.env.PROD;
-    const forceSimple = localStorage.getItem("forceSimpleApp") === "true";
-
-    console.log("✅ Usando modo seguro/desenvolvimento:", {
-      isProduction,
-      forceSimple,
-    });
-
-    if (isProduction && !forceSimple) {
-      console.log("🏭 Modo produção ativo - usando AppProduction");
-
-      // Carregar AppProduction
-      import("./AppProduction")
-        .then(({ default: AppProduction }) => {
-          console.log("📦 AppProduction importada com sucesso!");
-          console.log("🎯 Tipo do componente:", typeof AppProduction);
-
-          const root = ReactDOM.createRoot(rootElement);
-          console.log("🌳 Root criada:", root);
-
-          const element = React.createElement(AppProduction);
-          console.log("⚛️ Elemento React criado:", element);
-
-          root.render(element);
-          console.log("✅ AppProduction renderizada com sucesso!");
-
-          // Verificar se realmente renderizou
-          setTimeout(() => {
-            const hasContent = rootElement.children.length > 0;
-            console.log("🔍 Verificação pós-render:", {
-              hasChildren: hasContent,
-              innerHTML: rootElement.innerHTML.substring(0, 200) + "...",
-            });
-          }, 1000);
-        })
-        .catch((error) => {
-          console.error(
-            "❌ Erro ao carregar AppProduction, usando fallback:",
-            error,
-          );
-          console.error("❌ Stack trace:", error.stack);
-          console.error("❌ Detalhes do erro:", {
-            message: error.message,
-            name: error.name,
-            cause: error.cause,
-          });
-
-          console.log("🛡️ Renderizando SafeModeApp como fallback...");
-          ReactDOM.createRoot(rootElement).render(
-            React.createElement(SafeModeApp),
-          );
-          console.log("✅ SafeModeApp renderizada após erro!");
-        });
-    } else {
-      console.log("🛡️ Modo seguro ativo - usando app simplificada");
-      ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
-      console.log("✅ App simplificada renderizada!");
-    }
+    console.log("🛡️ Modo seguro ativo - usando app simplificada");
+    ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
+    console.log("✅ App simplificada renderizada!");
   } else {
     console.log("🚀 Tentando carregar app completa...");
 
