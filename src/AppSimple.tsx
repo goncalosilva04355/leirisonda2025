@@ -116,7 +116,7 @@ const AppSimple: React.FC = () => {
   // Not authenticated - show login
   if (!isAuthenticated) {
     return (
-      <LoginPage
+      <LoginPageFixed
         onLogin={async (
           email: string,
           password: string,
