@@ -267,24 +267,45 @@ try {
     // Carregar sempre a aplicação principal
     import("./App")
       .then(({ default: App }) => {
+        console.log("📦 App.tsx importada com sucesso!");
+
+        // Verificar se App é um componente válido
+        if (!App || typeof App !== "function") {
+          throw new Error("App não é um componente válido");
+        }
+
         import("./components/ErrorBoundary")
           .then(({ default: ErrorBoundary }) => {
-            ReactDOM.createRoot(rootElement).render(
+            console.log("📦 ErrorBoundary importado com sucesso!");
+
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(
               React.createElement(ErrorBoundary, {}, React.createElement(App)),
             );
-            console.log("✅ Aplicação principal carregada com sucesso!");
+            console.log("✅ Aplicação principal carregada com ErrorBoundary!");
+
+            // Verificar se realmente renderizou após 2 segundos
+            setTimeout(() => {
+              if (rootElement.children.length === 0) {
+                console.warn("⚠️ Root ainda vazio, tentando render direto...");
+                root.render(React.createElement(App));
+              }
+            }, 2000);
           })
           .catch((error) => {
             console.error(
               "❌ Erro ao carregar ErrorBoundary, carregando App diretamente:",
               error,
             );
-            ReactDOM.createRoot(rootElement).render(React.createElement(App));
+            const root = ReactDOM.createRoot(rootElement);
+            root.render(React.createElement(App));
             console.log("✅ App principal carregada sem ErrorBoundary!");
           });
       })
       .catch((error) => {
         console.error("❌ Erro crítico ao carregar App principal:", error);
+        console.error("Stack trace:", error.stack);
+
         // Fallback para modo seguro em caso de erro crítico
         ReactDOM.createRoot(rootElement).render(
           React.createElement(SafeModeApp),
