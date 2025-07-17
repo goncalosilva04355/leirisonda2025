@@ -2,10 +2,9 @@ import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppSimple from "./AppSimple";
 import SplashPage from "./pages/SplashPage";
-import MainApp from "./App";
 
-// Direct import instead of lazy loading to fix loading issues
-const App = MainApp;
+// Lazy load da aplicação principal
+const App = React.lazy(() => import("./App"));
 
 const AppWithFallback: React.FC = () => {
   const [useSimpleApp, setUseSimpleApp] = useState(false);
@@ -42,24 +41,10 @@ const AppWithFallback: React.FC = () => {
 
   // Loading fallback usando SplashPage
   const LoadingFallback = () => {
-    console.log("🔄 LoadingFallback renderizado, retryCount:", retryCount);
-
     const subtitle =
       retryCount > 0
         ? `A carregar aplicação... (Tentativa ${retryCount + 1} de ${maxRetries + 1})`
         : "A carregar aplicação principal...";
-
-    // Auto-timeout para debugging
-    React.useEffect(() => {
-      console.log("🕒 LoadingFallback timeout iniciado (10s)");
-      const timeout = setTimeout(() => {
-        console.log("🚨 TIMEOUT: App não carregou em 10 segundos");
-        console.log("🔄 Forçando uso do AppSimple devido a timeout");
-        setUseSimpleApp(true);
-      }, 10000);
-
-      return () => clearTimeout(timeout);
-    }, []);
 
     return (
       <SplashPage title="Leirisonda" subtitle={subtitle} showProgress={true} />
@@ -144,7 +129,9 @@ const AppWithFallback: React.FC = () => {
         }
       }}
     >
-      <App />
+      <Suspense fallback={<LoadingFallback />}>
+        <App />
+      </Suspense>
     </AppErrorBoundary>
   );
 };
