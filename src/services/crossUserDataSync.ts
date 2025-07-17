@@ -54,7 +54,7 @@ class CrossUserDataSyncService {
       dataShared: { pools: 0, works: 0, maintenance: 0, clients: 0 },
     };
 
-    if (!isFirebaseReady() || !db) {
+    if (!isFirebaseReady()) {
       result.success = false;
       result.message = "Firebase não disponível";
       result.details.push(
@@ -62,6 +62,8 @@ class CrossUserDataSyncService {
       );
       return result;
     }
+
+    const db = getFirestoreInstance();
 
     try {
       // NUNCA usar localStorage - verificar apenas se há dados globais
