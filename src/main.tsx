@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// Main application component
-import App from "./App";
+// Main application component - using simplified version for validation
+import App from "./AppSimple";
 // Error Boundary for safety
 import ErrorBoundary from "./components/ErrorBoundary";
 
