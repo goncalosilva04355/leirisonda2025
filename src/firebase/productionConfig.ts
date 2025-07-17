@@ -23,16 +23,16 @@ try {
     console.log("✅ Configuração carregada com sucesso");
   } catch (configError) {
     console.error("❌ Erro ao obter config Firebase:", configError);
-    // Usar configuração fixa como fallback
+    // Usar configuração de ambiente como fallback
     config = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "placeholder-api-key",
       authDomain: "leiria-1cfc9.firebaseapp.com",
       databaseURL:
         "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "leiria-1cfc9",
       storageBucket: "leiria-1cfc9.firebasestorage.app",
       messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "placeholder-app-id",
       measurementId: "G-Q2QWQVH60L",
     };
     console.log("🔧 Usando configuração fixa como fallback");
