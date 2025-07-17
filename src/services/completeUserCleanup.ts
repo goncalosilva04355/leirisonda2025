@@ -1,5 +1,8 @@
 // SERVIÇO LIMPO SEM FIREBASE SDK - USA APENAS REST API E LOCALSTORAGE
-import { saveToFirestoreRest, readFromFirestoreRest } from "../utils/firestoreRestApi";
+import {
+  saveToFirestoreRest,
+  readFromFirestoreRest,
+} from "../utils/firestoreRestApi";
 
 export interface CompleteCleanupResult {
   success: boolean;
@@ -161,7 +164,8 @@ class CompleteUserCleanupService {
 
       cookies.forEach((cookie) => {
         const eqPos = cookie.indexOf("=");
-        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        const name =
+          eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
         if (name) {
           // Clear cookie for all possible domains and paths
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
@@ -256,10 +260,10 @@ class CompleteUserCleanupService {
       localStorage.removeItem("userCredentials");
       localStorage.removeItem("authToken");
       localStorage.removeItem("isAuthenticated");
-      
+
       result.details.currentUserLoggedOut = true;
       result.details.authPersistenceCleared = true;
-      
+
       console.log("✅ Autenticação mock limpa");
     } catch (error: any) {
       console.error("❌ Erro ao limpar autenticação mock:", error);
@@ -375,7 +379,6 @@ class CompleteUserCleanupService {
       return false;
     }
   }
-}
 
   /**
    * Nuclear cleanup - alias for performCompleteCleanup
