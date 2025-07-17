@@ -679,22 +679,22 @@ function App() {
     }
   }, [universalSync]);
 
-  // Pull-to-refresh hook
-  let pullToRefresh = {
+  // Pull-to-refresh hook - TEMPORARIAMENTE DESABILITADO
+  const pullToRefresh = {
     isRefreshing: false,
     pullDistance: 0,
     showIndicator: false,
     canRefresh: false,
   };
-  try {
-    pullToRefresh = usePullToRefresh({
-      onRefresh: handleDashboardRefresh,
-      threshold: 60,
-      disabled: activeSection !== "dashboard",
-    });
-  } catch (error) {
-    console.error("❌ Erro no pull-to-refresh:", error);
-  }
+  // try {
+  //   pullToRefresh = usePullToRefresh({
+  //     onRefresh: handleDashboardRefresh,
+  //     threshold: 60,
+  //     disabled: activeSection !== "dashboard",
+  //   });
+  // } catch (error) {
+  //   console.error("❌ Erro no pull-to-refresh:", error);
+  // }
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
@@ -1967,7 +1967,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
+        "N��o tem permissão para criar manutenç€es. Contacte o administrador.",
       );
       return;
     }
@@ -4848,7 +4848,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Piscina
                             </option>
                             <option key="manutencao" value="manutencao">
-                              Manutenç��o
+                              Manutenção
                             </option>
                             <option key="instalacao" value="instalacao">
                               Instalaç€
