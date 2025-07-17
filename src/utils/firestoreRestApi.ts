@@ -163,6 +163,11 @@ export const readFromFirestoreRest = async (
     console.warn(
       `⚠️ REST API: Firebase PROJECT_ID não configurado. Definir variáveis VITE_FIREBASE_*`,
     );
+    console.warn("🛠️ SOLUÇÃO RÁPIDA:");
+    console.warn("1. Criar ficheiro .env na raiz do projeto");
+    console.warn("2. Adicionar: VITE_FIREBASE_PROJECT_ID=leiria-1cfc9");
+    console.warn("3. Adicionar: VITE_FIREBASE_API_KEY=sua_chave_real");
+    console.warn("4. Reiniciar: npm run dev");
     return [];
   }
 
@@ -170,6 +175,10 @@ export const readFromFirestoreRest = async (
     console.warn(
       `⚠️ REST API: Firebase API_KEY não configurado. Definir variáveis VITE_FIREBASE_*`,
     );
+    console.warn("🛠️ SOLUÇÃO RÁPIDA:");
+    console.warn("1. Obter API key do Firebase Console");
+    console.warn("2. Adicionar ao .env: VITE_FIREBASE_API_KEY=AIzaSy...");
+    console.warn("3. Reiniciar servidor");
     return [];
   }
 
