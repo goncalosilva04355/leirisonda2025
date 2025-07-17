@@ -1633,7 +1633,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç������es
+    // Adicionar listeners para todas as coleç��������es
     const collections = [
       "obras",
       "piscinas",
@@ -2077,6 +2077,9 @@ function App() {
         setIsAuthenticated(true);
         safeLocalStorage.setItem("currentUser", JSON.stringify(result.user));
         safeLocalStorage.setItem("isAuthenticated", "true");
+
+        // Inicializar Firebase Mobile APÓS login bem-sucedido
+        initMobileFirebaseAfterLogin();
 
         // Clear login form
         setLoginForm({ email: "", password: "" });
