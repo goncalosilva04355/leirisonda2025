@@ -2,7 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-console.log("🚀 Leirisonda - Inicializando aplicação (ANTI-TELA-BRANCA)...");
+console.log(
+  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODUÇÃO)...",
+);
+console.log("🌍 Ambiente:", {
+  mode: "DESENVOLVIMENTO = PRODUÇÃO",
+  entry: "main.tsx -> App.tsx",
+  timestamp: new Date().toISOString(),
+});
 
 // Global error handlers
 window.addEventListener("error", (event) => {
