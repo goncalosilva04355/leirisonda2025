@@ -271,8 +271,8 @@ const loadApp = async () => {
       throw new Error("Nenhum componente App disponível");
     }
 
-    // Create root and render
-    const root = ReactDOM.createRoot(rootElement);
+    // Get or create root and render
+    const root = getOrCreateRoot();
 
     // Try with ErrorBoundary first
     try {
