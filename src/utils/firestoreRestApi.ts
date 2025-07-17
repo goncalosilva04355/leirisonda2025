@@ -7,6 +7,7 @@ import {
   validateFirebaseProject,
   validateFirestoreAccess,
 } from "./firebaseProjectValidator";
+import { diagnose403Error } from "./firebase403Diagnostic";
 
 const config = getRestApiConfig();
 const PROJECT_ID = config.projectId;
@@ -299,6 +300,12 @@ export const readFromFirestoreRest = async (
         console.error(
           "🛠️ SOLUÇÃO: Definir VITE_FIREBASE_API_KEY com a chave real",
         );
+      }
+
+      // Run full diagnostic on first 403 error
+      if (!window.firebase403DiagnosticRun) {
+        window.firebase403DiagnosticRun = true;
+        setTimeout(() => diagnose403Error(), 100); // Slight delay for cleaner output
       }
 
       return [];
