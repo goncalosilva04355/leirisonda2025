@@ -1,29 +1,9 @@
 // Configuração Firestore SIMPLES que funciona
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getFirebaseApp, getFirestoreInstance } from "./config";
 
-// Configuração Firebase FIXA
-const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
-};
-
-// Inicializar Firebase App
-let app;
-if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);
-  console.log("✅ Firebase App inicializada:", app.name);
-} else {
-  app = getApp();
-  console.log("✅ Firebase App existente:", app.name);
-}
+// Obter app Firebase centralizada
+const app = getFirebaseApp();
+console.log("✅ Firebase App obtida:", app.name);
 
 // Variável para armazenar instância do Firestore
 let db: any = null;
@@ -36,7 +16,7 @@ async function initializeFirestore() {
     // Aguardar um pouco para garantir que o Firebase está pronto
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    db = getFirestore(app);
+    db = getFirestoreInstance();
     console.log("✅ Firestore inicializado assincronamente");
     return db;
   } catch (error: any) {
@@ -76,5 +56,5 @@ export function isFirestoreWorking(): boolean {
 // Log do estado
 console.log("🔥 Firebase configurado:");
 console.log("  - App:", !!app);
-console.log("  - Projeto:", firebaseConfig.projectId);
+console.log("  - Projeto:", app.options.projectId);
 console.log("  - Firestore:", "será inicializado assincronamente");
