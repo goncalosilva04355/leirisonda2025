@@ -1,275 +1,315 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import SplashPage from "./pages/SplashPage";
 
-console.log("🚀 AppSimple carregando...");
+const AppSimple: React.FC = () => {
+  console.log("🚀 AppSimple renderizando...");
 
-// Dados de utilizador padrão
-const defaultUser = {
-  id: 1,
-  name: "Gonçalo Fonseca",
-  email: "gongonsilva@gmail.com",
-  password: "19867gsf",
-  role: "super_admin",
-  permissions: {
-    obras: { view: true, create: true, edit: true, delete: true },
-    manutencoes: { view: true, create: true, edit: true, delete: true },
-    piscinas: { view: true, create: true, edit: true, delete: true },
-    utilizadores: { view: true, create: true, edit: true, delete: true },
-    relatorios: { view: true, create: true, edit: true, delete: true },
-    clientes: { view: true, create: true, edit: true, delete: true },
-  },
-  active: true,
-  createdAt: "2024-01-01",
-};
-
-export default function AppSimple() {
+  const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
-  const [loginError, setLoginError] = useState("");
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log("🔄 AppSimple renderizando...", { isAuthenticated });
+  // Initialize app safely
+  useEffect(() => {
+    const initApp = async () => {
+      try {
+        console.log("🔄 Inicializando AppSimple...");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoginError("");
+        // Reduced wait time to prevent appearance of infinite loading
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
-    // Verificar credenciais simples
-    if (
-      loginForm.email === "gongonsilva@gmail.com" &&
-      loginForm.password === "19867gsf"
-    ) {
-      console.log("✅ Login bem-sucedido");
-      setCurrentUser(defaultUser);
-      setIsAuthenticated(true);
-    } else {
-      setLoginError("Email ou palavra-passe incorretos");
-    }
-  };
+        // Check for existing auth
+        const savedUser = localStorage.getItem("currentUser");
+        const isAuthStored = localStorage.getItem("isAuthenticated");
 
-  // Se não estiver autenticado, mostrar login simples
-  if (!isAuthenticated) {
+        if (savedUser && isAuthStored === "true") {
+          try {
+            const user = JSON.parse(savedUser);
+            setCurrentUser(user);
+            setIsAuthenticated(true);
+            console.log("✅ Utilizador autenticado encontrado:", user.email);
+          } catch (e) {
+            console.warn("⚠️ Erro ao carregar utilizador salvo:", e);
+            localStorage.removeItem("currentUser");
+            localStorage.removeItem("isAuthenticated");
+          }
+        }
+
+        setIsLoading(false);
+        console.log("✅ AppSimple inicializado com sucesso");
+      } catch (error) {
+        console.error("❌ Erro na inicialização:", error);
+        setError("Erro ao carregar a aplicação");
+        setIsLoading(false);
+      }
+    };
+
+    initApp();
+  }, []);
+
+  // Loading state
+  if (isLoading) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #0891b2 0%, #0ea5e9 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "1rem",
-        }}
-      >
-        <div
-          style={{
-            background: "white",
-            padding: "2rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-            width: "100%",
-            maxWidth: "400px",
-          }}
-        >
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <h1
-              style={{
-                color: "#0891b2",
-                fontSize: "2rem",
-                fontWeight: "bold",
-                margin: "0 0 0.5rem 0",
-              }}
-            >
-              🔧 Leirisonda
-            </h1>
-            <p style={{ color: "#6b7280", margin: 0 }}>
-              Sistema de Gestão de Piscinas
-            </p>
+      <SplashPage
+        title="Leirisonda"
+        subtitle="A inicializar sistema..."
+        showProgress={true}
+      />
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-blue-200 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+          {/* Logo Leirisonda */}
+          <div className="text-center mb-8">
+            <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                alt="Leirisonda - Furos e Captações de Água, Lda"
+                className="w-full h-auto object-contain"
+                style={{ maxHeight: "80px" }}
+              />
+            </div>
           </div>
 
-          <form onSubmit={handleLogin}>
-            <div style={{ marginBottom: "1rem" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "500",
-                  color: "#374151",
-                }}
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                value={loginForm.email}
-                onChange={(e) =>
-                  setLoginForm((prev) => ({ ...prev, email: e.target.value }))
-                }
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "0.375rem",
-                  fontSize: "1rem",
-                  boxSizing: "border-box",
-                }}
-                placeholder="seu@email.com"
-                required
-              />
+          {/* Conteúdo do Erro */}
+          <div className="text-center space-y-6">
+            {/* Título */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+                Erro na Aplicação
+              </h1>
+              <p className="text-gray-600 text-sm">
+                Sistema de Gestão de Piscinas
+              </p>
             </div>
 
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label
-                style={{
-                  display: "block",
-                  marginBottom: "0.5rem",
-                  fontWeight: "500",
-                  color: "#374151",
-                }}
-              >
-                Palavra-passe
-              </label>
-              <input
-                type="password"
-                value={loginForm.password}
-                onChange={(e) =>
-                  setLoginForm((prev) => ({
-                    ...prev,
-                    password: e.target.value,
-                  }))
-                }
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #d1d5db",
-                  borderRadius: "0.375rem",
-                  fontSize: "1rem",
-                  boxSizing: "border-box",
-                }}
-                placeholder="Palavra-passe"
-                required
-              />
+            {/* Mensagem de erro */}
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <p className="text-red-700 text-sm">{error}</p>
             </div>
 
-            {loginError && (
-              <div
-                style={{
-                  background: "#fef2f2",
-                  border: "1px solid #fecaca",
-                  borderRadius: "0.375rem",
-                  padding: "0.75rem",
-                  marginBottom: "1rem",
-                  color: "#dc2626",
-                  fontSize: "0.875rem",
-                }}
+            {/* Botão de recarga */}
+            <div className="space-y-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="w-full bg-blue-300 text-white py-2 px-4 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
               >
-                {loginError}
-              </div>
-            )}
+                🔄 Recarregar Aplicação
+              </button>
+            </div>
 
-            <button
-              type="submit"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                background: "#0891b2",
-                color: "white",
-                border: "none",
-                borderRadius: "0.375rem",
-                fontSize: "1rem",
-                fontWeight: "500",
-                cursor: "pointer",
-              }}
-            >
-              Entrar
-            </button>
-          </form>
-
-          <div
-            style={{
-              textAlign: "center",
-              marginTop: "1.5rem",
-              fontSize: "0.75rem",
-              color: "#9ca3af",
-            }}
-          >
-            Versão Produção - {new Date().toLocaleDateString("pt-PT")}
+            {/* Informações adicionais */}
+            <div className="text-xs text-gray-400 text-center pt-4 border-t border-gray-100">
+              <p>Se o problema persistir, contacte o suporte</p>
+            </div>
           </div>
         </div>
       </div>
     );
   }
 
-  // Se estiver autenticado, mostrar dashboard simples
+  // Not authenticated - show login
+  if (!isAuthenticated) {
+    return (
+      <LoginPage
+        onLogin={async (
+          email: string,
+          password: string,
+          rememberMe?: boolean,
+        ) => {
+          console.log("🔑 Tentativa de login:", email);
+
+          // Hardcoded login for demo
+          if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
+            const user = {
+              id: 1,
+              email,
+              name: "Gonçalo Fonseca",
+              role: "super_admin",
+            };
+
+            setCurrentUser(user);
+            setIsAuthenticated(true);
+
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            localStorage.setItem("isAuthenticated", "true");
+
+            console.log("✅ Login bem-sucedido");
+          } else {
+            console.log("❌ Credenciais inválidas");
+            throw new Error("Credenciais inválidas");
+          }
+        }}
+        loginError={error || ""}
+      />
+    );
+  }
+
+  // Authenticated - show main app
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "#0891b2",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         color: "white",
-        padding: "2rem",
-        fontFamily: "Arial, sans-serif",
+        fontFamily: "system-ui, -apple-system, sans-serif",
       }}
     >
-      <h1>🔧 Leirisonda - Dashboard</h1>
-      <p>Bem-vindo, {currentUser?.name || "Utilizador"}!</p>
-
-      <div style={{ marginTop: "2rem" }}>
-        <button
-          onClick={() => {
-            setIsAuthenticated(false);
-            setCurrentUser(null);
-            setLoginForm({ email: "", password: "" });
-            setLoginError("");
-          }}
-          style={{
-            padding: "0.5rem 1rem",
-            background: "white",
-            color: "#0891b2",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            marginRight: "1rem",
-          }}
-        >
-          Sair
-        </button>
-
-        <button
-          onClick={() => alert("Dashboard completo em desenvolvimento")}
-          style={{
-            padding: "0.5rem 1rem",
-            background: "rgba(255,255,255,0.2)",
-            color: "white",
-            border: "1px solid white",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Funcionalidades
-        </button>
-      </div>
-
-      <div style={{ marginTop: "2rem", fontSize: "0.9rem", opacity: 0.8 }}>
-        <p>Aplicação em produção - {new Date().toLocaleString("pt-PT")}</p>
-        <p>Versão simplificada para garantir estabilidade</p>
-        <p>Para aceder ao sistema completo, contacte o administrador</p>
-      </div>
-
+      {/* Header */}
       <div
         style={{
-          marginTop: "3rem",
-          padding: "1rem",
-          background: "rgba(255,255,255,0.1)",
-          borderRadius: "0.375rem",
+          background: "rgba(255, 255, 255, 0.1)",
+          backdropFilter: "blur(10px)",
+          padding: "1rem 2rem",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <h3 style={{ margin: "0 0 1rem 0" }}>Status do Sistema:</h3>
-        <ul style={{ margin: 0, paddingLeft: "1.5rem" }}>
-          <li>✅ Aplicação carregada com sucesso</li>
-          <li>✅ Login funcional</li>
-          <li>✅ Interface responsiva</li>
-          <li>⚠️ Funcionalidades completas em desenvolvimento</li>
-        </ul>
+        <div>
+          <h1 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "bold" }}>
+            🏊‍♂️ Leirisonda
+          </h1>
+          <p style={{ margin: 0, opacity: 0.8, fontSize: "0.875rem" }}>
+            Sistema de Gestão de Piscinas
+          </p>
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <span style={{ opacity: 0.8 }}>
+            Olá, {currentUser?.name || "Utilizador"}
+          </span>
+          <button
+            onClick={() => {
+              setIsAuthenticated(false);
+              setCurrentUser(null);
+              localStorage.removeItem("currentUser");
+              localStorage.removeItem("isAuthenticated");
+              console.log("👋 Logout realizado");
+            }}
+            style={{
+              background: "rgba(255, 255, 255, 0.2)",
+              color: "white",
+              border: "1px solid rgba(255, 255, 255, 0.3)",
+              padding: "0.5rem 1rem",
+              borderRadius: "0.375rem",
+              cursor: "pointer",
+              fontSize: "0.875rem",
+            }}
+          >
+            🚪 Sair
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div style={{ padding: "2rem" }}>
+        <div
+          style={{
+            background: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(10px)",
+            borderRadius: "1rem",
+            padding: "2rem",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: "4rem", marginBottom: "1rem" }}>✅</div>
+          <h2
+            style={{
+              fontSize: "2rem",
+              marginBottom: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            Aplicação Funcionando!
+          </h2>
+          <p
+            style={{ fontSize: "1.125rem", opacity: 0.8, marginBottom: "2rem" }}
+          >
+            A versão simplificada da aplicação está carregada com sucesso.
+          </p>
+
+          <div
+            style={{
+              display: "grid",
+              gap: "1rem",
+              maxWidth: "400px",
+              margin: "0 auto",
+              textAlign: "left",
+            }}
+          >
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <strong>✅ Status:</strong> Aplicação carregada
+            </div>
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <strong>🔑 Utilizador:</strong> {currentUser?.email}
+            </div>
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <strong>⏰ Timestamp:</strong>{" "}
+              {new Date().toLocaleString("pt-PT")}
+            </div>
+            <div
+              style={{
+                background: "rgba(255, 255, 255, 0.1)",
+                padding: "1rem",
+                borderRadius: "0.5rem",
+              }}
+            >
+              <strong>�� Ambiente:</strong> {import.meta.env.MODE}
+            </div>
+          </div>
+
+          <div style={{ marginTop: "2rem" }}>
+            <p style={{ opacity: 0.8, marginBottom: "1rem" }}>
+              A aplicação principal pode ser carregada de volta:
+            </p>
+            <button
+              onClick={() => {
+                console.log("🔄 Redirecionando para aplicação principal...");
+                window.location.href = "/";
+              }}
+              style={{
+                background: "#3b82f6",
+                color: "white",
+                border: "none",
+                padding: "0.75rem 1.5rem",
+                borderRadius: "0.5rem",
+                cursor: "pointer",
+                fontSize: "1rem",
+                fontWeight: "bold",
+              }}
+            >
+              🚀 Carregar App Principal
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default AppSimple;

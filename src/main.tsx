@@ -47,8 +47,6 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
-// App simplificado para produção
-import AppSimple from "./AppSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 
@@ -95,9 +93,9 @@ try {
     });
   }
 
-  // Temporariamente usar AppSimple para testar
-  const AppComponent = AppSimple;
-  console.log("🧪 TESTE: Usando AppSimple temporariamente");
+  // SEMPRE usar App principal - desenvolvimento = produção
+  const AppComponent = App;
+  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
