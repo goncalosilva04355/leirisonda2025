@@ -335,42 +335,23 @@ function App() {
 
   // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN ESTAR CARREGADO
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
-  const [loginPageLoaded, setLoginPageLoaded] = useState(false);
+  const [loginPageLoaded, setLoginPageLoaded] = useState(true); // Inicia como true para mostrar login imediatamente
 
-  // Firebase só inicia depois do login estar carregado
-  useEffect(() => {
-    // Aguardar login page estar totalmente carregada antes de inicializar Firebase
-    if (!loginPageLoaded) {
-      return;
+  // Firebase só inicia depois do utilizador fazer login
+  const initMobileFirebaseAfterLogin = async () => {
+    try {
+      console.log("🔥 Utilizador fez login, iniciando Firebase Mobile...");
+      await initializeFirebaseMobile();
+      setMobileFirebaseReady(true);
+      console.log("✅ Firebase Mobile inicializado APÓS login!");
+    } catch (error) {
+      console.warn(
+        "⚠️ Firebase Mobile falhou, continuando em modo local:",
+        error,
+      );
+      setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
     }
-
-    const initMobileFirebase = async () => {
-      try {
-        console.log("🔥 Login page carregada, iniciando Firebase Mobile...");
-        await initializeFirebaseMobile();
-        setMobileFirebaseReady(true);
-        console.log("✅ Firebase Mobile inicializado APÓS login page!");
-      } catch (error) {
-        console.warn(
-          "⚠️ Firebase Mobile falhou, continuando em modo local:",
-          error,
-        );
-        setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
-      }
-    };
-
-    initMobileFirebase();
-  }, [loginPageLoaded]); // Só executa quando login page está carregada
-
-  // Detectar quando o login page está carregado
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("✅ Login page considerada carregada");
-      setLoginPageLoaded(true);
-    }, 500); // Dar tempo para o componente de login renderizar
-
-    return () => clearTimeout(timer);
-  }, []);
+  };
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1358,16 +1339,7 @@ function App() {
   });
 
   // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
-
-  useEffect(() => {
-    console.log("🚀 App safety check...");
-    // Simple timeout to ensure all React internals are ready
-    setTimeout(() => {
-      setIsAppReady(true);
-      console.log("✅ App ready to render");
-    }, 100);
-  }, []);
+  const [isAppReady, setIsAppReady] = useState(true); // Sempre true para mostrar login imediatamente
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
@@ -2219,7 +2191,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est������ ativo após login
+        // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -8396,7 +8368,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
                         <li>🎉 Dados consolidados</li>
-                        <li>• An��lise de performance</li>
+                        <li>• An���lise de performance</li>
                       </ul>
                     </div>
                     <button
