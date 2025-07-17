@@ -225,10 +225,16 @@ export async function getDB(): Promise<Firestore | null> {
   }
 }
 
-// Legacy exports for compatibility
-export const app = getFirebaseApp();
-export const db = getFirestoreInstance();
-export { auth };
+// Legacy exports for compatibility - lazy getters to avoid getImmediate errors
+export const app = {
+  get: () => getFirebaseApp(),
+};
+export const db = {
+  get: () => getFirestoreInstance(),
+};
+export const auth = {
+  get: () => getAuthInstance(),
+};
 
 // REST API Configuration
 export function getFirebaseRestConfig() {
@@ -249,11 +255,17 @@ export function getApiKey(): string {
   return getFirebaseConfig().apiKey;
 }
 
-// Default export
+// Default export with lazy initialization
 export default {
-  app: getFirebaseApp(),
-  db: getFirestoreInstance(),
-  auth: getAuthInstance(),
+  get app() {
+    return getFirebaseApp();
+  },
+  get db() {
+    return getFirestoreInstance();
+  },
+  get auth() {
+    return getAuthInstance();
+  },
   getFirebaseApp,
   getFirestoreInstance,
   getAuthInstance,
