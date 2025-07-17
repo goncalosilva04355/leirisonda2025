@@ -1,20 +1,11 @@
-// Configuração Firebase única e limpa - projeto leiria-1cfc9
+// Secure Firebase Configuration - projeto leiria-1cfc9
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth } from "firebase/auth";
+import { getSecureFirebaseConfig } from "../config/firebaseEnvSecure";
 
-// Configuração única do projeto leiria-1cfc9 (CORRETO)
-const leiriaFirebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
-};
+// Get configuration from environment variables
+const leiriaFirebaseConfig = getSecureFirebaseConfig();
 
 let app: FirebaseApp | null = null;
 let db: Firestore | null = null;
