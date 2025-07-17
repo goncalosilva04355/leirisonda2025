@@ -132,6 +132,35 @@ export function getAuthInstance(): Auth {
   return auth;
 }
 
+// Check if Firebase is ready
+export function isFirebaseReady(): boolean {
+  try {
+    const app = getFirebaseApp();
+    return app !== null && app !== undefined;
+  } catch {
+    return false;
+  }
+}
+
+// Check Firebase status
+export function getFirebaseStatus() {
+  return {
+    isReady: isFirebaseReady(),
+    app: firebaseApp,
+    projectId: firebaseApp?.options?.projectId,
+  };
+}
+
+// Wait for Firebase initialization (compatibility)
+export async function waitForFirebaseInit(): Promise<boolean> {
+  try {
+    const app = getFirebaseApp();
+    return app !== null;
+  } catch {
+    return false;
+  }
+}
+
 // Async helpers for backward compatibility
 export async function getCorrectFirestore(): Promise<Firestore> {
   return getFirestoreInstance();
