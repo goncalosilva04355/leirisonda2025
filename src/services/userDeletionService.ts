@@ -7,7 +7,11 @@ import {
   where,
 } from "firebase/firestore";
 import { deleteUser as deleteFirebaseUser } from "firebase/auth";
-import { db, auth, isFirebaseReady } from "../firebase/config";
+import {
+  getFirestoreInstance,
+  getAuthInstance,
+  isFirebaseReady,
+} from "../firebase/config";
 
 export interface UserDeletionResult {
   success: boolean;
