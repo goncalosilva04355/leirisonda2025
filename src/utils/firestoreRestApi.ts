@@ -253,15 +253,52 @@ export const saveToFirestoreRest = async (
       return false;
     }
 
-    // Read response body only once to avoid "Body is disturbed or locked"
+    // Validate response object before reading
+    if (!response || typeof response.text !== "function") {
+      console.error(
+        `❌ REST API: Resposta inválida para save ${collection}/${documentId}:`,
+        response,
+      );
+      return false;
+    }
+
+    // Read response body only once with enhanced error handling
     let responseText: string;
     try {
-      responseText = await response.text();
-    } catch (readError) {
+      // Try to read with timeout to prevent hanging
+      const textPromise = response.text();
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(
+          () => reject(new Error("Timeout reading save response")),
+          5000,
+        ),
+      );
+
+      responseText = await Promise.race([textPromise, timeoutPromise]);
+    } catch (readError: any) {
       console.error(
         `❌ REST API: Erro ao ler resposta de save para ${collection}/${documentId}:`,
         readError,
       );
+
+      // Provide specific error information
+      const errorDetails = {
+        status: response?.status,
+        statusText: response?.statusText,
+        ok: response?.ok,
+        type: response?.type,
+        errorMessage: readError?.message || "Unknown error",
+      };
+
+      console.error("🔍 Save response details:", errorDetails);
+
+      // For known issues, provide guidance
+      if (readError?.message === "Timeout reading save response") {
+        console.error("⏰ Response leitura timeout - verificar conectividade");
+      } else if (readError?.message?.includes("text@[native code]")) {
+        console.error("🚫 Response object corrupted - verificar requisição");
+      }
+
       return false;
     }
 
