@@ -3078,7 +3078,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }
               }
 
-              // console.log("🔐 Auth result:", result);
+              // console.log("���� Auth result:", result);
 
               if (result?.success && result?.user) {
                 // console.log("✅ Login successful for:", result.user.email);
@@ -11294,30 +11294,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
   const quotaStatus = syncManager.getSyncStatus();
   const syncInterval = syncManager.getSafeInterval();
 
-  // Safety check before rendering
-  if (!isAppReady) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>🏊‍♂️</div>
-          <div style={{ fontSize: "1.25rem", marginBottom: "1rem" }}>
-            Leirisonda
-          </div>
-          <div style={{ opacity: 0.8 }}>A carregar aplicação...</div>
-        </div>
-      </div>
-    );
-  }
+  // Safety check removed - no loading screen needed
 
   return (
     <AutoSyncProviderSafe
