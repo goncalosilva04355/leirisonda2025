@@ -236,25 +236,18 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // Force ultra simple mode to fix loading issues
-    console.log("📱 Carregando versão ultra simples (CORREÇÃO URGENTE)...");
+    // Load login page directly
+    console.log("📱 Carregando página de login diretamente...");
 
     let AppComponent;
 
     try {
-      const { default: AppUltraSimple } = await import("./AppUltraSimple");
-      AppComponent = AppUltraSimple;
-      console.log("✅ AppUltraSimple carregada com sucesso");
-    } catch (ultraSimpleError) {
-      console.error("❌ Erro ao carregar AppUltraSimple:", ultraSimpleError);
-      try {
-        const { default: AppSimple } = await import("./AppSimple");
-        AppComponent = AppSimple;
-        console.log("✅ AppSimple carregada como fallback");
-      } catch (simpleError) {
-        console.error("❌ Erro ao carregar AppSimple:", simpleError);
-        throw new Error("Falha ao carregar qualquer versão da aplicação");
-      }
+      const { default: LoginPage } = await import("./pages/LoginPage");
+      AppComponent = LoginPage;
+      console.log("✅ LoginPage carregada com sucesso");
+    } catch (loginError) {
+      console.error("❌ Erro ao carregar LoginPage:", loginError);
+      throw new Error("Falha ao carregar página de login");
     }
 
     if (!AppComponent) {
