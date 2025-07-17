@@ -166,18 +166,41 @@ export const readFromFirestoreRest = async (
 
     let response: Response;
     try {
+      console.log(
+        `🚀 Fazendo requisição para: ${url.replace(API_KEY, "[API_KEY]")}`,
+      );
+
       response = await fetch(url, {
-        // Add cache buster to ensure fresh requests
+        method: "GET",
         cache: "no-cache",
         headers: {
           "Content-Type": "application/json",
+          Accept: "application/json",
         },
+        // Add timeout to prevent hanging requests
+        signal: AbortSignal.timeout(10000), // 10 second timeout
       });
-    } catch (fetchError) {
+
+      console.log(`📝 Response status: ${response.status} para ${collection}`);
+    } catch (fetchError: any) {
       console.error(
         `❌ REST API: Erro na requisição para ${collection}:`,
         fetchError,
       );
+
+      // Provide specific error messages based on error type
+      if (fetchError.name === "AbortError") {
+        console.error("⏰ Timeout: Requisição demorou mais de 10 segundos");
+      } else if (fetchError.message === "Load failed") {
+        console.error("🌐 Erro de rede: Verificar conectividade ou CORS");
+        console.error("🔍 Verificar se o projeto Firebase existe e está ativo");
+        console.error("🔑 Verificar se a API key é válida");
+      } else if (fetchError.message.includes("CORS")) {
+        console.error("🚫 CORS: Problema de política de origem cruzada");
+      } else {
+        console.error("❌ Erro desconhecido:", fetchError.message);
+      }
+
       return [];
     }
 
