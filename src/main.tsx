@@ -70,7 +70,9 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
-    <AppComponent />,
+    <ErrorBoundary>
+      <AppComponent />
+    </ErrorBoundary>,
     // </React.StrictMode>
   );
   console.log("✅ Aplicação renderizada com sucesso!");
