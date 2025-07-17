@@ -55,7 +55,9 @@ class DataCleanupService {
 
         // Delete all pools
         try {
-          const poolsSnapshot = await getDocs(collection(db, "pools"));
+          const poolsSnapshot = await getDocs(
+            collection(getFirestoreInstance(), "pools"),
+          );
           console.log(`Found ${poolsSnapshot.docs.length} pools to delete`);
           for (const poolDoc of poolsSnapshot.docs) {
             await deleteDoc(doc(db, "pools", poolDoc.id));
@@ -67,7 +69,9 @@ class DataCleanupService {
 
         // Delete all works
         try {
-          const worksSnapshot = await getDocs(collection(db, "works"));
+          const worksSnapshot = await getDocs(
+            collection(getFirestoreInstance(), "works"),
+          );
           console.log(`Found ${worksSnapshot.docs.length} works to delete`);
           for (const workDoc of worksSnapshot.docs) {
             await deleteDoc(doc(db, "works", workDoc.id));
@@ -80,7 +84,7 @@ class DataCleanupService {
         // Delete all maintenance
         try {
           const maintenanceSnapshot = await getDocs(
-            collection(db, "maintenance"),
+            collection(getFirestoreInstance(), "maintenance"),
           );
           console.log(
             `Found ${maintenanceSnapshot.docs.length} maintenance records to delete`,
@@ -95,7 +99,9 @@ class DataCleanupService {
 
         // Delete all clients
         try {
-          const clientsSnapshot = await getDocs(collection(db, "clients"));
+          const clientsSnapshot = await getDocs(
+            collection(getFirestoreInstance(), "clients"),
+          );
           console.log(`Found ${clientsSnapshot.docs.length} clients to delete`);
           for (const clientDoc of clientsSnapshot.docs) {
             await deleteDoc(doc(db, "clients", clientDoc.id));
@@ -108,7 +114,7 @@ class DataCleanupService {
         // Delete all interventions (if they exist as a separate collection)
         try {
           const interventionsSnapshot = await getDocs(
-            collection(db, "interventions"),
+            collection(getFirestoreInstance(), "interventions"),
           );
           console.log(
             `Found ${interventionsSnapshot.docs.length} interventions to delete`,
@@ -321,7 +327,7 @@ class DataCleanupService {
 
     try {
       // Try to read from users collection to test connection
-      await getDocs(collection(db, "users"));
+      await getDocs(collection(getFirestoreInstance(), "users"));
       return true;
     } catch (error) {
       console.error("Firestore connection test failed:", error);
