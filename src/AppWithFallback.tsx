@@ -41,10 +41,24 @@ const AppWithFallback: React.FC = () => {
 
   // Loading fallback usando SplashPage
   const LoadingFallback = () => {
+    console.log("🔄 LoadingFallback renderizado, retryCount:", retryCount);
+
     const subtitle =
       retryCount > 0
         ? `A carregar aplicação... (Tentativa ${retryCount + 1} de ${maxRetries + 1})`
         : "A carregar aplicação principal...";
+
+    // Auto-timeout para debugging
+    React.useEffect(() => {
+      console.log("🕒 LoadingFallback timeout iniciado (10s)");
+      const timeout = setTimeout(() => {
+        console.log("🚨 TIMEOUT: App não carregou em 10 segundos");
+        console.log("🔄 Forçando uso do AppSimple devido a timeout");
+        setUseSimpleApp(true);
+      }, 10000);
+
+      return () => clearTimeout(timeout);
+    }, []);
 
     return (
       <SplashPage title="Leirisonda" subtitle={subtitle} showProgress={true} />
