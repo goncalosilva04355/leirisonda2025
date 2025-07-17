@@ -62,25 +62,25 @@ import {
   Share,
   Database,
 } from "lucide-react";
-// import { usePullToRefresh } from "./hooks/usePullToRefresh";
-// import RefreshIndicator from "./components/RefreshIndicator";
+import { usePullToRefresh } from "./hooks/usePullToRefresh";
+import RefreshIndicator from "./components/RefreshIndicator";
 import jsPDF from "jspdf";
 // import { FirebaseConfig } from "./components/FirebaseConfig";
 import { AdvancedSettings } from "./components/AdvancedSettings";
 import InstallPromptSimple from "./components/InstallPromptSimple";
 // UserPermissionsManager removido - consolidado no UserManager do painel admin
 
-// import { LocationPage } from "./components/LocationPage";
-// import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
-// import SyncStatusIndicator from "./components/SyncStatusIndicator";
-// import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
-// import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
-// import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
+import { LocationPage } from "./components/LocationPage";
+import { PersonalLocationSettings } from "./components/PersonalLocationSettings";
+import SyncStatusIndicator from "./components/SyncStatusIndicator";
+import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
+import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
+import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
 import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
-// import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
-// import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
-// import FirestoreTest from "./components/FirestoreTest";
+import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
+import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
+import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
 // import "./utils/clearModalStates";
@@ -679,22 +679,22 @@ function App() {
     }
   }, [universalSync]);
 
-  // Pull-to-refresh hook - TEMPORARIAMENTE DESABILITADO
-  const pullToRefresh = {
+  // Pull-to-refresh hook
+  let pullToRefresh = {
     isRefreshing: false,
     pullDistance: 0,
     showIndicator: false,
     canRefresh: false,
   };
-  // try {
-  //   pullToRefresh = usePullToRefresh({
-  //     onRefresh: handleDashboardRefresh,
-  //     threshold: 60,
-  //     disabled: activeSection !== "dashboard",
-  //   });
-  // } catch (error) {
-  //   console.error("❌ Erro no pull-to-refresh:", error);
-  // }
+  try {
+    pullToRefresh = usePullToRefresh({
+      onRefresh: handleDashboardRefresh,
+      threshold: 60,
+      disabled: activeSection !== "dashboard",
+    });
+  } catch (error) {
+    console.error("❌ Erro no pull-to-refresh:", error);
+  }
 
   // FIREBASE AUTO-CORREÇÃO - Monitorização automática
   const firebaseAutoFix = {
@@ -1967,7 +1967,7 @@ function App() {
     // SECURITY: Check if user has permission to create maintenance
     if (!hasPermission("manutencoes", "create")) {
       alert(
-        "N��o tem permissão para criar manutenç€es. Contacte o administrador.",
+        "Não tem permissão para criar manutenç€es. Contacte o administrador.",
       );
       return;
     }
