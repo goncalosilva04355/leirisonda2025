@@ -3,9 +3,10 @@ console.log(
   "[SW] Firebase Messaging Service Worker iniciado com configuração correta",
 );
 
-// Configuração EXATA do projeto leiria-1cfc9
+// Configuração do projeto leiria-1cfc9 (usando variáveis de ambiente)
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  apiKey:
+    self.VITE_FIREBASE_API_KEY || "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
   authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
