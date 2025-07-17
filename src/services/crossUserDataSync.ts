@@ -10,7 +10,11 @@ import {
   onSnapshot,
   Unsubscribe,
 } from "firebase/firestore";
-import { db, isFirebaseReady, waitForFirebaseInit } from "../firebase/config";
+import {
+  getFirestoreInstance,
+  isFirebaseReady,
+  waitForFirebaseInit,
+} from "../firebase/config";
 import { realFirebaseService } from "./realFirebaseService";
 
 export interface CrossUserSyncResult {
