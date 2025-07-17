@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 console.log(
-  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODUÇÃO)...",
+  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODU��ÃO)...",
 );
 console.log("🌍 Ambiente:", {
   mode: "DESENVOLVIMENTO = PRODUÇÃO",
@@ -312,7 +312,7 @@ const loadApp = async () => {
 
     // Try emergency React component
     try {
-      const emergencyRoot = ReactDOM.createRoot(rootElement);
+      const emergencyRoot = getOrCreateRoot();
       emergencyRoot.render(
         React.createElement(EmergencyApp, { error: error.message }),
       );
