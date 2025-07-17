@@ -28,6 +28,27 @@ const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PROD
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
+  // Verificação específica para produção
+  if (import.meta.env.PROD) {
+    console.log("📱 Firebase em produção - verificando configuração...");
+    try {
+      // Verificar se configuração está completa
+      const requiredFields = ["apiKey", "authDomain", "projectId"];
+      const missingFields = requiredFields.filter(
+        (field) => !leiriaFirebaseConfig[field],
+      );
+
+      if (missingFields.length > 0) {
+        console.error("❌ Firebase config incompleto:", missingFields);
+        return false;
+      }
+
+      console.log("✅ Configuração Firebase verificada para produção");
+    } catch (error) {
+      console.error("❌ Erro na verificação do Firebase:", error);
+      return false;
+    }
+  }
   // SEMPRE INICIALIZAR FIREBASE - DESENVOLVIMENTO = PRODUÇÃO
   console.log(
     "🔥 Firebase leiria-1cfc9 SEMPRE ATIVO - desenvolvimento como produção",
