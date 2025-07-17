@@ -179,9 +179,12 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
-console.log(
-  "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
-);
+console.log("🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - mesma aplicação sempre");
+console.log("🌍 Environment:", {
+  prod: import.meta.env.PROD,
+  mode: import.meta.env.MODE,
+  base: import.meta.env.BASE_URL,
+});
 
 // Função para gerar IDs únicos e evitar colisões React
 let appIdCounter = 0;
@@ -326,25 +329,22 @@ function App() {
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
 
-  // Fallback para produção em caso de erro
+  // Estado de renderização para qualquer ambiente
   const [hasRenderError, setHasRenderError] = useState(false);
 
   useEffect(() => {
-    // Detectar se estamos em produção e há problemas
-    const isProduction = import.meta.env.PROD;
-    if (isProduction) {
-      console.log("📱 Produção detectada - modo de fallback ativo");
+    // Verificação básica independente do ambiente
+    console.log("📱 Verificando estado da aplicação...");
 
-      // Verificar se imports essenciais estão disponíveis
-      try {
-        if (!React || !useState || !useEffect) {
-          throw new Error("React hooks não disponíveis");
-        }
-        console.log("✅ React e hooks verificados OK");
-      } catch (error) {
-        console.error("❌ Erro nos imports básicos:", error);
-        setHasRenderError(true);
+    // Verificar se imports essenciais estão disponíveis
+    try {
+      if (!React || !useState || !useEffect) {
+        throw new Error("React hooks não disponíveis");
       }
+      console.log("✅ React e hooks verificados OK");
+    } catch (error) {
+      console.error("❌ Erro nos imports básicos:", error);
+      setHasRenderError(true);
     }
   }, []);
 
@@ -1444,7 +1444,7 @@ function App() {
         console.log("✅ App initialization completed");
         console.log("🗑🔥 Mock and test data cleared");
       } catch (error) {
-        console.error("❌ Erro na inicializaç��o:", error);
+        console.error("❌ Erro na inicializaç���o:", error);
         // Em caso de erro, forçar logout completo
         setCurrentUser(null);
         setIsAuthenticated(false);
@@ -1520,7 +1520,7 @@ function App() {
           );
         }
       } catch (error) {
-        console.warn("❌ Passo 3: Erro no teste Firestore:", error);
+        console.warn("�� Passo 3: Erro no teste Firestore:", error);
       }
     };
 
@@ -8329,7 +8329,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
-                        <li>����� Datas e dura🔥es</li>
+                        <li>������� Datas e dura🔥es</li>
                         <li>• Estados e observa��ões</li>
                       </ul>
                     </div>

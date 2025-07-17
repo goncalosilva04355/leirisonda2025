@@ -2,7 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-console.log("🚀 Leirisonda - Inicializando aplicação (ANTI-TELA-BRANCA)...");
+console.log(
+  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODUÇÃO)...",
+);
+console.log("🌍 Ambiente:", {
+  mode: "DESENVOLVIMENTO = PRODUÇÃO",
+  entry: "main.tsx -> App.tsx",
+  timestamp: new Date().toISOString(),
+});
 
 // Global error handlers
 window.addEventListener("error", (event) => {
@@ -236,17 +243,17 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // Load main functional app
-    console.log("📱 Carregando aplicação principal...");
+    // DESENVOLVIMENTO = PRODUÇÃO - SEMPRE App principal
+    console.log("📱 Carregando App principal - desenvolvimento = produção");
 
     let AppComponent;
 
     try {
       const { default: App } = await import("./App");
       AppComponent = App;
-      console.log("✅ App principal carregada com sucesso");
+      console.log("✅ App principal carregada - desenvolvimento = produção");
     } catch (appError) {
-      console.error("❌ Erro ao carregar App:", appError);
+      console.error("❌ Erro ao carregar App principal:", appError);
       throw new Error("Falha ao carregar aplicação principal");
     }
 
