@@ -57,18 +57,20 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
         );
       }
 
-      // If no stored config, use the provided default config
-      const defaultConfig = {
-        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-        authDomain: "leiria-1cfc9.firebaseapp.com",
-        databaseURL:
-          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "leiria-1cfc9",
-        storageBucket: "leiria-1cfc9.firebasestorage.app",
-        messagingSenderId: "632599887141",
-        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-        measurementId: "G-Q2QWQVH60L",
+      // Check if environment variables are available as default
+      const envConfig = {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+        databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+        messagingSenderId:
+          import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+        appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
       };
+
+      const defaultConfig = envConfig;
 
       setConfig(defaultConfig);
       setIsConfigLoaded(true);
@@ -124,15 +126,15 @@ export const FirebaseConfig: React.FC<FirebaseConfigProps> = ({
 
   const handleReset = () => {
     const defaultConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      databaseURL:
-        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+      databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+      messagingSenderId:
+        import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
     };
 
     setConfig(defaultConfig);
