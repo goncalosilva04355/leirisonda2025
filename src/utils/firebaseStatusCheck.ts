@@ -4,7 +4,8 @@
 
 export async function checkFirebaseStatus() {
   try {
-    const apiKey = "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw";
+    const apiKey =
+      import.meta.env.VITE_FIREBASE_API_KEY || "placeholder-api-key";
 
     // Teste simples - tentar fazer uma requisição mínima ao Firebase Auth
     const response = await fetch(
