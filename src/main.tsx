@@ -1,166 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./AppWorking";
 import "./index.css";
 
-console.log(
-  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODU��ÃO)...",
-);
-console.log("🌍 Ambiente:", {
-  mode: "DESENVOLVIMENTO = PRODUÇÃO",
-  entry: "main.tsx -> App.tsx",
-  timestamp: new Date().toISOString(),
-});
-
-// Global error handlers
-window.addEventListener("error", (event) => {
-  console.error("❌ Global error:", event.error?.message || event.message);
-  showEmergencyFallback(
-    "Erro global: " + (event.error?.message || event.message),
-  );
-});
-
-window.addEventListener("unhandledrejection", (event) => {
-  if (
-    event.reason &&
-    (event.reason.toString().includes("firebase") ||
-      event.reason.toString().includes("messaging"))
-  ) {
-    console.warn("⚠️ Firebase error handled:", event.reason);
-    event.preventDefault();
-    return;
-  }
-  console.error("❌ Unhandled promise rejection:", event.reason);
-  showEmergencyFallback("Promise rejection: " + event.reason);
-});
+console.log("🚀 Leirisonda - Inicializando aplicação...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Create single root instance to avoid multiple createRoot warnings
-let globalRoot: ReactDOM.Root | null = null;
+// Create root and render immediately
+const root = ReactDOM.createRoot(rootElement);
 
-const getOrCreateRoot = () => {
-  if (!globalRoot) {
-    globalRoot = ReactDOM.createRoot(rootElement);
-  }
-  return globalRoot;
-};
+try {
+  root.render(<App />);
+  console.log("✅ App renderizada com sucesso");
+} catch (error) {
+  console.error("❌ Erro ao renderizar App:", error);
 
-// Emergency fallback - ALWAYS works
-function showEmergencyFallback(errorMessage = "") {
-  console.log("🚨 ACTIVATING EMERGENCY FALLBACK");
-
-  rootElement.innerHTML = `
-    <div style="
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui;
-      text-align: center;
-      padding: 2rem;
-    ">
-      <div style="max-width: 500px;">
-        <div style="font-size: 4rem; margin-bottom: 1rem;">🔧</div>
-        <h1 style="
-          font-size: 2.5rem;
-          margin: 0 0 1rem 0;
-          font-weight: bold;
-        ">Leirisonda</h1>
-        <p style="
-          font-size: 1.25rem;
-          margin: 0 0 2rem 0;
-          opacity: 0.9;
-        ">Sistema de Gestão de Piscinas</p>
-        
-        <div style="
-          background: rgba(255,255,255,0.1);
-          padding: 1.5rem;
-          border-radius: 0.5rem;
-          margin-bottom: 2rem;
-        ">
-          <h3 style="margin: 0 0 1rem 0;">✅ Sistema Funcionando!</h3>
-          <p style="margin: 0; opacity: 0.9;">
-            A aplicação está operacional. Esta é a versão de segurança 
-            que garante que nunca verá uma tela branca.
-          </p>
-          ${errorMessage ? `<p style="margin: 1rem 0 0 0; color: #fbbf24; font-size: 0.875rem;">Debug: ${errorMessage}</p>` : ""}
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-          <button onclick="window.location.reload()" style="
-            background: white;
-            color: #0891b2;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 0.5rem;
-            font-size: 1.125rem;
-            font-weight: bold;
-            cursor: pointer;
-          ">Recarregar Aplicação</button>
-          
-          <div style="display: flex; gap: 0.5rem;">
-            <button onclick="
-              localStorage.setItem('forceSimpleMode', 'true');
-              window.location.reload();
-            " style="
-              background: rgba(255,255,255,0.2);
-              color: white;
-              border: 1px solid rgba(255,255,255,0.3);
-              padding: 0.75rem 1rem;
-              border-radius: 0.375rem;
-              font-size: 1rem;
-              cursor: pointer;
-              flex: 1;
-            ">Modo Simples</button>
-            
-            <button onclick="
-              localStorage.clear();
-              sessionStorage.clear();
-              window.location.reload();
-            " style="
-              background: rgba(255,255,255,0.2);
-              color: white;
-              border: 1px solid rgba(255,255,255,0.3);
-              padding: 0.75rem 1rem;
-              border-radius: 0.375rem;
-              font-size: 1rem;
-              cursor: pointer;
-              flex: 1;
-            ">Limpar Cache</button>
-          </div>
-        </div>
-        
-        <p style="
-          color: rgba(255,255,255,0.7);
-          font-size: 0.875rem;
-          margin: 2rem 0 0 0;
-        ">
-          Versão: ${new Date().toLocaleString("pt-PT")}
-        </p>
-      </div>
-    </div>
-  `;
-}
-
-// Immediate fallback check - if root is empty after 500ms, show emergency
-let emergencyTimeout = setTimeout(() => {
-  if (rootElement.children.length === 0) {
-    console.warn("🚨 IMMEDIATE EMERGENCY: Root empty after 500ms");
-    showEmergencyFallback("Root vazio após 500ms");
-  }
-}, 500);
-
-// React-based fallback component
-const EmergencyApp = ({ error = "" }) => {
-  return React.createElement(
-    "div",
-    {
-      style: {
+  // Fallback simples
+  root.render(
+    <div
+      style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
         color: "white",
@@ -170,164 +32,30 @@ const EmergencyApp = ({ error = "" }) => {
         fontFamily: "system-ui",
         textAlign: "center",
         padding: "2rem",
-      },
-    },
-    React.createElement(
-      "div",
-      {
-        style: { maxWidth: "400px" },
-      },
-      [
-        React.createElement(
-          "div",
-          {
-            key: "icon",
-            style: { fontSize: "3rem", marginBottom: "1rem" },
-          },
-          "🔧",
-        ),
-        React.createElement(
-          "h1",
-          {
-            key: "title",
-            style: {
-              fontSize: "2.5rem",
-              margin: "0 0 1rem 0",
-              fontWeight: "bold",
-            },
-          },
-          "Leirisonda",
-        ),
-        React.createElement(
-          "p",
-          {
-            key: "subtitle",
-            style: {
-              fontSize: "1.125rem",
-              margin: "0 0 2rem 0",
-              opacity: 0.9,
-            },
-          },
-          "Sistema Funcionando Corretamente",
-        ),
-        React.createElement(
-          "button",
-          {
-            key: "reload",
-            onClick: () => window.location.reload(),
-            style: {
-              background: "white",
-              color: "#0891b2",
-              border: "none",
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              fontSize: "1.125rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginBottom: "1rem",
-              display: "block",
-              width: "100%",
-            },
-          },
-          "Recarregar",
-        ),
-        error &&
-          React.createElement(
-            "p",
-            {
-              key: "error",
-              style: { fontSize: "0.75rem", opacity: 0.7 },
-            },
-            `Debug: ${error}`,
-          ),
-      ],
-    ),
+      }}
+    >
+      <div>
+        <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
+          🔧 Leirisonda
+        </h1>
+        <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
+          Sistema de Gestão de Piscinas
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            background: "white",
+            color: "#0891b2",
+            border: "none",
+            padding: "1rem 2rem",
+            borderRadius: "0.5rem",
+            fontSize: "1rem",
+            cursor: "pointer",
+          }}
+        >
+          Recarregar
+        </button>
+      </div>
+    </div>,
   );
-};
-
-// Simple App Loading with maximum safety
-const loadApp = async () => {
-  try {
-    // Clear emergency timeout since we're loading
-    clearTimeout(emergencyTimeout);
-
-    console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
-
-    // DESENVOLVIMENTO = PRODUÇÃO - SEMPRE App principal
-    console.log("📱 Carregando App principal - desenvolvimento = produção");
-
-    let AppComponent;
-
-    try {
-      const { default: App } = await import("./App");
-      AppComponent = App;
-      console.log("✅ App principal carregada - desenvolvimento = produção");
-    } catch (appError) {
-      console.error("❌ Erro ao carregar App principal:", appError);
-      throw new Error("Falha ao carregar aplicação principal");
-    }
-
-    if (!AppComponent) {
-      throw new Error("Nenhum componente App disponível");
-    }
-
-    // Get or create root and render
-    const root = getOrCreateRoot();
-
-    // Try with ErrorBoundary first
-    try {
-      const { default: ErrorBoundary } = await import(
-        "./components/ErrorBoundary"
-      );
-      root.render(
-        React.createElement(
-          ErrorBoundary,
-          {},
-          React.createElement(AppComponent),
-        ),
-      );
-      console.log("✅ App renderizada com ErrorBoundary");
-    } catch (boundaryError) {
-      console.warn("⚠️ ErrorBoundary não disponível, renderizando diretamente");
-      root.render(React.createElement(AppComponent));
-      console.log("✅ App renderizada diretamente");
-    }
-
-    // Final safety check after render
-    setTimeout(() => {
-      if (rootElement.children.length === 0) {
-        console.error("🚨 CRITICAL: App renderizada mas root ainda vazio!");
-        const emergencyRoot = getOrCreateRoot();
-        emergencyRoot.render(
-          React.createElement(EmergencyApp, {
-            error: "App renderizada mas DOM vazio",
-          }),
-        );
-      } else {
-        console.log("✅ Verificação final: App renderizada corretamente");
-      }
-    }, 1000);
-  } catch (error) {
-    console.error("❌ ERRO CRÍTICO no carregamento:", error);
-
-    // Try emergency React component
-    try {
-      const emergencyRoot = getOrCreateRoot();
-      emergencyRoot.render(
-        React.createElement(EmergencyApp, { error: error.message }),
-      );
-      console.log("🚨 Emergency React component renderizado");
-    } catch (reactError) {
-      console.error("❌ Emergency React também falhou:", reactError);
-      // Final HTML fallback
-      showEmergencyFallback(error.message);
-    }
-  }
-};
-
-// Start the application
-loadApp();
-
-// Safety nets removed - direct app loading
-
-console.log("✅ main.tsx carregado - sistema anti-tela-branca ativo");
+}
