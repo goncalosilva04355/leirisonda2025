@@ -1,25 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 // Test Firebase imports specifically
 console.log("🔥 AppFirebaseTest: Testing Firebase imports...");
 
-try {
-  // Test Firebase imports that are in App.tsx
-  console.log("Testing firebase/leiriaConfig import...");
+// Import Firebase config at module level
+import {
+  isFirebaseReady,
+  isFirestoreReady,
+  getFirebaseFirestore,
+} from "./firebase/leiriaConfig";
 
-  // Import Firebase config
-  import {
-    isFirebaseReady,
-    isFirestoreReady,
-    getFirebaseFirestore,
-  } from "./firebase/leiriaConfig";
-
-  console.log("✅ Firebase imports successful");
-} catch (error) {
-  console.error("❌ Firebase import failed:", error);
-}
+console.log("✅ Firebase imports successful");
 
 export default function AppFirebaseTest() {
+  const [firebaseStatus, setFirebaseStatus] = useState("checking...");
+
+  useEffect(() => {
+    try {
+      console.log("🔥 Testing Firebase functions...");
+      const ready = isFirebaseReady();
+      const firestoreReady = isFirestoreReady();
+      const db = getFirebaseFirestore();
+
+      setFirebaseStatus(
+        `Firebase: ${ready}, Firestore: ${firestoreReady}, DB: ${db ? "OK" : "NULL"}`,
+      );
+      console.log("✅ Firebase functions work correctly");
+    } catch (error) {
+      console.error("❌ Firebase functions failed:", error);
+      setFirebaseStatus(`Error: ${error.message}`);
+    }
+  }, []);
+
   console.log("🔥 AppFirebaseTest renderizado com sucesso!");
 
   return (
@@ -40,8 +52,11 @@ export default function AppFirebaseTest() {
         <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
           🔥 Firebase Test
         </h1>
-        <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
+        <p style={{ fontSize: "1.125rem", marginBottom: "1rem" }}>
           Firebase imports test funcionando
+        </p>
+        <p style={{ fontSize: "0.875rem", marginBottom: "2rem", opacity: 0.8 }}>
+          Status: {firebaseStatus}
         </p>
         <button
           onClick={() => window.location.reload()}
