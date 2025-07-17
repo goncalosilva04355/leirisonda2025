@@ -2,9 +2,10 @@ import React, { useState, useEffect, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppSimple from "./AppSimple";
 import SplashPage from "./pages/SplashPage";
+import AppMinimalTest from "./AppMinimalTest";
 
-// Lazy load da aplicação principal - TEMPORARILY using minimal test
-const App = React.lazy(() => import("./AppMinimalTest"));
+// Direct import instead of lazy loading for debugging
+const App = AppMinimalTest;
 
 const AppWithFallback: React.FC = () => {
   const [useSimpleApp, setUseSimpleApp] = useState(false);
