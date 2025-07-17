@@ -1,537 +1,429 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+// HOOK CONVERTIDO PARA USAR APENAS REST API - SEM SDK FIREBASE
+import { useState, useCallback, useEffect } from "react";
+import {
+  saveToFirestoreRest,
+  readFromFirestoreRest,
+  deleteFromFirestoreRest,
+} from "../utils/firestoreRestApi";
 
-// Safe wrapper to prevent React hook errors
-const useSafeState = <T>(initialState: T | (() => T)) => {
-  try {
-    return useState(initialState);
-  } catch (error) {
-    console.error("❌ Critical error in useState:", error);
-    // Return a fallback state
-    return [initialState, () => {}] as const;
-  }
-};
-
-export interface UniversalSyncState {
+interface SyncState {
   obras: any[];
   manutencoes: any[];
   piscinas: any[];
   clientes: any[];
-  totalItems: number;
-  lastSync: string;
-  isGloballyShared: boolean;
   isLoading: boolean;
   error: string | null;
-  syncStatus: "disconnected" | "connecting" | "connected" | "syncing" | "error";
+  lastSync: string | null;
+  totalItems: number;
 }
 
-export interface UniversalSyncActions {
-  // Obras
-  addObra: (obra: any) => Promise<string>;
-  updateObra: (id: string, obra: any) => Promise<void>;
-  deleteObra: (id: string) => Promise<void>;
-
-  // Manutenções
-  addManutencao: (manutencao: any) => Promise<string>;
-  updateManutencao: (id: string, manutencao: any) => Promise<void>;
-  deleteManutencao: (id: string) => Promise<void>;
-
-  // Piscinas
-  addPiscina: (piscina: any) => Promise<string>;
-  updatePiscina: (id: string, piscina: any) => Promise<void>;
-  deletePiscina: (id: string) => Promise<void>;
-
-  // Clientes
-  addCliente: (cliente: any) => Promise<string>;
-  updateCliente: (id: string, cliente: any) => Promise<void>;
-  deleteCliente: (id: string) => Promise<void>;
-
-  // Sync
-  forceSyncAll: () => Promise<void>;
-  resetSync: () => Promise<void>;
-}
-
-/**
- * SAFE VERSION OF useUniversalDataSync
- * Simplified to prevent initialization errors
- */
-export function useUniversalDataSyncSafe(): UniversalSyncState &
-  UniversalSyncActions {
-  // Initialize state with error handling
-  const [state, setState] = useSafeState<UniversalSyncState>(() => {
-    try {
-      return {
-        obras: [],
-        manutencoes: [],
-        piscinas: [],
-        clientes: [],
-        totalItems: 0,
-        lastSync: "",
-        isGloballyShared: false,
-        isLoading: false,
-        error: null,
-        syncStatus: "disconnected",
-      };
-    } catch (error) {
-      console.error(
-        "❌ Error initializing useUniversalDataSyncSafe state:",
-        error,
-      );
-      return {
-        obras: [],
-        manutencoes: [],
-        piscinas: [],
-        clientes: [],
-        totalItems: 0,
-        lastSync: "",
-        isGloballyShared: false,
-        isLoading: false,
-        error: "Failed to initialize",
-        syncStatus: "error",
-      };
-    }
+export const useUniversalDataSyncSafe = () => {
+  const [state, setState] = useState<SyncState>({
+    obras: [],
+    manutencoes: [],
+    piscinas: [],
+    clientes: [],
+    isLoading: false,
+    error: null,
+    lastSync: null,
+    totalItems: 0,
   });
 
-  // Load data from localStorage as fallback
-  useEffect(() => {
+  // Safe localStorage helpers
+  const safeGetLocalStorage = (key: string, defaultValue: any[] = []) => {
     try {
-      const loadLocalData = () => {
-        try {
-          const obras = JSON.parse(localStorage.getItem("works") || "[]");
-          const manutencoes = JSON.parse(
-            localStorage.getItem("maintenance") || "[]",
-          );
-          const piscinas = JSON.parse(localStorage.getItem("pools") || "[]");
-          const clientes = JSON.parse(localStorage.getItem("clients") || "[]");
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  };
 
-          setState((prev) => ({
-            ...prev,
-            obras: Array.isArray(obras) ? obras : [],
-            manutencoes: Array.isArray(manutencoes) ? manutencoes : [],
-            piscinas: Array.isArray(piscinas) ? piscinas : [],
-            clientes: Array.isArray(clientes) ? clientes : [],
-            totalItems:
-              (Array.isArray(obras) ? obras.length : 0) +
-              (Array.isArray(manutencoes) ? manutencoes.length : 0) +
-              (Array.isArray(piscinas) ? piscinas.length : 0) +
-              (Array.isArray(clientes) ? clientes.length : 0),
-            lastSync: new Date().toISOString(),
-            isLoading: false,
-            syncStatus: "connected",
-          }));
-        } catch (localError) {
-          console.error("❌ Error loading data from localStorage:", localError);
-          setState((prev) => ({
-            ...prev,
-            error: "Failed to load local data",
-            isLoading: false,
-            syncStatus: "error",
-          }));
-        }
-      };
-
-      loadLocalData();
-
-      // Listen for storage changes
-      const handleStorageChange = () => {
-        loadLocalData();
-      };
-
-      window.addEventListener("storage", handleStorageChange);
-
-      return () => {
-        window.removeEventListener("storage", handleStorageChange);
-      };
+  const safeSetLocalStorage = (key: string, value: any[]) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error("❌ Error in useUniversalDataSyncSafe:", error);
+      console.warn(`⚠️ Erro ao salvar ${key} no localStorage:`, error);
+    }
+  };
+
+  // Load initial data
+  const loadInitialData = useCallback(async () => {
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+    try {
+      // Load from localStorage first
+      const localObras = safeGetLocalStorage("works", []);
+      const localManutencoes = safeGetLocalStorage("maintenance", []);
+      const localPiscinas = safeGetLocalStorage("pools", []);
+      const localClientes = safeGetLocalStorage("clients", []);
+
+      // Set local data immediately
       setState((prev) => ({
         ...prev,
-        error: "Failed to load data",
+        obras: localObras,
+        manutencoes: localManutencoes,
+        piscinas: localPiscinas,
+        clientes: localClientes,
+        totalItems:
+          localObras.length +
+          localManutencoes.length +
+          localPiscinas.length +
+          localClientes.length,
         isLoading: false,
-        syncStatus: "error",
       }));
+
+      // Then try to sync with REST API
+      try {
+        console.log("🌐 Sincronizando com REST API...");
+        const [obrasRest, manutencaoRest, piscinasRest, clientesRest] =
+          await Promise.all([
+            readFromFirestoreRest("obras"),
+            readFromFirestoreRest("manutencoes"),
+            readFromFirestoreRest("piscinas"),
+            readFromFirestoreRest("clientes"),
+          ]);
+
+        // Update with REST API data
+        setState((prev) => ({
+          ...prev,
+          obras: obrasRest,
+          manutencoes: manutencaoRest,
+          piscinas: piscinasRest,
+          clientes: clientesRest,
+          totalItems:
+            obrasRest.length +
+            manutencaoRest.length +
+            piscinasRest.length +
+            clientesRest.length,
+          lastSync: new Date().toISOString(),
+        }));
+
+        // Update localStorage
+        safeSetLocalStorage("works", obrasRest);
+        safeSetLocalStorage("maintenance", manutencaoRest);
+        safeSetLocalStorage("pools", piscinasRest);
+        safeSetLocalStorage("clients", clientesRest);
+
+        console.log("✅ Sincronização REST API concluída");
+      } catch (restError) {
+        console.warn("⚠️ Falha na sincronização REST API:", restError);
+        // Continue with local data
+      }
+    } catch (error: any) {
+      console.error("❌ Erro ao carregar dados iniciais:", error);
+      setState((prev) => ({ ...prev, error: error.message, isLoading: false }));
     }
   }, []);
 
-  // Enhanced add obra function with Firebase sync
+  // Add obra with REST API sync
   const addObra = useCallback(async (obraData: any): Promise<string> => {
+    const obra = {
+      ...obraData,
+      id: obraData.id || `obra_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
     try {
-      const id = obraData.id || `obra-${Date.now()}-${Math.random()}`;
-      const obra = {
-        ...obraData,
-        id,
-        createdAt: obraData.createdAt || new Date().toISOString(),
-        // Add global sharing flags
-        sharedGlobally: true,
-        visibleToAllUsers: true,
-        isGlobalData: true,
-        dataSharing: "all_users",
-      };
+      // Save to REST API first
+      const success = await saveToFirestoreRest("obras", obra.id, obra);
 
-      // Try to save to Firebase first
-      try {
-        const { isFirestoreReady } = await import(
-          "../firebase/firestoreConfig"
-        );
-        if (isFirestoreReady()) {
-          const { firestoreService } = await import(
-            "../services/firestoreService"
-          );
-          const firestoreId = await firestoreService.createObra(obra);
-          if (firestoreId) {
-            console.log("✅ Obra criada no Firestore:", firestoreId);
-            // Also save to localStorage as backup
-            const existingObras = JSON.parse(
-              localStorage.getItem("works") || "[]",
-            );
-            const workExists = existingObras.some((w: any) => w.id === obra.id);
-            if (!workExists) {
-              existingObras.push(obra);
-              localStorage.setItem("works", JSON.stringify(existingObras));
-            }
-            // Firebase will trigger sync automatically via observers
-            return firestoreId;
-          }
-        }
-      } catch (firebaseError) {
-        console.warn(
-          "⚠️ Erro ao criar obra no Firebase, usando localStorage:",
-          firebaseError,
-        );
+      if (success) {
+        console.log("✅ Obra criada via REST API:", obra.id);
+      } else {
+        console.warn("⚠️ Falha ao salvar via REST API, usando localStorage");
       }
 
-      // Fallback to localStorage
-      const existingObras = JSON.parse(localStorage.getItem("works") || "[]");
-      const workExists = existingObras.some((w: any) => w.id === obra.id);
-
-      if (!workExists) {
-        existingObras.push(obra);
-        localStorage.setItem("works", JSON.stringify(existingObras));
-
-        setState((prev) => ({
+      // Update local state and localStorage
+      setState((prev) => {
+        const newObras = [...prev.obras, obra];
+        safeSetLocalStorage("works", newObras);
+        return {
           ...prev,
-          obras: existingObras,
+          obras: newObras,
           totalItems: prev.totalItems + 1,
-        }));
+        };
+      });
 
-        // Trigger manual sync event
-        window.dispatchEvent(
-          new CustomEvent("obrasUpdated", {
-            detail: { data: existingObras, collection: "obras" },
-          }),
-        );
-      }
-
-      return id;
-    } catch (error) {
-      console.error("❌ Error adding obra:", error);
+      return obra.id;
+    } catch (error: any) {
+      console.error("❌ Erro ao adicionar obra:", error);
       throw error;
     }
   }, []);
 
-  // Enhanced add manutenção function with Firebase sync
+  // Add manutenção with REST API sync
   const addManutencao = useCallback(
     async (manutencaoData: any): Promise<string> => {
+      const manutencao = {
+        ...manutencaoData,
+        id: manutencaoData.id || `manutencao_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
       try {
-        const id =
-          manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
-        const manutencao = {
-          ...manutencaoData,
-          id,
-          createdAt: manutencaoData.createdAt || new Date().toISOString(),
-          sharedGlobally: true,
-          visibleToAllUsers: true,
-        };
+        // Save to REST API first
+        const success = await saveToFirestoreRest(
+          "manutencoes",
+          manutencao.id,
+          manutencao,
+        );
 
-        // Try to save to Firebase first
-        try {
-          const { isFirestoreReady } = await import(
-            "../firebase/firestoreConfig"
-          );
-          if (isFirestoreReady()) {
-            const { firestoreService } = await import(
-              "../services/firestoreService"
-            );
-            const firestoreId =
-              await firestoreService.createManutencao(manutencao);
-            if (firestoreId) {
-              console.log("✅ Manutenção criada no Firestore:", firestoreId);
-            }
-          }
-        } catch (firebaseError) {
-          console.warn(
-            "⚠️ Erro ao criar manutenção no Firebase:",
-            firebaseError,
-          );
+        if (success) {
+          console.log("✅ Manutenção criada via REST API:", manutencao.id);
+        } else {
+          console.warn("⚠️ Falha ao salvar via REST API, usando localStorage");
         }
 
-        // Always save to localStorage as backup/primary
-        const existingManutencoes = JSON.parse(
-          localStorage.getItem("maintenance") || "[]",
-        );
-        const maintenanceExists = existingManutencoes.some(
-          (m: any) => m.id === manutencao.id,
-        );
-
-        if (!maintenanceExists) {
-          existingManutencoes.push(manutencao);
-          localStorage.setItem(
-            "maintenance",
-            JSON.stringify(existingManutencoes),
-          );
-
-          setState((prev) => ({
+        // Update local state and localStorage
+        setState((prev) => {
+          const newManutencoes = [...prev.manutencoes, manutencao];
+          safeSetLocalStorage("maintenance", newManutencoes);
+          return {
             ...prev,
-            manutencoes: existingManutencoes,
+            manutencoes: newManutencoes,
             totalItems: prev.totalItems + 1,
-          }));
+          };
+        });
 
-          // Trigger manual sync event
-          window.dispatchEvent(
-            new CustomEvent("manutencoesUpdated", {
-              detail: { data: existingManutencoes, collection: "manutencoes" },
-            }),
-          );
-        }
-
-        return id;
-      } catch (error) {
-        console.error("❌ Error adding manutenção:", error);
+        return manutencao.id;
+      } catch (error: any) {
+        console.error("❌ Erro ao adicionar manutenção:", error);
         throw error;
       }
     },
     [],
   );
 
-  // Enhanced add piscina function with Firebase sync
+  // Add piscina with REST API sync
   const addPiscina = useCallback(async (piscinaData: any): Promise<string> => {
+    const piscina = {
+      ...piscinaData,
+      id: piscinaData.id || `piscina_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
     try {
-      const id = piscinaData.id || `piscina-${Date.now()}-${Math.random()}`;
-      const piscina = {
-        ...piscinaData,
-        id,
-        createdAt: piscinaData.createdAt || new Date().toISOString(),
-        sharedGlobally: true,
-        visibleToAllUsers: true,
-      };
+      // Save to REST API first
+      const success = await saveToFirestoreRest(
+        "piscinas",
+        piscina.id,
+        piscina,
+      );
 
-      // Try to save to Firebase first
-      try {
-        const { isFirestoreReady } = await import(
-          "../firebase/firestoreConfig"
-        );
-        if (isFirestoreReady()) {
-          const { firestoreService } = await import(
-            "../services/firestoreService"
-          );
-          const firestoreId = await firestoreService.createPiscina(piscina);
-          if (firestoreId) {
-            console.log("✅ Piscina criada no Firestore:", firestoreId);
-          }
-        }
-      } catch (firebaseError) {
-        console.warn("⚠️ Erro ao criar piscina no Firebase:", firebaseError);
+      if (success) {
+        console.log("✅ Piscina criada via REST API:", piscina.id);
+      } else {
+        console.warn("⚠️ Falha ao salvar via REST API, usando localStorage");
       }
 
-      // Always save to localStorage as backup/primary
-      const existingPiscinas = JSON.parse(
-        localStorage.getItem("pools") || "[]",
-      );
-      const piscinaExists = existingPiscinas.some(
-        (p: any) => p.id === piscina.id,
-      );
-
-      if (!piscinaExists) {
-        existingPiscinas.push(piscina);
-        localStorage.setItem("pools", JSON.stringify(existingPiscinas));
-
-        setState((prev) => ({
+      // Update local state and localStorage
+      setState((prev) => {
+        const newPiscinas = [...prev.piscinas, piscina];
+        safeSetLocalStorage("pools", newPiscinas);
+        return {
           ...prev,
-          piscinas: existingPiscinas,
+          piscinas: newPiscinas,
           totalItems: prev.totalItems + 1,
-        }));
+        };
+      });
 
-        // Trigger manual sync event
-        window.dispatchEvent(
-          new CustomEvent("piscinasUpdated", {
-            detail: { data: existingPiscinas, collection: "piscinas" },
-          }),
-        );
-      }
-
-      return id;
-    } catch (error) {
-      console.error("❌ Error adding piscina:", error);
+      return piscina.id;
+    } catch (error: any) {
+      console.error("❌ Erro ao adicionar piscina:", error);
       throw error;
     }
   }, []);
 
-  // Enhanced add cliente function with Firebase sync
+  // Add cliente with REST API sync
   const addCliente = useCallback(async (clienteData: any): Promise<string> => {
+    const cliente = {
+      ...clienteData,
+      id: clienteData.id || `cliente_${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
     try {
-      const id = clienteData.id || `cliente-${Date.now()}-${Math.random()}`;
-      const cliente = {
-        ...clienteData,
-        id,
-        createdAt: clienteData.createdAt || new Date().toISOString(),
-        sharedGlobally: true,
-        visibleToAllUsers: true,
-      };
+      // Save to REST API first
+      const success = await saveToFirestoreRest(
+        "clientes",
+        cliente.id,
+        cliente,
+      );
 
-      // Try to save to Firebase first
-      try {
-        const { isFirestoreReady } = await import(
-          "../firebase/firestoreConfig"
-        );
-        if (isFirestoreReady()) {
-          const { firestoreService } = await import(
-            "../services/firestoreService"
-          );
-          const firestoreId = await firestoreService.createCliente(cliente);
-          if (firestoreId) {
-            console.log("✅ Cliente criado no Firestore:", firestoreId);
-          }
-        }
-      } catch (firebaseError) {
-        console.warn("⚠️ Erro ao criar cliente no Firebase:", firebaseError);
+      if (success) {
+        console.log("✅ Cliente criado via REST API:", cliente.id);
+      } else {
+        console.warn("⚠️ Falha ao salvar via REST API, usando localStorage");
       }
 
-      // Always save to localStorage as backup/primary
-      const existingClientes = JSON.parse(
-        localStorage.getItem("clients") || "[]",
-      );
-      const clienteExists = existingClientes.some(
-        (c: any) => c.id === cliente.id,
-      );
-
-      if (!clienteExists) {
-        existingClientes.push(cliente);
-        localStorage.setItem("clients", JSON.stringify(existingClientes));
-
-        setState((prev) => ({
+      // Update local state and localStorage
+      setState((prev) => {
+        const newClientes = [...prev.clientes, cliente];
+        safeSetLocalStorage("clients", newClientes);
+        return {
           ...prev,
-          clientes: existingClientes,
+          clientes: newClientes,
           totalItems: prev.totalItems + 1,
-        }));
+        };
+      });
 
-        // Trigger manual sync event
-        window.dispatchEvent(
-          new CustomEvent("clientesUpdated", {
-            detail: { data: existingClientes, collection: "clientes" },
-          }),
-        );
-      }
-
-      return id;
-    } catch (error) {
-      console.error("❌ Error adding cliente:", error);
+      return cliente.id;
+    } catch (error: any) {
+      console.error("❌ Erro ao adicionar cliente:", error);
       throw error;
     }
   }, []);
 
-  // Placeholder functions for other operations
-  const updateObra = useCallback(
-    async (id: string, data: any): Promise<void> => {
-      console.log("updateObra called:", id, data);
-    },
-    [],
-  );
-
+  // Delete functions with REST API sync
   const deleteObra = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteObra called:", id);
-  }, []);
+    try {
+      await deleteFromFirestoreRest("obras", id);
+      console.log("✅ Obra eliminada via REST API:", id);
 
-  const updateManutencao = useCallback(
-    async (id: string, data: any): Promise<void> => {
-      console.log("updateManutencao called:", id, data);
-    },
-    [],
-  );
+      setState((prev) => {
+        const newObras = prev.obras.filter((obra) => obra.id !== id);
+        safeSetLocalStorage("works", newObras);
+        return {
+          ...prev,
+          obras: newObras,
+          totalItems: prev.totalItems - 1,
+        };
+      });
+    } catch (error: any) {
+      console.error("❌ Erro ao eliminar obra:", error);
+      throw error;
+    }
+  }, []);
 
   const deleteManutencao = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteManutencao called:", id);
-  }, []);
-
-  const updatePiscina = useCallback(
-    async (id: string, data: any): Promise<void> => {
-      console.log("updatePiscina called:", id, data);
-    },
-    [],
-  );
-
-  const deletePiscina = useCallback(async (id: string): Promise<void> => {
-    console.log("deletePiscina called:", id);
-  }, []);
-
-  const updateCliente = useCallback(
-    async (id: string, data: any): Promise<void> => {
-      console.log("updateCliente called:", id, data);
-    },
-    [],
-  );
-
-  const deleteCliente = useCallback(async (id: string): Promise<void> => {
-    console.log("deleteCliente called:", id);
-  }, []);
-
-  const forceSyncAll = useCallback(async (): Promise<void> => {
     try {
-      console.log("🔄 Iniciando sincronização forçada completa...");
+      await deleteFromFirestoreRest("manutencoes", id);
+      console.log("✅ Manutenção eliminada via REST API:", id);
 
-      // Import autoSyncService dynamically to avoid circular dependencies
-      const { autoSyncService } = await import("../services/autoSyncService");
-
-      if (autoSyncService.isAutoSyncActive()) {
-        await autoSyncService.syncAllCollections();
-        console.log("✅ Sincronização forçada completa!");
-      } else {
-        console.log("⚠️ Auto sync não está ativo, usando apenas localStorage");
-      }
-    } catch (error) {
-      console.error("❌ Erro na sincronização forçada:", error);
+      setState((prev) => {
+        const newManutencoes = prev.manutencoes.filter((m) => m.id !== id);
+        safeSetLocalStorage("maintenance", newManutencoes);
+        return {
+          ...prev,
+          manutencoes: newManutencoes,
+          totalItems: prev.totalItems - 1,
+        };
+      });
+    } catch (error: any) {
+      console.error("❌ Erro ao eliminar manutenção:", error);
+      throw error;
     }
   }, []);
 
-  const resetSync = useCallback(async (): Promise<void> => {
-    // console.log("resetSync called");
+  const deletePiscina = useCallback(async (id: string): Promise<void> => {
+    try {
+      await deleteFromFirestoreRest("piscinas", id);
+      console.log("✅ Piscina eliminada via REST API:", id);
+
+      setState((prev) => {
+        const newPiscinas = prev.piscinas.filter((p) => p.id !== id);
+        safeSetLocalStorage("pools", newPiscinas);
+        return {
+          ...prev,
+          piscinas: newPiscinas,
+          totalItems: prev.totalItems - 1,
+        };
+      });
+    } catch (error: any) {
+      console.error("❌ Erro ao eliminar piscina:", error);
+      throw error;
+    }
   }, []);
 
-  return useMemo(
-    () => ({
-      // State
-      ...state,
+  const deleteCliente = useCallback(async (id: string): Promise<void> => {
+    try {
+      await deleteFromFirestoreRest("clientes", id);
+      console.log("✅ Cliente eliminado via REST API:", id);
 
-      // Actions
-      addObra,
-      updateObra,
-      deleteObra,
-      addManutencao,
-      updateManutencao,
-      deleteManutencao,
-      addPiscina,
-      updatePiscina,
-      deletePiscina,
-      addCliente,
-      updateCliente,
-      deleteCliente,
-      forceSyncAll,
-      resetSync,
-    }),
-    [
-      state,
-      addObra,
-      updateObra,
-      deleteObra,
-      addManutencao,
-      updateManutencao,
-      deleteManutencao,
-      addPiscina,
-      updatePiscina,
-      deletePiscina,
-      addCliente,
-      updateCliente,
-      deleteCliente,
-      forceSyncAll,
-      resetSync,
-    ],
-  );
-}
+      setState((prev) => {
+        const newClientes = prev.clientes.filter((c) => c.id !== id);
+        safeSetLocalStorage("clients", newClientes);
+        return {
+          ...prev,
+          clientes: newClientes,
+          totalItems: prev.totalItems - 1,
+        };
+      });
+    } catch (error: any) {
+      console.error("❌ Erro ao eliminar cliente:", error);
+      throw error;
+    }
+  }, []);
+
+  // Force sync with REST API
+  const forceSyncAll = useCallback(async (): Promise<void> => {
+    console.log("🔄 Forçando sincronização com REST API...");
+    setState((prev) => ({ ...prev, isLoading: true }));
+
+    try {
+      const [obrasRest, manutencaoRest, piscinasRest, clientesRest] =
+        await Promise.all([
+          readFromFirestoreRest("obras"),
+          readFromFirestoreRest("manutencoes"),
+          readFromFirestoreRest("piscinas"),
+          readFromFirestoreRest("clientes"),
+        ]);
+
+      setState((prev) => ({
+        ...prev,
+        obras: obrasRest,
+        manutencoes: manutencaoRest,
+        piscinas: piscinasRest,
+        clientes: clientesRest,
+        totalItems:
+          obrasRest.length +
+          manutencaoRest.length +
+          piscinasRest.length +
+          clientesRest.length,
+        lastSync: new Date().toISOString(),
+        isLoading: false,
+        error: null,
+      }));
+
+      // Update localStorage
+      safeSetLocalStorage("works", obrasRest);
+      safeSetLocalStorage("maintenance", manutencaoRest);
+      safeSetLocalStorage("pools", piscinasRest);
+      safeSetLocalStorage("clients", clientesRest);
+
+      console.log("✅ Sincronização forçada concluída");
+    } catch (error: any) {
+      console.error("❌ Erro na sincronização forçada:", error);
+      setState((prev) => ({ ...prev, error: error.message, isLoading: false }));
+    }
+  }, []);
+
+  // Load initial data on mount
+  useEffect(() => {
+    loadInitialData();
+  }, [loadInitialData]);
+
+  return {
+    // State
+    ...state,
+
+    // Functions
+    addObra,
+    addManutencao,
+    addPiscina,
+    addCliente,
+    deleteObra,
+    deleteManutencao,
+    deletePiscina,
+    deleteCliente,
+    forceSyncAll,
+    loadInitialData,
+  };
+};
+
+export default useUniversalDataSyncSafe;
