@@ -1,8 +1,17 @@
 // FIRESTORE VIA REST API - BYPASS DOS PROBLEMAS DO SDK
 // Como o utilizador confirmou que funciona via REST API, vamos usar isso
 
-const PROJECT_ID = import.meta.env.VITE_FIREBASE_PROJECT_ID || "";
-const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || "";
+// Função para detectar ambiente de desenvolvimento
+const isDevelopment = (): boolean => {
+  return import.meta.env.DEV || import.meta.env.NODE_ENV !== "production";
+};
+
+const PROJECT_ID =
+  import.meta.env.VITE_FIREBASE_PROJECT_ID ||
+  (isDevelopment() ? "leiria-1cfc9" : "");
+const API_KEY =
+  import.meta.env.VITE_FIREBASE_API_KEY ||
+  (isDevelopment() ? "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw" : "");
 
 // Base URL da REST API do Firestore
 const FIRESTORE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
