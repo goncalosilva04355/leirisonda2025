@@ -12,10 +12,11 @@ function isPlaceholder(value: string | undefined): boolean {
 
 // Configuração Firebase segura - Usa apenas variáveis de ambiente
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || ""
-  authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
-    ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
-    : "leiria-1cfc9.firebaseapp.com",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || ""
+      ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
+      : "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     import.meta.env.VITE_FIREBASE_DATABASE_URL ||
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
