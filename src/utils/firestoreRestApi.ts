@@ -1,11 +1,13 @@
 // FIRESTORE VIA REST API - BYPASS DOS PROBLEMAS DO SDK
 // Como o utilizador confirmou que funciona via REST API, vamos usar isso
 
-const PROJECT_ID = "leiria-1cfc9";
-const API_KEY = "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw";
+import { getFirebaseRestConfig } from "../firebase/config";
 
-// Base URL da REST API do Firestore
-const FIRESTORE_BASE_URL = `https://firestore.googleapis.com/v1/projects/${PROJECT_ID}/databases/(default)/documents`;
+// Obter configuração REST API centralizada
+const restConfig = getFirebaseRestConfig();
+const PROJECT_ID = restConfig.projectId;
+const API_KEY = restConfig.apiKey;
+const FIRESTORE_BASE_URL = restConfig.baseUrl;
 
 // Função para converter dados para formato Firestore
 const convertToFirestoreFormat = (data: any): any => {
