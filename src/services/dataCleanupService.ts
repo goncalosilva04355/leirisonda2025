@@ -461,7 +461,7 @@ class DataCleanupService {
       console.log("🔄 Device memory cleanup complete. Page will reload...");
 
       result.success = true;
-      result.localStorageCleared = true;
+      result.details.localStorageCleared = true;
       result.message = `Memória do dispositivo limpa com sucesso! Removidos ${localStorageCount} itens do localStorage e ${sessionStorageCount} do sessionStorage.`;
 
       // Set a flag before reload so we know cleanup happened
