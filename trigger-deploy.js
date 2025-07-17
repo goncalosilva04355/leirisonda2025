@@ -19,31 +19,75 @@ const buildInfo = {
   ],
 };
 
-// Update deployment manifest
-const deployManifest = {
-  name: "Leirisonda Obras",
-  short_name: "Leirisonda",
-  description: "Sistema de gestão de obras e manutenção de piscinas",
-  start_url: "/",
-  display: "standalone",
-  theme_color: "#0066cc",
-  background_color: "#ffffff",
-  orientation: "portrait",
-  scope: "/",
-  build_info: buildInfo,
-  icons: [
-    {
-      src: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9862202d056a426996e6178b9981c1c7?format=webp&width=192",
-      sizes: "192x192",
-      type: "image/webp",
-    },
-    {
-      src: "https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9862202d056a426996e6178b9981c1c7?format=webp&width=512",
-      sizes: "512x512",
-      type: "image/webp",
-    },
-  ],
-};
+// Read existing manifest to maintain consistency
+const manifestPath = path.join(__dirname, "manifest.json");
+let deployManifest;
+
+try {
+  if (fs.existsSync(manifestPath)) {
+    deployManifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    deployManifest.build_info = buildInfo;
+  } else {
+    // Fallback manifest
+    deployManifest = {
+      name: "Leirisonda Obras",
+      short_name: "Leirisonda",
+      description: "Gestão de obras e manutenção de piscinas",
+      start_url: "/",
+      display: "standalone",
+      background_color: "#1E40AF",
+      theme_color: "#1E40AF",
+      orientation: "any",
+      scope: "/",
+      build_info: buildInfo,
+      icons: [
+        {
+          src: "/icon.svg",
+          sizes: "any",
+          type: "image/svg+xml",
+          purpose: "any",
+        },
+        {
+          src: "/icon.svg",
+          sizes: "192x192",
+          type: "image/svg+xml",
+          purpose: "any",
+        },
+        {
+          src: "/icon.svg",
+          sizes: "512x512",
+          type: "image/svg+xml",
+          purpose: "maskable",
+        },
+      ],
+      categories: ["business", "productivity"],
+      lang: "pt-PT",
+      prefer_related_applications: false,
+    };
+  }
+} catch (error) {
+  console.warn("⚠️ Could not read existing manifest, using fallback");
+  deployManifest = {
+    name: "Leirisonda Obras",
+    short_name: "Leirisonda",
+    description: "Gestão de obras e manutenção de piscinas",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#1E40AF",
+    theme_color: "#1E40AF",
+    orientation: "any",
+    scope: "/",
+    build_info: buildInfo,
+    icons: [
+      {
+        src: "/icon.svg",
+        sizes: "any",
+        type: "image/svg+xml",
+        purpose: "any",
+      },
+    ],
+  };
+}
 
 // Write deployment files
 try {
