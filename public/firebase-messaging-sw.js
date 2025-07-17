@@ -1,9 +1,7 @@
-// Firebase Cloud Messaging Service Worker - Environment Variables Template
-console.log(
-  "[SW] Firebase Messaging Service Worker starting with secure configuration",
-);
+// Firebase Cloud Messaging Service Worker - Static Version
+console.log("[SW] Firebase Messaging Service Worker starting");
 
-// Configuration will be injected at build time
+// Configuration will be set by environment variables at runtime
 const firebaseConfig = {
   apiKey: "demo-value-set-for-production",
   authDomain: "demo-value-set-for-production",
@@ -27,27 +25,32 @@ try {
   );
 
   if (typeof firebase !== "undefined") {
-    firebase.initializeApp(firebaseConfig);
-    messaging = firebase.messaging();
-    console.log(
-      "[SW] Firebase initialized with secure configuration - project:",
-      firebaseConfig.projectId,
-    );
+    // Only initialize if we have real config (not placeholder)
+    if (firebaseConfig.projectId !== "demo-value-set-for-production") {
+      firebase.initializeApp(firebaseConfig);
+      messaging = firebase.messaging();
+      console.log(
+        "[SW] Firebase initialized - project:",
+        firebaseConfig.projectId,
+      );
 
-    // Handle background messages
-    messaging.onBackgroundMessage((payload) => {
-      console.log("[SW] Background message:", payload);
+      // Handle background messages
+      messaging.onBackgroundMessage((payload) => {
+        console.log("[SW] Background message:", payload);
 
-      const title = payload.notification?.title || "Leirisonda";
-      const options = {
-        body: payload.notification?.body || "Nova notificação",
-        icon: "/icon.svg",
-        badge: "/icon.svg",
-        tag: "leirisonda-notification",
-      };
+        const title = payload.notification?.title || "Leirisonda";
+        const options = {
+          body: payload.notification?.body || "Nova notificação",
+          icon: "/icon.svg",
+          badge: "/icon.svg",
+          tag: "leirisonda-notification",
+        };
 
-      return self.registration.showNotification(title, options);
-    });
+        return self.registration.showNotification(title, options);
+      });
+    } else {
+      console.log("[SW] Firebase not configured - using placeholder values");
+    }
   }
 } catch (error) {
   console.warn("[SW] Firebase could not be initialized:", error);
@@ -76,7 +79,4 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-console.log(
-  "[SW] Firebase Messaging Service Worker ready - project:",
-  firebaseConfig.projectId,
-);
+console.log("[SW] Firebase Messaging Service Worker ready");
