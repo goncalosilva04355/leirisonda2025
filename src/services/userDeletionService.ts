@@ -58,7 +58,7 @@ class UserDeletionService {
       console.log(`⚠️ Super admin to preserve: ${this.SUPER_ADMIN_EMAIL}`);
 
       // 1. Delete from Firestore users collection (if Firebase is available)
-      if (isFirebaseReady() && db) {
+      if (isFirebaseReady()) {
         try {
           await this.deleteFromFirestore(result);
         } catch (error: any) {
