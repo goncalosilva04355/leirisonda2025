@@ -169,7 +169,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
-// import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
+// import "./utils/ultraDirectKill"; // ELIMINAÇ��O ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
 // TODOS OS SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
@@ -5296,7 +5296,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    👤 {assignedUser.name}
+                                    ��� {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -7298,7 +7298,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenç����es
+                                  Hist📞rico de intervenç�����es
                                 </p>
                               </div>
                             </div>
@@ -11062,29 +11062,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       !!currentUser,
       "timestamp:",
       new Date().toISOString(),
-    );
-
-    // TESTE: Mostrar mensagem simples em vez do LoginPage
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #0891b2, #06b6d4)",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "Arial, sans-serif",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          <h1>🔧 Leirisonda</h1>
-          <p>Login necessário</p>
-          <p>isAuthenticated: {String(isAuthenticated)}</p>
-          <p>currentUser: {currentUser ? "Sim" : "Não"}</p>
-        </div>
-      </div>
     );
 
     if (showAdvancedSettings) {
