@@ -49,18 +49,17 @@ class DataCleanupService {
     };
 
     try {
-      // 1. Clean Firestore data (if Firebase is configured)
-      if (db) {
+            // 1. Clean Firestore data (if Firebase is configured)
+      try {
+        const db = getFirestoreInstance();
         console.log("🔥 Starting Firestore data cleanup...");
 
         // Delete all pools
         try {
-          const poolsSnapshot = await getDocs(
-            collection(getFirestoreInstance(), "pools"),
-          );
+                    const poolsSnapshot = await getDocs(collection(getFirestoreInstance(), "pools"));
           console.log(`Found ${poolsSnapshot.docs.length} pools to delete`);
           for (const poolDoc of poolsSnapshot.docs) {
-            await deleteDoc(doc(getFirestoreInstance(), "pools", poolDoc.id));
+                        await deleteDoc(doc(getFirestoreInstance(), "pools", poolDoc.id));
             result.details.firestoreDeleted.pools++;
           }
         } catch (error) {
@@ -69,12 +68,10 @@ class DataCleanupService {
 
         // Delete all works
         try {
-          const worksSnapshot = await getDocs(
-            collection(getFirestoreInstance(), "works"),
-          );
+                    const worksSnapshot = await getDocs(collection(getFirestoreInstance(), "works"));
           console.log(`Found ${worksSnapshot.docs.length} works to delete`);
           for (const workDoc of worksSnapshot.docs) {
-            await deleteDoc(doc(getFirestoreInstance(), "works", workDoc.id));
+                        await deleteDoc(doc(getFirestoreInstance(), "works", workDoc.id));
             result.details.firestoreDeleted.works++;
           }
         } catch (error) {
@@ -84,15 +81,13 @@ class DataCleanupService {
         // Delete all maintenance
         try {
           const maintenanceSnapshot = await getDocs(
-            collection(getFirestoreInstance(), "maintenance"),
+                        collection(getFirestoreInstance(), "maintenance"),
           );
           console.log(
             `Found ${maintenanceSnapshot.docs.length} maintenance records to delete`,
           );
           for (const maintenanceDoc of maintenanceSnapshot.docs) {
-            await deleteDoc(
-              doc(getFirestoreInstance(), "maintenance", maintenanceDoc.id),
-            );
+                        await deleteDoc(doc(getFirestoreInstance(), "maintenance", maintenanceDoc.id));
             result.details.firestoreDeleted.maintenance++;
           }
         } catch (error) {
@@ -101,14 +96,10 @@ class DataCleanupService {
 
         // Delete all clients
         try {
-          const clientsSnapshot = await getDocs(
-            collection(getFirestoreInstance(), "clients"),
-          );
+                    const clientsSnapshot = await getDocs(collection(getFirestoreInstance(), "clients"));
           console.log(`Found ${clientsSnapshot.docs.length} clients to delete`);
           for (const clientDoc of clientsSnapshot.docs) {
-            await deleteDoc(
-              doc(getFirestoreInstance(), "clients", clientDoc.id),
-            );
+                        await deleteDoc(doc(getFirestoreInstance(), "clients", clientDoc.id));
             result.details.firestoreDeleted.clients++;
           }
         } catch (error) {
@@ -118,15 +109,13 @@ class DataCleanupService {
         // Delete all interventions (if they exist as a separate collection)
         try {
           const interventionsSnapshot = await getDocs(
-            collection(getFirestoreInstance(), "interventions"),
+                        collection(getFirestoreInstance(), "interventions"),
           );
           console.log(
             `Found ${interventionsSnapshot.docs.length} interventions to delete`,
           );
           for (const interventionDoc of interventionsSnapshot.docs) {
-            await deleteDoc(
-              doc(getFirestoreInstance(), "interventions", interventionDoc.id),
-            );
+                        await deleteDoc(doc(getFirestoreInstance(), "interventions", interventionDoc.id));
             result.details.firestoreDeleted.interventions++;
           }
         } catch (error) {
@@ -333,7 +322,7 @@ class DataCleanupService {
 
     try {
       // Try to read from users collection to test connection
-      await getDocs(collection(getFirestoreInstance(), "users"));
+            await getDocs(collection(getFirestoreInstance(), "users"));
       return true;
     } catch (error) {
       console.error("Firestore connection test failed:", error);
@@ -436,7 +425,7 @@ class DataCleanupService {
       // 4. Clear WebSQL if available (deprecated but might exist)
       try {
         if ("webkitStorageInfo" in navigator) {
-          console.log("🗄️ WebSQL cleanup attempted");
+          console.log("��️ WebSQL cleanup attempted");
         }
       } catch (error) {
         console.warn("⚠️ WebSQL cleanup failed:", error);
@@ -461,7 +450,7 @@ class DataCleanupService {
       console.log("🔄 Device memory cleanup complete. Page will reload...");
 
       result.success = true;
-      result.details.localStorageCleared = true;
+            result.details.localStorageCleared = true;
       result.message = `Memória do dispositivo limpa com sucesso! Removidos ${localStorageCount} itens do localStorage e ${sessionStorageCount} do sessionStorage.`;
 
       // Set a flag before reload so we know cleanup happened
