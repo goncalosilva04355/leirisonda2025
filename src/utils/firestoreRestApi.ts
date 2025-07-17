@@ -13,6 +13,77 @@ import {
   isSetupNeeded,
 } from "./firebaseQuickSetup";
 
+// Mock data generator for development mode
+function generateMockData(collection: string): any[] {
+  console.log(`🤖 Gerando dados mock para ${collection}`);
+
+  switch (collection) {
+    case "test":
+      return [
+        {
+          id: "mock-test-1",
+          message: "Dados mock para teste",
+          timestamp: new Date().toISOString(),
+          status: "development",
+        },
+      ];
+
+    case "clientes":
+      return [
+        {
+          id: "mock-cliente-1",
+          nome: "Cliente Exemplo",
+          email: "cliente@exemplo.com",
+          telefone: "123456789",
+          timestamp: new Date().toISOString(),
+        },
+      ];
+
+    case "obras":
+      return [
+        {
+          id: "mock-obra-1",
+          titulo: "Obra Exemplo",
+          descricao: "Descrição da obra exemplo",
+          status: "ativo",
+          timestamp: new Date().toISOString(),
+        },
+      ];
+
+    case "manutencoes":
+      return [
+        {
+          id: "mock-manutencao-1",
+          tipo: "Manutenção Exemplo",
+          descricao: "Descrição da manutenção",
+          data: new Date().toISOString(),
+          status: "pendente",
+        },
+      ];
+
+    case "piscinas":
+      return [
+        {
+          id: "mock-piscina-1",
+          nome: "Piscina Exemplo",
+          tipo: "Residencial",
+          tamanho: "10x5m",
+          timestamp: new Date().toISOString(),
+        },
+      ];
+
+    default:
+      return [
+        {
+          id: `mock-${collection}-1`,
+          tipo: collection,
+          dados: "Dados mock para desenvolvimento",
+          timestamp: new Date().toISOString(),
+        },
+      ];
+  }
+}
+
 const config = getRestApiConfig();
 const PROJECT_ID = config.projectId;
 const API_KEY = config.apiKey;
@@ -218,7 +289,7 @@ export const readFromFirestoreRest = async (
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
 
   try {
-    console.log(`��� REST API: Lendo ${collection}...`);
+    console.log(`🌐 REST API: Lendo ${collection}...`);
 
     // Debug configuration
     if (!PROJECT_ID || PROJECT_ID === "demo-value-set-for-production") {
@@ -291,7 +362,7 @@ export const readFromFirestoreRest = async (
       );
 
       // Provide specific guidance for 403 errors
-      console.error("🔑 SOLUÇÃO PARA 403:");
+      console.error("🔑 SOLU��ÃO PARA 403:");
       console.error("1. 🔄 Definir variáveis de ambiente reais:");
       console.error("   VITE_FIREBASE_API_KEY=sua_chave_real_aqui");
       console.error("   VITE_FIREBASE_PROJECT_ID=leiria-1cfc9");
