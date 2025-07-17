@@ -103,8 +103,16 @@ export const saveToFirestoreRest = async (
       );
       return true;
     } else {
-      const errorText = await response.text();
-      console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      // Clone response to avoid "Body is disturbed or locked" error
+      const responseClone = response.clone();
+      try {
+        const errorText = await responseClone.text();
+        console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      } catch (readError) {
+        console.error(
+          `❌ REST API: Erro ${response.status} (não foi possível ler detalhes)`,
+        );
+      }
       return false;
     }
   } catch (error: any) {
@@ -128,26 +136,42 @@ export const readFromFirestoreRest = async (
     const response = await fetch(url);
 
     if (response.ok) {
-      const data = await response.json();
+      try {
+        const data = await response.json();
 
-      if (data.documents) {
-        const converted = data.documents.map((doc: any) => {
-          const id = doc.name.split("/").pop();
-          const data = convertFromFirestoreFormat(doc);
-          return { id, ...data };
-        });
+        if (data.documents) {
+          const converted = data.documents.map((doc: any) => {
+            const id = doc.name.split("/").pop();
+            const data = convertFromFirestoreFormat(doc);
+            return { id, ...data };
+          });
 
-        console.log(
-          `✅ REST API: ${collection} lido (${converted.length} documentos)`,
+          console.log(
+            `✅ REST API: ${collection} lido (${converted.length} documentos)`,
+          );
+          return converted;
+        } else {
+          console.log(`📄 REST API: ${collection} vazio`);
+          return [];
+        }
+      } catch (jsonError) {
+        console.error(
+          `❌ REST API: Erro ao processar JSON para ${collection}:`,
+          jsonError,
         );
-        return converted;
-      } else {
-        console.log(`📄 REST API: ${collection} vazio`);
         return [];
       }
     } else {
-      const errorText = await response.text();
-      console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      // Clone response to avoid "Body is disturbed or locked" error
+      const responseClone = response.clone();
+      try {
+        const errorText = await responseClone.text();
+        console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      } catch (readError) {
+        console.error(
+          `❌ REST API: Erro ${response.status} (não foi possível ler detalhes)`,
+        );
+      }
       return [];
     }
   } catch (error: any) {
@@ -176,8 +200,16 @@ export const deleteFromFirestoreRest = async (
       );
       return true;
     } else {
-      const errorText = await response.text();
-      console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      // Clone response to avoid "Body is disturbed or locked" error
+      const responseClone = response.clone();
+      try {
+        const errorText = await responseClone.text();
+        console.error(`❌ REST API: Erro ${response.status}:`, errorText);
+      } catch (readError) {
+        console.error(
+          `❌ REST API: Erro ${response.status} (não foi possível ler detalhes)`,
+        );
+      }
       return false;
     }
   } catch (error: any) {
