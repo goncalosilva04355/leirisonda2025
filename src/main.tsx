@@ -33,15 +33,34 @@ const shouldUseSafeMode = () => {
   const forceSimple =
     urlParams.get("simple") === "true" ||
     localStorage.getItem("forceSimpleApp") === "true";
+  const forceAdvanced =
+    urlParams.get("advanced") === "true" ||
+    localStorage.getItem("forceAdvancedApp") === "true";
   const isProduction = import.meta.env.PROD;
 
   console.log("🔍 Mode detection:", {
     forceSimple,
+    forceAdvanced,
     isProduction,
     url: window.location.href,
   });
 
-  return forceSimple;
+  // Se está forçando modo avançado, usar app completa
+  if (forceAdvanced) {
+    return false;
+  }
+
+  // Se está forçando modo simples, usar modo seguro
+  if (forceSimple) {
+    return true;
+  }
+
+  // Em produção, usar AppProduction por padrão se não foi especificado
+  if (isProduction) {
+    return true; // Usar modo produção simplificado por padrão
+  }
+
+  return false; // Desenvolvimento usa app completa
 };
 
 // App simplificado para produção/modo seguro
