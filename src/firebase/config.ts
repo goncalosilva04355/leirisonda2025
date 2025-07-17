@@ -130,9 +130,14 @@ export function getFirestoreInstance(): Firestore {
 // Get Auth instance
 export function getAuthInstance(): Auth {
   if (!auth) {
-    const app = getFirebaseApp();
-    auth = getAuth(app);
-    console.log("✅ Auth initialized");
+    try {
+      const app = getFirebaseApp();
+      auth = getAuth(app);
+      console.log("✅ Auth initialized");
+    } catch (error: any) {
+      console.error("❌ Auth initialization failed:", error.message);
+      throw error;
+    }
   }
   return auth;
 }
