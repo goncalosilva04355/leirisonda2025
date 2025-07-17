@@ -169,7 +169,25 @@ export const saveToFirestoreRest = async (
     console.error("❌ REST API: DocumentId inválido:", documentId);
     console.error("🛠️ Tipo recebido:", typeof documentId);
     console.error("🛠️ Valor recebido:", documentId);
-    return false;
+
+    // Try to fix common issues
+    if (typeof documentId === "object" && documentId !== null) {
+      if (documentId.id) {
+        console.warn("🔧 Tentando usar documentId.id:", documentId.id);
+        documentId = String(documentId.id);
+      } else if (documentId.email) {
+        console.warn("🔧 Tentando usar documentId.email:", documentId.email);
+        documentId = String(documentId.email);
+      } else {
+        console.error("❌ Não foi possível extrair string do objeto");
+        return false;
+      }
+    } else if (documentId !== null && documentId !== undefined) {
+      console.warn("🔧 Convertendo para string:", documentId);
+      documentId = String(documentId);
+    } else {
+      return false;
+    }
   }
 
   if (data === null || data === undefined) {
