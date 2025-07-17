@@ -128,12 +128,21 @@ export const saveToFirestoreRest = async (
 export const readFromFirestoreRest = async (
   collection: string,
 ): Promise<any[]> => {
+  // Add small delay to prevent race conditions in concurrent calls
+  await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
+
   try {
     console.log(`🌐 REST API: Lendo ${collection}...`);
 
     const url = `${FIRESTORE_BASE_URL}/${collection}?key=${API_KEY}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      // Add cache buster to ensure fresh requests
+      cache: "no-cache",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (response.ok) {
       try {
