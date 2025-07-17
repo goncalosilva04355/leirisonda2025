@@ -290,7 +290,7 @@ const AppSimple: React.FC = () => {
             <button
               onClick={() => {
                 console.log("🔄 Redirecionando para aplicação principal...");
-                window.location.href = "/";
+                window.location.assign("/");
               }}
               style={{
                 background: "#3b82f6",
