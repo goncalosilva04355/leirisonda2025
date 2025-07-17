@@ -151,10 +151,11 @@ export class ProductionAutoSyncService {
 // Instância singleton
 export const productionAutoSync = new ProductionAutoSyncService();
 
-// Inicializar automaticamente quando o módulo for carregado
-setTimeout(() => {
-  if (!productionAutoSync.isActive()) {
-    console.log("🔄 Auto-retry da sincronização após 10 segundos...");
-    productionAutoSync.forceRetry();
-  }
-}, 10000);
+// Inicializar automaticamente quando o módulo for carregado - DESATIVADO
+// setTimeout(() => {
+//   if (!productionAutoSync.isActive()) {
+//     console.log("🔄 Auto-retry da sincronização após 10 segundos...");
+//     productionAutoSync.forceRetry();
+//   }
+// }, 10000);
+console.log("⏸️ Auto-retry da sincronização DESATIVADO para debugging");
