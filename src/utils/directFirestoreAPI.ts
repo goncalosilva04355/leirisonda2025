@@ -39,14 +39,23 @@ export async function testFirestoreAPI(): Promise<{
     });
 
     if (!writeResponse.ok) {
-      const errorData = await writeResponse.text();
+      // Clone response to avoid "Body is disturbed or locked" error
+      const responseClone = writeResponse.clone();
+      let errorData = "Não foi possível ler detalhes do erro";
+
+      try {
+        errorData = await responseClone.text();
+      } catch (readError) {
+        console.warn("⚠️ Não foi possível ler corpo da resposta de erro");
+      }
+
       console.error("❌ Erro na escrita:", writeResponse.status, errorData);
 
       if (writeResponse.status === 404) {
         return {
           success: false,
           message:
-            "Firestore não encontrado - verifique se está habilitado no projeto leiria-1cfc9",
+            "Firestore não encontrado - verifique se está habilitado no projeto",
         };
       }
 
@@ -56,7 +65,19 @@ export async function testFirestoreAPI(): Promise<{
       };
     }
 
-    const writeResult = await writeResponse.json();
+    let writeResult;
+    try {
+      writeResult = await writeResponse.json();
+    } catch (jsonError) {
+      console.error(
+        "❌ Erro ao processar resposta JSON da escrita:",
+        jsonError,
+      );
+      return {
+        success: false,
+        message: "Erro ao processar resposta da escrita",
+      };
+    }
     console.log("✅ Escrita bem-sucedida:", writeResult);
 
     // 2. Tentar ler o documento
@@ -77,7 +98,20 @@ export async function testFirestoreAPI(): Promise<{
       };
     }
 
-    const readResult = await readResponse.json();
+    let readResult;
+    try {
+      readResult = await readResponse.json();
+    } catch (jsonError) {
+      console.error(
+        "❌ Erro ao processar resposta JSON da leitura:",
+        jsonError,
+      );
+      return {
+        success: false,
+        message:
+          "Documento foi escrito mas erro ao processar resposta da leitura",
+      };
+    }
     console.log("✅ Leitura bem-sucedida:", readResult);
 
     // Sucesso total!
