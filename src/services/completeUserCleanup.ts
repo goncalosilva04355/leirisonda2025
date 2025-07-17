@@ -4,7 +4,7 @@ import {
   readFromFirestoreRest,
 } from "../utils/firestoreRestApi";
 
-interface CompleteCleanupResult {
+export interface CompleteCleanupResult {
   success: boolean;
   message: string;
   details: {
