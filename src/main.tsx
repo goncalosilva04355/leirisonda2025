@@ -243,18 +243,66 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // DESENVOLVIMENTO = PRODUÇÃO - SEMPRE App principal
-    console.log("📱 Carregando App principal - desenvolvimento = produção");
+    // Detectar se estamos em produção baseado na URL
+    const isProduction =
+      window.location.hostname !== "localhost" &&
+      window.location.hostname !== "127.0.0.1" &&
+      !window.location.hostname.includes("5173");
+
+    console.log("🌍 Ambiente detectado:", {
+      hostname: window.location.hostname,
+      isProduction,
+      mode: import.meta.env.MODE,
+    });
 
     let AppComponent;
 
-    try {
-      const { default: App } = await import("./App");
-      AppComponent = App;
-      console.log("✅ App principal carregada - desenvolvimento = produção");
-    } catch (appError) {
-      console.error("❌ Erro ao carregar App principal:", appError);
-      throw new Error("Falha ao carregar aplicação principal");
+    // Tentar carregar a versão de produção simplificada primeiro se estivermos em produção
+    if (isProduction) {
+      try {
+        console.log("📱 Tentando carregar App de Produção simplificada...");
+        const { default: ProductionApp } = await import("./App-Production");
+        AppComponent = ProductionApp;
+        console.log("✅ App de Produção carregada com sucesso!");
+      } catch (productionError) {
+        console.warn(
+          "⚠️ App de Produção falhou, tentando App principal:",
+          productionError,
+        );
+
+        try {
+          const { default: App } = await import("./App");
+          AppComponent = App;
+          console.log("✅ App principal carregada como fallback");
+        } catch (appError) {
+          console.error("❌ Erro ao carregar App principal:", appError);
+          throw new Error("Falha ao carregar qualquer versão da aplicação");
+        }
+      }
+    } else {
+      // Em desenvolvimento, carregar App principal
+      try {
+        const { default: App } = await import("./App");
+        AppComponent = App;
+        console.log("✅ App principal carregada - desenvolvimento");
+      } catch (appError) {
+        console.error("❌ Erro ao carregar App principal:", appError);
+
+        // Fallback para versão de produção em desenvolvimento também
+        try {
+          console.log(
+            "📱 Fallback: tentando App de Produção em desenvolvimento...",
+          );
+          const { default: ProductionApp } = await import("./App-Production");
+          AppComponent = ProductionApp;
+          console.log(
+            "✅ App de Produção carregada como fallback em desenvolvimento",
+          );
+        } catch (productionError) {
+          console.error("❌ Todas as versões falharam:", productionError);
+          throw new Error("Falha ao carregar qualquer versão da aplicação");
+        }
+      }
     }
 
     if (!AppComponent) {
