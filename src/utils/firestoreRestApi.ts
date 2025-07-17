@@ -90,13 +90,37 @@ export const saveToFirestoreRest = async (
 
     const url = `${FIRESTORE_BASE_URL}/${collection}/${documentId}?key=${API_KEY}`;
 
-    const response = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(firestoreData),
-    });
+    let response: Response;
+    try {
+      console.log(`🚀 Salvando: ${url.replace(API_KEY, "[API_KEY]")}`);
+
+      response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(firestoreData),
+        signal: AbortSignal.timeout(15000), // 15 second timeout for writes
+      });
+
+      console.log(
+        `📝 Save response status: ${response.status} para ${collection}/${documentId}`,
+      );
+    } catch (fetchError: any) {
+      console.error(
+        `❌ REST API: Erro ao fazer requisição para ${collection}/${documentId}:`,
+        fetchError,
+      );
+
+      if (fetchError.name === "AbortError") {
+        console.error("⏰ Timeout: Escrita demorou mais de 15 segundos");
+      } else if (fetchError.message === "Load failed") {
+        console.error("🌐 Erro de rede ao salvar - verificar conectividade");
+      }
+
+      return false;
+    }
 
     if (response.ok) {
       console.log(
