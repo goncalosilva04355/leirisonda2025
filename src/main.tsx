@@ -68,9 +68,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
+  // TESTE: usar App simples para diagnosticar tela branca
+  const AppComponent = AppTestSimple;
+  console.log("🧪 TESTE: Usando AppTestSimple para diagnosticar problema");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
