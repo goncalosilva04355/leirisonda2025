@@ -297,7 +297,7 @@ const loadApp = async () => {
     setTimeout(() => {
       if (rootElement.children.length === 0) {
         console.error("🚨 CRITICAL: App renderizada mas root ainda vazio!");
-        const emergencyRoot = ReactDOM.createRoot(rootElement);
+        const emergencyRoot = getOrCreateRoot();
         emergencyRoot.render(
           React.createElement(EmergencyApp, {
             error: "App renderizada mas DOM vazio",
