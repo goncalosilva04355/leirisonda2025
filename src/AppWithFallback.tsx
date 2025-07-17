@@ -3,8 +3,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import AppSimple from "./AppSimple";
 import SplashPage from "./pages/SplashPage";
 
-// Lazy load da aplicação principal - TEMPORARILY using AppFirebaseTest to debug Firebase imports
-const App = React.lazy(() => import("./AppFirebaseTest"));
+// Lazy load da aplicação principal
+const App = React.lazy(() => import("./App"));
 
 const AppWithFallback: React.FC = () => {
   const [useSimpleApp, setUseSimpleApp] = useState(false);
