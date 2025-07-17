@@ -337,13 +337,13 @@ function App() {
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
   const [loginPageLoaded, setLoginPageLoaded] = useState(true); // Inicia como true para mostrar login imediatamente
 
-  // Firebase só inicia depois do utilizador fazer login
+  // Firebase só inicia depois do utilizador fazer login - TEMPORARIAMENTE DESATIVADO
   const initMobileFirebaseAfterLogin = async () => {
     try {
-      console.log("🔥 Utilizador fez login, iniciando Firebase Mobile...");
-      await initializeFirebaseMobile();
+      console.log("🔥 Firebase Mobile DESATIVADO para debugging");
+      // await initializeFirebaseMobile();
       setMobileFirebaseReady(true);
-      console.log("✅ Firebase Mobile inicializado APÓS login!");
+      console.log("✅ Firebase Mobile SALTADO!");
     } catch (error) {
       console.warn(
         "⚠️ Firebase Mobile falhou, continuando em modo local:",
@@ -1366,7 +1366,7 @@ function App() {
         );
 
         // If no valid session, start fresh
-        console.log("����� No valid session found, starting fresh");
+        console.log("������� No valid session found, starting fresh");
 
         // Clear any invalid auth state
         setCurrentUser(null);
@@ -4856,7 +4856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Sa��da
+                              Hora de Saída
                             </label>
                             <input
                               type="datetime-local"
@@ -5483,7 +5483,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </div>
                               <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                  Potência do Motor (HP) *
+                                  Pot��ncia do Motor (HP) *
                                 </label>
                                 <select
                                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -6669,7 +6669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Hora In��cio
+                          Hora Início
                         </label>
                         <input
                           type="time"
@@ -6933,7 +6933,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom�����tico",
+                          "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7596,7 +7596,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç����es do Sistema
+                              Informaç�����es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -8027,7 +8027,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="space-y-6">
                           <div>
                             <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                              Relatórios do Sistema
+                              Relat��rios do Sistema
                             </h2>
                             <p className="text-gray-600 mb-6">
                               Gere relatórios detalhados em PDF sobre piscinas,
@@ -11011,7 +11011,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Agora Não
+                Agora N��o
               </button>
               <button
                 onClick={() => handleShare("preview")}
@@ -11874,7 +11874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "����� Gerada"
+                                ? "��� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
