@@ -155,6 +155,7 @@ function AppProduction() {
             <p className="mt-2">
               <button
                 onClick={() => {
+                  localStorage.setItem("forceAdvancedApp", "true");
                   localStorage.removeItem("forceSimpleApp");
                   window.location.reload();
                 }}
