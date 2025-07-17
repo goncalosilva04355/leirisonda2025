@@ -263,12 +263,44 @@ export const readFromFirestoreRest = async (
       return [];
     }
 
-    // Handle 403 errors specifically
+    // Handle 403 errors specifically with detailed guidance
     if (response.status === 403) {
       console.error(
         `❌ REST API: Acesso negado (403) para ${collection}:`,
         "Verificar API key e regras de segurança do Firestore",
       );
+
+      // Provide specific guidance for 403 errors
+      console.error("🔑 SOLUÇÃO PARA 403:");
+      console.error("1. 🔄 Definir variáveis de ambiente reais:");
+      console.error("   VITE_FIREBASE_API_KEY=sua_chave_real_aqui");
+      console.error("   VITE_FIREBASE_PROJECT_ID=leiria-1cfc9");
+      console.error("2. 🔒 Atualizar regras Firestore (Firebase Console):");
+      console.error("   allow read, write: if true; // Para desenvolvimento");
+      console.error("3. 🚪 Habilitar Firestore Database no projeto");
+      console.error(
+        "🔗 Firebase Console: https://console.firebase.google.com/",
+      );
+
+      // Check if using placeholder values
+      if (PROJECT_ID === "demo-value-set-for-production") {
+        console.error(
+          "⚠️ PROBLEMA: Usando valores placeholder em vez de configuração real!",
+        );
+        console.error(
+          "🛠️ SOLUÇÃO: Definir VITE_FIREBASE_PROJECT_ID com o ID real do projeto",
+        );
+      }
+
+      if (API_KEY === "demo-value-set-for-production") {
+        console.error(
+          "⚠️ PROBLEMA: Usando API key placeholder em vez da chave real!",
+        );
+        console.error(
+          "🛠️ SOLUÇÃO: Definir VITE_FIREBASE_API_KEY com a chave real",
+        );
+      }
+
       return [];
     }
 
