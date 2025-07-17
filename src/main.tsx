@@ -236,18 +236,18 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // Load login page directly
-    console.log("📱 Carregando página de login diretamente...");
+    // Load main functional app
+    console.log("📱 Carregando aplicação principal...");
 
     let AppComponent;
 
     try {
-      const { default: LoginPage } = await import("./pages/LoginPage");
-      AppComponent = LoginPage;
-      console.log("✅ LoginPage carregada com sucesso");
-    } catch (loginError) {
-      console.error("❌ Erro ao carregar LoginPage:", loginError);
-      throw new Error("Falha ao carregar página de login");
+      const { default: App } = await import("./App");
+      AppComponent = App;
+      console.log("✅ App principal carregada com sucesso");
+    } catch (appError) {
+      console.error("❌ Erro ao carregar App:", appError);
+      throw new Error("Falha ao carregar aplicação principal");
     }
 
     if (!AppComponent) {
