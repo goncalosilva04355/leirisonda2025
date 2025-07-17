@@ -64,9 +64,10 @@ const executeForceCleanup = async () => {
 
   console.log("🔄 Limpeza concluída - Recarregando...");
   setTimeout(() => {
-    // Limpar parâmetros da URL e recarregar
-    window.history.replaceState({}, document.title, window.location.pathname);
-    window.location.reload();
+    // Clear URL parameters using safer method
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, 2000);
 };
 
