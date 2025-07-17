@@ -262,9 +262,9 @@ try {
     ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
     console.log("✅ App simplificada renderizada!");
   } else {
-    console.log("🚀 Tentando carregar app completa...");
+    console.log("🚀 Carregando aplicação principal...");
 
-    // Tentar carregar app completa
+    // Carregar sempre a aplicação principal
     import("./App")
       .then(({ default: App }) => {
         import("./components/ErrorBoundary")
@@ -272,40 +272,24 @@ try {
             ReactDOM.createRoot(rootElement).render(
               React.createElement(ErrorBoundary, {}, React.createElement(App)),
             );
-            console.log("✅ App completa carregada com sucesso!");
+            console.log("✅ Aplicação principal carregada com sucesso!");
           })
           .catch((error) => {
             console.error(
-              "❌ Erro ao carregar ErrorBoundary, usando app produção:",
+              "❌ Erro ao carregar ErrorBoundary, carregando App diretamente:",
               error,
             );
-            import("./AppProduction")
-              .then(({ default: AppProduction }) => {
-                ReactDOM.createRoot(rootElement).render(
-                  React.createElement(AppProduction),
-                );
-              })
-              .catch(() => {
-                localStorage.setItem("forceSimpleApp", "true");
-                window.location.reload();
-              });
+            ReactDOM.createRoot(rootElement).render(React.createElement(App));
+            console.log("✅ App principal carregada sem ErrorBoundary!");
           });
       })
       .catch((error) => {
-        console.error(
-          "❌ Erro ao carregar App principal, usando app produção:",
-          error,
+        console.error("❌ Erro crítico ao carregar App principal:", error);
+        // Fallback para modo seguro em caso de erro crítico
+        ReactDOM.createRoot(rootElement).render(
+          React.createElement(SafeModeApp),
         );
-        import("./AppProduction")
-          .then(({ default: AppProduction }) => {
-            ReactDOM.createRoot(rootElement).render(
-              React.createElement(AppProduction),
-            );
-          })
-          .catch(() => {
-            localStorage.setItem("forceSimpleApp", "true");
-            window.location.reload();
-          });
+        console.log("🛡️ Fallback para SafeModeApp após erro crítico!");
       });
   }
 } catch (error) {
