@@ -49,40 +49,41 @@ export const LEIRIA_FIREBASE_CONFIG = {
 export function getFirebaseConfig() {
   const config = LEIRIA_FIREBASE_CONFIG;
 
-  // Determinar se está usando variáveis do Netlify ou fallback
-  const usingNetlifyVars = !isPlaceholder(
-    import.meta.env.VITE_FIREBASE_API_KEY,
-  );
-  const isNetlifyBuild =
-    import.meta.env.NETLIFY === "true" ||
-    import.meta.env.VITE_IS_NETLIFY === "true";
+    // Determinar se está usando variáveis do Netlify ou fallback
+  const usingNetlifyVars = !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY);
+  const isNetlifyBuild = import.meta.env.NETLIFY === "true" || import.meta.env.VITE_IS_NETLIFY === "true";
+  const isDevMode = isDevelopment();
 
   console.log("🔍 Firebase Environment Detection:");
+  console.log("  - Development Mode:", isDevMode);
   console.log("  - NETLIFY:", import.meta.env.NETLIFY);
-  console.log("  - VITE_IS_NETLIFY:", import.meta.env.VITE_IS_NETLIFY);
   console.log("  - Using Netlify vars:", usingNetlifyVars);
   console.log("  - Is Netlify build:", isNetlifyBuild);
 
   if (usingNetlifyVars && isNetlifyBuild) {
-    console.log("✅ Firebase: CONFIGURADO COM VARIÁVEIS DO NETLIFY");
+    console.log("✅ Firebase: CONFIGURADO COM VARIÁVEIS DO NETLIFY (PRODUÇÃO)");
     console.log("🚀 Projeto ativo:", config.projectId);
     console.log("🔑 API Key configurada:", config.apiKey ? "✅" : "❌");
-    console.log("🏠 Auth Domain:", config.authDomain);
-  } else if (usingNetlifyVars) {
-    console.log("⚠️ Firebase: usando variáveis mas não no Netlify");
-    console.log("🔄 Projeto:", config.projectId);
+  } else if (isDevMode) {
+    console.log("🔧 Firebase: MODO DESENVOLVIMENTO com fallbacks");
+    console.log("🎯 Projeto dev:", config.projectId);
+    console.log("📝 Produção usará variáveis VITE_FIREBASE_* do Netlify");
   } else {
-    console.log("🔄 Firebase: usando fallback local (leiria-1cfc9)");
-    console.log("📝 Deploy no Netlify usará as suas variáveis VITE_FIREBASE_*");
-    console.log("🎯 Projeto fallback:", config.projectId);
+    console.log("⚠️ Firebase: Modo desconhecido - verificar configuração");
   }
 
   // Verificar se a configuração é válida
-  if (!config.apiKey || !config.projectId || !config.authDomain) {
-    console.error("❌ Configuração Firebase inv��lida:", {
-      apiKey: !!config.apiKey,
-      projectId: !!config.projectId,
-      authDomain: !!config.authDomain,
+  const isValidConfig = config.apiKey && config.projectId && config.authDomain && config.databaseURL;
+
+  if (!isValidConfig) {
+    console.error("❌ Configuração Firebase inválida:");
+    console.error("  - API Key:", config.apiKey ? "✅ OK" : "❌ FALTANDO");
+    console.error("  - Project ID:", config.projectId ? "✅ OK" : "❌ FALTANDO");
+    console.error("  - Auth Domain:", config.authDomain ? "✅ OK" : "❌ FALTANDO");
+    console.error("  - Database URL:", config.databaseURL ? "✅ OK" : "❌ FALTANDO");
+
+    if (!isDevMode) {
+      throw new Error("Firebase configuration is invalid and not in development mode");
     });
     throw new Error("Configuração Firebase inválida");
   }
