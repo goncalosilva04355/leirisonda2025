@@ -1,0 +1,37 @@
+/* Minimal CSS for validation testing */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+  line-height: 1.5;
+  color: #374151;
+  background-color: #f9fafb;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+input {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+}
