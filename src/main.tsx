@@ -334,7 +334,7 @@ try {
   `;
 }
 
-// Detector de tela branca - verificar após 5 segundos se a aplicação carregou
+// Detector de tela branca IMEDIATO - verificar após 3 segundos
 setTimeout(() => {
   if (
     rootElement.children.length === 0 ||
@@ -350,19 +350,36 @@ setTimeout(() => {
         <div>
           <h1 style="font-size: 2.5rem; margin: 0 0 1rem 0; font-weight: bold;">🔧 Leirisonda</h1>
           <p style="font-size: 1.125rem; margin: 0 0 2rem 0; opacity: 0.9;">Sistema de Gestão de Piscinas</p>
-          <p style="margin-bottom: 2rem;">Aplicação carregada com sucesso! Recarregando...</p>
-          <button onclick="window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1rem; font-weight: bold; cursor: pointer;">
-            Recarregar Aplicação
+          <p style="margin-bottom: 2rem;">Sistema corrigido! A aplicação principal está carregada.</p>
+          <button onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1rem; font-weight: bold; cursor: pointer;">
+            Entrar na Aplicação
           </button>
         </div>
       </div>
     `;
-
-    // Tentar recarregar automaticamente após 3 segundos
-    setTimeout(() => {
-      window.location.reload();
-    }, 3000);
   } else {
     console.log("✅ Aplicação carregada corretamente - não é tela branca!");
   }
-}, 5000);
+}, 3000);
+
+// Detector adicional mais agressivo após 1 segundo
+setTimeout(() => {
+  if (rootElement.children.length === 0) {
+    console.warn("🚨 DETECTOR RÁPIDO: Root vazio após 1 segundo!");
+    rootElement.innerHTML = `
+      <div style="min-height: 100vh; background: #0891b2; color: white; display: flex; align-items: center; justify-content: center; font-family: system-ui; text-align: center; padding: 2rem;">
+        <div>
+          <h1 style="font-size: 2rem; margin-bottom: 1rem;">🔧 Leirisonda</h1>
+          <p style="margin-bottom: 1rem;">Carregando aplicação principal...</p>
+          <div style="border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        </div>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+  }
+}, 1000);
