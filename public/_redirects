@@ -1,2 +1,1 @@
-# Redirect rules for SPA routing
-/*    /index.html   200
+# Redirects managed by netlify.toml to avoid conflicts
