@@ -144,6 +144,7 @@ class UserDeletionService {
    * Delete users from Firestore collection (preserving super admin)
    */
   private async deleteFromFirestore(result: UserDeletionResult): Promise<void> {
+    const db = getFirestoreInstance();
     if (!db) {
       throw new Error("Firestore not available");
     }
