@@ -1342,17 +1342,7 @@ function App() {
     status: "completed",
   });
 
-  // Safety check - render loading state if essential hooks are not ready
-  const [isAppReady, setIsAppReady] = useState(true); // Inicia como true para evitar tela branca
-
-  useEffect(() => {
-    console.log("🚀 App safety check...");
-    // Simple timeout to ensure all React internals are ready
-    setTimeout(() => {
-      setIsAppReady(true);
-      console.log("✅ App ready to render");
-    }, 100);
-  }, []);
+  // Safety check disabled - no loading screen needed
 
   // Initialize authentication state with auto-login check
   useEffect(() => {
