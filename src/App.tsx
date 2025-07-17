@@ -611,7 +611,7 @@ function App() {
       // Universal sync
       await universalSync.forceSyncAll?.();
 
-      console.log("✅ Dashboard atualizado com sucesso!");
+      console.log("�� Dashboard atualizado com sucesso!");
     } catch (error) {
       console.error("������ Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
@@ -1449,7 +1449,7 @@ function App() {
                 writeError,
               );
               console.log(
-                "💡 Firestore conectado mas pode haver problema nas regras de seguran��a",
+                "��� Firestore conectado mas pode haver problema nas regras de seguran��a",
               );
             }
           }
@@ -1566,7 +1566,7 @@ function App() {
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
-  // Listeners para atualizações automáticas da UI
+  // Listeners para atualiza��ões automáticas da UI
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
@@ -2177,6 +2177,9 @@ function App() {
           isAuthenticated: true,
         });
 
+        // Inicializar Firebase Mobile APÓS login bem-sucedido
+        initMobileFirebaseAfterLogin();
+
         // Use setTimeout to ensure state is set before navigation
         setTimeout(() => {
           // Handle any pending hash navigation after login
@@ -2557,7 +2560,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
     );
   };
 
-  // Função generateReport para compatibilidade com UnifiedAdminPage
+  // Fun��ão generateReport para compatibilidade com UnifiedAdminPage
   const generateReport = (type: string) => {
     switch (type) {
       case "piscinas":
@@ -3381,7 +3384,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                   </button>
 
-                  {/* Obras Atribuídas */}
+                  {/* Obras Atribu��das */}
                   <button
                     onClick={() => navigateToSection("obras")}
                     className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
