@@ -135,7 +135,19 @@ export const readFromFirestoreRest = async (
   try {
     console.log(`🌐 REST API: Lendo ${collection}...`);
 
+    // Debug configuration
+    if (!PROJECT_ID || PROJECT_ID === "demo-value-set-for-production") {
+      console.warn(
+        "⚠️ REST API: PROJECT_ID não configurado corretamente:",
+        PROJECT_ID,
+      );
+    }
+    if (!API_KEY || API_KEY === "demo-value-set-for-production") {
+      console.warn("⚠️ REST API: API_KEY não configurado corretamente");
+    }
+
     const url = `${FIRESTORE_BASE_URL}/${collection}?key=${API_KEY}`;
+    console.log(`🔗 REST API URL: ${url.replace(API_KEY, "[API_KEY_HIDDEN]")}`);
 
     let response: Response;
     try {
