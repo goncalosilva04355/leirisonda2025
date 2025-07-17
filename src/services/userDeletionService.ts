@@ -575,7 +575,8 @@ class UserDeletionService {
 
     try {
       // Count Firestore users
-      if (isFirebaseReady() && db) {
+      if (isFirebaseReady()) {
+        const db = getFirestoreInstance();
         const usersSnapshot = await getDocs(collection(db, "users"));
         stats.firestore = usersSnapshot.docs.length;
       }
