@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
-  base: "./", // Fix for production deployment paths
+  base: "/", // Correct base path for Netlify SPA deployment
   define: {
     global: "globalThis",
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
