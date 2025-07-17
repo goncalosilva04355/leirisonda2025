@@ -159,6 +159,24 @@ export const saveToFirestoreRest = async (
   documentId: string,
   data: any,
 ): Promise<boolean> => {
+  // Validate parameters first
+  if (!collection || typeof collection !== "string") {
+    console.error("❌ REST API: Collection inválida:", collection);
+    return false;
+  }
+
+  if (!documentId || typeof documentId !== "string") {
+    console.error("❌ REST API: DocumentId inválido:", documentId);
+    console.error("🛠️ Tipo recebido:", typeof documentId);
+    console.error("🛠️ Valor recebido:", documentId);
+    return false;
+  }
+
+  if (data === null || data === undefined) {
+    console.error("❌ REST API: Dados inválidos (null/undefined):", data);
+    return false;
+  }
+
   // Check if Firebase is configured
   const isFirebaseConfigured =
     PROJECT_ID &&
