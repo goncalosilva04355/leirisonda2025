@@ -21,9 +21,7 @@ let db: Firestore | null = null;
 let auth: Auth | null = null;
 
 // Verificar se deve inicializar Firebase - SEMPRE ATIVO PARA DESENVOLVIMENTO IGUAL A PRODUÇÃO
-const IS_NETLIFY_BUILD =
-  import.meta.env.NETLIFY === "true" ||
-  import.meta.env.VITE_IS_NETLIFY === "true";
+const IS_NETLIFY_BUILD = false; // Simplified for debugging
 const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PRODUÇÃO
 
 // Inicialização simples e única
