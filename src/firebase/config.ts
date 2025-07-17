@@ -115,9 +115,14 @@ export function getFirebaseApp(): FirebaseApp {
 // Get Firestore instance
 export function getFirestoreInstance(): Firestore {
   if (!firestore) {
-    const app = getFirebaseApp();
-    firestore = getFirestore(app);
-    console.log("✅ Firestore initialized");
+    try {
+      const app = getFirebaseApp();
+      firestore = getFirestore(app);
+      console.log("✅ Firestore initialized");
+    } catch (error: any) {
+      console.error("❌ Firestore initialization failed:", error.message);
+      throw error;
+    }
   }
   return firestore;
 }
