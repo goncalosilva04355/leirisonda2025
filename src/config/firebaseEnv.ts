@@ -10,16 +10,39 @@ function isPlaceholder(value: string | undefined): boolean {
   );
 }
 
-// Configuração Firebase segura - Usa apenas variáveis de ambiente
+// Função para detectar ambiente de desenvolvimento
+function isDevelopment(): boolean {
+  return import.meta.env.DEV || import.meta.env.NODE_ENV !== "production";
+}
+
+// Configuração Firebase com fallbacks para desenvolvimento
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
+  apiKey:
+    import.meta.env.VITE_FIREBASE_API_KEY ||
+    (isDevelopment() ? "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw" : ""),
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    (isDevelopment() ? "leiria-1cfc9.firebaseapp.com" : ""),
+  databaseURL:
+    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
+    (isDevelopment()
+      ? "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app"
+      : ""),
+  projectId:
+    import.meta.env.VITE_FIREBASE_PROJECT_ID ||
+    (isDevelopment() ? "leiria-1cfc9" : ""),
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    (isDevelopment() ? "leiria-1cfc9.firebasestorage.app" : ""),
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ||
+    (isDevelopment() ? "632599887141" : ""),
+  appId:
+    import.meta.env.VITE_FIREBASE_APP_ID ||
+    (isDevelopment() ? "1:632599887141:web:1290b471d41fc3ad64eecc" : ""),
+  measurementId:
+    import.meta.env.VITE_FIREBASE_MEASUREMENT_ID ||
+    (isDevelopment() ? "G-Q2QWQVH60L" : ""),
 };
 
 // Função para obter configuração Firebase
