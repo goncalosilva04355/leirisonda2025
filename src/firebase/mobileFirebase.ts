@@ -175,45 +175,11 @@ export const getFirebaseMobileAuth = async () => {
   };
 };
 
-// Auto-inicialização para aplicações móveis
-if (isMobileDevice()) {
-  console.log("📱 Dispositivo móvel detectado, preparando REST API...");
-
-  const autoInit = async () => {
-    // Aguardar o DOM estar completamente carregado
-    if (document.readyState !== "complete") {
-      await new Promise((resolve) => {
-        if (document.readyState === "complete") {
-          resolve(void 0);
-        } else {
-          window.addEventListener("load", () => resolve(void 0), {
-            once: true,
-          });
-        }
-      });
-    }
-
-    // Aguardar tempo adicional para REST API estar disponível
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    try {
-      console.log(
-        "🚀 Iniciando auto-inicialização Firebase Mobile (REST API)...",
-      );
-      await initializeFirebaseMobile();
-      console.log(
-        "✅ Auto-inicialização Firebase Mobile (REST API) completada",
-      );
-    } catch (error) {
-      console.warn(
-        "⚠️ Auto-inicialização falhou, app funcionará normalmente:",
-        error,
-      );
-    }
-  };
-
-  autoInit();
-}
+// Auto-inicialização DESATIVADA - Firebase só inicia após login page carregada
+// Removido para evitar inicialização prematura que pode causar erros
+console.log(
+  "📱 Firebase Mobile: Auto-inicialização desativada para evitar erros",
+);
 
 // Exportar configuração para compatibilidade
 export const firebaseConfig = {
