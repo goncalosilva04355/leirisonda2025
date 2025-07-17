@@ -158,6 +158,50 @@ export class DataProtectionService {
     this.maintainBackupHistory();
   }
 
+  // Limpar backups antigos para liberar espaço
+  private static cleanOldBackups(maxToKeep: number = 3): void {
+    try {
+      console.log(
+        `🧹 Limpando backups antigos, mantendo apenas ${maxToKeep}...`,
+      );
+
+      // Obter lista de todas as chaves do localStorage
+      const allKeys = Object.keys(localStorage);
+
+      // Encontrar chaves de backup
+      const backupKeys = allKeys.filter(
+        (key) =>
+          key.startsWith(this.BACKUP_PREFIX) ||
+          key.includes("BACKUP") ||
+          key.includes("backup"),
+      );
+
+      // Remover backups se há muitos
+      if (backupKeys.length > maxToKeep * this.BACKUP_KEYS.length) {
+        backupKeys.forEach((key) => {
+          try {
+            localStorage.removeItem(key);
+          } catch (error) {
+            // Ignorar erros individuais
+          }
+        });
+        console.log(`✅ ${backupKeys.length} backups antigos removidos`);
+      }
+
+      // Limpar histórico também
+      const backupHistory = JSON.parse(
+        localStorage.getItem("BACKUP_HISTORY") || "[]",
+      );
+
+      if (backupHistory.length > maxToKeep) {
+        const newHistory = backupHistory.slice(0, maxToKeep);
+        localStorage.setItem("BACKUP_HISTORY", JSON.stringify(newHistory));
+      }
+    } catch (error: any) {
+      console.warn("⚠️ Erro ao limpar backups antigos:", error.message);
+    }
+  }
+
   // Manter histórico de backups
   private static maintainBackupHistory(): void {
     const maxBackups = 5;
@@ -177,13 +221,21 @@ export class DataProtectionService {
       const oldBackups = backupHistory.slice(maxBackups);
       oldBackups.forEach((backup: any) => {
         this.BACKUP_KEYS.forEach((key) => {
-          localStorage.removeItem(`${this.BACKUP_PREFIX}${key}_${backup.id}`);
+          try {
+            localStorage.removeItem(`${this.BACKUP_PREFIX}${key}_${backup.id}`);
+          } catch (error) {
+            // Ignorar erros de remoção individual
+          }
         });
       });
       backupHistory.splice(maxBackups);
     }
 
-    localStorage.setItem("BACKUP_HISTORY", JSON.stringify(backupHistory));
+    try {
+      localStorage.setItem("BACKUP_HISTORY", JSON.stringify(backupHistory));
+    } catch (error: any) {
+      console.warn("⚠️ Falha ao salvar histórico de backup:", error.message);
+    }
   }
 
   // Restauro de emergência
