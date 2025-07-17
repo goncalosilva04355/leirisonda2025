@@ -1,14 +1,14 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-// Configuração que DEVE funcionar - projeto leiria-1cfc9
+// Configuração usando variáveis de ambiente
 const config = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
 };
 
 export const debugFirestore = async () => {
