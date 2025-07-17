@@ -13,28 +13,13 @@ function isPlaceholder(value: string | undefined): boolean {
 // Configuração Firebase segura - Usa apenas variáveis de ambiente
 export const LEIRIA_FIREBASE_CONFIG = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain:
-    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || ""
-      ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
-      : "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    import.meta.env.VITE_FIREBASE_DATABASE_URL ||
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: !isPlaceholder(import.meta.env.VITE_FIREBASE_PROJECT_ID)
-    ? import.meta.env.VITE_FIREBASE_PROJECT_ID!
-    : "leiria-1cfc9",
-  storageBucket: !isPlaceholder(import.meta.env.VITE_FIREBASE_STORAGE_BUCKET)
-    ? import.meta.env.VITE_FIREBASE_STORAGE_BUCKET!
-    : "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: !isPlaceholder(
-    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  )
-    ? import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID!
-    : "632599887141",
-  appId: !isPlaceholder(import.meta.env.VITE_FIREBASE_APP_ID)
-    ? import.meta.env.VITE_FIREBASE_APP_ID!
-    : "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-Q2QWQVH60L",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "",
 };
 
 // Função para obter configuração Firebase
