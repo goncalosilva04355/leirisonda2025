@@ -259,11 +259,24 @@ if (!rootElement) {
 
 try {
   console.log("🔄 Verificando modo de funcionamento...");
+  console.log("📊 Estado do ambiente:", {
+    isProd: import.meta.env.PROD,
+    mode: import.meta.env.MODE,
+    shouldUseSafe: shouldUseSafeMode(),
+    forceSimple: localStorage.getItem("forceSimpleApp"),
+    forceAdvanced: localStorage.getItem("forceAdvancedApp"),
+    url: window.location.href,
+  });
 
   // Se estiver em modo seguro ou produção, decidir qual app usar
   if (shouldUseSafeMode()) {
     const isProduction = import.meta.env.PROD;
     const forceSimple = localStorage.getItem("forceSimpleApp") === "true";
+
+    console.log("✅ Usando modo seguro/produção:", {
+      isProduction,
+      forceSimple,
+    });
 
     if (isProduction && !forceSimple) {
       console.log("🏭 Modo produção ativo - usando AppProduction");
