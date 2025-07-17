@@ -1,5 +1,5 @@
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { getFirestoreInstance } from "../firebase/config";
 import { realFirebaseService } from "./realFirebaseService";
 import {
   poolService,
