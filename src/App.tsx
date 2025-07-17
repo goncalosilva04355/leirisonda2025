@@ -4,7 +4,7 @@ import {
   isFirebaseMobileReady,
 } from "./firebase/mobileFirebase";
 
-// VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
+// VERIFICADOR SIMPLES DE COLE��ÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
@@ -121,7 +121,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
+// import { productionAutoSync } from "./services/productionAutoSync"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
