@@ -250,4 +250,10 @@ export default {
   getFirebaseRestConfig,
   getProjectId,
   getApiKey,
+  isFirebaseReady,
+  getFirebaseStatus,
+  waitForFirebaseInit,
+  markQuotaExceeded,
+  isQuotaExceeded,
+  reinitializeFirebase,
 };
