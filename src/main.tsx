@@ -2,31 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-console.log("🚀 Inicializando aplicação...");
+console.log("🚀 Inicializando aplicação (versão corrigida para produção)...");
 
-// Production safety - prevent crashes
-import "./utils/productionSafety";
-
-// Production diagnostic
-import "./utils/productionDiagnostic";
-
-// Clear any flags that might force simple app
-import "./utils/clearAppFlags";
-
-// Adicionar error boundary e tratamento global de erros
+// Error handler global simplificado
 window.addEventListener("error", (event) => {
-  console.error("❌ Global error:", event.error);
-  console.error("❌ Error details:", {
-    message: event.message,
-    filename: event.filename,
-    lineno: event.lineno,
-    colno: event.colno,
-    stack: event.error?.stack,
-  });
+  console.error("❌ Global error:", event.error?.message || event.message);
 });
 
 window.addEventListener("unhandledrejection", (event) => {
-  // Check if it's a Firebase messaging error and prevent logging
+  // Handle Firebase errors gracefully
   if (
     event.reason &&
     (event.reason.toString().includes("firebase") ||
@@ -34,21 +18,218 @@ window.addEventListener("unhandledrejection", (event) => {
       event.reason.toString().includes("_FirebaseError"))
   ) {
     console.warn(
-      "⚠️ Firebase messaging error handled gracefully:",
+      "⚠️ Firebase error handled:",
       event.reason.message || event.reason,
     );
-    event.preventDefault(); // Prevent the error from being logged as unhandled
+    event.preventDefault();
     return;
   }
-
-  console.error("�� Unhandled promise rejection:", event.reason);
-  console.error("❌ Promise:", event.promise);
+  console.error("❌ Unhandled promise rejection:", event.reason);
 });
 
-// App original reparado
-import App from "./App";
-// Error Boundary
-import ErrorBoundary from "./components/ErrorBoundary";
+// Função para detectar modo seguro
+const shouldUseSafeMode = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceSimple =
+    urlParams.get("simple") === "true" ||
+    localStorage.getItem("forceSimpleApp") === "true";
+  const isProduction = import.meta.env.PROD;
+
+  console.log("🔍 Mode detection:", {
+    forceSimple,
+    isProduction,
+    url: window.location.href,
+  });
+
+  return forceSimple;
+};
+
+// App simplificado para produção/modo seguro
+const SafeModeApp = () => {
+  const [showLogin, setShowLogin] = React.useState(false);
+
+  if (!showLogin) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "system-ui",
+          textAlign: "center",
+          padding: "2rem",
+        }}
+      >
+        <div style={{ maxWidth: "400px" }}>
+          <div
+            style={{
+              fontSize: "3rem",
+              marginBottom: "1rem",
+            }}
+          >
+            🔧
+          </div>
+          <h1
+            style={{
+              fontSize: "2.5rem",
+              margin: "0 0 1rem 0",
+              fontWeight: "bold",
+            }}
+          >
+            Leirisonda
+          </h1>
+          <p
+            style={{
+              fontSize: "1.125rem",
+              margin: "0 0 2rem 0",
+              opacity: 0.9,
+            }}
+          >
+            Sistema de Gestão de Piscinas
+          </p>
+          <button
+            onClick={() => setShowLogin(true)}
+            style={{
+              background: "white",
+              color: "#0891b2",
+              border: "none",
+              padding: "1rem 2rem",
+              borderRadius: "0.5rem",
+              fontSize: "1.125rem",
+              fontWeight: "bold",
+              cursor: "pointer",
+              marginBottom: "1rem",
+              display: "block",
+              width: "100%",
+            }}
+          >
+            Entrar na Aplicação
+          </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("forceSimpleApp");
+              window.location.reload();
+            }}
+            style={{
+              background: "rgba(255,255,255,0.2)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.3)",
+              padding: "0.75rem 1.5rem",
+              borderRadius: "0.375rem",
+              fontSize: "1rem",
+              cursor: "pointer",
+              marginRight: "0.5rem",
+            }}
+          >
+            Modo Avançado
+          </button>
+          <button
+            onClick={() => {
+              localStorage.clear();
+              sessionStorage.clear();
+              window.location.reload();
+            }}
+            style={{
+              background: "rgba(255,255,255,0.2)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.3)",
+              padding: "0.75rem 1.5rem",
+              borderRadius: "0.375rem",
+              fontSize: "1rem",
+              cursor: "pointer",
+            }}
+          >
+            Limpar Cache
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Página de login simples
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f8fafc",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "system-ui",
+        padding: "2rem",
+      }}
+    >
+      <div
+        style={{
+          background: "white",
+          padding: "2rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          width: "100%",
+          maxWidth: "400px",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "2rem",
+            color: "#0891b2",
+            fontSize: "1.5rem",
+          }}
+        >
+          Login - Leirisonda
+        </h2>
+        <p
+          style={{
+            textAlign: "center",
+            color: "#6b7280",
+            marginBottom: "2rem",
+          }}
+        >
+          Modo simplificado ativo. Para aceder à aplicação completa, clique em
+          "Carregar App Completa" abaixo.
+        </p>
+        <button
+          onClick={() => {
+            localStorage.removeItem("forceSimpleApp");
+            window.location.href = window.location.origin;
+          }}
+          style={{
+            background: "#0891b2",
+            color: "white",
+            border: "none",
+            padding: "1rem",
+            borderRadius: "0.375rem",
+            fontSize: "1rem",
+            cursor: "pointer",
+            width: "100%",
+            marginBottom: "1rem",
+          }}
+        >
+          Carregar App Completa
+        </button>
+        <button
+          onClick={() => setShowLogin(false)}
+          style={{
+            background: "#f3f4f6",
+            color: "#6b7280",
+            border: "none",
+            padding: "0.75rem",
+            borderRadius: "0.375rem",
+            fontSize: "1rem",
+            cursor: "pointer",
+            width: "100%",
+          }}
+        >
+          Voltar
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -56,73 +237,59 @@ if (!rootElement) {
 }
 
 try {
-  console.log("🔄 Tentando renderizar aplicação...");
-  console.log("🔍 Root element:", rootElement);
-  console.log(
-    "🔍 CSS imported:",
-    !!document.querySelector('style, link[rel="stylesheet"]'),
-  );
+  console.log("🔄 Verificando modo de funcionamento...");
 
-  console.log("🚀 Loading application...");
-  console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
-  console.log("🔍 Base URL:", import.meta.env.BASE_URL);
+  // Se estiver em modo seguro, usar app simplificada
+  if (shouldUseSafeMode()) {
+    console.log("🛡️ Modo seguro ativo - usando app simplificada");
+    ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
+    console.log("✅ App simplificada renderizada!");
+  } else {
+    console.log("🚀 Tentando carregar app completa...");
 
-  // Verificações específicas para produção
-  if (import.meta.env.PROD) {
-    console.log("📱 PRODUÇÃO: Verificando recursos essenciais...");
-
-    // Verificar se CSS está carregado
-    const cssLoaded = !!document.querySelector('style, link[rel="stylesheet"]');
-    console.log("🎨 CSS carregado:", cssLoaded);
-
-    // Verificar se React está disponível
-    console.log("⚛️ React disponível:", !!window.React || !!React);
-
-    // Verificar se há erros JavaScript anteriores
-    const hasErrors =
-      window.hasOwnProperty("__reactErrorOverlay") ||
-      document.querySelector(".error-overlay");
-    console.log("❌ Erros detectados:", hasErrors);
-
-    // Log de status final
-    console.log("📊 Status produção:", {
-      css: cssLoaded,
-      react: !!React,
-      errors: hasErrors,
-      timestamp: new Date().toISOString(),
-    });
+    // Tentar carregar app completa
+    import("./App")
+      .then(({ default: App }) => {
+        import("./components/ErrorBoundary")
+          .then(({ default: ErrorBoundary }) => {
+            ReactDOM.createRoot(rootElement).render(
+              React.createElement(ErrorBoundary, {}, React.createElement(App)),
+            );
+            console.log("✅ App completa carregada com sucesso!");
+          })
+          .catch((error) => {
+            console.error(
+              "❌ Erro ao carregar ErrorBoundary, usando app simples:",
+              error,
+            );
+            localStorage.setItem("forceSimpleApp", "true");
+            window.location.reload();
+          });
+      })
+      .catch((error) => {
+        console.error(
+          "❌ Erro ao carregar App principal, usando app simples:",
+          error,
+        );
+        localStorage.setItem("forceSimpleApp", "true");
+        window.location.reload();
+      });
   }
-
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
-
-  ReactDOM.createRoot(rootElement).render(
-    // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
-    <ErrorBoundary>
-      <AppComponent />
-    </ErrorBoundary>,
-    // </React.StrictMode>
-  );
-  console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
-  console.error("❌ Erro ao renderizar App:", error);
-  console.error("❌ Stack trace:", error.stack);
+  console.error("❌ Erro crítico, usando fallback HTML:", error);
 
-  // Fallback: Simple error display
+  // Fallback HTML direto
   rootElement.innerHTML = `
-    <div style="min-height: 100vh; background: #f3f4f6; display: flex; align-items: center; justify-content: center; padding: 1rem; font-family: system-ui;">
-      <div style="background: white; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); max-width: 500px;">
-        <h1 style="color: #dc2626; font-size: 1.5rem; font-weight: bold; margin-bottom: 1rem;">Leirisonda - Erro de Carregamento</h1>
-        <p style="margin-bottom: 1rem; color: #6b7280;">A aplicação encontrou um erro durante o carregamento:</p>
-        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 0.375rem; padding: 1rem; margin-bottom: 1rem;">
-          <pre style="color: #dc2626; font-size: 0.875rem; white-space: pre-wrap;">${error.message}</pre>
-        </div>
-        <button onclick="location.reload()" style="background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer; margin-right: 0.5rem;">
-          Recarregar Página
+    <div style="min-height: 100vh; background: #0891b2; color: white; display: flex; align-items: center; justify-content: center; font-family: system-ui; text-align: center; padding: 2rem;">
+      <div>
+        <h1 style="font-size: 2.5rem; margin: 0 0 1rem 0;">🔧 Leirisonda</h1>
+        <p style="font-size: 1.125rem; margin: 0 0 2rem 0; opacity: 0.9;">Sistema de Gestão de Piscinas</p>
+        <p style="margin-bottom: 2rem;">A aplicação encontrou um problema durante o carregamento.</p>
+        <button onclick="window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-size: 1rem; font-weight: bold; cursor: pointer; margin-right: 0.5rem;">
+          Tentar Novamente
         </button>
-        <button onclick="console.clear(); localStorage.clear(); location.reload()" style="background: #dc2626; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer;">
-          Limpar Cache e Recarregar
+        <button onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-size: 1rem; cursor: pointer;">
+          Limpar Cache
         </button>
       </div>
     </div>
