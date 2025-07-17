@@ -9,7 +9,7 @@ const IS_NETLIFY_BUILD =
   import.meta.env.NETLIFY === "true" ||
   import.meta.env.VITE_IS_NETLIFY === "true" ||
   !import.meta.env.DEV; // Considera produção se não for DEV
-const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PRODUÇÃO
+const FORCE_FIREBASE_PRODUCTION = false; // TEMPORARIAMENTE DESATIVADO para resolver problemas de produção
 
 // Variável para armazenar a instância do Firebase
 let firebaseApp: FirebaseApp | null = null;
@@ -148,7 +148,7 @@ export function isFirebaseReady(): boolean {
 
 // Função para obter db seguro - usar firestoreConfig diretamente
 export function getDB() {
-  console.log("💾 Use getFirebaseFirestore() diretamente do firestoreConfig");
+  console.log("��� Use getFirebaseFirestore() diretamente do firestoreConfig");
   return null;
 }
 
