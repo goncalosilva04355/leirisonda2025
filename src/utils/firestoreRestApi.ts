@@ -162,27 +162,33 @@ export const saveToFirestoreRest = async (
 export const readFromFirestoreRest = async (
   collection: string,
 ): Promise<any[]> => {
-  // Validate Firebase configuration first
-  if (!PROJECT_ID || PROJECT_ID === "demo-value-set-for-production") {
+  // Check if Firebase is properly configured
+  const isFirebaseConfigured =
+    PROJECT_ID &&
+    API_KEY &&
+    PROJECT_ID !== "demo-value-set-for-production" &&
+    API_KEY !== "demo-value-set-for-production" &&
+    !API_KEY.includes("sua_chave") &&
+    !API_KEY.includes("your_");
+
+  if (!isFirebaseConfigured) {
     console.warn(
-      `⚠️ REST API: Firebase PROJECT_ID não configurado. Definir variáveis VITE_FIREBASE_*`,
+      `⚠️ REST API: Firebase não configurado - usando modo desenvolvimento`,
     );
-    console.warn("🛠️ SOLUÇÃO RÁPIDA:");
+    console.warn("🛠️ Para configurar Firebase:");
     console.warn("1. Criar ficheiro .env na raiz do projeto");
     console.warn("2. Adicionar: VITE_FIREBASE_PROJECT_ID=leiria-1cfc9");
     console.warn("3. Adicionar: VITE_FIREBASE_API_KEY=sua_chave_real");
     console.warn("4. Reiniciar: npm run dev");
-    return [];
-  }
 
-  if (!API_KEY || API_KEY === "demo-value-set-for-production") {
-    console.warn(
-      `⚠️ REST API: Firebase API_KEY não configurado. Definir variáveis VITE_FIREBASE_*`,
-    );
-    console.warn("🛠️ SOLUÇÃO RÁPIDA:");
-    console.warn("1. Obter API key do Firebase Console");
-    console.warn("2. Adicionar ao .env: VITE_FIREBASE_API_KEY=AIzaSy...");
-    console.warn("3. Reiniciar servidor");
+    // Return mock data for development
+    if (import.meta.env.DEV) {
+      console.log(
+        `📝 Modo desenvolvimento: Retornando dados mock para ${collection}`,
+      );
+      return generateMockData(collection);
+    }
+
     return [];
   }
 
@@ -212,7 +218,7 @@ export const readFromFirestoreRest = async (
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
 
   try {
-    console.log(`🌐 REST API: Lendo ${collection}...`);
+    console.log(`��� REST API: Lendo ${collection}...`);
 
     // Debug configuration
     if (!PROJECT_ID || PROJECT_ID === "demo-value-set-for-production") {
