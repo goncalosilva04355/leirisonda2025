@@ -236,38 +236,18 @@ const loadApp = async () => {
 
     console.log("📱 Carregando aplicação com proteção anti-tela-branca...");
 
-    // Check environment and force simple mode for production
-    const isProd = import.meta.env.PROD;
-    const urlParams = new URLSearchParams(window.location.search);
-    const forceSimple =
-      urlParams.get("simple") === "true" ||
-      localStorage.getItem("forceSimpleMode") === "true" ||
-      isProd; // ALWAYS use simple in production
+    // Load main functional app
+    console.log("📱 Carregando aplicação principal...");
 
     let AppComponent;
 
-    if (forceSimple) {
-      console.log("📱 Carregando versão simplificada (ANTI-TELA-BRANCA)...");
-      try {
-        const { default: AppSimple } = await import("./AppSimple");
-        AppComponent = AppSimple;
-        console.log("✅ AppSimple carregada com sucesso");
-      } catch (simpleError) {
-        console.error("❌ Erro ao carregar AppSimple:", simpleError);
-        throw new Error("Falha ao carregar versão simplificada");
-      }
-    } else {
-      console.log("🚀 Tentando carregar versão completa...");
-      try {
-        const { default: App } = await import("./App");
-        AppComponent = App;
-        console.log("✅ App completa carregada com sucesso");
-      } catch (advancedError) {
-        console.error("❌ Erro ao carregar App completa:", advancedError);
-        console.log("📱 Fallback para versão simplificada...");
-        const { default: AppSimple } = await import("./AppSimple");
-        AppComponent = AppSimple;
-      }
+    try {
+      const { default: App } = await import("./App");
+      AppComponent = App;
+      console.log("✅ App principal carregada com sucesso");
+    } catch (appError) {
+      console.error("❌ Erro ao carregar App:", appError);
+      throw new Error("Falha ao carregar aplicação principal");
     }
 
     if (!AppComponent) {
@@ -331,34 +311,6 @@ const loadApp = async () => {
 // Start the application
 loadApp();
 
-// Additional safety nets
-setTimeout(() => {
-  if (rootElement.children.length === 0) {
-    console.warn("🚨 SAFETY NET 1: Root vazio após 1 segundo");
-    showEmergencyFallback("Safety net 1 - 1 segundo");
-  }
-}, 1000);
-
-setTimeout(() => {
-  if (rootElement.children.length === 0) {
-    console.warn("🚨 SAFETY NET 2: Root vazio após 3 segundos");
-    showEmergencyFallback("Safety net 2 - 3 segundos");
-  }
-}, 3000);
-
-setTimeout(() => {
-  if (rootElement.children.length === 0) {
-    console.warn("🚨 SAFETY NET 3: Root vazio após 5 segundos");
-    showEmergencyFallback("Safety net 3 - 5 segundos");
-  }
-}, 5000);
-
-// Visibility change handler - re-check when page becomes visible
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && rootElement.children.length === 0) {
-    console.warn("🚨 VISIBILITY CHECK: Root vazio quando página ficou visível");
-    showEmergencyFallback("Verificação de visibilidade");
-  }
-});
+// Safety nets removed - direct app loading
 
 console.log("✅ main.tsx carregado - sistema anti-tela-branca ativo");
