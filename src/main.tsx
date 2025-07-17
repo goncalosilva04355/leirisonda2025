@@ -44,12 +44,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
-// App de teste simples
-import AppTestSimple from "./AppTestSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
-// App Loader
-import AppLoader from "./components/AppLoader";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
