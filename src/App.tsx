@@ -169,7 +169,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
-// import "./utils/ultraDirectKill"; // ELIMINAÇ��O ULTRA-DIRETA SEM LOGS VISUAIS
+// import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
 // TODOS OS SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
@@ -325,6 +325,67 @@ const showNotification = (
 function App() {
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
+
+  // Fallback para produção em caso de erro
+  const [hasRenderError, setHasRenderError] = useState(false);
+
+  useEffect(() => {
+    // Detectar se estamos em produção e há problemas
+    const isProduction = import.meta.env.PROD;
+    if (isProduction) {
+      console.log("📱 Produção detectada - modo de fallback ativo");
+
+      // Verificar se imports essenciais estão disponíveis
+      try {
+        if (!React || !useState || !useEffect) {
+          throw new Error("React hooks não disponíveis");
+        }
+        console.log("✅ React e hooks verificados OK");
+      } catch (error) {
+        console.error("❌ Erro nos imports básicos:", error);
+        setHasRenderError(true);
+      }
+    }
+  }, []);
+
+  // Fallback UI se houver problemas de renderização
+  if (hasRenderError) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0891b2",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "Arial, sans-serif",
+          textAlign: "center",
+          padding: "2rem",
+        }}
+      >
+        <div>
+          <h1>🔧 Leirisonda</h1>
+          <p>A aplicação está a carregar...</p>
+          <p>Se este problema persistir, recarregue a página.</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              background: "white",
+              color: "#0891b2",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Recarregar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // Debug: Check if App is being rendered multiple times with same timestamp
   if ((window as any).lastAppRenderTime === renderTime) {
@@ -2424,7 +2485,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����🔥ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -5296,7 +5357,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   className="flex items-center justify-between bg-blue-50 px-3 py-2 rounded-md"
                                 >
                                   <span className="text-sm text-blue-700 font-medium">
-                                    ��� {assignedUser.name}
+                                    👤 {assignedUser.name}
                                   </span>
                                   <button
                                     type="button"
@@ -7298,7 +7359,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   Relatório de Manutenções
                                 </h3>
                                 <p className="text-sm text-gray-600">
-                                  Hist📞rico de intervenç�����es
+                                  Hist📞rico de intervenç����es
                                 </p>
                               </div>
                             </div>
@@ -10563,7 +10624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingMaintenance?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
-                        placeholder="Observações sobre a manutenção"
+                        placeholder="Observações sobre a manuten��ão"
                       />
                     </div>
 
