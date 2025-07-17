@@ -333,18 +333,23 @@ function App() {
   }
   (window as any).lastAppRenderTime = renderTime;
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - PREVINE TELA BRANCA
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN ESTAR CARREGADO
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
+  const [loginPageLoaded, setLoginPageLoaded] = useState(false);
 
+  // Firebase só inicia depois do login estar carregado
   useEffect(() => {
+    // Aguardar login page estar totalmente carregada antes de inicializar Firebase
+    if (!loginPageLoaded) {
+      return;
+    }
+
     const initMobileFirebase = async () => {
       try {
-        console.log(
-          "�� Inicializando Firebase Mobile para prevenir tela branca...",
-        );
+        console.log("🔥 Login page carregada, iniciando Firebase Mobile...");
         await initializeFirebaseMobile();
         setMobileFirebaseReady(true);
-        console.log("✅ Firebase Mobile inicializado com sucesso!");
+        console.log("✅ Firebase Mobile inicializado APÓS login page!");
       } catch (error) {
         console.warn(
           "⚠️ Firebase Mobile falhou, continuando em modo local:",
@@ -355,6 +360,16 @@ function App() {
     };
 
     initMobileFirebase();
+  }, [loginPageLoaded]); // Só executa quando login page está carregada
+
+  // Detectar quando o login page está carregado
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      console.log("✅ Login page considerada carregada");
+      setLoginPageLoaded(true);
+    }, 500); // Dar tempo para o componente de login renderizar
+
+    return () => clearTimeout(timer);
   }, []);
 
   // SECURITY: Always start as not authenticated - NUNCA mudar para true
@@ -487,7 +502,7 @@ function App() {
   useEffect(() => {
     console.log("🔍 Verificando e recuperando quota Firebase...");
 
-    // Tentar recuperação automática
+    // Tentar recuperaç��o automática
     autoRecoverOnInit();
   }, []);
 
