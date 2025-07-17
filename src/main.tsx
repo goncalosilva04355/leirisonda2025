@@ -294,9 +294,18 @@ try {
             "❌ Erro ao carregar AppProduction, usando fallback:",
             error,
           );
+          console.error("❌ Stack trace:", error.stack);
+          console.error("❌ Detalhes do erro:", {
+            message: error.message,
+            name: error.name,
+            cause: error.cause,
+          });
+
+          console.log("🛡️ Renderizando SafeModeApp como fallback...");
           ReactDOM.createRoot(rootElement).render(
             React.createElement(SafeModeApp),
           );
+          console.log("✅ SafeModeApp renderizada após erro!");
         });
     } else {
       console.log("🛡️ Modo seguro ativo - usando app simplificada");
