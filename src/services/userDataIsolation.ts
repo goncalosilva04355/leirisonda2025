@@ -15,7 +15,7 @@ import {
   onSnapshot,
   Unsubscribe,
 } from "firebase/firestore";
-import { db, getAuthService } from "../firebase/config";
+import { getFirestoreInstance, getAuthService } from "../firebase/config";
 
 export interface UserDataAccess {
   canRead: boolean;
@@ -103,7 +103,7 @@ export class UserDataIsolationService {
         canRead: true,
         canWrite: true,
         canDelete: true,
-        reason: "Utilizador é o proprietário dos dados",
+        reason: "Utilizador �� o proprietário dos dados",
       };
     } else {
       // Para dados novos com dono, aplicar isolamento
