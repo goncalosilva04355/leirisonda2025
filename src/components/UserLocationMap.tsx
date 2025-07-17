@@ -530,7 +530,7 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
                 Nenhuma localização disponível
               </h3>
               <p className="text-gray-600 mb-4">
-                Partilhe a sua localiza��ão ou aguarde que outros utilizadores
+                Partilhe a sua localização ou aguarde que outros utilizadores
                 partilhem as suas.
               </p>
               <button

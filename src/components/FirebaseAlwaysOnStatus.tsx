@@ -22,17 +22,20 @@ export const FirebaseAlwaysOnStatus: React.FC<FirebaseStatusProps> = ({
   const [lastTest, setLastTest] = useState<Date | null>(null);
 
   useEffect(() => {
-    const runTest = async () => {
+    const runQuickTest = async () => {
       try {
-        const result = await testFirebaseConnection();
+        // Teste rápido e simples
+        const { getFirebaseApp } = await import("../firebase/basicConfig");
+        const app = getFirebaseApp();
+
         setLastTest(new Date());
 
-        if (result.success) {
+        if (app && app.options.projectId) {
           setStatus("connected");
-          setDetails("Firebase totalmente funcional");
+          setDetails(`Conectado: ${app.options.projectId}`);
         } else {
           setStatus("error");
-          setDetails(result.errors[0] || "Erro desconhecido");
+          setDetails("Firebase não inicializado");
         }
       } catch (error: any) {
         setStatus("error");
@@ -41,13 +44,14 @@ export const FirebaseAlwaysOnStatus: React.FC<FirebaseStatusProps> = ({
       }
     };
 
-    // Teste inicial
-    runTest();
+    // Teste inicial rápido
+    runQuickTest();
 
-    // Teste reduzido para evitar refresh constante no Builder.io
-    const interval = setInterval(runTest, 120000); // 2 minutos em vez de 30 segundos
-
-    return () => clearInterval(interval);
+    // Desativar polling durante desenvolvimento para evitar refresh no Builder.io
+    if (!import.meta.env.DEV) {
+      const interval = setInterval(runQuickTest, 30000); // 30 segundos
+      return () => clearInterval(interval);
+    }
   }, []);
 
   const getStatusIcon = () => {

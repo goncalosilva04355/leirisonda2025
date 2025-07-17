@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste de Inserção de Dados - Leirisonda</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #2563eb;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .section {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #1d4ed8;
+      }
+      .result {
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+        background: #f8f9fa;
+        white-space: pre-wrap;
+        font-family: monospace;
+        max-height: 200px;
+        overflow-y: auto;
+      }
+      .success {
+        background: #d4edda;
+        border: 1px solid #c3e6cb;
+      }
+      .error {
+        background: #f8d7da;
+        border: 1px solid #f5c6cb;
+      }
+      .info {
+        background: #d1ecf1;
+        border: 1px solid #bee5eb;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔧 Teste de Inserção de Dados</h1>
+
+      <div class="section">
+        <h3>1. Verificar Firebase/Firestore</h3>
+        <button onclick="testFirebaseConnection()">
+          Testar Conexão Firebase
+        </button>
+        <div id="firebase-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>2. Testar Inserção de Obra</h3>
+        <button onclick="testObraInsertion()">Criar Obra de Teste</button>
+        <div id="obra-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>3. Testar Inserção de Utilizador</h3>
+        <button onclick="testUserInsertion()">Criar Utilizador de Teste</button>
+        <div id="user-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>4. Testar Inserção de Manutenção</h3>
+        <button onclick="testManutencaoInsertion()">
+          Criar Manutenção de Teste
+        </button>
+        <div id="manutencao-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>5. Testar Inserção de Cliente</h3>
+        <button onclick="testClienteInsertion()">Criar Cliente de Teste</button>
+        <div id="cliente-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>6. Testar Inserção de Piscina</h3>
+        <button onclick="testPiscinaInsertion()">Criar Piscina de Teste</button>
+        <div id="piscina-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>7. Testar Notificações Push</h3>
+        <button onclick="testPushNotification()">
+          Simular Notificação de Obra
+        </button>
+        <div id="notification-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>8. Verificar Dados Gravados</h3>
+        <button onclick="checkSavedData()">Verificar LocalStorage</button>
+        <button onclick="checkFirestoreData()">Verificar Firestore</button>
+        <div id="data-result" class="result"></div>
+      </div>
+
+      <div class="section">
+        <h3>9. Limpeza</h3>
+        <button onclick="clearTestData()">Limpar Dados de Teste</button>
+        <div id="cleanup-result" class="result"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      let firestoreService;
+      let testResults = {};
+
+      // Função auxiliar para log
+      function log(elementId, message, type = "info") {
+        const element = document.getElementById(elementId);
+        const timestamp = new Date().toLocaleTimeString();
+        element.textContent += `[${timestamp}] ${message}\n`;
+        element.className = `result ${type}`;
+        console.log(message);
+      }
+
+      // Importar e inicializar serviços
+      async function initializeServices() {
+        try {
+          // Simular importação de serviços (na aplicação real seria diferente)
+          window.firestoreService = {
+            async addDocument(collection, data) {
+              console.log(`Simulando addDocument para ${collection}:`, data);
+              // Simular delay
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+
+              // Gravar no localStorage para teste
+              const key = `firestore_${collection}`;
+              const existing = JSON.parse(localStorage.getItem(key) || "{}");
+              const id = `test_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+              existing[id] = {
+                ...data,
+                id,
+                createdAt: new Date().toISOString(),
+              };
+              localStorage.setItem(key, JSON.stringify(existing));
+
+              return id;
+            },
+            async getCollection(collection) {
+              const key = `firestore_${collection}`;
+              const existing = JSON.parse(localStorage.getItem(key) || "{}");
+              return Object.values(existing);
+            },
+            async createUtilizador(userData) {
+              return await this.addDocument("utilizadores", userData);
+            },
+            async addObra(obraData) {
+              return await this.addDocument("obras", obraData);
+            },
+            async addManutencao(manutencaoData) {
+              return await this.addDocument("manutencoes", manutencaoData);
+            },
+            async addCliente(clienteData) {
+              return await this.addDocument("clientes", clienteData);
+            },
+            async addPiscina(piscinaData) {
+              return await this.addDocument("piscinas", piscinaData);
+            },
+          };
+
+          return true;
+        } catch (error) {
+          console.error("Erro ao inicializar serviços:", error);
+          return false;
+        }
+      }
+
+      // Teste 1: Conexão Firebase
+      window.testFirebaseConnection = async function () {
+        log("firebase-result", "Testando conexão Firebase...", "info");
+
+        try {
+          const initialized = await initializeServices();
+          if (initialized) {
+            log(
+              "firebase-result",
+              "✅ Serviços inicializados com sucesso",
+              "success",
+            );
+            log(
+              "firebase-result",
+              "✅ Firestore disponível (modo teste)",
+              "success",
+            );
+            testResults.firebase = true;
+          } else {
+            log("firebase-result", "❌ Falha ao inicializar serviços", "error");
+            testResults.firebase = false;
+          }
+        } catch (error) {
+          log("firebase-result", `❌ Erro: ${error.message}`, "error");
+          testResults.firebase = false;
+        }
+      };
+
+      // Teste 2: Inserção de Obra
+      window.testObraInsertion = async function () {
+        log("obra-result", "Testando inserção de obra...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const obraData = {
+            workSheetNumber: `LS-TEST-${Date.now()}`,
+            title: "Obra de Teste",
+            type: "furo",
+            client: "Cliente de Teste",
+            contact: "123456789",
+            location: "Local de Teste",
+            startTime: new Date().toISOString(),
+            status: "em_andamento",
+            description: "Descrição da obra de teste",
+            budget: 1000,
+          };
+
+          log(
+            "obra-result",
+            "Dados da obra: " + JSON.stringify(obraData, null, 2),
+            "info",
+          );
+
+          const result = await window.firestoreService.addObra(obraData);
+
+          if (result) {
+            log("obra-result", `✅ Obra criada com ID: ${result}`, "success");
+            testResults.obra = { success: true, id: result };
+          } else {
+            log("obra-result", "❌ Falha ao criar obra", "error");
+            testResults.obra = { success: false };
+          }
+        } catch (error) {
+          log("obra-result", `❌ Erro: ${error.message}`, "error");
+          testResults.obra = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 3: Inserção de Utilizador
+      window.testUserInsertion = async function () {
+        log("user-result", "Testando inserção de utilizador...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const userData = {
+            name: "Utilizador de Teste",
+            email: `teste${Date.now()}@leirisonda.com`,
+            role: "technician",
+            password: "123456",
+            active: true,
+            permissions: {
+              obras: { view: true, create: true, edit: true, delete: false },
+              manutencoes: {
+                view: true,
+                create: true,
+                edit: true,
+                delete: false,
+              },
+              piscinas: { view: true, create: true, edit: true, delete: false },
+              utilizadores: {
+                view: true,
+                create: false,
+                edit: false,
+                delete: false,
+              },
+              relatorios: {
+                view: true,
+                create: false,
+                edit: false,
+                delete: false,
+              },
+              clientes: { view: true, create: true, edit: true, delete: false },
+            },
+          };
+
+          log(
+            "user-result",
+            "Dados do utilizador: " + JSON.stringify(userData, null, 2),
+            "info",
+          );
+
+          const result =
+            await window.firestoreService.createUtilizador(userData);
+
+          if (result) {
+            log(
+              "user-result",
+              `✅ Utilizador criado com ID: ${result}`,
+              "success",
+            );
+            testResults.user = { success: true, id: result };
+          } else {
+            log("user-result", "❌ Falha ao criar utilizador", "error");
+            testResults.user = { success: false };
+          }
+        } catch (error) {
+          log("user-result", `❌ Erro: ${error.message}`, "error");
+          testResults.user = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 4: Verificar dados
+      window.checkSavedData = function () {
+        log("data-result", "Verificando dados no localStorage...", "info");
+
+        try {
+          const obras = JSON.parse(
+            localStorage.getItem("firestore_obras") || "{}",
+          );
+          const users = JSON.parse(
+            localStorage.getItem("firestore_utilizadores") || "{}",
+          );
+
+          log(
+            "data-result",
+            `Obras encontradas: ${Object.keys(obras).length}`,
+            "info",
+          );
+          log(
+            "data-result",
+            `Utilizadores encontrados: ${Object.keys(users).length}`,
+            "info",
+          );
+
+          if (Object.keys(obras).length > 0) {
+            log(
+              "data-result",
+              "Últimas obras: " +
+                JSON.stringify(Object.values(obras).slice(-2), null, 2),
+              "success",
+            );
+          }
+
+          if (Object.keys(users).length > 0) {
+            log(
+              "data-result",
+              "Últimos utilizadores: " +
+                JSON.stringify(Object.values(users).slice(-2), null, 2),
+              "success",
+            );
+          }
+
+          if (
+            Object.keys(obras).length === 0 &&
+            Object.keys(users).length === 0
+          ) {
+            log("data-result", "⚠️ Nenhum dado encontrado", "error");
+          }
+        } catch (error) {
+          log("data-result", `❌ Erro: ${error.message}`, "error");
+        }
+      };
+
+      window.checkFirestoreData = async function () {
+        log("data-result", "Verificando dados no Firestore...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const obras = await window.firestoreService.getCollection("obras");
+          const users =
+            await window.firestoreService.getCollection("utilizadores");
+
+          log("data-result", `Firestore - Obras: ${obras.length}`, "info");
+          log(
+            "data-result",
+            `Firestore - Utilizadores: ${users.length}`,
+            "info",
+          );
+
+          if (obras.length > 0) {
+            log(
+              "data-result",
+              "Últimas obras: " + JSON.stringify(obras.slice(-2), null, 2),
+              "success",
+            );
+          }
+
+          if (users.length > 0) {
+            log(
+              "data-result",
+              "Últimos utilizadores: " +
+                JSON.stringify(users.slice(-2), null, 2),
+              "success",
+            );
+          }
+        } catch (error) {
+          log("data-result", `❌ Erro Firestore: ${error.message}`, "error");
+        }
+      };
+
+      // Teste 4: Inserção de Manutenção
+      window.testManutencaoInsertion = async function () {
+        log("manutencao-result", "Testando inserção de manutenção...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const manutencaoData = {
+            title: "Manutenção de Teste",
+            type: "preventiva",
+            client: "Cliente de Teste",
+            location: "Local de Teste",
+            scheduledDate: new Date().toISOString(),
+            status: "agendada",
+            description: "Descrição da manutenção de teste",
+            equipments: ["Bomba", "Filtro"],
+            assignedTechnician: "Técnico de Teste",
+          };
+
+          log(
+            "manutencao-result",
+            "Dados da manutenção: " + JSON.stringify(manutencaoData, null, 2),
+            "info",
+          );
+
+          const result =
+            await window.firestoreService.addManutencao(manutencaoData);
+
+          if (result) {
+            log(
+              "manutencao-result",
+              `✅ Manutenção criada com ID: ${result}`,
+              "success",
+            );
+            testResults.manutencao = { success: true, id: result };
+          } else {
+            log("manutencao-result", "❌ Falha ao criar manutenção", "error");
+            testResults.manutencao = { success: false };
+          }
+        } catch (error) {
+          log("manutencao-result", `❌ Erro: ${error.message}`, "error");
+          testResults.manutencao = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 5: Inserção de Cliente
+      window.testClienteInsertion = async function () {
+        log("cliente-result", "Testando inserção de cliente...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const clienteData = {
+            name: "Cliente de Teste Lda",
+            contact: "João Silva",
+            email: `cliente${Date.now()}@teste.com`,
+            phone: "912345678",
+            address: "Rua de Teste, 123",
+            city: "Leiria",
+            postalCode: "2400-123",
+            nif: "123456789",
+            clientType: "empresa",
+            active: true,
+          };
+
+          log(
+            "cliente-result",
+            "Dados do cliente: " + JSON.stringify(clienteData, null, 2),
+            "info",
+          );
+
+          const result = await window.firestoreService.addCliente(clienteData);
+
+          if (result) {
+            log(
+              "cliente-result",
+              `✅ Cliente criado com ID: ${result}`,
+              "success",
+            );
+            testResults.cliente = { success: true, id: result };
+          } else {
+            log("cliente-result", "❌ Falha ao criar cliente", "error");
+            testResults.cliente = { success: false };
+          }
+        } catch (error) {
+          log("cliente-result", `❌ Erro: ${error.message}`, "error");
+          testResults.cliente = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 6: Inserção de Piscina
+      window.testPiscinaInsertion = async function () {
+        log("piscina-result", "Testando inserção de piscina...", "info");
+
+        try {
+          if (!window.firestoreService) {
+            throw new Error("Firestore não inicializado");
+          }
+
+          const piscinaData = {
+            name: "Piscina de Teste",
+            client: "Cliente de Teste",
+            location: "Quinta do Teste, Leiria",
+            type: "exterior",
+            dimensions: {
+              length: 10,
+              width: 5,
+              depth: 1.8,
+            },
+            volume: 90,
+            equipment: {
+              pump: "Bomba 1.5CV",
+              filter: "Filtro Areia",
+              heating: "Bomba de Calor",
+            },
+            installationDate: new Date().toISOString(),
+            status: "ativa",
+            lastMaintenance: new Date().toISOString(),
+          };
+
+          log(
+            "piscina-result",
+            "Dados da piscina: " + JSON.stringify(piscinaData, null, 2),
+            "info",
+          );
+
+          const result = await window.firestoreService.addPiscina(piscinaData);
+
+          if (result) {
+            log(
+              "piscina-result",
+              `✅ Piscina criada com ID: ${result}`,
+              "success",
+            );
+            testResults.piscina = { success: true, id: result };
+          } else {
+            log("piscina-result", "❌ Falha ao criar piscina", "error");
+            testResults.piscina = { success: false };
+          }
+        } catch (error) {
+          log("piscina-result", `❌ Erro: ${error.message}`, "error");
+          testResults.piscina = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 7: Notificações Push
+      window.testPushNotification = async function () {
+        log("notification-result", "Testando notificações push...", "info");
+
+        try {
+          // Simular criação de uma obra com atribuição
+          const obraData = {
+            id: `obra_test_${Date.now()}`,
+            workSheetNumber: `LS-NOTIF-${Date.now()}`,
+            title: "Obra para Teste de Notificação",
+            client: "Cliente Notificação",
+            assignedUsers: ["test-user-123"],
+          };
+
+          // Simular notificação
+          const notification = {
+            id: `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            title: "🏗️ Nova Obra Atribuída",
+            body: `Obra "${obraData.workSheetNumber}" foi atribuída a você`,
+            timestamp: new Date().toISOString(),
+            userId: "test-user-123",
+            data: {
+              type: "obra_assignment",
+              obraId: obraData.id,
+              workSheetNumber: obraData.workSheetNumber,
+            },
+          };
+
+          // Guardar notificação no localStorage
+          const notifications = JSON.parse(
+            localStorage.getItem("pending-notifications") || "[]",
+          );
+          notifications.push(notification);
+          localStorage.setItem(
+            "pending-notifications",
+            JSON.stringify(notifications),
+          );
+
+          log(
+            "notification-result",
+            "Notificação criada: " + JSON.stringify(notification, null, 2),
+            "info",
+          );
+
+          // Simular exibição da notificação
+          if (
+            "Notification" in window &&
+            Notification.permission === "granted"
+          ) {
+            new Notification(notification.title, {
+              body: notification.body,
+              icon: "/icon.svg",
+            });
+            log(
+              "notification-result",
+              "✅ Notificação exibida com sucesso",
+              "success",
+            );
+          } else {
+            log(
+              "notification-result",
+              "⚠️ Permissão de notificação necessária",
+              "info",
+            );
+            // Tentar solicitar permissão
+            if ("Notification" in window) {
+              const permission = await Notification.requestPermission();
+              if (permission === "granted") {
+                new Notification(notification.title, {
+                  body: notification.body,
+                  icon: "/icon.svg",
+                });
+                log(
+                  "notification-result",
+                  "✅ Permissão concedida e notificação exibida",
+                  "success",
+                );
+              } else {
+                log(
+                  "notification-result",
+                  "❌ Permissão de notificação negada",
+                  "error",
+                );
+              }
+            }
+          }
+
+          testResults.notification = { success: true, id: notification.id };
+        } catch (error) {
+          log("notification-result", `❌ Erro: ${error.message}`, "error");
+          testResults.notification = { success: false, error: error.message };
+        }
+      };
+
+      // Teste 9: Limpeza
+      window.clearTestData = function () {
+        log("cleanup-result", "Limpando dados de teste...", "info");
+
+        try {
+          // Limpar localStorage
+          localStorage.removeItem("firestore_obras");
+          localStorage.removeItem("firestore_utilizadores");
+          localStorage.removeItem("firestore_manutencoes");
+          localStorage.removeItem("firestore_clientes");
+          localStorage.removeItem("firestore_piscinas");
+          localStorage.removeItem("pending-notifications");
+
+          // Limpar resultados dos testes
+          testResults = {};
+
+          log("cleanup-result", "✅ Dados de teste removidos", "success");
+        } catch (error) {
+          log("cleanup-result", `❌ Erro: ${error.message}`, "error");
+        }
+      };
+
+      // Inicialização automática
+      document.addEventListener("DOMContentLoaded", function () {
+        log(
+          "firebase-result",
+          'Página carregada. Clique em "Testar Conexão Firebase" para começar.',
+          "info",
+        );
+      });
+    </script>
+  </body>
+</html>

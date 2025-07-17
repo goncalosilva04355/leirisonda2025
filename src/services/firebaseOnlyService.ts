@@ -223,7 +223,7 @@ export class FirebaseOnlyService {
       );
       return maintenance;
     } catch (error) {
-      console.error("❌ Erro ao carregar manutenç��es:", error);
+      console.error("❌ Erro ao carregar manutenções:", error);
       return [];
     }
   }

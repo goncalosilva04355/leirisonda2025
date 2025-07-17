@@ -1,26 +1,45 @@
-import React from "react";
+import React, { Component, ErrorInfo, ReactNode } from "react";
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+interface Props {
+  children: ReactNode;
 }
 
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  ErrorBoundaryState
-> {
-  constructor(props: { children: React.ReactNode }) {
+interface State {
+  hasError: boolean;
+  error?: Error;
+  errorInfo?: ErrorInfo;
+}
+
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(error: Error): State {
+    console.error("🚨 Error Boundary caught error:", error);
+
+    // Log adicional para produção
+    if (import.meta?.env?.PROD) {
+      console.error("📱 PRODUÇÃO - Erro capturado:", {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      });
+    }
+
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error("🚨 Error Boundary details:", {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString(),
+    });
+
     this.setState({
       error,
       errorInfo,
@@ -29,47 +48,129 @@ class ErrorBoundary extends React.Component<
 
   render() {
     if (this.state.hasError) {
+      console.error("🚨 ErrorBoundary activated:", this.state.error);
+
       return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full">
-            <h1 className="text-2xl font-bold text-red-600 mb-4">
-              Erro da Aplicação
+        <div
+          style={{
+            minHeight: "100vh",
+            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1rem",
+            fontFamily: "system-ui",
+          }}
+        >
+          <div
+            style={{
+              background: "white",
+              padding: "2rem",
+              borderRadius: "0.5rem",
+              boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+              maxWidth: "600px",
+              width: "100%",
+            }}
+          >
+            <h1
+              style={{
+                color: "#dc2626",
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                marginBottom: "1rem",
+              }}
+            >
+              Leirisonda - Erro da Aplicação
             </h1>
-            <p className="text-gray-600 mb-4">
-              Ocorreu um erro que impediu a aplicação de carregar corretamente.
+
+            <p
+              style={{
+                marginBottom: "1rem",
+                color: "#6b7280",
+              }}
+            >
+              A aplicação encontrou um erro e precisa ser recarregada:
             </p>
 
-            <details className="mb-4">
-              <summary className="cursor-pointer text-sm font-medium text-gray-700 hover:text-gray-900">
-                Detalhes técnicos
-              </summary>
-              <div className="mt-2 p-3 bg-gray-100 rounded text-xs font-mono">
-                <div className="mb-2">
-                  <strong>Erro:</strong> {this.state.error?.message}
-                </div>
-                <div className="mb-2">
-                  <strong>Stack:</strong>
-                  <pre className="whitespace-pre-wrap">
-                    {this.state.error?.stack}
-                  </pre>
-                </div>
-                {this.state.errorInfo && (
-                  <div>
-                    <strong>Component Stack:</strong>
-                    <pre className="whitespace-pre-wrap">
-                      {this.state.errorInfo.componentStack}
-                    </pre>
-                  </div>
-                )}
+            {this.state.error && (
+              <div
+                style={{
+                  background: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  borderRadius: "0.375rem",
+                  padding: "1rem",
+                  marginBottom: "1rem",
+                }}
+              >
+                <h3
+                  style={{
+                    color: "#dc2626",
+                    fontWeight: "bold",
+                    marginBottom: "0.5rem",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Detalhes do Erro:
+                </h3>
+                <pre
+                  style={{
+                    color: "#dc2626",
+                    fontSize: "0.75rem",
+                    whiteSpace: "pre-wrap",
+                    margin: 0,
+                    fontFamily: "monospace",
+                  }}
+                >
+                  {this.state.error.message}
+                </pre>
               </div>
-            </details>
+            )}
 
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <button
+                onClick={() => window.location.reload()}
+                style={{
+                  background: "#3b82f6",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  border: "none",
+                  borderRadius: "0.375rem",
+                  cursor: "pointer",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Recarregar
+              </button>
+
+              <button
+                onClick={() => {
+                  localStorage.clear();
+                  sessionStorage.clear();
+                  window.location.reload();
+                }}
+                style={{
+                  background: "#dc2626",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  border: "none",
+                  borderRadius: "0.375rem",
+                  cursor: "pointer",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Limpar Dados e Recarregar
+              </button>
+            </div>
+
+            <p
+              style={{
+                color: "#9ca3af",
+                fontSize: "0.75rem",
+                marginTop: "1rem",
+              }}
             >
-              Recarregar Página
-            </button>
+              Timestamp: {new Date().toLocaleString("pt-PT")}
+            </p>
           </div>
         </div>
       );

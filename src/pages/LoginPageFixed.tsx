@@ -3,9 +3,10 @@ import { Database } from "lucide-react";
 import {
   saveLoginAttempt,
   testFirestoreConnection,
-} from "../services/firestoreDataService";
+} from "../services/firestoreDataServiceRest";
 import { FirebaseAlwaysOnStatus } from "../components/FirebaseAlwaysOnStatus";
 import { LoginHints } from "../components/LoginHints";
+import NetlifyEnvChecker from "../components/NetlifyEnvChecker";
 
 interface LoginPageProps {
   onLogin: (
@@ -73,32 +74,14 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("�� Error in LoginPage useEffect:", error);
+      console.error("❌ Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
-  // Check Firestore connection status
+  // Firestore só ativa após login - não verificar na página de login
   useEffect(() => {
-    const checkFirestore = async () => {
-      console.log("🔄 Verificando conexão com Firestore...");
-      try {
-        const isConnected = await testFirestoreConnection();
-        if (isConnected) {
-          setFirestoreStatus("ready");
-          console.log("✅ Firestore pronto para gravação de dados");
-        } else {
-          setFirestoreStatus("error");
-          console.warn(
-            "⚠️ Firestore não disponível - dados serão salvos localmente",
-          );
-        }
-      } catch (error) {
-        console.error("❌ Erro ao verificar Firestore:", error);
-        setFirestoreStatus("error");
-      }
-    };
-
-    checkFirestore();
+    console.log("📱 LoginPage: Firestore desativado - só ativa após login");
+    setFirestoreStatus("error"); // Assumir que não está disponível inicialmente
   }, []);
 
   const handleLogin = useCallback(
@@ -153,7 +136,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
           sessionStorage.removeItem("savedLoginCredentials");
         }
 
-        console.log("📤 LoginPage: Calling onLogin function...");
+        console.log("���� LoginPage: Calling onLogin function...");
         await onLogin(loginForm.email.trim(), loginForm.password, rememberMe);
         console.log("✅ LoginPage: onLogin completed");
       } catch (error) {
@@ -247,33 +230,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               htmlFor="remember-me"
               className="ml-2 block text-sm text-gray-700"
             >
-              Lembrar-me (auto-login)
+              Lembrar-me
             </label>
-          </div>
-
-          {/* Firestore Status Indicator */}
-          <div className="text-xs text-center">
-            {firestoreStatus === "checking" && (
-              <div className="text-blue-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3 animate-pulse" />
-                <span>Verificando Firestore...</span>
-              </div>
-            )}
-            {firestoreStatus === "ready" && (
-              <div className="text-green-600 flex items-center justify-center space-x-2">
-                <Database className="h-3 w-3" />
-                <span>✅ Firestore conectado</span>
-                {lastSaveId && (
-                  <span className="text-gray-500">
-                    | ID: {lastSaveId.slice(-6)}
-                  </span>
-                )}
-              </div>
-            )}
-            {/* Status Firebase sempre conectado */}
-            <div className="flex items-center justify-center">
-              <FirebaseAlwaysOnStatus />
-            </div>
           </div>
 
           {/* Error Message */}
@@ -282,21 +240,8 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
               <strong>Erro de Login:</strong>
               <br />
               {loginError}
-
-              {/* Mobile quick fix hint */}
-              {/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) && (
-                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-yellow-700">
-                  <strong>💡 Solução Rápida (Mobile):</strong>
-                  <br />
-                  Tente usar password:{" "}
-                  <code className="bg-yellow-100 px-1 rounded">123</code>
-                </div>
-              )}
             </div>
           )}
-
-          {/* Login Hints */}
-          <LoginHints />
 
           {/* Login Button */}
           <div className="space-y-2 pt-2">

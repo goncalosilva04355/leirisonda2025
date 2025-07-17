@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { getFirebaseFirestore } from "../firebase/firestoreConfig";
 import { firestoreService } from "./firestoreService";
+import { SystemConfig, isSystemDisabled } from "../config/systemConfig";
 
 export interface SyncObserver {
   collection: string;
@@ -22,12 +23,55 @@ export class AutoSyncService {
   private observers: Map<string, SyncObserver> = new Map();
   private db = getFirebaseFirestore();
   private isActive = false;
+  private firestoreAvailable = false;
+
+  // Check if Firestore is available
+  private async checkFirestoreAvailability(): Promise<boolean> {
+    try {
+      this.db = getFirebaseFirestore();
+      if (this.db) {
+        this.firestoreAvailable = true;
+        console.log("✅ Firestore disponível para sincronização");
+        return true;
+      } else {
+        this.firestoreAvailable = false;
+        console.warn(
+          "⚠️ Firestore não disponível - usando apenas localStorage",
+        );
+        return false;
+      }
+    } catch (error: any) {
+      this.firestoreAvailable = false;
+      if (
+        error.message?.includes("getImmediate") ||
+        error.code === "firestore/unavailable" ||
+        error.message?.includes("Service firestore is not available")
+      ) {
+        console.warn("⚠️ Firestore não está habilitado no projeto Firebase");
+        console.info("💡 Aplicação funcionará com localStorage apenas");
+      } else {
+        console.error("❌ Erro ao verificar Firestore:", error.message);
+      }
+      return false;
+    }
+  }
 
   // Inicializar sincronização automática
   async startAutoSync(): Promise<void> {
-    if (!this.db || this.isActive) return;
+    console.log("🔄 Iniciando sincronização automática...");
 
-    console.log("🔄 Iniciando sincronização automática em tempo real...");
+    // Check Firestore availability first
+    const firestoreAvailable = await this.checkFirestoreAvailability();
+
+    if (!firestoreAvailable) {
+      console.log("📱 Modo localStorage ativo - sincronização limitada");
+      this.isActive = true; // Still mark as active for localStorage operations
+      return;
+    }
+
+    if (this.isActive) return;
+
+    console.log("🔄 Iniciando sincronização em tempo real...");
     this.isActive = true;
 
     // Configurar observadores para todas as coleções
@@ -36,7 +80,7 @@ export class AutoSyncService {
     console.log("✅ Sincronização automática ativa!");
   }
 
-  // Parar sincronização automática
+  // Parar sincronizaç��o automática
   stopAutoSync(): void {
     console.log("⏹️ Parando sincronização automática...");
 
@@ -153,30 +197,85 @@ export class AutoSyncService {
     try {
       console.log(`🔄 Sincronizando ${collectionName} manualmente...`);
 
-      const data = await firestoreService.read(collectionName);
+      if (!this.firestoreAvailable) {
+        console.log(
+          `📱 Firestore indisponível - usando dados locais para ${collectionName}`,
+        );
+
+        // Use local data if Firestore is not available
+        const localData = this.getLocalStorageData(localStorageKey);
+
+        // Dispatch event with local data
+        window.dispatchEvent(
+          new CustomEvent(`${collectionName}Updated`, {
+            detail: {
+              data: localData,
+              collection: collectionName,
+              source: "localStorage",
+            },
+          }),
+        );
+
+        console.log(
+          `📱 ${collectionName} carregado do localStorage: ${localData.length} itens`,
+        );
+        return;
+      }
+
+      const data = await firestoreService.getCollection(collectionName);
       localStorage.setItem(localStorageKey, JSON.stringify(data));
 
       // Disparar evento de atualização
       window.dispatchEvent(
         new CustomEvent(`${collectionName}Updated`, {
-          detail: { data, collection: collectionName },
+          detail: { data, collection: collectionName, source: "firestore" },
         }),
       );
 
       console.log(
         `✅ ${collectionName} sincronizado manualmente: ${data.length} itens`,
       );
-    } catch (error) {
-      console.error(
-        `❌ Erro na sincronização manual de ${collectionName}:`,
-        error,
-      );
+    } catch (error: any) {
+      // Check if it's a Firestore unavailability error
+      if (
+        error.message?.includes("getImmediate") ||
+        error.code === "firestore/unavailable" ||
+        error.message?.includes("Service firestore is not available")
+      ) {
+        console.warn(
+          `⚠️ Firestore não disponível para ${collectionName} - usando dados locais`,
+        );
+
+        // Try to get data from localStorage as fallback
+        const localData = this.getLocalStorageData(localStorageKey);
+        if (localData.length > 0) {
+          console.log(
+            `📱 ${collectionName} carregado do localStorage: ${localData.length} itens`,
+          );
+
+          // Dispatch event with local data
+          window.dispatchEvent(
+            new CustomEvent(`${collectionName}Updated`, {
+              detail: {
+                data: localData,
+                collection: collectionName,
+                source: "localStorage",
+              },
+            }),
+          );
+        }
+      } else {
+        console.error(
+          `❌ Erro na sincronização manual de ${collectionName}:`,
+          error.message || error,
+        );
+      }
     }
   }
 
   // Sincronizar todas as coleções manualmente
   async syncAllCollections(): Promise<void> {
-    console.log("🔄 Sincronização manual completa iniciada...");
+    console.log("��� Sincronização manual completa iniciada...");
 
     const collections = [
       { name: "obras", localKey: "works" },
@@ -198,6 +297,42 @@ export class AutoSyncService {
   // Verificar se a sincronização está ativa
   isAutoSyncActive(): boolean {
     return this.isActive;
+  }
+
+  // Verificar e iniciar auto sync após login (método específico)
+  async ensureAutoSyncAfterLogin(): Promise<boolean> {
+    try {
+      console.log("🔑 Verificando auto sync após login...");
+
+      if (!this.db) {
+        console.warn("⚠️ Firebase não disponível para auto sync");
+        return false;
+      }
+
+      if (this.isActive) {
+        console.log("✅ Auto sync já está ativo após login");
+        return true;
+      }
+
+      console.log("🚀 Iniciando auto sync após login...");
+      await this.startAutoSync();
+
+      if (this.isActive) {
+        console.log("✅ Auto sync iniciado com sucesso após login!");
+
+        // Forçar uma sincronização completa imediata
+        await this.syncAllCollections();
+        console.log("🔄 Sincronização completa executada após login");
+
+        return true;
+      } else {
+        console.warn("⚠️ Falha ao iniciar auto sync após login");
+        return false;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao garantir auto sync após login:", error);
+      return false;
+    }
   }
 
   // Obter status dos observadores
@@ -249,6 +384,17 @@ export class AutoSyncService {
     };
 
     return mapping[collectionName] || null;
+  }
+
+  // Helper method to get data from localStorage
+  private getLocalStorageData(localStorageKey: string): any[] {
+    try {
+      const data = localStorage.getItem(localStorageKey);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.warn(`⚠️ Erro ao ler ${localStorageKey} do localStorage:`, error);
+      return [];
+    }
   }
 }
 

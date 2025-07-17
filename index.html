@@ -43,42 +43,111 @@
 
     <!-- Security Headers -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
     <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
 
-    <!-- Debug Chrome -->
-    <script src="/debug-chrome.js"></script>
+    <!-- Production optimizations -->
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 
-    <!-- Service Worker Registration -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          // Registar Firebase SW primeiro
-          navigator.serviceWorker
-            .register("/firebase-messaging-sw.js")
-            .then((registration) => {
-              console.log("Firebase SW registered: ", registration);
-            })
-            .catch((error) => {
-              console.warn("Firebase SW registration failed: ", error);
-
-              // Fallback para SW básico
-              return navigator.serviceWorker.register("/sw.js");
-            })
-            .then((registration) => {
-              if (registration) {
-                console.log("SW registered: ", registration);
-              }
-            })
-            .catch((registrationError) => {
-              console.log("SW registration failed: ", registrationError);
-            });
-        });
+    <!-- Emergency Fallback CSS -->
+    <style>
+      #root {
+        min-height: 100vh;
       }
-    </script>
+
+      .emergency-fallback {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: system-ui, sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .emergency-content {
+        max-width: 400px;
+      }
+
+      .emergency-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: bold;
+      }
+
+      .emergency-subtitle {
+        font-size: 1.125rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+      }
+
+      .emergency-btn {
+        background: white;
+        color: #0891b2;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 0.5rem;
+      }
+
+      .emergency-btn:hover {
+        opacity: 0.9;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Emergency fallback -->
+    <script>
+      console.log("🚀 HTML carregado - aplicação Leirisonda");
+
+      // Show emergency fallback after 2 seconds if root is still empty
+      setTimeout(() => {
+        const root = document.getElementById("root");
+        if (!root || root.children.length === 0) {
+          console.warn("🚨 EMERGENCY: Showing fallback UI");
+
+          // Create emergency fallback
+          const fallback = document.createElement("div");
+          fallback.className = "emergency-fallback";
+          fallback.innerHTML = `
+            <div class="emergency-content">
+              <h1 class="emergency-title">🔧 Leirisonda</h1>
+              <p class="emergency-subtitle">Sistema de Gestão de Piscinas</p>
+              <p style="margin-bottom: 2rem; opacity: 0.8;">A aplicação está a carregar... Se persistir, recarregue a página.</p>
+              <button class="emergency-btn" onclick="window.location.reload()">
+                Recarregar Aplicação
+              </button>
+              <br>
+              <button class="emergency-btn" onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload()">
+                Limpar Cache e Recarregar
+              </button>
+            </div>
+          `;
+
+          // Replace root content or add to body
+          if (root) {
+            root.appendChild(fallback);
+          } else {
+            document.body.appendChild(fallback);
+          }
+        } else {
+          console.log("✅ App carregada corretamente");
+        }
+      }, 2000);
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -16,6 +16,14 @@ export async function testFirebaseConnection(): Promise<{
   results: string[];
   errors: string[];
 }> {
+  // Firebase desativado em desenvolvimento
+  if (import.meta.env.DEV) {
+    return {
+      success: false,
+      results: ["Firebase desativado em desenvolvimento"],
+      errors: [],
+    };
+  }
   const results: string[] = [];
   const errors: string[] = [];
 

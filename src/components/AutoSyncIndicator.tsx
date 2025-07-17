@@ -5,25 +5,28 @@ import { Zap, ZapOff, RotateCcw, CheckCircle } from "lucide-react";
 let autoSyncService: any = null;
 let isFirestoreReady: any = null;
 
-try {
-  const autoSyncModule = require("../services/autoSyncService");
-  autoSyncService = autoSyncModule.autoSyncService;
-} catch (error) {
-  console.warn(
-    "⚠️ AutoSyncIndicator: Could not import autoSyncService:",
-    error,
-  );
-}
+// Initialize services dynamically
+const initializeServices = async () => {
+  try {
+    const autoSyncModule = await import("../services/autoSyncService");
+    autoSyncService = autoSyncModule.autoSyncService;
+  } catch (error) {
+    console.warn(
+      "⚠️ AutoSyncIndicator: Could not import autoSyncService:",
+      error,
+    );
+  }
 
-try {
-  const firestoreModule = require("../firebase/firestoreConfig");
-  isFirestoreReady = firestoreModule.isFirestoreReady;
-} catch (error) {
-  console.warn(
-    "⚠️ AutoSyncIndicator: Could not import isFirestoreReady:",
-    error,
-  );
-}
+  try {
+    const firestoreModule = await import("../firebase/firestoreConfig");
+    isFirestoreReady = firestoreModule.isFirestoreReady;
+  } catch (error) {
+    console.warn(
+      "⚠️ AutoSyncIndicator: Could not import isFirestoreReady:",
+      error,
+    );
+  }
+};
 
 interface AutoSyncIndicatorProps {
   className?: string;
@@ -52,6 +55,9 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
   }
 
   useEffect(() => {
+    // Inicializar serviços primeiro
+    initializeServices();
+
     const checkStatus = () => {
       try {
         // Verificar se os serviços estão disponíveis antes de usar
@@ -115,14 +121,22 @@ export const AutoSyncIndicator: React.FC<AutoSyncIndicatorProps> = ({
       );
     }
 
-    // Atualizar a cada 5 segundos com proteção
-    const interval = setInterval(() => {
-      try {
-        checkStatus();
-      } catch (error) {
-        console.error("❌ AutoSyncIndicator: Erro no interval:", error);
-      }
-    }, 5000);
+    // Desativar polling durante desenvolvimento para evitar refresh no Builder.io
+    let interval: NodeJS.Timeout | null = null;
+    if (
+      typeof import.meta === "undefined" ||
+      !import.meta.env ||
+      !import.meta.env.DEV
+    ) {
+      // Atualizar a cada 5 segundos com proteção
+      interval = setInterval(() => {
+        try {
+          checkStatus();
+        } catch (error) {
+          console.error("❌ AutoSyncIndicator: Erro no interval:", error);
+        }
+      }, 5000);
+    }
 
     // Escutar eventos de sync com proteção
     const handleAutoSyncStarted = () => {

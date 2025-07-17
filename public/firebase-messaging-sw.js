@@ -1,14 +1,25 @@
-// Firebase Cloud Messaging Service Worker - versão compatível Chrome
-// Versão simplificada que não falha se Firebase não estiver disponível
+// Firebase Cloud Messaging Service Worker - CONFIGURAÇÃO CORRETA
+console.log(
+  "[SW] Firebase Messaging Service Worker iniciado com configuração correta",
+);
 
-console.log("[SW] Service Worker iniciado");
+// Configuração EXATA do projeto leiria-1cfc9
+const firebaseConfig = {
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
+  databaseURL:
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
+};
 
-// Tentar carregar Firebase apenas se disponível
-let firebaseLoaded = false;
 let messaging = null;
 
 try {
-  // Carregar scripts Firebase
+  // Carregar Firebase scripts
   importScripts(
     "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
   );
@@ -16,65 +27,34 @@ try {
     "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
   );
 
-  // Configuração Firebase Leiria
-  const firebaseConfig = {
-    apiKey: "AIzaSyBdV_hGP4_xzY5kqJLm9NzF3rQ8wXeUvAw",
-    authDomain: "leiria-1cfc9.firebaseapp.com",
-    databaseURL:
-      "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "leiria-1cfc9",
-    storageBucket: "leiria-1cfc9.firebasestorage.app",
-    messagingSenderId: "947851234567",
-    appId: "1:947851234567:web:abcd1234567890abcd1234",
-  };
+  if (typeof firebase !== "undefined") {
+    firebase.initializeApp(firebaseConfig);
+    messaging = firebase.messaging();
+    console.log(
+      "[SW] Firebase inicializado com configuração correta - projeto:",
+      firebaseConfig.projectId,
+    );
 
-  // Inicializar Firebase
-  firebase.initializeApp(firebaseConfig);
-  messaging = firebase.messaging();
-  firebaseLoaded = true;
+    // Handle background messages
+    messaging.onBackgroundMessage((payload) => {
+      console.log("[SW] Background message:", payload);
 
-  console.log("[SW] Firebase inicializado com sucesso");
+      const title = payload.notification?.title || "Leirisonda";
+      const options = {
+        body: payload.notification?.body || "Nova notificação",
+        icon: "/icon.svg",
+        badge: "/icon.svg",
+        tag: "leirisonda-notification",
+      };
+
+      return self.registration.showNotification(title, options);
+    });
+  }
 } catch (error) {
-  console.warn("[SW] Firebase não disponível:", error);
-  firebaseLoaded = false;
+  console.warn("[SW] Firebase não pôde ser inicializado:", error);
 }
 
-// Handle background messages apenas se Firebase estiver disponível
-if (firebaseLoaded && messaging) {
-  messaging.onBackgroundMessage((payload) => {
-    console.log("[SW] Mensagem em background:", payload);
-
-    const notificationTitle = payload.notification?.title || "Leirisonda";
-    const notificationOptions = {
-      body: payload.notification?.body || "Nova notificação",
-      icon: "/icon.svg",
-      badge: "/icon.svg",
-      tag: "leirisonda-notification",
-      data: payload.data || {},
-      requireInteraction: false,
-    };
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-  });
-}
-
-// Handle notification clicks
-self.addEventListener("notificationclick", (event) => {
-  console.log("[SW] Notificação clicada");
-  event.notification.close();
-
-  // Abrir/focar na aplicação
-  event.waitUntil(
-    clients.matchAll().then((clientList) => {
-      if (clientList.length > 0) {
-        return clientList[0].focus();
-      }
-      return clients.openWindow("/");
-    }),
-  );
-});
-
-// Basic service worker functionality para PWA
+// Service Worker básico
 self.addEventListener("install", (event) => {
   console.log("[SW] Service Worker instalado");
   self.skipWaiting();
@@ -85,10 +65,18 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(clients.claim());
 });
 
-// Handle fetch events (fallback básico)
-self.addEventListener("fetch", (event) => {
-  // Deixar o browser handle requests normalmente
-  // Não interferir com requests para evitar problemas
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    clients.matchAll().then((clientList) => {
+      if (clientList.length > 0) {
+        return clientList[0].focus();
+      }
+      return clients.openWindow("/");
+    }),
+  );
 });
 
-console.log("[SW] Service Worker pronto para Chrome");
+console.log(
+  "[SW] Firebase Messaging Service Worker pronto - projeto leiria-1cfc9",
+);

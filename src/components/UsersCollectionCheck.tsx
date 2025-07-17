@@ -118,7 +118,7 @@ export const UsersCollectionCheck: React.FC = () => {
           usersCount,
           sampleUsers,
           canCreateUser: true,
-          details: `Cole��ão 'users' está funcionando perfeitamente com ${usersCount} utilizadores`,
+          details: `Coleção 'users' está funcionando perfeitamente com ${usersCount} utilizadores`,
           isLoading: false,
         });
       } else if (canAccessUsers && !canCreateUser) {

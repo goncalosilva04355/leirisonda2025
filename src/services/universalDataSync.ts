@@ -551,7 +551,7 @@ class UniversalDataSyncService {
 
       await setDoc(doc(db, "universal_obras", id), obra);
       console.log(
-        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - vis��vel para todos`,
+        `✅ OBRA ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
       );
       return id;
     } catch (error) {
@@ -598,7 +598,7 @@ class UniversalDataSyncService {
    */
   async addManutencao(manutencaoData: any): Promise<string> {
     if (!isFirebaseReady() || !db) {
-      throw new Error("Firebase n��o disponível");
+      throw new Error("Firebase não disponível");
     }
 
     const id = manutencaoData.id || `manutencao-${Date.now()}-${Math.random()}`;
@@ -613,7 +613,7 @@ class UniversalDataSyncService {
 
     await setDoc(doc(db!, "universal_manutencoes", id), manutencao);
     console.log(
-      `��� MANUTENÇÃO ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
+      `✅ MANUTENÇÃO ADICIONADA UNIVERSALMENTE: ${id} - visível para todos`,
     );
     return id;
   }
@@ -968,7 +968,7 @@ class UniversalDataSyncService {
   }
 
   /**
-   * Verificar se o servi��o está pronto
+   * Verificar se o serviço está pronto
    */
   isReady(): boolean {
     return this.isInitialized && isFirebaseReady();

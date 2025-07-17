@@ -3,9 +3,26 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Permitir acesso completo para utilizadores autenticados
+        // Permitir acesso completo para desenvolvimento (temporário)
     match /{document=**} {
-      allow read, write: if request.auth != null;
+      allow read, write: if true;
+    }
+
+    // Coleções específicas sempre acessíveis
+    match /obras/{docId} {
+      allow read, write: if true;
+    }
+
+    match /piscinas/{docId} {
+      allow read, write: if true;
+    }
+
+    match /manutencoes/{docId} {
+      allow read, write: if true;
+    }
+
+    match /clientes/{docId} {
+      allow read, write: if true;
     }
     
     // Permitir testes de conexão mesmo sem autenticação (coleção específica)

@@ -1,6 +1,7 @@
 // Serviço de autenticação direto que sempre aceita os emails do Gonçalo
 import { UserProfile } from "./localAuthService";
 import { safeLocalStorage, safeSessionStorage } from "../utils/storageUtils";
+import { saveToFirestoreRest } from "../utils/firestoreRestApi";
 
 class DirectAuthService {
   // Lista fixa de emails autorizados (hardcoded para garantir que funciona)
@@ -14,7 +15,7 @@ class DirectAuthService {
     password: string,
     rememberMe: boolean = false,
   ): Promise<{ success: boolean; error?: string; user?: UserProfile }> {
-    console.log("🔐 DirectAuth: Attempting login for:", email);
+    console.log("�� DirectAuth: Attempting login for:", email);
 
     try {
       // Validação básica
@@ -28,48 +29,102 @@ class DirectAuthService {
       // Normalizar email
       const normalizedEmail = email.toLowerCase().trim();
 
-      // Verificar se email está na lista autorizada (hardcoded)
-      const isAuthorizedEmail =
-        this.AUTHORIZED_EMAILS.includes(normalizedEmail);
+      // Primeiro verificar emails hardcoded (para compatibilidade)
+      const isHardcodedEmail = this.AUTHORIZED_EMAILS.includes(normalizedEmail);
 
-      if (!isAuthorizedEmail) {
-        console.warn("❌ Email não está na lista autorizada:", email);
-        console.log("📋 Emails autorizados:", this.AUTHORIZED_EMAILS);
+      // Garantir que o utilizador padrão existe no sistema
+      this.ensureDefaultUser();
+
+      // Também verificar utilizadores criados no sistema
+      const savedUsers = safeLocalStorage.getItem("app-users");
+      let authorizedUser = null;
+
+      if (savedUsers) {
+        try {
+          const users = JSON.parse(savedUsers);
+          authorizedUser = users.find(
+            (user: any) =>
+              user.email?.toLowerCase().trim() === normalizedEmail &&
+              user.active,
+          );
+        } catch (error) {
+          console.warn("❌ Erro ao carregar utilizadores:", error);
+        }
+      }
+
+      if (!isHardcodedEmail && !authorizedUser) {
+        console.warn("❌ Email não encontrado no sistema:", email);
         return {
           success: false,
-          error: `Email não autorizado. Use: ${this.AUTHORIZED_EMAILS.join(" ou ")}`,
+          error: "Email não encontrado ou utilizador inativo",
         };
       }
 
-      // Verificar password (muito permissiva)
-      const isPasswordValid =
-        password === "123456" ||
-        password === "123" ||
-        password === "19867gsf" ||
-        password.length >= 3; // Qualquer password com 3+ caracteres
+      // Verificar password
+      let isPasswordValid = false;
+      let userProfile: UserProfile;
+
+      if (isHardcodedEmail) {
+        // Para emails hardcoded, usar password permissiva
+        isPasswordValid =
+          password === "123456" ||
+          password === "123" ||
+          password === "19867gsf" ||
+          password.length >= 3;
+
+        userProfile = {
+          uid: `direct_${Date.now()}`,
+          email: normalizedEmail,
+          name: "Gonçalo Fonseca",
+          role: "super_admin",
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+      } else if (authorizedUser) {
+        // Para utilizadores criados, verificar password exata
+        isPasswordValid = authorizedUser.password === password;
+
+        userProfile = {
+          uid: authorizedUser.id?.toString() || `user_${Date.now()}`,
+          email: normalizedEmail,
+          name: authorizedUser.name,
+          role: authorizedUser.role || "technician",
+          active: authorizedUser.active,
+          permissions: authorizedUser.permissions,
+          createdAt: authorizedUser.createdAt || new Date().toISOString(),
+        };
+      } else {
+        return {
+          success: false,
+          error: "Erro de autenticação",
+        };
+      }
 
       if (!isPasswordValid) {
-        console.warn("❌ Password muito curta para:", email);
+        console.warn("❌ Password incorreta para:", email);
         return {
           success: false,
-          error: `Password deve ter pelo menos 3 caracteres. Tente: 123, 123456 ou 19867gsf`,
+          error: "Password incorreta",
         };
       }
 
-      // Criar perfil do utilizador
-      const userProfile: UserProfile = {
-        uid: `direct_${Date.now()}`,
-        email: normalizedEmail,
-        name: "Gonçalo Fonseca",
-        role: "super_admin",
-        active: true,
-        createdAt: new Date().toISOString(),
-      };
-
-      // Persistir dados
+      // Persistir dados no localStorage E no Firestore
       try {
+        // Guardar localmente para sessão
         safeLocalStorage.setItem("currentUser", JSON.stringify(userProfile));
         safeLocalStorage.setItem("isAuthenticated", "true");
+
+        // SEMPRE guardar no Firestore
+        try {
+          await saveToFirestoreRest(
+            "users",
+            userProfile.id?.toString() || email,
+            userProfile,
+          );
+          console.log("✅ DirectAuth: Utilizador guardado no Firestore");
+        } catch (firestoreError) {
+          console.warn("⚠️ DirectAuth: Erro Firestore, mas login continua");
+        }
 
         if (rememberMe) {
           safeLocalStorage.setItem("rememberMe", "true");
@@ -85,6 +140,17 @@ class DirectAuthService {
         }
 
         console.log("✅ DirectAuth: Login successful for:", email);
+
+        // Disparar evento para ativar auto sync após login
+        setTimeout(() => {
+          console.log("🔄 Disparando evento de login para ativar auto sync...");
+          window.dispatchEvent(
+            new CustomEvent("userLoggedIn", {
+              detail: { user: userProfile, timestamp: Date.now() },
+            }),
+          );
+        }, 100);
+
         return { success: true, user: userProfile };
       } catch (storageError) {
         console.error("❌ DirectAuth: Storage error:", storageError);
@@ -136,6 +202,65 @@ class DirectAuthService {
   // Função para listar emails autorizados
   getAuthorizedEmails(): string[] {
     return [...this.AUTHORIZED_EMAILS];
+  }
+
+  // Garantir que o utilizador padrão existe no localStorage
+  private ensureDefaultUser(): void {
+    try {
+      const savedUsers = safeLocalStorage.getItem("app-users");
+      let users: any[] = [];
+
+      if (savedUsers) {
+        try {
+          users = JSON.parse(savedUsers);
+        } catch (error) {
+          console.warn("❌ Erro ao carregar utilizadores existentes:", error);
+          users = [];
+        }
+      }
+
+      // Verificar se Gonçalo Fonseca já existe
+      const hasGoncalo = users.some(
+        (user) =>
+          user.email?.toLowerCase().trim() === "gongonsilva@gmail.com" ||
+          user.name === "Gonçalo Fonseca",
+      );
+
+      if (!hasGoncalo) {
+        console.log("🔧 Criando utilizador padrão Gonçalo Fonseca...");
+
+        const defaultUser = {
+          id: 1,
+          name: "Gonçalo Fonseca",
+          email: "gongonsilva@gmail.com",
+          password: "19867gsf",
+          role: "super_admin",
+          permissions: {
+            obras: { view: true, create: true, edit: true, delete: true },
+            manutencoes: { view: true, create: true, edit: true, delete: true },
+            piscinas: { view: true, create: true, edit: true, delete: true },
+            utilizadores: {
+              view: true,
+              create: true,
+              edit: true,
+              delete: true,
+            },
+            relatorios: { view: true, create: true, edit: true, delete: true },
+            clientes: { view: true, create: true, edit: true, delete: true },
+          },
+          active: true,
+          createdAt: new Date().toISOString(),
+        };
+
+        users.push(defaultUser);
+        safeLocalStorage.setItem("app-users", JSON.stringify(users));
+        console.log("✅ Utilizador padrão criado com sucesso");
+      } else {
+        console.log("✅ Utilizador padrão já existe no sistema");
+      }
+    } catch (error) {
+      console.error("❌ Erro ao garantir utilizador padrão:", error);
+    }
   }
 }
 

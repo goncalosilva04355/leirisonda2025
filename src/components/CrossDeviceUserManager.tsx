@@ -98,7 +98,7 @@ export const CrossDeviceUserManager: React.FC = () => {
             };
           case "manager":
             return {
-              obras: { view: true, create: true, edit: true, delete: false },
+              obras: { view: true, create: true, edit: true, delete: true },
               manutencoes: {
                 view: true,
                 create: true,
@@ -315,7 +315,7 @@ export const CrossDeviceUserManager: React.FC = () => {
                               ? "Super Admin"
                               : user.role === "manager"
                                 ? "Gestor"
-                                : "T��cnico"}
+                                : "Técnico"}
                           </p>
                         </div>
                       </div>

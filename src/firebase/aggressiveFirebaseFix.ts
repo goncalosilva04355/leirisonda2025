@@ -19,9 +19,14 @@ export class AggressiveFirebaseFix {
   private static currentAuth: any = null;
 
   // Firebase config from centralized environment
-  private static get config() {
-    const { getLegacyFirebaseConfig } = require("../config/firebaseEnv");
-    return getLegacyFirebaseConfig();
+  private static async getConfig() {
+    try {
+      const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
+      return getLegacyFirebaseConfig();
+    } catch (error) {
+      console.error("❌ Erro ao carregar config Firebase:", error);
+      return null;
+    }
   }
 
   /**
@@ -44,7 +49,12 @@ export class AggressiveFirebaseFix {
       const { getFirestore } = await import("firebase/firestore");
       const { getAuth } = await import("firebase/auth");
 
-      const app = initializeApp(this.config, `firebase-app-${Date.now()}`);
+      const config = await this.getConfig();
+      if (!config) {
+        throw new Error("Firebase config não disponível");
+      }
+
+      const app = initializeApp(config, `firebase-app-${Date.now()}`);
       const db = getFirestore(app);
       const auth = getAuth(app);
 
@@ -81,7 +91,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Try initializeFirestore with iOS-specific settings
@@ -130,7 +144,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Very basic Firestore initialization
@@ -169,7 +187,11 @@ export class AggressiveFirebaseFix {
       if (existingApps.length > 0) {
         app = existingApps[0];
       } else {
-        app = initializeApp(this.config);
+        const config = await this.getConfig();
+        if (!config) {
+          throw new Error("Firebase config não disponível");
+        }
+        app = initializeApp(config);
       }
 
       // Try with different cache settings

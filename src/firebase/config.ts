@@ -1,4 +1,4 @@
-// Passo 1: Firebase configuration - básica e simples
-// Usando o novo projeto Firebase passo a passo
+// Configuração Firebase SEMPRE ATIVA - desenvolvimento = produção
+// Garantir que Firebase está ativo em TODOS os ambientes (dev e prod)
 
-export * from "./basicConfig";
+export * from "./productionConfig";

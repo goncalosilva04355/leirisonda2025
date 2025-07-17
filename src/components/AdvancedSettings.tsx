@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { FirebaseConfig } from "./FirebaseConfig";
 import { FCMNotificationSetup } from "./FCMNotificationSetup";
+import { NotificationDebugger } from "./NotificationDebugger";
 
 interface User {
   uid: string;
@@ -142,7 +143,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
       // Test 5: Simulate data operation
       tests.push("✅ Estrutura de dados validada");
-      tests.push("✅ Permissões b��sicas verificadas");
+      tests.push("✅ Permissões básicas verificadas");
 
       setSyncTest({
         status: "success",
@@ -210,7 +211,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       // Show last sync info
       if (dataSync?.lastSync) {
         tests.push(
-          `📅 Última sincronização: ${dataSync.lastSync.toLocaleString("pt-PT")}`,
+          `📅 Última sincronização: ${new Date(dataSync.lastSync).toLocaleString("pt-PT")}`,
         );
       }
 
@@ -256,7 +257,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
       setSyncTest({
         status: "error",
         message: "Erro ao ativar sincronização",
-        details: ["❌ Verifique a configuraç��o Firebase"],
+        details: ["❌ Verifique a configuração Firebase"],
       });
     }
   };
@@ -500,8 +501,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                   Teste de Sincronização
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Verifique o funcionamento das funcionalidades de
-                  sincronizaç��o
+                  Verifique o funcionamento das funcionalidades de sincronização
                 </p>
               </div>
 
@@ -591,7 +591,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
 
               {/* Additional Info */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h4 className="font-medium text-blue-900 mb-2">Informa��ões</h4>
+                <h4 className="font-medium text-blue-900 mb-2">Informações</h4>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>• Configure o Firebase primeiro antes de testar</li>
                   <li>• Os testes verificam conectividade e funcionalidades</li>
@@ -890,7 +890,7 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>
                     • Quando uma obra é criada e atribuída a um utilizador, ele
-                    recebe uma notificaç��o push
+                    recebe uma notificação push
                   </li>
                   <li>
                     • A obra aparece automaticamente no dashboard do utilizador
@@ -942,7 +942,10 @@ export const AdvancedSettings: React.FC<AdvancedSettingsProps> = ({
               </div>
 
               {/* FCM Setup Component */}
-              <FCMNotificationSetup currentUser={currentUser} />
+              <FCMNotificationSetup />
+
+              {/* Notification Debugger */}
+              <NotificationDebugger />
 
               {/* Info Box */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">

@@ -94,7 +94,7 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
               description:
                 "Coleção vazia - dados podem não estar sendo compartilhados",
               status: "warning",
-              action: "Verificar sincronizaç��o",
+              action: "Verificar sincronização",
             });
           } else {
             results.push({

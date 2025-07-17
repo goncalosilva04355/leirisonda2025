@@ -5,26 +5,42 @@ export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
+  base: "/", // Corrigir para produção Netlify
   define: {
     global: "globalThis",
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
   },
   build: {
     outDir: "dist",
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
     sourcemap: false,
     minify: "esbuild",
     rollupOptions: {
       output: {
-        manualChunks: {
-          "react-vendor": ["react", "react-dom"],
-          "ui-vendor": ["lucide-react", "framer-motion"],
-          "pdf-vendor": ["jspdf", "html2canvas"],
-          "firebase-vendor": [
-            "firebase/app",
-            "firebase/firestore",
-            "firebase/auth",
-          ],
+        manualChunks: (id) => {
+          // React e dependências principais
+          if (
+            id.includes("node_modules/react") ||
+            id.includes("node_modules/react-dom")
+          ) {
+            return "react-vendor";
+          }
+          // Firebase
+          if (id.includes("firebase") || id.includes("@firebase")) {
+            return "firebase-vendor";
+          }
+          // UI components
+          if (id.includes("lucide-react") || id.includes("framer-motion")) {
+            return "ui-vendor";
+          }
+          // PDF generation
+          if (id.includes("jspdf") || id.includes("html2canvas")) {
+            return "pdf-vendor";
+          }
+          // Separar arquivos da aplicação dos vendor
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
         },
       },
     },
@@ -32,6 +48,15 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    hmr: {
+      // Reduzir freqüência de HMR para evitar refreshes no Builder.io
+      overlay: false, // Desativar overlay de erros
+    },
+    watch: {
+      // Reduzir watch sensitivity
+      ignored: ["**/node_modules/**", "**/dist/**"],
+      usePolling: false,
+    },
   },
   css: {
     postcss: "./postcss.config.cjs",

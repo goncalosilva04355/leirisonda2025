@@ -60,12 +60,23 @@ export async function initializeFirebaseComplete(): Promise<InitializationStatus
       const firestore = await getFirebaseFirestoreAsync();
 
       if (!firestore) {
-        console.error("❌ Firestore não conseguiu ser inicializado");
-        initializationStatus = {
-          firebase: true,
-          firestore: false,
-          error: "Firestore falhou na inicialização",
-        };
+        if (import.meta.env.DEV) {
+          console.warn(
+            "⚠️ Firestore não disponível em desenvolvimento - usando localStorage",
+          );
+          initializationStatus = {
+            firebase: true,
+            firestore: false,
+            error: "Modo desenvolvimento ativo - dados em localStorage",
+          };
+        } else {
+          console.error("❌ Firestore não conseguiu ser inicializado");
+          initializationStatus = {
+            firebase: true,
+            firestore: false,
+            error: "Firestore falhou na inicialização",
+          };
+        }
         return initializationStatus;
       }
 

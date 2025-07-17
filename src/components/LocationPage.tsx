@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { UserLocationMap } from "./UserLocationMap";
+import TeamLocationManager from "./TeamLocationManager";
 
 interface LocationPageProps {
   onBack?: () => void;
@@ -8,6 +9,7 @@ interface LocationPageProps {
     id: string;
     name: string;
     email: string;
+    role?: string;
   };
   allUsers?: Array<{
     id: number | string;
@@ -44,6 +46,12 @@ export const LocationPage: React.FC<LocationPageProps> = ({
 
       {/* User Location Map */}
       <UserLocationMap currentUser={currentUser} allUsers={allUsers} />
+
+      {/* Team Location Manager - Only for admins */}
+      {(currentUser?.role === "super_admin" ||
+        currentUser?.role === "admin") && (
+        <TeamLocationManager currentUser={currentUser} allUsers={allUsers} />
+      )}
     </div>
   );
 };

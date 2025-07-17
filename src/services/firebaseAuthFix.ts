@@ -7,7 +7,7 @@ import {
   browserLocalPersistence,
   browserSessionPersistence,
 } from "firebase/auth";
-import { firebaseService } from "../firebase/robustConfig";
+import { getAuth } from "../firebase/basicConfig";
 
 export interface FirebaseAuthFixResult {
   success: boolean;
@@ -41,6 +41,15 @@ class FirebaseAuthFix {
 
         // Set persistence safely
         await this.setSafePersistence(auth, rememberMe);
+
+        // Verificar modo emergência
+        if (
+          typeof window !== "undefined" &&
+          (window as any).EMERGENCY_MODE_ACTIVE
+        ) {
+          console.log("🚨 firebaseAuthFix bloqueado - modo emergência");
+          throw new Error("Firebase desativado temporariamente");
+        }
 
         // Attempt sign in
         console.log("🔐 Attempting signInWithEmailAndPassword...");
@@ -87,10 +96,12 @@ class FirebaseAuthFix {
     try {
       console.log("🔧 Ensuring Firebase is ready...");
 
-      // Force reinitialize if needed
-      const isReady = await firebaseService.initialize();
-      if (!isReady) {
-        throw new Error("Firebase initialization failed");
+      // Check if Firebase app is available
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
+      const app = getFirebaseApp();
+
+      if (!app) {
+        throw new Error("Firebase app not available");
       }
 
       console.log("✅ Firebase ready");
@@ -102,7 +113,7 @@ class FirebaseAuthFix {
 
   private async getSafeAuthInstance(): Promise<Auth | null> {
     try {
-      const auth = await firebaseService.getAuth();
+      const auth = getAuth();
 
       if (!auth) {
         console.warn("⚠️ No auth instance available");
@@ -111,9 +122,8 @@ class FirebaseAuthFix {
 
       // Verify auth instance is not destroyed
       if ((auth as any)._deleted) {
-        console.warn("⚠️ Auth instance is deleted, reinitializing...");
-        await firebaseService.initialize();
-        return await firebaseService.getAuth();
+        console.warn("⚠️ Auth instance is deleted, getting new instance...");
+        return getAuth();
       }
 
       return auth;
@@ -168,7 +178,8 @@ class FirebaseAuthFix {
       console.log("🆘 Getting emergency auth instance...");
 
       // Try to get app directly and create new auth
-      const app = firebaseService.getApp();
+      const { getFirebaseApp } = await import("../firebase/basicConfig");
+      const app = getFirebaseApp();
       if (app) {
         const auth = getAuth(app);
         console.log("✅ Emergency auth instance created");

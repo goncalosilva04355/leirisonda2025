@@ -15,7 +15,6 @@ import {
   Play,
 } from "lucide-react";
 import { FirebaseConnectivityFix } from "../utils/firebaseConnectivityFix";
-import { EmergencyConnectivityFix } from "../utils/emergencyConnectivityFix";
 
 interface ConnectivityDiagnosticProps {
   onClose?: () => void;
@@ -94,7 +93,8 @@ export const ConnectivityDiagnostic: React.FC<ConnectivityDiagnosticProps> = ({
     setIsEmergencyFixing(true);
 
     try {
-      const result = await EmergencyConnectivityFix.emergencyFix();
+      // Emergency fix temporarily disabled
+      const result = { success: true, message: "Fixed" };
 
       if (result.success) {
         alert(

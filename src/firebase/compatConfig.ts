@@ -1,10 +1,11 @@
 // Backward compatibility wrapper for existing Firebase config usage
-import { firebaseService } from "./robustConfig";
+import { getFirebaseApp, getAuth } from "./basicConfig";
+import { getFirebaseFirestore } from "./firestoreConfig";
 
-// Legacy exports that delegate to the robust service
+// Legacy exports that delegate to the new basic service
 export const getAuthService = async () => {
   try {
-    return await firebaseService.getAuth();
+    return getAuth();
   } catch (error) {
     console.warn("⚠️ getAuthService failed:", error);
     return null;
@@ -13,7 +14,8 @@ export const getAuthService = async () => {
 
 export const attemptFirestoreInit = async () => {
   try {
-    return await firebaseService.getFirestore();
+    const { getFirebaseFirestoreAsync } = await import("./firestoreConfig");
+    return await getFirebaseFirestoreAsync();
   } catch (error) {
     console.warn("⚠️ attemptFirestoreInit failed:", error);
     return null;
@@ -22,19 +24,23 @@ export const attemptFirestoreInit = async () => {
 
 export const getDB = async () => {
   try {
-    return await firebaseService.getFirestore();
+    const { getFirebaseFirestoreAsync } = await import("./firestoreConfig");
+    return await getFirebaseFirestoreAsync();
   } catch (error) {
     console.warn("⚠️ getDB failed:", error);
     return null;
   }
 };
 
-export const isFirebaseReady = () => firebaseService.isInitialized();
+export const isFirebaseReady = () => {
+  const app = getFirebaseApp();
+  return app !== null;
+};
 
 export const waitForFirebaseInit = async () => {
   try {
-    await firebaseService.initialize();
-    return firebaseService.isInitialized();
+    const app = getFirebaseApp();
+    return app !== null;
   } catch (error) {
     console.warn("⚠️ waitForFirebaseInit failed:", error);
     return false;
@@ -47,12 +53,7 @@ export const auth = new Proxy(
   {
     get(target, prop) {
       try {
-        if (!firebaseService.isInitialized()) {
-          // Return null for properties when not initialized
-          return null;
-        }
-
-        const authInstance = firebaseService.getAuth();
+        const authInstance = getAuth();
         if (!authInstance) return null;
 
         // Handle special case for currentUser which might be accessed synchronously
@@ -74,11 +75,7 @@ export const db = new Proxy(
   {
     get(target, prop) {
       try {
-        if (!firebaseService.isInitialized()) {
-          return null;
-        }
-
-        const dbInstance = firebaseService.getFirestore();
+        const dbInstance = getFirebaseFirestore();
         if (!dbInstance) return null;
 
         return (dbInstance as any)[prop];
@@ -90,7 +87,4 @@ export const db = new Proxy(
   },
 );
 
-export const app = firebaseService.getApp();
-
-// Initialize on module load
-firebaseService.initialize().catch(console.error);
+export const app = getFirebaseApp();

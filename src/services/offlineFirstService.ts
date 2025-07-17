@@ -1,5 +1,7 @@
 // Serviço offline-first - funciona sem Firebase
-// O Firebase é opcional e será usado quando disponível
+// ATUALIZADO: Agora usa ForceFirestore como principal
+
+import { forceFirestoreService } from "./forceFirestoreService";
 
 class OfflineFirstService {
   private useFirebase = false;
@@ -32,22 +34,28 @@ class OfflineFirstService {
     }
   }
 
-  // Método principal para criar obra
+  // Método principal para criar obra - AGORA USA FIRESTORE
   async createWork(workData: any): Promise<string> {
     const id = Date.now().toString();
     const work = {
       ...workData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
-      // 1. Sempre salvar no localStorage primeiro (garantia)
+      console.log("🔥 OfflineFirst: Guardando obra no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.saveWork(work);
+      console.log("✅ Obra guardada no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existingWorks = JSON.parse(localStorage.getItem("works") || "[]");
       existingWorks.push(work);
       localStorage.setItem("works", JSON.stringify(existingWorks));
-      console.log("✅ Obra salva no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
       // 2. Tentar Firebase se disponível (opcional)
       if (this.firebaseAvailable) {
@@ -68,22 +76,29 @@ class OfflineFirstService {
       ...poolData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
+      console.log("🔥 OfflineFirst: Guardando piscina no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.savePool(pool);
+      console.log("✅ Piscina guardada no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existingPools = JSON.parse(localStorage.getItem("pools") || "[]");
       existingPools.push(pool);
       localStorage.setItem("pools", JSON.stringify(existingPools));
-      console.log("✅ Piscina salva no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
-      if (this.firebaseAvailable) {
-        this.tryFirebaseSave("piscinas", pool);
-      }
-
-      return id;
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro ao criar piscina:", error);
+      // Fallback para localStorage se Firestore falhar
+      const existingPools = JSON.parse(localStorage.getItem("pools") || "[]");
+      existingPools.push({ ...pool, source: "localStorage-fallback" });
+      localStorage.setItem("pools", JSON.stringify(existingPools));
       return id;
     }
   }
@@ -94,22 +109,30 @@ class OfflineFirstService {
       ...maintenanceData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
+      console.log("🔥 OfflineFirst: Guardando manutenção no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId =
+        await forceFirestoreService.saveMaintenanceItem(maintenance);
+      console.log("✅ Manutenção guardada no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existing = JSON.parse(localStorage.getItem("maintenance") || "[]");
       existing.push(maintenance);
       localStorage.setItem("maintenance", JSON.stringify(existing));
-      console.log("✅ Manutenção salva no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
-      if (this.firebaseAvailable) {
-        this.tryFirebaseSave("manutencoes", maintenance);
-      }
-
-      return id;
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro ao criar manutenção:", error);
+      // Fallback para localStorage se Firestore falhar
+      const existing = JSON.parse(localStorage.getItem("maintenance") || "[]");
+      existing.push({ ...maintenance, source: "localStorage-fallback" });
+      localStorage.setItem("maintenance", JSON.stringify(existing));
       return id;
     }
   }
@@ -120,22 +143,29 @@ class OfflineFirstService {
       ...clientData,
       id,
       createdAt: new Date().toISOString(),
-      source: "localStorage",
+      source: "firestore",
     };
 
     try {
+      console.log("🔥 OfflineFirst: Guardando cliente no Firestore...");
+
+      // 1. PRINCIPAL: Guardar no Firestore
+      const firestoreId = await forceFirestoreService.saveClient(client);
+      console.log("✅ Cliente guardado no Firestore:", firestoreId);
+
+      // 2. BACKUP: localStorage apenas como cache temporário
       const existing = JSON.parse(localStorage.getItem("clients") || "[]");
       existing.push(client);
       localStorage.setItem("clients", JSON.stringify(existing));
-      console.log("✅ Cliente salvo no localStorage:", id);
+      console.log("💾 Cache local atualizado");
 
-      if (this.firebaseAvailable) {
-        this.tryFirebaseSave("clientes", client);
-      }
-
-      return id;
+      return firestoreId;
     } catch (error) {
       console.error("❌ Erro ao criar cliente:", error);
+      // Fallback para localStorage se Firestore falhar
+      const existing = JSON.parse(localStorage.getItem("clients") || "[]");
+      existing.push({ ...client, source: "localStorage-fallback" });
+      localStorage.setItem("clients", JSON.stringify(existing));
       return id;
     }
   }

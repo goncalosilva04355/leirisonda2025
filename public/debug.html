@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leirisonda - Diagnóstico Completo</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background: linear-gradient(135deg, #0891b2, #06b6d4);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #0891b2;
+        text-align: center;
+        margin-bottom: 24px;
+        font-size: 28px;
+      }
+      .test-grid {
+        display: grid;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .test-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+      }
+      .test-item.success {
+        background: #f0f9ff;
+        border-color: #0891b2;
+      }
+      .test-item.error {
+        background: #fef2f2;
+        border-color: #ef4444;
+      }
+      .test-item.warning {
+        background: #fefce8;
+        border-color: #f59e0b;
+      }
+      .status {
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+      .status.ok {
+        background: #10b981;
+      }
+      .status.error {
+        background: #ef4444;
+      }
+      .status.warning {
+        background: #f59e0b;
+      }
+      .buttons {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+      button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        color: white;
+      }
+      .btn-primary {
+        background: #0891b2;
+      }
+      .btn-danger {
+        background: #ef4444;
+      }
+      .btn-success {
+        background: #10b981;
+      }
+      .info-box {
+        background: #f8fafc;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 24px;
+      }
+      .console-output {
+        background: #1f2937;
+        color: #f3f4f6;
+        padding: 16px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🏊‍♂️ Leirisonda - Diagnóstico de Produção</h1>
+
+      <div id="test-results" class="test-grid">
+        <!-- Resultados serão inseridos aqui -->
+      </div>
+
+      <div class="buttons">
+        <button class="btn-primary" onclick="runDiagnostics()">
+          🔍 Executar Diagnósticos
+        </button>
+        <button class="btn-danger" onclick="clearAllData()">
+          🗑️ Limpar Todos os Dados
+        </button>
+        <button class="btn-success" onclick="testReactApp()">
+          ⚛️ Testar React App
+        </button>
+        <button class="btn-primary" onclick="checkNetwork()">
+          🌐 Testar Rede
+        </button>
+      </div>
+
+      <div class="info-box">
+        <h3>📋 Informações do Sistema</h3>
+        <p><strong>URL:</strong> <span id="current-url"></span></p>
+        <p><strong>User Agent:</strong> <span id="user-agent"></span></p>
+        <p><strong>Viewport:</strong> <span id="viewport"></span></p>
+        <p><strong>Protocolo:</strong> <span id="protocol"></span></p>
+        <p><strong>Host:</strong> <span id="host"></span></p>
+        <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+      </div>
+
+      <div id="console-container">
+        <h3>📝 Console Output</h3>
+        <div id="console-output" class="console-output"></div>
+      </div>
+    </div>
+
+    <script>
+      let consoleMessages = [];
+
+      // Interceptar console
+      const originalLog = console.log;
+      const originalError = console.error;
+      const originalWarn = console.warn;
+
+      console.log = function (...args) {
+        consoleMessages.push(
+          `[LOG] ${new Date().toLocaleTimeString()}: ${args.join(" ")}`,
+        );
+        updateConsoleOutput();
+        originalLog.apply(console, args);
+      };
+
+      console.error = function (...args) {
+        consoleMessages.push(
+          `[ERROR] ${new Date().toLocaleTimeString()}: ${args.join(" ")}`,
+        );
+        updateConsoleOutput();
+        originalError.apply(console, args);
+      };
+
+      console.warn = function (...args) {
+        consoleMessages.push(
+          `[WARN] ${new Date().toLocaleTimeString()}: ${args.join(" ")}`,
+        );
+        updateConsoleOutput();
+        originalWarn.apply(console, args);
+      };
+
+      function updateConsoleOutput() {
+        const output = document.getElementById("console-output");
+        output.textContent = consoleMessages.slice(-20).join("\n");
+        output.scrollTop = output.scrollHeight;
+      }
+
+      function updateSystemInfo() {
+        document.getElementById("current-url").textContent =
+          window.location.href;
+        document.getElementById("user-agent").textContent = navigator.userAgent;
+        document.getElementById("viewport").textContent =
+          `${window.innerWidth}x${window.innerHeight}`;
+        document.getElementById("protocol").textContent =
+          window.location.protocol;
+        document.getElementById("host").textContent = window.location.host;
+        document.getElementById("timestamp").textContent =
+          new Date().toLocaleString();
+      }
+
+      function addTestResult(test, status, details = "") {
+        const container = document.getElementById("test-results");
+        const item = document.createElement("div");
+        item.className = `test-item ${status === "OK" ? "success" : status === "ERROR" ? "error" : "warning"}`;
+
+        item.innerHTML = `
+                <span><strong>${test}</strong> ${details ? `<br><small>${details}</small>` : ""}</span>
+                <span class="status ${status === "OK" ? "ok" : status === "ERROR" ? "error" : "warning"}">${status}</span>
+            `;
+
+        container.appendChild(item);
+      }
+
+      function runDiagnostics() {
+        console.log("🔍 Iniciando diagnósticos...");
+
+        // Limpar resultados anteriores
+        document.getElementById("test-results").innerHTML = "";
+
+        // Teste 1: DOM
+        try {
+          const testDiv = document.createElement("div");
+          addTestResult("DOM API", "OK", "createElement funcionando");
+        } catch (e) {
+          addTestResult("DOM API", "ERROR", e.message);
+        }
+
+        // Teste 2: LocalStorage
+        try {
+          localStorage.setItem("test", "ok");
+          localStorage.removeItem("test");
+          addTestResult("LocalStorage", "OK", "Read/Write funcionando");
+        } catch (e) {
+          addTestResult("LocalStorage", "ERROR", e.message);
+        }
+
+        // Teste 3: CSS
+        try {
+          const testEl = document.createElement("div");
+          testEl.style.backgroundColor = "red";
+          const computed = window.getComputedStyle(testEl);
+          addTestResult("CSS Engine", "OK", "Estilos aplicáveis");
+        } catch (e) {
+          addTestResult("CSS Engine", "ERROR", e.message);
+        }
+
+        // Teste 4: JavaScript básico
+        try {
+          const test = [1, 2, 3].map((x) => x * 2);
+          addTestResult(
+            "JavaScript ES6",
+            "OK",
+            "Arrow functions e métodos array",
+          );
+        } catch (e) {
+          addTestResult("JavaScript ES6", "ERROR", e.message);
+        }
+
+        // Teste 5: Fetch API
+        fetch(window.location.href)
+          .then(() => addTestResult("Fetch API", "OK", "Rede acessível"))
+          .catch((e) => addTestResult("Fetch API", "ERROR", e.message));
+
+        // Teste 6: Service Worker
+        if ("serviceWorker" in navigator) {
+          addTestResult("Service Worker", "OK", "API disponível");
+        } else {
+          addTestResult("Service Worker", "WARNING", "Não suportado");
+        }
+
+        // Teste 7: Módulos ES
+        if (typeof Symbol !== "undefined") {
+          addTestResult("ES6 Modules", "OK", "Suporte moderno");
+        } else {
+          addTestResult("ES6 Modules", "ERROR", "Browser muito antigo");
+        }
+
+        console.log("✅ Diagnósticos concluídos");
+      }
+
+      function clearAllData() {
+        try {
+          localStorage.clear();
+          sessionStorage.clear();
+
+          if ("indexedDB" in window) {
+            indexedDB.databases().then((databases) => {
+              databases.forEach((db) => {
+                if (db.name) {
+                  indexedDB.deleteDatabase(db.name);
+                }
+              });
+            });
+          }
+
+          console.log("🗑️ Todos os dados limpos");
+          alert("Todos os dados foram limpos! A página será recarregada.");
+          setTimeout(() => window.location.reload(), 1000);
+        } catch (e) {
+          console.error("❌ Erro ao limpar dados:", e);
+          alert("Erro ao limpar dados: " + e.message);
+        }
+      }
+
+      function testReactApp() {
+        console.log("⚛️ Tentando carregar React App...");
+        window.location.href = "/";
+      }
+
+      function checkNetwork() {
+        console.log("🌐 Testando conectividade...");
+
+        Promise.all([
+          fetch("/manifest.json").then((r) => r.ok),
+          fetch("/index.html").then((r) => r.ok),
+          fetch("/").then((r) => r.ok),
+        ])
+          .then((results) => {
+            console.log("✅ Testes de rede:", results);
+            addTestResult(
+              "Conectividade",
+              "OK",
+              `${results.filter(Boolean).length}/3 recursos acessíveis`,
+            );
+          })
+          .catch((e) => {
+            console.error("❌ Erro de rede:", e);
+            addTestResult("Conectividade", "ERROR", e.message);
+          });
+      }
+
+      // Inicialização
+      updateSystemInfo();
+      runDiagnostics();
+
+      // Atualizar timestamp a cada segundo
+      setInterval(() => {
+        document.getElementById("timestamp").textContent =
+          new Date().toLocaleString();
+      }, 1000);
+
+      console.log("🚀 Diagnóstico carregado com sucesso!");
+    </script>
+  </body>
+</html>
