@@ -311,34 +311,6 @@ const loadApp = async () => {
 // Start the application
 loadApp();
 
-// Additional safety nets (temporarily disabled)
-// setTimeout(() => {
-//   if (rootElement.children.length === 0) {
-//     console.warn("🚨 SAFETY NET 1: Root vazio após 1 segundo");
-//     showEmergencyFallback("Safety net 1 - 1 segundo");
-//   }
-// }, 1000);
-
-// setTimeout(() => {
-//   if (rootElement.children.length === 0) {
-//     console.warn("🚨 SAFETY NET 2: Root vazio após 3 segundos");
-//     showEmergencyFallback("Safety net 2 - 3 segundos");
-//   }
-// }, 3000);
-
-// setTimeout(() => {
-//   if (rootElement.children.length === 0) {
-//     console.warn("🚨 SAFETY NET 3: Root vazio após 5 segundos");
-//     showEmergencyFallback("Safety net 3 - 5 segundos");
-//   }
-// }, 5000);
-
-// Visibility change handler - re-check when page becomes visible
-document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && rootElement.children.length === 0) {
-    console.warn("🚨 VISIBILITY CHECK: Root vazio quando página ficou visível");
-    showEmergencyFallback("Verificação de visibilidade");
-  }
-});
+// Safety nets removed - direct app loading
 
 console.log("✅ main.tsx carregado - sistema anti-tela-branca ativo");
