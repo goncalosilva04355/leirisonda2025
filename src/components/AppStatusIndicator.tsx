@@ -84,7 +84,7 @@ export const AppStatusIndicator: React.FC = () => {
   };
 
   const handleDiagnostic = () => {
-    window.location.href = "?diagnostic=true";
+    window.location.search = "?diagnostic=true";
   };
 
   if (!status.isLoaded) {
