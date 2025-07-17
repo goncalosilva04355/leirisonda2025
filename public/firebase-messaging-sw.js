@@ -1,25 +1,24 @@
-// Firebase Cloud Messaging Service Worker - CONFIGURAÇÃO CORRETA
+// Firebase Cloud Messaging Service Worker - Environment Variables Template
 console.log(
-  "[SW] Firebase Messaging Service Worker iniciado com configuração correta",
+  "[SW] Firebase Messaging Service Worker starting with secure configuration",
 );
 
-// Configuração EXATA do projeto leiria-1cfc9
+// Configuration will be injected at build time
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
+  apiKey: "demo-value-set-for-production",
+  authDomain: "demo-value-set-for-production",
+  databaseURL: "demo-value-set-for-production",
+  projectId: "demo-value-set-for-production",
+  storageBucket: "demo-value-set-for-production",
+  messagingSenderId: "demo-value-set-for-production",
+  appId: "demo-value-set-for-production",
+  measurementId: "demo-value-set-for-production",
 };
 
 let messaging = null;
 
 try {
-  // Carregar Firebase scripts
+  // Load Firebase scripts
   importScripts(
     "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
   );
@@ -31,7 +30,7 @@ try {
     firebase.initializeApp(firebaseConfig);
     messaging = firebase.messaging();
     console.log(
-      "[SW] Firebase inicializado com configuração correta - projeto:",
+      "[SW] Firebase initialized with secure configuration - project:",
       firebaseConfig.projectId,
     );
 
@@ -51,17 +50,17 @@ try {
     });
   }
 } catch (error) {
-  console.warn("[SW] Firebase não pôde ser inicializado:", error);
+  console.warn("[SW] Firebase could not be initialized:", error);
 }
 
-// Service Worker básico
+// Service Worker basics
 self.addEventListener("install", (event) => {
-  console.log("[SW] Service Worker instalado");
+  console.log("[SW] Service Worker installed");
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
-  console.log("[SW] Service Worker ativado");
+  console.log("[SW] Service Worker activated");
   event.waitUntil(clients.claim());
 });
 
@@ -78,5 +77,6 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 console.log(
-  "[SW] Firebase Messaging Service Worker pronto - projeto leiria-1cfc9",
+  "[SW] Firebase Messaging Service Worker ready - project:",
+  firebaseConfig.projectId,
 );
