@@ -1,10 +1,12 @@
 /**
- * Verificação rápida do status do Firebase
+ * Quick Firebase status check with secure configuration
  */
+import { getRestApiConfig } from "./firebaseConfigHelper";
 
 export async function checkFirebaseStatus() {
   try {
-    const apiKey = "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw";
+    const config = getRestApiConfig();
+    const apiKey = config.apiKey;
 
     // Teste simples - tentar fazer uma requisição mínima ao Firebase Auth
     const response = await fetch(
