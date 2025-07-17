@@ -13,13 +13,13 @@ export class ProductionAutoSyncService {
   }
 
   private async initialize(): Promise<void> {
-    console.log("🚀 ProductionAutoSync: Inicializando...");
-
-    // SEMPRE ATIVAR - DESENVOLVIMENTO = PRODUÇÃO
     console.log(
-      "🔥 DESENVOLVIMENTO = PRODUÇÃO - Ativando sincronização automática",
+      "🚀 ProductionAutoSync: Inicialização DESATIVADA para resolver problemas de produção",
     );
-    await this.enableProductionSync();
+
+    // TEMPORARIAMENTE DESATIVADO - pode estar a causar bloqueios na produção
+    console.log("⏸️ ProductionAutoSync DESATIVADO para debugging");
+    // await this.enableProductionSync();
   }
 
   private async enableProductionSync(): Promise<void> {
