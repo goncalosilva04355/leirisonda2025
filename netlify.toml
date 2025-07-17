@@ -7,13 +7,13 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   VITE_IS_NETLIFY = "true"
 
-# Redirects para SPA
+# SPA redirect - catch all routes and serve index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# Headers específicos
+# Security and performance headers
 [[headers]]
   for = "/*"
   [headers.values]
@@ -25,12 +25,23 @@
     Cross-Origin-Embedder-Policy = "unsafe-none"
     Cross-Origin-Opener-Policy = "same-origin-allow-popups"
 
+# Static asset headers
 [[headers]]
-  for = "/manifest.json"
+  for = "/assets/*"
   [headers.values]
-    Content-Type = "application/manifest+json"
-    Cache-Control = "public, max-age=3600"
+    Cache-Control = "public, max-age=31536000, immutable"
 
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Service worker and manifest
 [[headers]]
   for = "/firebase-messaging-sw.js"
   [headers.values]
@@ -39,9 +50,28 @@
     Service-Worker-Allowed = "/"
 
 [[headers]]
-  for = "/assets/*"
+  for = "/manifest.json"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Type = "application/manifest+json"
+    Cache-Control = "public, max-age=3600"
+
+# Other static files
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "*.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+    Content-Type = "image/svg+xml"
+
+[[headers]]
+  for = "*.webp"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+    Content-Type = "image/webp"
 
 [[headers]]
   for = "/robots.txt"
