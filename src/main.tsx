@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 console.log(
-  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODUÇÃO)...",
+  "🚀 Leirisonda - Inicializando aplicação (DESENVOLVIMENTO = PRODU��ÃO)...",
 );
 console.log("🌍 Ambiente:", {
   mode: "DESENVOLVIMENTO = PRODUÇÃO",
@@ -37,6 +37,16 @@ const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element not found");
 }
+
+// Create single root instance to avoid multiple createRoot warnings
+let globalRoot: ReactDOM.Root | null = null;
+
+const getOrCreateRoot = () => {
+  if (!globalRoot) {
+    globalRoot = ReactDOM.createRoot(rootElement);
+  }
+  return globalRoot;
+};
 
 // Emergency fallback - ALWAYS works
 function showEmergencyFallback(errorMessage = "") {
@@ -261,8 +271,8 @@ const loadApp = async () => {
       throw new Error("Nenhum componente App disponível");
     }
 
-    // Create root and render
-    const root = ReactDOM.createRoot(rootElement);
+    // Get or create root and render
+    const root = getOrCreateRoot();
 
     // Try with ErrorBoundary first
     try {
@@ -287,7 +297,7 @@ const loadApp = async () => {
     setTimeout(() => {
       if (rootElement.children.length === 0) {
         console.error("🚨 CRITICAL: App renderizada mas root ainda vazio!");
-        const emergencyRoot = ReactDOM.createRoot(rootElement);
+        const emergencyRoot = getOrCreateRoot();
         emergencyRoot.render(
           React.createElement(EmergencyApp, {
             error: "App renderizada mas DOM vazio",
@@ -302,7 +312,7 @@ const loadApp = async () => {
 
     // Try emergency React component
     try {
-      const emergencyRoot = ReactDOM.createRoot(rootElement);
+      const emergencyRoot = getOrCreateRoot();
       emergencyRoot.render(
         React.createElement(EmergencyApp, { error: error.message }),
       );
