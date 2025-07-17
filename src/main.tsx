@@ -259,11 +259,79 @@ if (!rootElement) {
 
 try {
   console.log("🔄 Verificando modo de funcionamento...");
+  console.log("📊 Estado do ambiente:", {
+    isProd: import.meta.env.PROD,
+    mode: import.meta.env.MODE,
+    shouldUseSafe: shouldUseSafeMode(),
+    forceSimple: localStorage.getItem("forceSimpleApp"),
+    forceAdvanced: localStorage.getItem("forceAdvancedApp"),
+    url: window.location.href,
+  });
 
-  // Se estiver em modo seguro ou produção, decidir qual app usar
-  if (shouldUseSafeMode()) {
+  // SIMPLIFICADO: Em produção, sempre usar AppProduction
+  if (import.meta.env.PROD) {
+    console.log("🏭 PRODUÇÃO DETECTADA - Forçando AppProduction");
+
+    // Em produção, sempre usar AppProduction
+    import("./AppProduction")
+      .then(({ default: AppProduction }) => {
+        console.log("📦 AppProduction importada para produção!");
+
+        const root = ReactDOM.createRoot(rootElement);
+        root.render(React.createElement(AppProduction));
+        console.log("✅ AppProduction renderizada em produção!");
+
+        // Garantir que aparece algo
+        setTimeout(() => {
+          if (rootElement.children.length === 0) {
+            console.warn(
+              "⚠️ Root vazio em produção, renderizando fallback HTML...",
+            );
+            rootElement.innerHTML = `
+              <div style="min-height: 100vh; background: #0891b2; color: white; display: flex; align-items: center; justify-content: center; font-family: system-ui; text-align: center; padding: 2rem;">
+                <div>
+                  <h1 style="font-size: 2.5rem; margin: 0 0 1rem 0;">🔧 Leirisonda</h1>
+                  <p style="font-size: 1.125rem; margin: 0 0 2rem 0; opacity: 0.9;">Sistema de Gestão de Piscinas</p>
+                  <p style="margin-bottom: 2rem;">A aplicação está a carregar...</p>
+                  <button onclick="window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                    Recarregar
+                  </button>
+                </div>
+              </div>
+            `;
+          }
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error("❌ ERRO CRÍTICO AppProduction:", error);
+
+        // Fallback HTML direto em produção
+        rootElement.innerHTML = `
+          <div style="min-height: 100vh; background: #0891b2; color: white; display: flex; align-items: center; justify-content: center; font-family: system-ui; text-align: center; padding: 2rem;">
+            <div>
+              <h1 style="font-size: 2.5rem; margin: 0 0 1rem 0;">🔧 Leirisonda</h1>
+              <p style="font-size: 1.125rem; margin: 0 0 2rem 0; opacity: 0.9;">Sistema de Gestão de Piscinas</p>
+              <p style="margin-bottom: 2rem;">Erro no carregamento. A tentar novamente...</p>
+              <button onclick="window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-size: 1rem; font-weight: bold; cursor: pointer; margin-right: 0.5rem;">
+                Tentar Novamente
+              </button>
+              <button onclick="localStorage.setItem('forceAdvancedApp', 'true'); window.location.reload()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.75rem 1.5rem; border-radius: 0.375rem; font-size: 1rem; cursor: pointer;">
+                Modo Avançado
+              </button>
+            </div>
+          </div>
+        `;
+        console.log("🛡️ Fallback HTML renderizado em produção!");
+      });
+  } else if (shouldUseSafeMode()) {
+    // Desenvolvimento: usar lógica existente
     const isProduction = import.meta.env.PROD;
     const forceSimple = localStorage.getItem("forceSimpleApp") === "true";
+
+    console.log("✅ Usando modo seguro/desenvolvimento:", {
+      isProduction,
+      forceSimple,
+    });
 
     if (isProduction && !forceSimple) {
       console.log("🏭 Modo produção ativo - usando AppProduction");
@@ -271,19 +339,44 @@ try {
       // Carregar AppProduction
       import("./AppProduction")
         .then(({ default: AppProduction }) => {
-          ReactDOM.createRoot(rootElement).render(
-            React.createElement(AppProduction),
-          );
+          console.log("📦 AppProduction importada com sucesso!");
+          console.log("🎯 Tipo do componente:", typeof AppProduction);
+
+          const root = ReactDOM.createRoot(rootElement);
+          console.log("🌳 Root criada:", root);
+
+          const element = React.createElement(AppProduction);
+          console.log("⚛️ Elemento React criado:", element);
+
+          root.render(element);
           console.log("✅ AppProduction renderizada com sucesso!");
+
+          // Verificar se realmente renderizou
+          setTimeout(() => {
+            const hasContent = rootElement.children.length > 0;
+            console.log("🔍 Verificação pós-render:", {
+              hasChildren: hasContent,
+              innerHTML: rootElement.innerHTML.substring(0, 200) + "...",
+            });
+          }, 1000);
         })
         .catch((error) => {
           console.error(
             "❌ Erro ao carregar AppProduction, usando fallback:",
             error,
           );
+          console.error("❌ Stack trace:", error.stack);
+          console.error("❌ Detalhes do erro:", {
+            message: error.message,
+            name: error.name,
+            cause: error.cause,
+          });
+
+          console.log("🛡️ Renderizando SafeModeApp como fallback...");
           ReactDOM.createRoot(rootElement).render(
             React.createElement(SafeModeApp),
           );
+          console.log("✅ SafeModeApp renderizada após erro!");
         });
     } else {
       console.log("🛡️ Modo seguro ativo - usando app simplificada");

@@ -36,6 +36,11 @@ function AppProduction() {
   const [activeSection, setActiveSection] = useState("dashboard");
 
   console.log("🚀 AppProduction carregada com sucesso!");
+  console.log("🌍 Environment:", {
+    prod: import.meta.env.PROD,
+    mode: import.meta.env.MODE,
+    base: import.meta.env.BASE_URL,
+  });
 
   // Função de login
   const handleLogin = (e: React.FormEvent) => {
