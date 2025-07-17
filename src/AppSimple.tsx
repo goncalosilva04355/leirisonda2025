@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
-import SplashPage from "./pages/SplashPage";
+import { LoginPageFixed } from "./pages/LoginPageFixed";
+import { SplashPage } from "./pages/SplashPage";
 
 const AppSimple: React.FC = () => {
   console.log("🚀 AppSimple renderizando...");
@@ -62,49 +62,113 @@ const AppSimple: React.FC = () => {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-blue-200 flex items-center justify-center">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#dbeafe",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "system-ui",
+        }}
+      >
+        <div
+          style={{
+            background: "white",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+            width: "100%",
+            maxWidth: "28rem",
+          }}
+        >
           {/* Logo Leirisonda */}
-          <div className="text-center mb-8">
-            <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <div
+              style={{
+                background: "white",
+                borderRadius: "0.5rem",
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                padding: "1rem",
+                margin: "0 auto",
+                border: "1px solid #e5e7eb",
+                maxWidth: "24rem",
+              }}
+            >
               <img
                 src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
                 alt="Leirisonda - Furos e Captações de Água, Lda"
-                className="w-full h-auto object-contain"
-                style={{ maxHeight: "80px" }}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "contain",
+                  maxHeight: "80px",
+                }}
               />
             </div>
           </div>
 
           {/* Conteúdo do Erro */}
-          <div className="text-center space-y-6">
+          <div style={{ textAlign: "center" }}>
             {/* Título */}
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">
+            <div style={{ marginBottom: "1.5rem" }}>
+              <h1
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "bold",
+                  color: "#1f2937",
+                  marginBottom: "0.5rem",
+                }}
+              >
                 Erro na Aplicação
               </h1>
-              <p className="text-gray-600 text-sm">
+              <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
                 Sistema de Gestão de Piscinas
               </p>
             </div>
 
             {/* Mensagem de erro */}
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <p className="text-red-700 text-sm">{error}</p>
+            <div
+              style={{
+                background: "#fef2f2",
+                border: "1px solid #fecaca",
+                borderRadius: "0.5rem",
+                padding: "1rem",
+                marginBottom: "1.5rem",
+              }}
+            >
+              <p style={{ color: "#dc2626", fontSize: "0.875rem" }}>{error}</p>
             </div>
 
             {/* Botão de recarga */}
-            <div className="space-y-2">
+            <div style={{ marginBottom: "1.5rem" }}>
               <button
                 onClick={() => window.location.reload()}
-                className="w-full bg-blue-300 text-white py-2 px-4 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-colors"
+                style={{
+                  width: "100%",
+                  background: "#93c5fd",
+                  color: "white",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "0.375rem",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                }}
               >
                 🔄 Recarregar Aplicação
               </button>
             </div>
 
             {/* Informações adicionais */}
-            <div className="text-xs text-gray-400 text-center pt-4 border-t border-gray-100">
+            <div
+              style={{
+                fontSize: "0.75rem",
+                color: "#9ca3af",
+                textAlign: "center",
+                paddingTop: "1rem",
+                borderTop: "1px solid #f3f4f6",
+              }}
+            >
               <p>Se o problema persistir, contacte o suporte</p>
             </div>
           </div>
@@ -116,7 +180,7 @@ const AppSimple: React.FC = () => {
   // Not authenticated - show login
   if (!isAuthenticated) {
     return (
-      <LoginPage
+      <LoginPageFixed
         onLogin={async (
           email: string,
           password: string,
