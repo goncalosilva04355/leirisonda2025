@@ -323,12 +323,8 @@ try {
         `;
         console.log("🛡️ Fallback HTML renderizado em produção!");
       });
-
-    return; // Sair aqui para produção
-  }
-
-  // Desenvolvimento: usar lógica existente
-  if (shouldUseSafeMode()) {
+  } else if (shouldUseSafeMode()) {
+    // Desenvolvimento: usar lógica existente
     const isProduction = import.meta.env.PROD;
     const forceSimple = localStorage.getItem("forceSimpleApp") === "true";
 
