@@ -49,9 +49,13 @@ export const LEIRIA_FIREBASE_CONFIG = {
 export function getFirebaseConfig() {
   const config = LEIRIA_FIREBASE_CONFIG;
 
-    // Determinar se está usando variáveis do Netlify ou fallback
-  const usingNetlifyVars = !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY);
-  const isNetlifyBuild = import.meta.env.NETLIFY === "true" || import.meta.env.VITE_IS_NETLIFY === "true";
+  // Determinar se está usando variáveis do Netlify ou fallback
+  const usingNetlifyVars = !isPlaceholder(
+    import.meta.env.VITE_FIREBASE_API_KEY,
+  );
+  const isNetlifyBuild =
+    import.meta.env.NETLIFY === "true" ||
+    import.meta.env.VITE_IS_NETLIFY === "true";
   const isDevMode = isDevelopment();
 
   console.log("🔍 Firebase Environment Detection:");
@@ -73,19 +77,36 @@ export function getFirebaseConfig() {
   }
 
   // Verificar se a configuração é válida
-  const isValidConfig = config.apiKey && config.projectId && config.authDomain && config.databaseURL;
+  const isValidConfig =
+    config.apiKey &&
+    config.projectId &&
+    config.authDomain &&
+    config.databaseURL;
 
   if (!isValidConfig) {
     console.error("❌ Configuração Firebase inválida:");
     console.error("  - API Key:", config.apiKey ? "✅ OK" : "❌ FALTANDO");
-    console.error("  - Project ID:", config.projectId ? "✅ OK" : "❌ FALTANDO");
-    console.error("  - Auth Domain:", config.authDomain ? "✅ OK" : "❌ FALTANDO");
-    console.error("  - Database URL:", config.databaseURL ? "✅ OK" : "❌ FALTANDO");
+    console.error(
+      "  - Project ID:",
+      config.projectId ? "✅ OK" : "❌ FALTANDO",
+    );
+    console.error(
+      "  - Auth Domain:",
+      config.authDomain ? "✅ OK" : "❌ FALTANDO",
+    );
+    console.error(
+      "  - Database URL:",
+      config.databaseURL ? "✅ OK" : "❌ FALTANDO",
+    );
 
     if (!isDevMode) {
-      throw new Error("Firebase configuration is invalid and not in development mode");
-    });
-    throw new Error("Configuração Firebase inválida");
+      throw new Error(
+        "Firebase configuration is invalid and not in development mode",
+      );
+    }
+    console.warn(
+      "⚠️ Prosseguindo com configuração incompleta em desenvolvimento",
+    );
   }
 
   return config;
