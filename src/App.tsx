@@ -3078,7 +3078,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 }
               }
 
-              // console.log("���� Auth result:", result);
+              // console.log("🔐 Auth result:", result);
 
               if (result?.success && result?.user) {
                 // console.log("✅ Login successful for:", result.user.email);
@@ -12398,8 +12398,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {/* Mobile Firebase Fix - Show when conflicts detected */}
         {/* {showMobileFirebaseFix && <MobileFirebaseFix />} */}
 
-        {/* App Status Indicator */}
-        <AppStatusIndicator />
+        {/* App Status Indicator - Disabled to remove loading screen */}
+        {/* <AppStatusIndicator /> */}
       </InstantSyncManagerSafe>
     </AutoSyncProviderSafe>
   );
