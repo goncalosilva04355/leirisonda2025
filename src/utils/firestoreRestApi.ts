@@ -137,13 +137,31 @@ export const readFromFirestoreRest = async (
 
     const url = `${FIRESTORE_BASE_URL}/${collection}?key=${API_KEY}`;
 
-    const response = await fetch(url, {
-      // Add cache buster to ensure fresh requests
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        // Add cache buster to ensure fresh requests
+        cache: "no-cache",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (fetchError) {
+      console.error(
+        `❌ REST API: Erro na requisição para ${collection}:`,
+        fetchError,
+      );
+      return [];
+    }
+
+    // Validate response object
+    if (!response || typeof response.text !== "function") {
+      console.error(
+        `❌ REST API: Resposta inválida para ${collection}:`,
+        response,
+      );
+      return [];
+    }
 
     // Read response body only once
     let responseText: string;
@@ -153,6 +171,10 @@ export const readFromFirestoreRest = async (
       console.error(
         `❌ REST API: Erro ao ler resposta para ${collection}:`,
         readError,
+        "Response status:",
+        response?.status,
+        "Response headers:",
+        response?.headers,
       );
       return [];
     }
