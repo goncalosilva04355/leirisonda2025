@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-// import "./index.css"; // Temporariamente comentado para testar
+import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
