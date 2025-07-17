@@ -3,6 +3,10 @@
 
 import { getRestApiConfig } from "./firebaseConfigHelper";
 import { queuedRestApiCall } from "./requestQueue";
+import {
+  validateFirebaseProject,
+  validateFirestoreAccess,
+} from "./firebaseProjectValidator";
 
 const config = getRestApiConfig();
 const PROJECT_ID = config.projectId;
@@ -166,6 +170,28 @@ export const readFromFirestoreRest = async (
       `⚠️ REST API: Firebase API_KEY não configurado. Definir variáveis VITE_FIREBASE_*`,
     );
     return [];
+  }
+
+  // Validate project exists (only for first call per session)
+  if (!window.firebaseValidated) {
+    try {
+      const validation = await validateFirebaseProject(PROJECT_ID, API_KEY);
+      if (!validation.valid) {
+        console.error(
+          `❌ Firebase Project Validation Failed: ${validation.error}`,
+        );
+        if (validation.details) {
+          console.error("🔍 Details:", validation.details);
+        }
+        // Don't return empty array, continue with request to get specific error
+      } else {
+        console.log("✅ Firebase project validated successfully");
+        window.firebaseValidated = true;
+      }
+    } catch (validationError) {
+      console.warn("⚠️ Could not validate Firebase project:", validationError);
+      // Continue with request anyway
+    }
   }
 
   // Add small delay to prevent race conditions in concurrent calls
