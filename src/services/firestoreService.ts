@@ -285,6 +285,10 @@ export class FirestoreService {
   async getPiscinas(): Promise<FirestoreDocument[]> {
     return this.getCollection("piscinas");
   }
+
+  async createUtilizador(user: any): Promise<string | null> {
+    return this.saveDocument("users", user);
+  }
 }
 
 // Singleton instance
