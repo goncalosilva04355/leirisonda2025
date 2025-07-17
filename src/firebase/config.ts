@@ -215,6 +215,16 @@ export async function getAuthService(): Auth {
   return getAuthInstance();
 }
 
+// Legacy getDB function for compatibility
+export async function getDB(): Promise<Firestore | null> {
+  try {
+    return getFirestoreInstance();
+  } catch (error: any) {
+    console.error("❌ getDB failed:", error.message);
+    return null;
+  }
+}
+
 // Legacy exports for compatibility
 export const app = getFirebaseApp();
 export const db = getFirestoreInstance();
