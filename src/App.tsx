@@ -1,10 +1,10 @@
-// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
-import {
-  initializeFirebaseMobile,
-  isFirebaseMobileReady,
-} from "./firebase/mobileFirebase";
+// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - TEMPORARIAMENTE DESATIVADA
+// import {
+//   initializeFirebaseMobile,
+//   isFirebaseMobileReady,
+// } from "./firebase/mobileFirebase";
 
-// VERIFICADOR SIMPLES DE COLE��ÕES FIRESTORE
+// VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
 
 // FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
@@ -4856,7 +4856,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Hora de Saída
+                              Hora de Sa��da
                             </label>
                             <input
                               type="datetime-local"
@@ -6669,7 +6669,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Hora Início
+                          Hora In��cio
                         </label>
                         <input
                           type="time"
@@ -6933,7 +6933,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom����tico",
+                          "Enchimento autom�����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -11874,7 +11874,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }`}
                             >
                               {selectedWork.folhaGerada
-                                ? "��� Gerada"
+                                ? "����� Gerada"
                                 : "✗ Não gerada"}
                             </span>
                           </div>
