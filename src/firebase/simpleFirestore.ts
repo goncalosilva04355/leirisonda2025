@@ -1,19 +1,10 @@
-// Configuração Firestore SIMPLES que funciona
+// Secure Firestore Configuration using Environment Variables
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getSecureFirebaseConfig } from "../config/firebaseEnvSecure";
 
-// Configuração Firebase FIXA
-const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
-};
+// Get configuration from environment variables
+const firebaseConfig = getSecureFirebaseConfig();
 
 // Inicializar Firebase App
 let app;
