@@ -284,10 +284,26 @@ try {
       // Carregar AppProduction
       import("./AppProduction")
         .then(({ default: AppProduction }) => {
-          ReactDOM.createRoot(rootElement).render(
-            React.createElement(AppProduction),
-          );
+          console.log("📦 AppProduction importada com sucesso!");
+          console.log("🎯 Tipo do componente:", typeof AppProduction);
+
+          const root = ReactDOM.createRoot(rootElement);
+          console.log("🌳 Root criada:", root);
+
+          const element = React.createElement(AppProduction);
+          console.log("⚛️ Elemento React criado:", element);
+
+          root.render(element);
           console.log("✅ AppProduction renderizada com sucesso!");
+
+          // Verificar se realmente renderizou
+          setTimeout(() => {
+            const hasContent = rootElement.children.length > 0;
+            console.log("🔍 Verificação pós-render:", {
+              hasChildren: hasContent,
+              innerHTML: rootElement.innerHTML.substring(0, 200) + "...",
+            });
+          }, 1000);
         })
         .catch((error) => {
           console.error(
