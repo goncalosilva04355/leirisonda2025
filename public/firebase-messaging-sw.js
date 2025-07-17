@@ -3,16 +3,16 @@ console.log(
   "[SW] Firebase Messaging Service Worker iniciado com configuração correta",
 );
 
-// Configuração EXATA do projeto leiria-1cfc9
+// Configuração usando environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  apiKey: self.VITE_FIREBASE_API_KEY || "placeholder-api-key",
   authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "leiria-1cfc9",
   storageBucket: "leiria-1cfc9.firebasestorage.app",
   messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  appId: self.VITE_FIREBASE_APP_ID || "placeholder-app-id",
   measurementId: "G-Q2QWQVH60L",
 };
 
