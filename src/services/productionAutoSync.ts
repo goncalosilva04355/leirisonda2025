@@ -1,63 +1,54 @@
-// Serviço de sincronização automática para produção
+// SERVIÇO CONVERTIDO PARA REST API - SEM SDK FIREBASE
 import { autoSyncService } from "./autoSyncService";
-import { isFirestoreReady } from "../firebase/firestoreConfig";
+import { readFromFirestoreRest } from "../utils/firestoreRestApi";
 
-export class ProductionAutoSyncService {
+class ProductionAutoSync {
   private isInitialized = false;
-  private retryCount = 0;
-  private maxRetries = 10;
-  private retryInterval = 3000; // 3 segundos
+  private syncInterval: NodeJS.Timeout | null = null;
 
-  constructor() {
-    this.initialize();
-  }
+  async initialize(): Promise<void> {
+    if (this.isInitialized) return;
 
-  private async initialize(): Promise<void> {
-    console.log(
-      "🚀 ProductionAutoSync: Inicialização DESATIVADA para resolver problemas de produção",
-    );
+    console.log("🚀 Inicializando ProductionAutoSync com REST API...");
 
-    // TEMPORARIAMENTE DESATIVADO - pode estar a causar bloqueios na produção
-    console.log("⏸️ ProductionAutoSync DESATIVADO para debugging");
-    // await this.enableProductionSync();
+    try {
+      await this.enableProductionSync();
+      this.isInitialized = true;
+      console.log("✅ ProductionAutoSync inicializado com sucesso");
+    } catch (error) {
+      console.error("❌ Erro ao inicializar ProductionAutoSync:", error);
+    }
   }
 
   private async enableProductionSync(): Promise<void> {
-    console.log("🔄 Aguardando Firestore estar pronto...");
+    console.log("🔄 Testando conectividade REST API...");
 
-    // Aguardar Firestore com timeout
-    const firestoreReady = await this.waitForFirestore(30000); // 30 segundos
+    // Test REST API connection
+    const apiReady = await this.waitForRestAPI(30000); // 30 seconds
 
-    if (!firestoreReady) {
-      console.error(
-        "❌ Firestore não ficou pronto a tempo - tentando mesmo assim",
-      );
+    if (!apiReady) {
+      console.error("❌ REST API não respondeu a tempo - tentando mesmo assim");
+    } else {
+      console.log("✅ REST API está funcionando!");
     }
 
+    // Start sync regardless
     await this.startSyncWithRetry();
   }
 
-  private async enableDevelopmentSync(): Promise<void> {
-    // Aguardar menos tempo em desenvolvimento
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    if (isFirestoreReady()) {
-      await this.startSyncWithRetry();
-    } else {
-      console.log("⚠️ Firestore não disponível em desenvolvimento");
-    }
-  }
-
-  private async waitForFirestore(timeout: number): Promise<boolean> {
+  private async waitForRestAPI(timeout: number): Promise<boolean> {
     const startTime = Date.now();
 
     while (Date.now() - startTime < timeout) {
-      if (isFirestoreReady()) {
-        console.log("✅ Firestore está pronto!");
+      try {
+        await readFromFirestoreRest("test");
+        console.log("✅ REST API está pronto!");
         return true;
+      } catch (error) {
+        // API not ready yet
       }
 
-      console.log("🔄 Aguardando Firestore...");
+      console.log("🔄 Aguardando REST API...");
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
@@ -65,97 +56,76 @@ export class ProductionAutoSyncService {
   }
 
   private async startSyncWithRetry(): Promise<void> {
-    while (this.retryCount < this.maxRetries && !this.isInitialized) {
-      this.retryCount++;
+    const maxRetries = 3;
+    let retries = 0;
 
+    while (retries < maxRetries) {
       try {
-        console.log(
-          `🔄 Tentativa ${this.retryCount}/${this.maxRetries} - Ativando sincronização...`,
-        );
+        console.log(`🔄 Tentativa ${retries + 1} de iniciar sync...`);
 
-        await autoSyncService.startAutoSync();
+        // Start periodic sync
+        this.startPeriodicSync();
 
-        this.isInitialized = true;
-        console.log("✅ SINCRONIZAÇÃO AUTOMÁTICA ATIVADA COM SUCESSO!");
-
-        // Marcar no localStorage que foi ativada
-        localStorage.setItem("production-sync-enabled", "true");
-        localStorage.setItem(
-          "production-sync-timestamp",
-          Date.now().toString(),
-        );
-
-        // Disparar evento para notificar a UI
-        window.dispatchEvent(
-          new CustomEvent("productionSyncActivated", {
-            detail: { timestamp: Date.now() },
-          }),
-        );
-
-        break;
+        console.log("✅ Sync iniciado com sucesso");
+        return;
       } catch (error) {
-        console.error(`❌ Tentativa ${this.retryCount} falhou:`, error);
+        retries++;
+        console.error(`❌ Erro na tentativa ${retries}:`, error);
 
-        if (this.retryCount < this.maxRetries) {
-          console.log(
-            `🔄 Tentando novamente em ${this.retryInterval / 1000}s...`,
-          );
-          await new Promise((resolve) =>
-            setTimeout(resolve, this.retryInterval),
-          );
-
-          // Aumentar intervalo progressivamente
-          this.retryInterval = Math.min(this.retryInterval * 1.2, 10000);
-        } else {
-          console.error(
-            "❌ Todas as tentativas falharam - sincronização não pôde ser ativada",
-          );
-
-          // Mesmo assim marcar como tentativa feita
-          localStorage.setItem("production-sync-attempted", "true");
-          localStorage.setItem("production-sync-failed", "true");
+        if (retries < maxRetries) {
+          console.log(`⏳ Aguardando antes de tentar novamente...`);
+          await new Promise((resolve) => setTimeout(resolve, 5000 * retries));
         }
       }
     }
+
+    console.error("❌ Falha ao iniciar sync após todas as tentativas");
   }
 
-  // Forçar nova tentativa de sincronização
-  public async forceRetry(): Promise<void> {
-    console.log("🔄 Forçando nova tentativa de sincronização...");
-    this.retryCount = 0;
-    this.isInitialized = false;
-    await this.startSyncWithRetry();
+  private startPeriodicSync(): void {
+    // Clear existing interval
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+    }
+
+    // Start new interval - sync every 5 minutes
+    this.syncInterval = setInterval(
+      () => {
+        this.performSync();
+      },
+      5 * 60 * 1000,
+    );
+
+    // Perform initial sync
+    this.performSync();
   }
 
-  // Verificar se sincronização está ativa
-  public isActive(): boolean {
-    return this.isInitialized && autoSyncService.isAutoSyncActive();
+  private async performSync(): Promise<void> {
+    try {
+      console.log("🔄 Realizando sincronização automática...");
+
+      // Test if autoSyncService is available
+      if (
+        autoSyncService &&
+        typeof autoSyncService.performSync === "function"
+      ) {
+        await autoSyncService.performSync();
+        console.log("✅ Sincronização automática concluída");
+      } else {
+        console.log("⚠️ AutoSyncService não disponível");
+      }
+    } catch (error) {
+      console.error("❌ Erro na sincronização automática:", error);
+    }
   }
 
-  // Obter status da sincronização
-  public getStatus(): {
-    isActive: boolean;
-    retryCount: number;
-    lastEnabled: string | null;
-    lastAttempt: string | null;
-  } {
-    return {
-      isActive: this.isActive(),
-      retryCount: this.retryCount,
-      lastEnabled: localStorage.getItem("production-sync-timestamp"),
-      lastAttempt: localStorage.getItem("production-sync-attempted"),
-    };
+  stop(): void {
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+      this.syncInterval = null;
+    }
+    console.log("🛑 ProductionAutoSync parado");
   }
 }
 
-// Instância singleton
-export const productionAutoSync = new ProductionAutoSyncService();
-
-// Inicializar automaticamente quando o módulo for carregado - DESATIVADO
-// setTimeout(() => {
-//   if (!productionAutoSync.isActive()) {
-//     console.log("🔄 Auto-retry da sincronização após 10 segundos...");
-//     productionAutoSync.forceRetry();
-//   }
-// }, 10000);
-console.log("⏸️ Auto-retry da sincronização DESATIVADO para debugging");
+export const productionAutoSync = new ProductionAutoSync();
