@@ -185,8 +185,11 @@ const loadApp = async () => {
   }
 };
 
-// Start loading
-loadApp();
+// Start loading the application
+loadApp().catch((error) => {
+  console.error("❌ Erro final ao carregar aplicação:", error);
+  loadSimpleApp();
+});
 
 // White screen detector and recovery
 setTimeout(() => {
