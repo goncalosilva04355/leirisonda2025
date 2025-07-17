@@ -64,9 +64,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Voltar ao App principal para diagnóstico
+  // SEMPRE usar App principal - desenvolvimento = produção
   const AppComponent = App;
-  console.log("🔧 DIAGNÓSTICO: Usando App principal para identificar problema");
+  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
