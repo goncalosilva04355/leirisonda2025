@@ -159,6 +159,21 @@ export const saveToFirestoreRest = async (
   documentId: string,
   data: any,
 ): Promise<boolean> => {
+  // Check if Firebase is configured
+  const isFirebaseConfigured =
+    PROJECT_ID &&
+    API_KEY &&
+    PROJECT_ID !== "demo-value-set-for-production" &&
+    API_KEY !== "demo-value-set-for-production";
+
+  if (!isFirebaseConfigured && import.meta.env.DEV) {
+    console.log(
+      `🤖 Modo desenvolvimento: Simulando save para ${collection}/${documentId}`,
+    );
+    console.log("📝 Dados que seriam salvos:", data);
+    return true; // Return success in dev mode
+  }
+
   try {
     console.log(`🌐 REST API: Guardando ${collection}/${documentId}...`);
 
