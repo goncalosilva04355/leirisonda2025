@@ -7,6 +7,9 @@ console.log("🚀 Inicializando aplicação...");
 // Production safety - prevent crashes
 import "./utils/productionSafety";
 
+// Production diagnostic
+import "./utils/productionDiagnostic";
+
 // Clear any flags that might force simple app
 import "./utils/clearAppFlags";
 
