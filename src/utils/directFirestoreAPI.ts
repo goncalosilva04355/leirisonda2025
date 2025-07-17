@@ -168,10 +168,21 @@ export class FirestoreRESTService {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        const responseClone = response.clone();
+        let errorText = "Não foi possível ler detalhes do erro";
+        try {
+          errorText = await responseClone.text();
+        } catch (readError) {
+          console.warn("⚠️ Erro ao ler corpo da resposta");
+        }
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
 
-      return await response.json();
+      try {
+        return await response.json();
+      } catch (jsonError) {
+        throw new Error("Erro ao processar resposta JSON");
+      }
     } catch (error) {
       console.error("❌ Erro ao criar documento:", error);
       throw error;
@@ -191,10 +202,22 @@ export class FirestoreRESTService {
         if (response.status === 404) {
           return null; // Documento não existe
         }
-        throw new Error(`HTTP ${response.status}: ${await response.text()}`);
+        const responseClone = response.clone();
+        let errorText = "Não foi possível ler detalhes do erro";
+        try {
+          errorText = await responseClone.text();
+        } catch (readError) {
+          console.warn("⚠️ Erro ao ler corpo da resposta");
+        }
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
       }
 
-      const doc = await response.json();
+      let doc;
+      try {
+        doc = await response.json();
+      } catch (jsonError) {
+        throw new Error("Erro ao processar resposta JSON do documento");
+      }
       return this.convertFromFirestoreFormat(doc.fields || {});
     } catch (error) {
       console.error("❌ Erro ao ler documento:", error);
