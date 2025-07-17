@@ -1,51 +1,70 @@
-// SERVICE WORKER SIMPLES SEM FIREBASE SDK
-console.log("[SW] Service Worker iniciado - sem Firebase SDK");
+// Firebase Cloud Messaging Service Worker - CONFIGURAÇÃO CORRETA
+console.log(
+  "[SW] Firebase Messaging Service Worker iniciado com configuração correta",
+);
 
-// Basic service worker for Leirisonda
-const CACHE_NAME = "leirisonda-sw-v1";
-const urlsToCache = ["/", "/manifest.json", "/icon.svg"];
+// Configuração EXATA do projeto leiria-1cfc9
+const firebaseConfig = {
+  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  authDomain: "leiria-1cfc9.firebaseapp.com",
+  databaseURL:
+    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "leiria-1cfc9",
+  storageBucket: "leiria-1cfc9.firebasestorage.app",
+  messagingSenderId: "632599887141",
+  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+  measurementId: "G-Q2QWQVH60L",
+};
 
-// Install event
+let messaging = null;
+
+try {
+  // Carregar Firebase scripts
+  importScripts(
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js",
+  );
+  importScripts(
+    "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js",
+  );
+
+  if (typeof firebase !== "undefined") {
+    firebase.initializeApp(firebaseConfig);
+    messaging = firebase.messaging();
+    console.log(
+      "[SW] Firebase inicializado com configuração correta - projeto:",
+      firebaseConfig.projectId,
+    );
+
+    // Handle background messages
+    messaging.onBackgroundMessage((payload) => {
+      console.log("[SW] Background message:", payload);
+
+      const title = payload.notification?.title || "Leirisonda";
+      const options = {
+        body: payload.notification?.body || "Nova notificação",
+        icon: "/icon.svg",
+        badge: "/icon.svg",
+        tag: "leirisonda-notification",
+      };
+
+      return self.registration.showNotification(title, options);
+    });
+  }
+} catch (error) {
+  console.warn("[SW] Firebase não pôde ser inicializado:", error);
+}
+
+// Service Worker básico
 self.addEventListener("install", (event) => {
   console.log("[SW] Service Worker instalado");
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("[SW] Cache aberto");
-      return cache.addAll(urlsToCache);
-    }),
-  );
   self.skipWaiting();
 });
 
-// Activate event
 self.addEventListener("activate", (event) => {
   console.log("[SW] Service Worker ativado");
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log("[SW] Cache antigo removido:", cacheName);
-            return caches.delete(cacheName);
-          }
-        }),
-      );
-    }),
-  );
   event.waitUntil(clients.claim());
 });
 
-// Fetch event
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached resource or fetch from network
-      return response || fetch(event.request);
-    }),
-  );
-});
-
-// Notification click event
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil(
@@ -58,4 +77,6 @@ self.addEventListener("notificationclick", (event) => {
   );
 });
 
-console.log("[SW] Service Worker pronto - sem Firebase SDK");
+console.log(
+  "[SW] Firebase Messaging Service Worker pronto - projeto leiria-1cfc9",
+);

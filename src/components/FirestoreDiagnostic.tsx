@@ -1,283 +1,354 @@
-// COMPONENTE CONVERTIDO PARA REST API - SEM SDK FIREBASE
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { Database, CheckCircle, XCircle, Clock, Settings } from "lucide-react";
 import {
-  readFromFirestoreRest,
-  saveToFirestoreRest,
-} from "../utils/firestoreRestApi";
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  RefreshCw,
+  Database,
+  Wifi,
+  Settings,
+  Terminal,
+} from "lucide-react";
 
-interface DiagnosticStep {
+interface DiagnosticResult {
   step: string;
-  status: "pending" | "success" | "error";
+  status: "success" | "error" | "warning" | "pending";
   message: string;
   details?: string;
 }
 
-export const FirestoreDiagnostic: React.FC = () => {
-  const [diagnostics, setDiagnostics] = useState<DiagnosticStep[]>([]);
+export default function FirestoreDiagnostic() {
+  const [diagnostics, setDiagnostics] = useState<DiagnosticResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [forceAPI, setForceAPI] = useState(false);
+  const [forceFirebase, setForceFirebase] = useState(false);
 
-  const addDiagnostic = (diagnostic: DiagnosticStep) => {
-    setDiagnostics((prev) => {
-      const existing = prev.findIndex((d) => d.step === diagnostic.step);
-      if (existing >= 0) {
-        const updated = [...prev];
-        updated[existing] = diagnostic;
-        return updated;
-      }
-      return [...prev, diagnostic];
-    });
+  const addDiagnostic = (result: DiagnosticResult) => {
+    setDiagnostics((prev) => [...prev, result]);
+  };
+
+  const clearDiagnostics = () => {
+    setDiagnostics([]);
   };
 
   const runDiagnostics = async () => {
     setIsRunning(true);
-    setDiagnostics([]);
+    clearDiagnostics();
 
-    // Passo 1: Verificar ambiente
+    // Passo 1: Verificar variáveis de ambiente
     addDiagnostic({
-      step: "Ambiente",
-      status: "success",
-      message: "Usando REST API direta - sem SDK Firebase",
-      details: `Modo: REST API pura
-Projeto: leiria-1cfc9
-SDK Firebase: Eliminado`,
-    });
-
-    // Passo 2: Testar conectividade REST API
-    addDiagnostic({
-      step: "Conectividade REST API",
+      step: "Variáveis de Ambiente",
       status: "pending",
-      message: "Testando conexão com Firestore REST API...",
+      message: "Verificando configuração...",
     });
 
     try {
-      const testData = await readFromFirestoreRest("test");
+      const isNetlify =
+        import.meta.env.NETLIFY === "true" ||
+        import.meta.env.VITE_IS_NETLIFY === "true";
+      const isDev = import.meta.env.DEV;
+      const hasFirebaseVars = !!import.meta.env.VITE_FIREBASE_API_KEY;
+      const forceFirebaseEnabled =
+        import.meta.env.VITE_FORCE_FIREBASE === "true" ||
+        import.meta.env.VITE_FORCE_FIREBASE === true ||
+        forceFirebase;
+
       addDiagnostic({
-        step: "Conectividade REST API",
-        status: "success",
-        message: "REST API funcionando",
-        details: `Projeto: leiria-1cfc9
-Resposta: ${testData.length} documentos de teste`,
+        step: "Variáveis de Ambiente",
+        status: isNetlify ? "success" : hasFirebaseVars ? "warning" : "error",
+        message: isNetlify
+          ? "Executando no Netlify - Firebase ativo"
+          : hasFirebaseVars
+            ? "Variáveis Firebase detectadas"
+            : "Firebase desativado (desenvolvimento local)",
+        details: `
+Environment: ${isDev ? "Development" : "Production"}
+Netlify: ${isNetlify}
+Firebase Vars: ${hasFirebaseVars}
+Force Firebase: ${forceFirebaseEnabled}
+        `.trim(),
       });
 
-      // Passo 3: Testar escrita
+      if (!isNetlify && !forceFirebaseEnabled) {
+        addDiagnostic({
+          step: "Configuração Firebase",
+          status: "success",
+          message:
+            "Firebase desativado durante desenvolvimento (configurado corretamente)",
+          details: `VITE_FORCE_FIREBASE=${import.meta.env.VITE_FORCE_FIREBASE}
+Modo desenvolvimento: ${isDev}
+Aplicação funcionará com localStorage apenas
+Firebase será ativado automaticamente no Netlify`,
+        });
+        setIsRunning(false);
+        return;
+      }
+
+      // Passo 2: Verificar inicialização do Firebase
       addDiagnostic({
-        step: "Teste de Escrita",
+        step: "Inicialização Firebase",
         status: "pending",
-        message: "Testando escrita via REST API...",
+        message: "Verificando Firebase App...",
       });
 
       try {
-        const testDoc = {
-          message: "Diagnóstico REST API",
-          timestamp: new Date().toISOString(),
-          diagnostic: true,
-        };
+        const { getFirebaseApp } = await import("../firebase/basicConfig");
+        const app = getFirebaseApp();
 
-        const success = await saveToFirestoreRest(
-          "test",
-          `diagnostic_${Date.now()}`,
-          testDoc,
-        );
-
-        if (success) {
+        if (app) {
           addDiagnostic({
-            step: "Teste de Escrita",
+            step: "Inicialização Firebase",
             status: "success",
-            message: "Escrita via REST API funcionando",
-            details: "Documento de teste criado com sucesso",
+            message: "Firebase App inicializada com sucesso",
+            details: `Project ID: ${app.options.projectId}`,
           });
         } else {
           addDiagnostic({
-            step: "Teste de Escrita",
+            step: "Inicialização Firebase",
             status: "error",
-            message: "Falha na escrita via REST API",
+            message: "Firebase App não inicializada",
           });
+          setIsRunning(false);
+          return;
         }
-      } catch (writeError: any) {
+      } catch (error: any) {
         addDiagnostic({
-          step: "Teste de Escrita",
+          step: "Inicialização Firebase",
           status: "error",
-          message: "Erro na escrita via REST API",
-          details: writeError.message,
+          message: "Erro ao inicializar Firebase",
+          details: error.message,
         });
+        setIsRunning(false);
+        return;
       }
 
-      // Passo 4: Verificar coleções existentes
+      // Passo 3: Verificar Firestore
       addDiagnostic({
-        step: "Verificação de Dados",
+        step: "Firestore",
         status: "pending",
-        message: "Verificando coleções existentes...",
+        message: "Verificando Firestore...",
       });
 
       try {
-        const [obras, piscinas, clientes, manutencoes] = await Promise.all([
-          readFromFirestoreRest("obras"),
-          readFromFirestoreRest("piscinas"),
-          readFromFirestoreRest("clientes"),
-          readFromFirestoreRest("manutencoes"),
-        ]);
+        const { getFirebaseFirestoreAsync } = await import(
+          "../firebase/firestoreConfig"
+        );
+        const firestore = await getFirebaseFirestoreAsync();
 
+        if (firestore) {
+          addDiagnostic({
+            step: "Firestore",
+            status: "success",
+            message: "Firestore inicializado com sucesso",
+          });
+
+          // Passo 4: Teste de conectividade
+          addDiagnostic({
+            step: "Conectividade",
+            status: "pending",
+            message: "Testando conexão com Firestore...",
+          });
+
+          try {
+            const { doc, getDoc } = await import("firebase/firestore");
+            const testDoc = doc(firestore, "connection-test", "ping");
+            await getDoc(testDoc);
+
+            addDiagnostic({
+              step: "Conectividade",
+              status: "success",
+              message: "Conexão com Firestore funcionando",
+            });
+
+            // Passo 5: Testar coleção Obras
+            addDiagnostic({
+              step: "Coleção Obras",
+              status: "pending",
+              message: "Testando acesso à coleção Obras...",
+            });
+
+            try {
+              const { collection, getDocs, limit, query } = await import(
+                "firebase/firestore"
+              );
+              const obrasRef = collection(firestore, "obras");
+              const obrasQuery = query(obrasRef, limit(1));
+              const snapshot = await getDocs(obrasQuery);
+
+              addDiagnostic({
+                step: "Coleção Obras",
+                status: "success",
+                message: `Coleção Obras acessível (${snapshot.size} documentos encontrados)`,
+              });
+            } catch (error: any) {
+              addDiagnostic({
+                step: "Coleção Obras",
+                status: "error",
+                message: "Erro ao acessar coleção Obras",
+                details: error.message,
+              });
+            }
+          } catch (error: any) {
+            addDiagnostic({
+              step: "Conectividade",
+              status: "error",
+              message: "Erro na conectividade com Firestore",
+              details: error.message,
+            });
+          }
+        } else {
+          addDiagnostic({
+            step: "Firestore",
+            status: "error",
+            message: "Firestore não inicializado",
+          });
+        }
+      } catch (error: any) {
         addDiagnostic({
-          step: "Verificação de Dados",
-          status: "success",
-          message: "Dados encontrados no Firestore",
-          details: `Obras: ${obras.length}
-Piscinas: ${piscinas.length}
-Clientes: ${clientes.length}
-Manutenções: ${manutencoes.length}`,
-        });
-      } catch (dataError: any) {
-        addDiagnostic({
-          step: "Verificação de Dados",
+          step: "Firestore",
           status: "error",
-          message: "Erro ao verificar dados",
-          details: dataError.message,
+          message: "Erro ao verificar Firestore",
+          details: error.message,
         });
       }
-    } catch (connectError: any) {
+    } catch (error: any) {
       addDiagnostic({
-        step: "Conectividade REST API",
+        step: "Diagnóstico",
         status: "error",
-        message: "Erro na REST API",
-        details: connectError.message,
+        message: "Erro durante diagnóstico",
+        details: error.message,
       });
     }
 
     setIsRunning(false);
   };
 
+  const getStatusIcon = (status: DiagnosticResult["status"]) => {
+    switch (status) {
+      case "success":
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case "error":
+        return <XCircle className="h-5 w-5 text-red-500" />;
+      case "warning":
+        return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+      case "pending":
+        return <RefreshCw className="h-5 w-5 text-blue-500 animate-spin" />;
+    }
+  };
+
+  const getStatusBadge = (status: DiagnosticResult["status"]) => {
+    const variants = {
+      success: "default",
+      error: "destructive",
+      warning: "secondary",
+      pending: "outline",
+    } as const;
+
+    return <Badge variant={variants[status]}>{status.toUpperCase()}</Badge>;
+  };
+
   useEffect(() => {
+    // Auto-executar na primeira carga
     runDiagnostics();
-  }, [forceAPI]);
-
-  const getStatusIcon = (status: DiagnosticStep["status"]) => {
-    switch (status) {
-      case "success":
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "error":
-        return <XCircle className="h-4 w-4 text-red-500" />;
-      case "pending":
-        return <Clock className="h-4 w-4 text-yellow-500" />;
-    }
-  };
-
-  const getStatusBadge = (status: DiagnosticStep["status"]) => {
-    switch (status) {
-      case "success":
-        return (
-          <Badge variant="default" className="bg-green-100 text-green-800">
-            Sucesso
-          </Badge>
-        );
-      case "error":
-        return <Badge variant="destructive">Erro</Badge>;
-      case "pending":
-        return <Badge variant="secondary">Processando</Badge>;
-    }
-  };
+  }, [forceFirebase]);
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-        <div className="flex items-center space-x-2">
-          <Database className="h-6 w-6" />
-          <CardTitle>Diagnóstico REST API</CardTitle>
-        </div>
-        <div className="ml-auto flex space-x-2">
-          <Button
-            variant="outline"
-            onClick={runDiagnostics}
-            disabled={isRunning}
-            className="flex items-center gap-2"
-          >
-            <Settings className="h-4 w-4" />
-            {isRunning ? "Testando..." : "Testar Novamente"}
-          </Button>
-
-          <Button
-            variant="outline"
-            onClick={() => setForceAPI(!forceAPI)}
-            className="flex items-center gap-2"
-          >
-            <Settings className="h-4 w-4" />
-            {forceAPI ? "Desativar" : "Forçar"} Teste REST API
-          </Button>
-        </div>
-      </CardHeader>
-
-      <CardContent>
-        <CardDescription className="mb-6">
-          Diagnóstico completo da REST API do Firestore (sem SDK Firebase)
-        </CardDescription>
-
-        {forceAPI && (
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md mb-6">
-            <div className="flex">
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  <strong>REST API Forçada:</strong> Testando conectividade
-                  direta com Firestore sem usar Firebase SDK.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="space-y-4">
-          {diagnostics.map((diagnostic, index) => (
-            <div
-              key={index}
-              className="flex items-start space-x-3 p-4 border rounded-lg"
+    <div className="container mx-auto p-6 space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Database className="h-6 w-6" />
+            Diagnóstico do Firestore
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              onClick={runDiagnostics}
+              disabled={isRunning}
+              className="flex items-center gap-2"
             >
-              <div className="flex-shrink-0 mt-1">
-                {getStatusIcon(diagnostic.status)}
-              </div>
-              <div className="flex-grow min-w-0">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">
-                    {diagnostic.step}
-                  </h3>
-                  {getStatusBadge(diagnostic.status)}
+              {isRunning ? (
+                <RefreshCw className="h-4 w-4 animate-spin" />
+              ) : (
+                <Terminal className="h-4 w-4" />
+              )}
+              {isRunning ? "Executando..." : "Executar Diagnóstico"}
+            </Button>
+
+            <Button
+              variant="outline"
+              onClick={() => setForceFirebase(!forceFirebase)}
+              className="flex items-center gap-2"
+            >
+              <Settings className="h-4 w-4" />
+              {forceFirebase ? "Desativar" : "Forçar"} Firebase Local
+            </Button>
+
+            <Button
+              variant="ghost"
+              onClick={clearDiagnostics}
+              disabled={isRunning}
+            >
+              Limpar
+            </Button>
+          </div>
+
+          {forceFirebase && (
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-md">
+              <div className="flex">
+                <AlertCircle className="h-5 w-5 text-yellow-400 mr-2" />
+                <div>
+                  <p className="text-sm text-yellow-700">
+                    <strong>Firebase Forçado Localmente:</strong> Isto pode
+                    causar problemas de quotas ou conectividade. Use apenas para
+                    debugging.
+                  </p>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">
-                  {diagnostic.message}
-                </p>
-                {diagnostic.details && (
-                  <pre className="text-xs text-gray-500 mt-2 whitespace-pre-wrap bg-gray-50 p-2 rounded">
-                    {diagnostic.details}
-                  </pre>
-                )}
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        </CardContent>
+      </Card>
 
-        {diagnostics.length === 0 && !isRunning && (
-          <div className="text-center py-8 text-gray-500">
-            Clique em "Testar Novamente" para iniciar o diagnóstico
-          </div>
-        )}
-
-        {isRunning && (
-          <div className="text-center py-8">
-            <Clock className="h-8 w-8 mx-auto mb-2 text-yellow-500 animate-spin" />
-            <p className="text-gray-600">Executando diagnóstico REST API...</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {diagnostics.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Wifi className="h-6 w-6" />
+              Resultados do Diagnóstico
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {diagnostics.map((diagnostic, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-4 border rounded-lg"
+                >
+                  {getStatusIcon(diagnostic.status)}
+                  <div className="flex-1 space-y-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">{diagnostic.step}</h4>
+                      {getStatusBadge(diagnostic.status)}
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      {diagnostic.message}
+                    </p>
+                    {diagnostic.details && (
+                      <pre className="text-xs bg-gray-100 p-2 rounded mt-2 overflow-x-auto">
+                        {diagnostic.details}
+                      </pre>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
-};
-
-export default FirestoreDiagnostic;
+}

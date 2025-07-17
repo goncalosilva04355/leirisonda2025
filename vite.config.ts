@@ -25,7 +25,10 @@ export default defineConfig({
           ) {
             return "react-vendor";
           }
-
+          // Firebase
+          if (id.includes("firebase") || id.includes("@firebase")) {
+            return "firebase-vendor";
+          }
           // UI components
           if (id.includes("lucide-react") || id.includes("framer-motion")) {
             return "ui-vendor";
@@ -57,5 +60,9 @@ export default defineConfig({
   },
   css: {
     postcss: "./postcss.config.cjs",
+  },
+  optimizeDeps: {
+    include: ["firebase/app", "firebase/firestore", "firebase/auth"],
+    exclude: ["@firebase/firestore"],
   },
 });

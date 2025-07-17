@@ -21,7 +21,8 @@
     "builder:sync": "echo 'Builder.io sync trigger - Leirisonda ready'",
     "builder:force-push": "echo 'Syncing ai_main_9fcae005c620 branch to GitHub...'",
     "builder:fix-sync": "echo 'Fixing Builder.io GitHub integration...'",
-    "github:create-branch": "echo 'Creating branch ai_main_9fcae005c620 on GitHub...'"
+    "github:create-branch": "echo 'Creating branch ai_main_9fcae005c620 on GitHub...'",
+    "firebase:update": "node scripts/update-firebase-config.js"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",
@@ -32,6 +33,7 @@
     "@capacitor/status-bar": "^7.0.1",
     "archiver": "^7.0.1",
     "express": "^4.18.2",
+    "firebase": "^11.10.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "xlsx": "^0.18.5",

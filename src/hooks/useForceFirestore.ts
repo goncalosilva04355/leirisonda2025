@@ -1,176 +1,171 @@
-// HOOK CONVERTIDO PARA REST API - SEM SDK FIREBASE
 import { useState, useEffect, useCallback } from "react";
-import {
-  saveToFirestoreRest,
-  readFromFirestoreRest,
-  deleteFromFirestoreRest,
-} from "../utils/firestoreRestApi";
+import { forceFirestoreService } from "../services/forceFirestoreService";
 
 /**
- * Hook que usa APENAS REST API do Firestore (sem SDK)
- * Substitui totalmente o Firebase SDK
+ * Hook que força TODOS os dados a serem guardados no Firestore
+ * Substitui qualquer uso de localStorage como armazenamento principal
  */
 export const useForceFirestore = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [status, setStatus] = useState<{
     firestoreReady: boolean;
     collections: { [key: string]: number };
+    lastCheck: string;
   }>({
     firestoreReady: false,
     collections: {},
+    lastCheck: new Date().toISOString(),
   });
 
-  // Initialize REST API
+  // Initialize and migrate localStorage data to Firestore
   useEffect(() => {
-    const initializeRestApi = async () => {
+    const initializeFirestore = async () => {
       try {
-        console.log("🌐 USANDO APENAS REST API - SEM SDK FIREBASE");
+        console.log("🔥 FORÇANDO USO DO FIRESTORE - MIGRANDO DADOS LOCAIS");
 
-        // Test REST API connection
-        const testData = await readFromFirestoreRest("test");
+        // Migrate any existing localStorage data
+        const migrationResult =
+          await forceFirestoreService.migrateLocalStorageToFirestore();
+        console.log("📦 Migração concluída:", migrationResult);
 
-        setStatus({
-          firestoreReady: true,
-          collections: {},
-        });
+        // Get current status
+        const currentStatus = await forceFirestoreService.getStatus();
+        setStatus(currentStatus);
+
         setIsInitialized(true);
-
-        console.log("✅ REST API inicializada com sucesso");
+        console.log(
+          "✅ useForceFirestore inicializado - todos os dados vão para Firestore",
+        );
       } catch (error) {
-        console.error("❌ Erro ao inicializar REST API:", error);
-        setIsInitialized(true);
+        console.error("❌ Erro ao inicializar useForceFirestore:", error);
+        setIsInitialized(true); // Continue mesmo com erro
       }
     };
 
-    initializeRestApi();
+    initializeFirestore();
   }, []);
 
-  // Pools operations - REST API
+  // Pools operations - SEMPRE no Firestore
   const savePools = useCallback(async (pools: any[]): Promise<void> => {
-    console.log("💾 Guardando piscinas via REST API:", pools.length);
+    console.log("💾 Guardando piscinas no Firestore:", pools.length);
     try {
-      for (const pool of pools) {
-        await saveToFirestoreRest(
-          "piscinas",
-          pool.id || `pool_${Date.now()}`,
-          pool,
-        );
-      }
-      console.log("✅ Piscinas guardadas via REST API");
+      const operations = pools.map((pool) => ({
+        collection: "pools",
+        data: pool,
+        id: pool.id,
+      }));
+      await forceFirestoreService.saveBatch(operations);
+      console.log("✅ Piscinas guardadas no Firestore");
     } catch (error) {
-      console.error("❌ Erro ao guardar piscinas via REST API:", error);
+      console.error("❌ Erro ao guardar piscinas no Firestore:", error);
       throw error;
     }
   }, []);
 
   const getPools = useCallback(async (): Promise<any[]> => {
-    console.log("📖 Obtendo piscinas via REST API");
+    console.log("📖 Obtendo piscinas do Firestore");
     try {
-      const pools = await readFromFirestoreRest("piscinas");
-      console.log("✅ Piscinas obtidas via REST API:", pools.length);
+      const pools = await forceFirestoreService.getPools();
+      console.log("✅ Piscinas obtidas do Firestore:", pools.length);
       return pools;
     } catch (error) {
-      console.error("❌ Erro ao obter piscinas via REST API:", error);
+      console.error("❌ Erro ao obter piscinas do Firestore:", error);
       return [];
     }
   }, []);
 
   const savePool = useCallback(async (pool: any): Promise<string> => {
-    console.log("💾 Guardando piscina via REST API:", pool.name || pool.id);
+    console.log("💾 Guardando piscina no Firestore:", pool.name || pool.id);
     try {
-      const id = pool.id || `pool_${Date.now()}`;
-      await saveToFirestoreRest("piscinas", id, pool);
-      console.log("✅ Piscina guardada via REST API:", id);
+      const id = await forceFirestoreService.savePool(pool);
+      console.log("✅ Piscina guardada no Firestore:", id);
       return id;
     } catch (error) {
-      console.error("❌ Erro ao guardar piscina via REST API:", error);
+      console.error("❌ Erro ao guardar piscina no Firestore:", error);
       throw error;
     }
   }, []);
 
   const deletePool = useCallback(async (poolId: string): Promise<void> => {
-    console.log("🗑️ Eliminando piscina via REST API:", poolId);
+    console.log("🗑️ Eliminando piscina do Firestore:", poolId);
     try {
-      await deleteFromFirestoreRest("piscinas", poolId);
-      console.log("✅ Piscina eliminada via REST API");
+      await forceFirestoreService.deletePool(poolId);
+      console.log("✅ Piscina eliminada do Firestore");
     } catch (error) {
-      console.error("❌ Erro ao eliminar piscina via REST API:", error);
+      console.error("❌ Erro ao eliminar piscina do Firestore:", error);
       throw error;
     }
   }, []);
 
-  // Works operations - REST API
+  // Works operations - SEMPRE no Firestore
   const saveWorks = useCallback(async (works: any[]): Promise<void> => {
-    console.log("💾 Guardando obras via REST API:", works.length);
+    console.log("💾 Guardando obras no Firestore:", works.length);
     try {
-      for (const work of works) {
-        await saveToFirestoreRest(
-          "obras",
-          work.id || `work_${Date.now()}`,
-          work,
-        );
-      }
-      console.log("✅ Obras guardadas via REST API");
+      const operations = works.map((work) => ({
+        collection: "works",
+        data: work,
+        id: work.id,
+      }));
+      await forceFirestoreService.saveBatch(operations);
+      console.log("✅ Obras guardadas no Firestore");
     } catch (error) {
-      console.error("❌ Erro ao guardar obras via REST API:", error);
+      console.error("❌ Erro ao guardar obras no Firestore:", error);
       throw error;
     }
   }, []);
 
   const getWorks = useCallback(async (): Promise<any[]> => {
-    console.log("📖 Obtendo obras via REST API");
+    console.log("📖 Obtendo obras do Firestore");
     try {
-      const works = await readFromFirestoreRest("obras");
-      console.log("✅ Obras obtidas via REST API:", works.length);
+      const works = await forceFirestoreService.getWorks();
+      console.log("✅ Obras obtidas do Firestore:", works.length);
       return works;
     } catch (error) {
-      console.error("❌ Erro ao obter obras via REST API:", error);
+      console.error("❌ Erro ao obter obras do Firestore:", error);
       return [];
     }
   }, []);
 
   const saveWork = useCallback(async (work: any): Promise<string> => {
-    console.log("💾 Guardando obra via REST API:", work.name || work.id);
+    console.log("💾 Guardando obra no Firestore:", work.name || work.id);
     try {
-      const id = work.id || `work_${Date.now()}`;
-      await saveToFirestoreRest("obras", id, work);
-      console.log("✅ Obra guardada via REST API:", id);
+      const id = await forceFirestoreService.saveWork(work);
+      console.log("✅ Obra guardada no Firestore:", id);
       return id;
     } catch (error) {
-      console.error("❌ Erro ao guardar obra via REST API:", error);
+      console.error("❌ Erro ao guardar obra no Firestore:", error);
       throw error;
     }
   }, []);
 
   const deleteWork = useCallback(async (workId: string): Promise<void> => {
-    console.log("🗑️ Eliminando obra via REST API:", workId);
+    console.log("🗑️ Eliminando obra do Firestore:", workId);
     try {
-      await deleteFromFirestoreRest("obras", workId);
-      console.log("✅ Obra eliminada via REST API");
+      await forceFirestoreService.deleteWork(workId);
+      console.log("✅ Obra eliminada do Firestore");
     } catch (error) {
-      console.error("❌ Erro ao eliminar obra via REST API:", error);
+      console.error("❌ Erro ao eliminar obra do Firestore:", error);
       throw error;
     }
   }, []);
 
-  // Maintenance operations - REST API
+  // Maintenance operations - SEMPRE no Firestore
   const saveMaintenance = useCallback(
     async (maintenanceList: any[]): Promise<void> => {
       console.log(
-        "💾 Guardando manutenções via REST API:",
+        "💾 Guardando manutenções no Firestore:",
         maintenanceList.length,
       );
       try {
-        for (const maintenance of maintenanceList) {
-          await saveToFirestoreRest(
-            "manutencoes",
-            maintenance.id || `maint_${Date.now()}`,
-            maintenance,
-          );
-        }
-        console.log("✅ Manutenções guardadas via REST API");
+        const operations = maintenanceList.map((maintenance) => ({
+          collection: "maintenance",
+          data: maintenance,
+          id: maintenance.id,
+        }));
+        await forceFirestoreService.saveBatch(operations);
+        console.log("✅ Manutenções guardadas no Firestore");
       } catch (error) {
-        console.error("❌ Erro ao guardar manutenções via REST API:", error);
+        console.error("❌ Erro ao guardar manutenções no Firestore:", error);
         throw error;
       }
     },
@@ -178,13 +173,13 @@ export const useForceFirestore = () => {
   );
 
   const getMaintenance = useCallback(async (): Promise<any[]> => {
-    console.log("📖 Obtendo manutenções via REST API");
+    console.log("📖 Obtendo manutenções do Firestore");
     try {
-      const maintenance = await readFromFirestoreRest("manutencoes");
-      console.log("✅ Manutenções obtidas via REST API:", maintenance.length);
+      const maintenance = await forceFirestoreService.getMaintenance();
+      console.log("✅ Manutenções obtidas do Firestore:", maintenance.length);
       return maintenance;
     } catch (error) {
-      console.error("❌ Erro ao obter manutenções via REST API:", error);
+      console.error("❌ Erro ao obter manutenções do Firestore:", error);
       return [];
     }
   }, []);
@@ -192,16 +187,15 @@ export const useForceFirestore = () => {
   const saveMaintenanceItem = useCallback(
     async (maintenance: any): Promise<string> => {
       console.log(
-        "💾 Guardando manutenção via REST API:",
+        "💾 Guardando manutenção no Firestore:",
         maintenance.poolName || maintenance.id,
       );
       try {
-        const id = maintenance.id || `maint_${Date.now()}`;
-        await saveToFirestoreRest("manutencoes", id, maintenance);
-        console.log("✅ Manutenção guardada via REST API:", id);
+        const id = await forceFirestoreService.saveMaintenance(maintenance);
+        console.log("✅ Manutenção guardada no Firestore:", id);
         return id;
       } catch (error) {
-        console.error("❌ Erro ao guardar manutenção via REST API:", error);
+        console.error("❌ Erro ao guardar manutenção no Firestore:", error);
         throw error;
       }
     },
@@ -210,112 +204,112 @@ export const useForceFirestore = () => {
 
   const deleteMaintenance = useCallback(
     async (maintenanceId: string): Promise<void> => {
-      console.log("🗑️ Eliminando manutenção via REST API:", maintenanceId);
+      console.log("🗑️ Eliminando manutenção do Firestore:", maintenanceId);
       try {
-        await deleteFromFirestoreRest("manutencoes", maintenanceId);
-        console.log("✅ Manutenção eliminada via REST API");
+        await forceFirestoreService.deleteMaintenance(maintenanceId);
+        console.log("✅ Manutenção eliminada do Firestore");
       } catch (error) {
-        console.error("❌ Erro ao eliminar manutenção via REST API:", error);
+        console.error("❌ Erro ao eliminar manutenção do Firestore:", error);
         throw error;
       }
     },
     [],
   );
 
-  // Clients operations - REST API
+  // Clients operations - SEMPRE no Firestore
   const saveClients = useCallback(async (clients: any[]): Promise<void> => {
-    console.log("💾 Guardando clientes via REST API:", clients.length);
+    console.log("💾 Guardando clientes no Firestore:", clients.length);
     try {
-      for (const client of clients) {
-        await saveToFirestoreRest(
-          "clientes",
-          client.id || `client_${Date.now()}`,
-          client,
-        );
-      }
-      console.log("✅ Clientes guardados via REST API");
+      const operations = clients.map((client) => ({
+        collection: "clients",
+        data: client,
+        id: client.id,
+      }));
+      await forceFirestoreService.saveBatch(operations);
+      console.log("✅ Clientes guardados no Firestore");
     } catch (error) {
-      console.error("❌ Erro ao guardar clientes via REST API:", error);
+      console.error("❌ Erro ao guardar clientes no Firestore:", error);
       throw error;
     }
   }, []);
 
   const getClients = useCallback(async (): Promise<any[]> => {
-    console.log("📖 Obtendo clientes via REST API");
+    console.log("📖 Obtendo clientes do Firestore");
     try {
-      const clients = await readFromFirestoreRest("clientes");
-      console.log("✅ Clientes obtidos via REST API:", clients.length);
+      const clients = await forceFirestoreService.getClients();
+      console.log("✅ Clientes obtidos do Firestore:", clients.length);
       return clients;
     } catch (error) {
-      console.error("❌ Erro ao obter clientes via REST API:", error);
+      console.error("❌ Erro ao obter clientes do Firestore:", error);
       return [];
     }
   }, []);
 
   const saveClient = useCallback(async (client: any): Promise<string> => {
-    console.log("💾 Guardando cliente via REST API:", client.name || client.id);
+    console.log("💾 Guardando cliente no Firestore:", client.name || client.id);
     try {
-      const id = client.id || `client_${Date.now()}`;
-      await saveToFirestoreRest("clientes", id, client);
-      console.log("✅ Cliente guardado via REST API:", id);
+      const id = await forceFirestoreService.saveClient(client);
+      console.log("✅ Cliente guardado no Firestore:", id);
       return id;
     } catch (error) {
-      console.error("❌ Erro ao guardar cliente via REST API:", error);
+      console.error("❌ Erro ao guardar cliente no Firestore:", error);
       throw error;
     }
   }, []);
 
   const deleteClient = useCallback(async (clientId: string): Promise<void> => {
-    console.log("🗑️ Eliminando cliente via REST API:", clientId);
+    console.log("🗑️ Eliminando cliente do Firestore:", clientId);
     try {
-      await deleteFromFirestoreRest("clientes", clientId);
-      console.log("✅ Cliente eliminado via REST API");
+      await forceFirestoreService.deleteClient(clientId);
+      console.log("✅ Cliente eliminado do Firestore");
     } catch (error) {
-      console.error("❌ Erro ao eliminar cliente via REST API:", error);
+      console.error("❌ Erro ao eliminar cliente do Firestore:", error);
       throw error;
     }
   }, []);
 
-  // Users operations - REST API
+  // Users operations - SEMPRE no Firestore
   const getUsers = useCallback(async (): Promise<any[]> => {
-    console.log("📖 Obtendo utilizadores via REST API");
+    console.log("📖 Obtendo utilizadores do Firestore");
     try {
-      const users = await readFromFirestoreRest("users");
-      console.log("✅ Utilizadores obtidos via REST API:", users.length);
+      const users = await forceFirestoreService.getUsers();
+      console.log("✅ Utilizadores obtidos do Firestore:", users.length);
       return users;
     } catch (error) {
-      console.error("❌ Erro ao obter utilizadores via REST API:", error);
+      console.error("❌ Erro ao obter utilizadores do Firestore:", error);
       return [];
     }
   }, []);
 
   const saveUser = useCallback(async (user: any): Promise<void> => {
-    console.log("💾 Guardando utilizador via REST API:", user.email);
+    console.log("💾 Guardando utilizador no Firestore:", user.email);
     try {
-      const id = user.id || user.email || `user_${Date.now()}`;
-      await saveToFirestoreRest("users", id, user);
-      console.log("✅ Utilizador guardado via REST API");
+      await forceFirestoreService.saveUser(user);
+      console.log("✅ Utilizador guardado no Firestore");
     } catch (error) {
-      console.error("❌ Erro ao guardar utilizador via REST API:", error);
+      console.error("❌ Erro ao guardar utilizador no Firestore:", error);
       throw error;
     }
   }, []);
 
-  // Generic data operations - REST API
+  // Generic operations
   const saveData = useCallback(
     async (collection: string, data: any, id?: string): Promise<string> => {
       console.log(
-        `💾 Guardando dados via REST API (${collection}):`,
+        `💾 Guardando dados no Firestore (${collection}):`,
         id || data.id,
       );
       try {
-        const docId = id || data.id || `${collection}_${Date.now()}`;
-        await saveToFirestoreRest(collection, docId, data);
-        console.log(`✅ Dados guardados via REST API (${collection}):`, docId);
+        const docId = await forceFirestoreService.saveData(
+          collection,
+          data,
+          id,
+        );
+        console.log(`✅ Dados guardados no Firestore (${collection}):`, docId);
         return docId;
       } catch (error) {
         console.error(
-          `❌ Erro ao guardar dados via REST API (${collection}):`,
+          `❌ Erro ao guardar dados no Firestore (${collection}):`,
           error,
         );
         throw error;
@@ -325,17 +319,17 @@ export const useForceFirestore = () => {
   );
 
   const getData = useCallback(async (collection: string): Promise<any[]> => {
-    console.log(`📖 Obtendo dados via REST API (${collection})`);
+    console.log(`📖 Obtendo dados do Firestore (${collection})`);
     try {
-      const data = await readFromFirestoreRest(collection);
+      const data = await forceFirestoreService.getData(collection);
       console.log(
-        `✅ Dados obtidos via REST API (${collection}):`,
+        `✅ Dados obtidos do Firestore (${collection}):`,
         data.length,
       );
       return data;
     } catch (error) {
       console.error(
-        `❌ Erro ao obter dados via REST API (${collection}):`,
+        `❌ Erro ao obter dados do Firestore (${collection}):`,
         error,
       );
       return [];
@@ -344,13 +338,13 @@ export const useForceFirestore = () => {
 
   const deleteData = useCallback(
     async (collection: string, id: string): Promise<void> => {
-      console.log(`🗑️ Eliminando dados via REST API (${collection}):`, id);
+      console.log(`🗑️ Eliminando dados do Firestore (${collection}):`, id);
       try {
-        await deleteFromFirestoreRest(collection, id);
-        console.log(`✅ Dados eliminados via REST API (${collection})`);
+        await forceFirestoreService.deleteData(collection, id);
+        console.log(`✅ Dados eliminados do Firestore (${collection})`);
       } catch (error) {
         console.error(
-          `❌ Erro ao eliminar dados via REST API (${collection}):`,
+          `❌ Erro ao eliminar dados do Firestore (${collection}):`,
           error,
         );
         throw error;
@@ -359,31 +353,21 @@ export const useForceFirestore = () => {
     [],
   );
 
-  // Status check
-  const getStatus = useCallback(async () => {
+  // Refresh status
+  const refreshStatus = useCallback(async (): Promise<void> => {
     try {
-      // Test if REST API is working
-      await readFromFirestoreRest("test");
-      const newStatus = {
-        firestoreReady: true,
-        collections: {},
-      };
-      setStatus(newStatus);
-      return newStatus;
+      const currentStatus = await forceFirestoreService.getStatus();
+      setStatus(currentStatus);
     } catch (error) {
-      console.error("❌ Erro ao verificar status REST API:", error);
-      const newStatus = {
-        firestoreReady: false,
-        collections: {},
-      };
-      setStatus(newStatus);
-      return newStatus;
+      console.error("❌ Erro ao atualizar status:", error);
     }
   }, []);
 
   return {
+    // Status
     isInitialized,
     status,
+    refreshStatus,
 
     // Pools
     savePools,
@@ -417,7 +401,6 @@ export const useForceFirestore = () => {
     saveData,
     getData,
     deleteData,
-    getStatus,
   };
 };
 
