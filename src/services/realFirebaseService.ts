@@ -87,14 +87,41 @@ class RealFirebaseService {
         return false;
       }
 
+      // Verificar se a configuração tem databaseURL válida
+      const config = firebaseApp.options;
+      if (!config.databaseURL || config.databaseURL === "") {
+        console.warn(
+          "⚠️ Database URL não configurada - Realtime Database não disponível",
+        );
+        console.log(
+          "💡 Para usar Realtime Database, configure VITE_FIREBASE_DATABASE_URL",
+        );
+        return false;
+      }
+
       this.app = firebaseApp;
       this.database = getDatabase(this.app);
       this.isInitialized = true;
 
       console.log("✅ Firebase database service initialized successfully");
+      console.log("🔗 Database URL:", config.databaseURL);
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Firebase database initialization failed:", error);
+
+      // Verificar se é erro específico de URL inválida
+      if (
+        error.message &&
+        error.message.includes("Cannot parse Firebase url")
+      ) {
+        console.error(
+          "💡 Solução: Verificar VITE_FIREBASE_DATABASE_URL no Netlify",
+        );
+        console.error(
+          "📋 Formato esperado: https://SEU-PROJETO-default-rtdb.region.firebasedatabase.app",
+        );
+      }
+
       return false;
     }
   }
