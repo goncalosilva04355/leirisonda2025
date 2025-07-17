@@ -98,15 +98,10 @@ try {
     console.log("✅ Updated dist/spa/manifest.json");
   }
 
-  // Update public manifest
-  const publicManifestPath = path.join(__dirname, "public", "manifest.json");
-  if (fs.existsSync(publicManifestPath)) {
-    fs.writeFileSync(
-      publicManifestPath,
-      JSON.stringify(deployManifest, null, 2),
-    );
-    console.log("✅ Updated public/manifest.json");
-  }
+  // Don't overwrite public manifest to avoid build conflicts
+  console.log(
+    "⏸️ Skipping public/manifest.json update to avoid build conflicts",
+  );
 
   // Create deployment trigger file
   const triggerPath = path.join(__dirname, ".deploy-trigger");
