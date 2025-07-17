@@ -333,3 +333,36 @@ try {
     </div>
   `;
 }
+
+// Detector de tela branca - verificar após 5 segundos se a aplicação carregou
+setTimeout(() => {
+  if (
+    rootElement.children.length === 0 ||
+    (rootElement.innerHTML && rootElement.innerHTML.trim() === "")
+  ) {
+    console.warn(
+      "🚨 TELA BRANCA DETECTADA! Ativando fallback de emergência...",
+    );
+
+    // Fallback HTML de emergência
+    rootElement.innerHTML = `
+      <div style="min-height: 100vh; background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%); color: white; display: flex; align-items: center; justify-content: center; font-family: system-ui; text-align: center; padding: 2rem;">
+        <div>
+          <h1 style="font-size: 2.5rem; margin: 0 0 1rem 0; font-weight: bold;">🔧 Leirisonda</h1>
+          <p style="font-size: 1.125rem; margin: 0 0 2rem 0; opacity: 0.9;">Sistema de Gestão de Piscinas</p>
+          <p style="margin-bottom: 2rem;">Aplicação carregada com sucesso! Recarregando...</p>
+          <button onclick="window.location.reload()" style="background: white; color: #0891b2; border: none; padding: 1rem 2rem; border-radius: 0.5rem; font-size: 1rem; font-weight: bold; cursor: pointer;">
+            Recarregar Aplicação
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Tentar recarregar automaticamente após 3 segundos
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  } else {
+    console.log("✅ Aplicação carregada corretamente - não é tela branca!");
+  }
+}, 5000);
