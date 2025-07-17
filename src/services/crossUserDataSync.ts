@@ -224,7 +224,7 @@ class CrossUserDataSyncService {
       result.success = false;
       result.message = "Erro durante migração";
       result.details.push(
-        `❌ Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
+        `�� Erro: ${error instanceof Error ? error.message : "Erro desconhecido"}`,
       );
     }
 
@@ -369,6 +369,8 @@ class CrossUserDataSyncService {
       console.warn("⚠️ Firebase não disponível para sincronização");
       return false;
     }
+
+    const db = getFirestoreInstance();
 
     try {
       // Get all data from Firestore
