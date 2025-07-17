@@ -243,15 +243,18 @@ if (!rootElement) {
 }
 
 try {
-  console.log("🔄 Verificando modo de funcionamento...");
+  console.log("🔄 Carregando aplicação principal...");
   console.log("📊 Estado do ambiente:", {
     isProd: import.meta.env.PROD,
     mode: import.meta.env.MODE,
     shouldUseSafe: shouldUseSafeMode(),
     forceSimple: localStorage.getItem("forceSimpleApp"),
-    forceAdvanced: localStorage.getItem("forceAdvancedApp"),
     url: window.location.href,
   });
+
+  // Limpar localStorage que força AppProduction
+  localStorage.removeItem("forceAdvancedApp");
+  localStorage.removeItem("forceSimpleApp");
 
   // SEMPRE carregar app principal, tanto em desenvolvimento como produção
   if (shouldUseSafeMode()) {
