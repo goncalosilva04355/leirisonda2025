@@ -10,11 +10,9 @@ function isPlaceholder(value: string | undefined): boolean {
   );
 }
 
-// Configuração Firebase inteligente - Projeto ativo: Leiria25
+// Configuração Firebase segura - Usa apenas variáveis de ambiente
 export const LEIRIA_FIREBASE_CONFIG = {
-  apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
-    ? import.meta.env.VITE_FIREBASE_API_KEY!
-    : "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw", // API Key REAL do projeto leiria-1cfc9
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || ""
   authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
     ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
     : "leiria-1cfc9.firebaseapp.com",
@@ -72,7 +70,7 @@ export function getFirebaseConfig() {
 
   // Verificar se a configuração é válida
   if (!config.apiKey || !config.projectId || !config.authDomain) {
-    console.error("❌ Configuração Firebase inválida:", {
+    console.error("❌ Configuração Firebase inv��lida:", {
       apiKey: !!config.apiKey,
       projectId: !!config.projectId,
       authDomain: !!config.authDomain,
