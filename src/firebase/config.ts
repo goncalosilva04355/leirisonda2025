@@ -161,6 +161,51 @@ export async function waitForFirebaseInit(): Promise<boolean> {
   }
 }
 
+// Quota management
+let quotaExceeded = false;
+let quotaExceededTime = 0;
+
+export function markQuotaExceeded(): void {
+  quotaExceeded = true;
+  quotaExceededTime = Date.now();
+  console.warn("⚠️ Firebase quota exceeded, cooling down...");
+}
+
+export function isQuotaExceeded(): boolean {
+  // Reset after 1 hour
+  if (quotaExceeded && Date.now() - quotaExceededTime > 3600000) {
+    quotaExceeded = false;
+    quotaExceededTime = 0;
+  }
+  return quotaExceeded;
+}
+
+// Reinitialize Firebase
+export async function reinitializeFirebase(): Promise<boolean> {
+  try {
+    console.log("🔄 Reinitializing Firebase...");
+    firebaseApp = null;
+    firestore = null;
+    auth = null;
+
+    // Get new instances
+    const app = getFirebaseApp();
+    const db = getFirestoreInstance();
+    const authInstance = getAuthInstance();
+
+    const success = app !== null && db !== null && authInstance !== null;
+    console.log(
+      success
+        ? "✅ Firebase reinitialized successfully"
+        : "❌ Firebase reinitialization failed",
+    );
+    return success;
+  } catch (error: any) {
+    console.error("❌ Error reinitializing Firebase:", error.message);
+    return false;
+  }
+}
+
 // Async helpers for backward compatibility
 export async function getCorrectFirestore(): Promise<Firestore> {
   return getFirestoreInstance();
