@@ -68,9 +68,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // TESTE: usar App simples para diagnosticar tela branca
-  const AppComponent = AppTestSimple;
-  console.log("🧪 TESTE: Usando AppTestSimple para diagnosticar problema");
+  // Voltar ao App principal para diagnóstico
+  const AppComponent = App;
+  console.log("🔧 DIAGNÓSTICO: Usando App principal para identificar problema");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
