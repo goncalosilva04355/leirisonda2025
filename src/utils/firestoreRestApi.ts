@@ -217,22 +217,32 @@ export const saveToFirestoreRest = async (
       return false;
     }
 
+    // Read response body only once to avoid "Body is disturbed or locked"
+    let responseText: string;
+    try {
+      responseText = await response.text();
+    } catch (readError) {
+      console.error(
+        `❌ REST API: Erro ao ler resposta de save para ${collection}/${documentId}:`,
+        readError,
+      );
+      return false;
+    }
+
     if (response.ok) {
       console.log(
         `✅ REST API: ${collection}/${documentId} guardado com sucesso`,
       );
+      // Optionally log response content if needed
+      if (responseText && responseText.length > 0) {
+        console.log("📝 Save response:", responseText.substring(0, 100));
+      }
       return true;
     } else {
-      // Clone response to avoid "Body is disturbed or locked" error
-      const responseClone = response.clone();
-      try {
-        const errorText = await responseClone.text();
-        console.error(`❌ REST API: Erro ${response.status}:`, errorText);
-      } catch (readError) {
-        console.error(
-          `❌ REST API: Erro ${response.status} (não foi possível ler detalhes)`,
-        );
-      }
+      console.error(
+        `❌ REST API: Erro ${response.status} ao guardar ${collection}/${documentId}:`,
+        responseText,
+      );
       return false;
     }
   } catch (error: any) {
@@ -444,7 +454,7 @@ export const readFromFirestoreRest = async (
       };
 
       console.error(
-        `❌ REST API: Erro ao ler resposta para ${collection}:`,
+        `��� REST API: Erro ao ler resposta para ${collection}:`,
         readError,
         "Response details:",
         errorDetails,
