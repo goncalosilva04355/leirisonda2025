@@ -111,7 +111,7 @@ export class ImprovedErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = "/";
+    window.location.assign("/");
   };
 
   handleClearData = () => {
