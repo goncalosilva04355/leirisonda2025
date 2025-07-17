@@ -156,19 +156,7 @@ function AppProduction() {
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>Versão de Produção Simplificada</p>
-            <p className="mt-2">
-              <button
-                onClick={() => {
-                  localStorage.setItem("forceAdvancedApp", "true");
-                  localStorage.removeItem("forceSimpleApp");
-                  window.location.reload();
-                }}
-                className="text-blue-600 hover:underline"
-              >
-                Carregar Versão Completa
-              </button>
-            </p>
+            <p>Sistema Leirisonda</p>
           </div>
         </div>
       </div>
