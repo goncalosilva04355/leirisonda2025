@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
+console.log("🔧 Build version:", new Date().toISOString());
 
 // Production safety - prevent crashes
 import "./utils/productionSafety";
