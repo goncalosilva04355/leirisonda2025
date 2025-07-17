@@ -145,15 +145,27 @@ export const readFromFirestoreRest = async (
       },
     });
 
+    // Read response body only once
+    let responseText: string;
+    try {
+      responseText = await response.text();
+    } catch (readError) {
+      console.error(
+        `❌ REST API: Erro ao ler resposta para ${collection}:`,
+        readError,
+      );
+      return [];
+    }
+
     if (response.ok) {
       try {
-        const data = await response.json();
+        const data = JSON.parse(responseText);
 
         if (data.documents) {
           const converted = data.documents.map((doc: any) => {
             const id = doc.name.split("/").pop();
-            const data = convertFromFirestoreFormat(doc);
-            return { id, ...data };
+            const docData = convertFromFirestoreFormat(doc);
+            return { id, ...docData };
           });
 
           console.log(
@@ -169,19 +181,14 @@ export const readFromFirestoreRest = async (
           `❌ REST API: Erro ao processar JSON para ${collection}:`,
           jsonError,
         );
+        console.error(`❌ Response text:`, responseText.substring(0, 200));
         return [];
       }
     } else {
-      // Clone response to avoid "Body is disturbed or locked" error
-      const responseClone = response.clone();
-      try {
-        const errorText = await responseClone.text();
-        console.error(`❌ REST API: Erro ${response.status}:`, errorText);
-      } catch (readError) {
-        console.error(
-          `❌ REST API: Erro ${response.status} (não foi possível ler detalhes)`,
-        );
-      }
+      console.error(
+        `❌ REST API: Erro ${response.status} ao ler ${collection}:`,
+        responseText,
+      );
       return [];
     }
   } catch (error: any) {
