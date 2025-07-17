@@ -53,6 +53,87 @@ function App() {
 
     const initializeAuth = async () => {
       try {
+        // Ensure default user exists in localStorage
+        const ensureDefaultUser = () => {
+          const savedUsers = safeLocalStorage.getItem("app-users");
+          let users: any[] = [];
+
+          if (savedUsers) {
+            try {
+              users = JSON.parse(savedUsers);
+            } catch (error) {
+              console.warn(
+                "❌ Erro ao carregar utilizadores existentes:",
+                error,
+              );
+              users = [];
+            }
+          }
+
+          // Check if Gonçalo Fonseca already exists
+          const hasGoncalo = users.some(
+            (user) =>
+              user.email?.toLowerCase().trim() === "gongonsilva@gmail.com" ||
+              user.name === "Gonçalo Fonseca",
+          );
+
+          if (!hasGoncalo) {
+            console.log("🔧 Criando utilizador padrão Gonçalo Fonseca...");
+
+            const defaultUser = {
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: "gongonsilva@gmail.com",
+              password: "19867gsf",
+              role: "super_admin",
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              active: true,
+              createdAt: new Date().toISOString(),
+            };
+
+            users.push(defaultUser);
+            safeLocalStorage.setItem("app-users", JSON.stringify(users));
+            console.log("✅ Utilizador padrão criado com sucesso");
+          } else {
+            console.log("✅ Utilizador padrão já existe no sistema");
+          }
+        };
+
+        // Create default user first
+        ensureDefaultUser();
+
         // Check if user is already authenticated
         const savedUser = safeLocalStorage.getItem("currentUser");
         const isAuthenticatedStored =
