@@ -210,20 +210,50 @@ export class DataProtectionService {
     return restored;
   }
 
+  // Verificar se localStorage está disponível
+  private static isLocalStorageAvailable(): boolean {
+    try {
+      const test = "__localStorage_test__";
+      localStorage.setItem(test, "test");
+      localStorage.removeItem(test);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   // Inicialização segura com verificação automática
   static safeInitialization(): void {
-    console.log("🛡️ Inicialização segura do sistema de proteção de dados");
+    try {
+      console.log("🛡️ Inicialização segura do sistema de proteção de dados");
 
-    const integrity = this.checkDataIntegrity();
+      // Verificar se localStorage está disponível
+      if (!this.isLocalStorageAvailable()) {
+        console.warn(
+          "⚠️ localStorage não disponível - sistema de backup desativado",
+        );
+        return;
+      }
 
-    if (!integrity.hasData && this.hasBackupData()) {
-      console.log(
-        "⚠️ Dados principais ausentes, mas backup disponível. Restaurando...",
+      const integrity = this.checkDataIntegrity();
+
+      if (!integrity.hasData && this.hasBackupData()) {
+        console.log(
+          "⚠️ Dados principais ausentes, mas backup disponível. Restaurando...",
+        );
+        this.emergencyRestore();
+      } else if (integrity.hasData) {
+        console.log("✅ Dados principais presentes, criando backup preventivo");
+        this.createFullBackup();
+      } else {
+        console.log("ℹ️ Sem dados principais ou backups - aplicação nova");
+      }
+    } catch (error: any) {
+      console.error(
+        "❌ Erro na inicialização do sistema de proteção:",
+        error.message,
       );
-      this.emergencyRestore();
-    } else if (integrity.hasData) {
-      console.log("✅ Dados principais presentes, criando backup preventivo");
-      this.createFullBackup();
+      // Não fazer throw para não quebrar a aplicação
     }
   }
 
