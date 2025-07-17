@@ -27,40 +27,25 @@ window.addEventListener("unhandledrejection", (event) => {
   console.error("❌ Unhandled promise rejection:", event.reason);
 });
 
-// Função para detectar modo seguro
+// Função para detectar modo seguro - DESABILITADA: sempre usar app principal
 const shouldUseSafeMode = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const forceSimple =
     urlParams.get("simple") === "true" ||
     localStorage.getItem("forceSimpleApp") === "true";
-  const forceAdvanced =
-    urlParams.get("advanced") === "true" ||
-    localStorage.getItem("forceAdvancedApp") === "true";
-  const isProduction = import.meta.env.PROD;
 
-  console.log("🔍 Mode detection:", {
+  console.log("🔍 Mode detection (sempre app principal):", {
     forceSimple,
-    forceAdvanced,
-    isProduction,
     url: window.location.href,
   });
 
-  // Se está forçando modo avançado, usar app completa
-  if (forceAdvanced) {
-    return false;
-  }
-
-  // Se está forçando modo simples, usar modo seguro
+  // Só usar modo simples se explicitamente forçado
   if (forceSimple) {
     return true;
   }
 
-  // Em produção, usar AppProduction por padrão se não foi especificado
-  if (isProduction) {
-    return true; // Usar modo produção simplificado por padrão
-  }
-
-  return false; // Desenvolvimento usa app completa
+  // SEMPRE usar app principal, tanto em desenvolvimento como produção
+  return false;
 };
 
 // App simplificado para produção/modo seguro
