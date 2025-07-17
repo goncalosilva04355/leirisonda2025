@@ -4,33 +4,6 @@ import {
   isFirebaseMobileReady,
 } from "./firebase/mobileFirebase";
 
-// VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
-// import "./utils/simpleFirestoreChecker";
-
-// FORÇAR INICIALIZAÇÃO FIREBASE SIMPLES
-// import "./utils/simpleFirebaseInit";
-
-// VERIFICAÇÃO BÁSICA DE SAÚDE
-// import "./utils/basicHealthCheck";
-
-// PREVENÇÃO DE ERROS GETIMMEDIATE
-// import "./utils/preventGetImmediateError";
-
-// HANDLER GLOBAL DE ERROS
-// import "./utils/globalErrorHandler";
-// import "./utils/safeFetch";
-// import "./utils/safeFirestoreTestFixed";
-// import "./utils/loadFailedDetector";
-
-// TESTES ABRANGENTES FIREBASE/FIRESTORE
-// import "./utils/comprehensiveFirebaseTest";
-// import "./utils/verifySaveToFirestore";
-// import "./utils/verifyAutoSync";
-// import "./utils/finalFirebaseVerification";
-// import "./utils/firestoreDiagnosticMessage";
-// import "./utils/safeFirestoreTest";
-// import "./utils/ultraSafeTest";
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Building2,
@@ -175,7 +148,7 @@ import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
 // import "./utils/cleanupFirestoreDuplicates"; // Limpeza automática de duplicados
 // import "./utils/manualDuplicateCleanup"; // Limpeza manual forçada de duplicados
 // import "./utils/debugDuplicates"; // Debug de duplicados
-// import "./utils/forcedDuplicateRemoval"; // Remoção forçada de duplicados específicos
+// import "./utils/forcedDuplicateRemoval"; // Remo��ão forçada de duplicados específicos
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
@@ -6893,7 +6866,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             <input
                               type="text"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                              placeholder="Ex: Cloro l��quido"
+                              placeholder="Ex: Cloro l���quido"
                             />
                           </div>
                           <div>
