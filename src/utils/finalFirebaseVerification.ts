@@ -198,7 +198,7 @@ DADOS DE TESTE:
 - Sincronização é verificada via localStorage
 - REST API é testada independentemente do SDK
 
-CONCLUSÃO:
+CONCLUS��O:
 Os testes verificam que todos os serviços estão configurados para 
 usar o projeto leiria-1cfc9 e que os dados são salvos e 
 sincronizados corretamente.
@@ -240,7 +240,7 @@ setTimeout(async () => {
       });
     }
 
-    document.title = "Leirisonda - Firebase Issues ⚠️";
+    // Firebase issues detected - see console for details
   }
 }, 6000);
 
