@@ -244,7 +244,7 @@ class CrossUserDataSyncService {
       "📡 Configurando listeners globais para dados compartilhados...",
     );
 
-    if (!isFirebaseReady() || !db) {
+    if (!isFirebaseReady()) {
       console.warn("⚠️ Firebase não disponível - listeners não configurados");
       return () => {};
     }
@@ -363,7 +363,7 @@ class CrossUserDataSyncService {
       "🚀 Forçando sincronização imediata entre todos os utilizadores...",
     );
 
-    if (!isFirebaseReady() || !db) {
+    if (!isFirebaseReady()) {
       console.warn("⚠️ Firebase não disponível para sincronização");
       return false;
     }
