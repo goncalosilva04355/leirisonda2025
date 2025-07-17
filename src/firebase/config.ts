@@ -146,6 +146,25 @@ export const app = getFirebaseApp();
 export const db = getFirestoreInstance();
 export { auth };
 
+// REST API Configuration
+export function getFirebaseRestConfig() {
+  const config = getFirebaseConfig();
+  return {
+    projectId: config.projectId,
+    apiKey: config.apiKey,
+    baseUrl: `https://firestore.googleapis.com/v1/projects/${config.projectId}/databases/(default)/documents`,
+  };
+}
+
+// REST API Helper Functions
+export function getProjectId(): string {
+  return getFirebaseConfig().projectId;
+}
+
+export function getApiKey(): string {
+  return getFirebaseConfig().apiKey;
+}
+
 // Default export
 export default {
   app: getFirebaseApp(),
@@ -154,4 +173,7 @@ export default {
   getFirebaseApp,
   getFirestoreInstance,
   getAuthInstance,
+  getFirebaseRestConfig,
+  getProjectId,
+  getApiKey,
 };
