@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import LoginSimple from "./LoginSimple";
 
 // Simple storage utilities
 const safeLocalStorage = {
@@ -28,7 +28,7 @@ const AppSimple = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("🚀 App inicializada");
+    console.log("🚀 App Simples inicializada");
 
     // Initialize with clean state
     setIsAuthenticated(false);
@@ -84,7 +84,7 @@ const AppSimple = () => {
   // Not authenticated - show login
   if (!isAuthenticated) {
     return (
-      <LoginPage
+      <LoginSimple
         onLogin={handleLogin}
         onError={(error) => console.error("❌ Erro no login:", error)}
       />
@@ -127,7 +127,8 @@ const AppSimple = () => {
           Bem-vindo, {currentUser?.name || "Utilizador"}!
         </p>
         <p style={{ marginBottom: "2rem" }}>
-          A aplicação principal está a ser carregada. Por favor, aguarde...
+          Aplicação funcionando corretamente. A versão completa estará
+          disponível em breve.
         </p>
 
         <div style={{ marginBottom: "2rem" }}>
@@ -150,47 +151,50 @@ const AppSimple = () => {
               width: "100%",
             }}
           >
-            Carregar App Principal
+            Carregar App Completa
           </button>
 
-          <button
-            onClick={handleLogout}
-            style={{
-              background: "rgba(255,255,255,0.2)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.3)",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.375rem",
-              fontSize: "1rem",
-              cursor: "pointer",
-              marginRight: "0.5rem",
-            }}
-          >
-            Sair
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.3)",
+                padding: "0.75rem 1.5rem",
+                borderRadius: "0.375rem",
+                fontSize: "1rem",
+                cursor: "pointer",
+                flex: 1,
+              }}
+            >
+              Sair
+            </button>
 
-          <button
-            onClick={() => {
-              localStorage.clear();
-              sessionStorage.clear();
-              window.location.reload();
-            }}
-            style={{
-              background: "rgba(255,255,255,0.2)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.3)",
-              padding: "0.75rem 1.5rem",
-              borderRadius: "0.375rem",
-              fontSize: "1rem",
-              cursor: "pointer",
-            }}
-          >
-            Limpar Cache
-          </button>
+            <button
+              onClick={() => {
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.reload();
+              }}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                color: "white",
+                border: "1px solid rgba(255,255,255,0.3)",
+                padding: "0.75rem 1.5rem",
+                borderRadius: "0.375rem",
+                fontSize: "1rem",
+                cursor: "pointer",
+                flex: 1,
+              }}
+            >
+              Limpar Cache
+            </button>
+          </div>
         </div>
 
         <p style={{ fontSize: "0.875rem", opacity: 0.7 }}>
-          Sistema funcionando em modo simplificado
+          Versão simplificada ativa - Sistema funcionando corretamente
         </p>
       </div>
     </div>
