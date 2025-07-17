@@ -125,7 +125,7 @@ const loadSimpleApp = async () => {
 // Main App Loading Function
 const loadApp = async () => {
   try {
-    console.log("📦 Tentando carregar App principal...");
+    console.log("���� Tentando carregar App principal...");
 
     // Check if we should use simple app for production issues
     const isProd = import.meta.env.PROD;
@@ -133,9 +133,9 @@ const loadApp = async () => {
     const forceAdvanced = urlParams.get("advanced") === "true";
     const useSimple = urlParams.get("simple") === "true";
 
-    // For production, default to simple app unless advanced is explicitly requested
-    if ((isProd && !forceAdvanced) || useSimple) {
-      console.log("📱 Usando versão simplificada para produção");
+    // For production, ALWAYS use simple app to prevent white screen
+    if (isProd || useSimple) {
+      console.log("📱 Forçando versão simplificada para evitar tela branca");
       await loadSimpleApp();
       return;
     }
