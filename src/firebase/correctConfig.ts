@@ -1,26 +1,17 @@
-// Configuração Firebase CORRETA do projeto leiria-1cfc9
+// Secure Firebase Configuration using Environment Variables
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getSecureFirebaseConfig } from "../config/firebaseEnvSecure";
 
-// Configuração EXATA fornecida pelo cliente
-const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  authDomain: "leiria-1cfc9.firebaseapp.com",
-  databaseURL:
-    "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "leiria-1cfc9",
-  storageBucket: "leiria-1cfc9.firebasestorage.app",
-  messagingSenderId: "632599887141",
-  appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-  measurementId: "G-Q2QWQVH60L",
-};
+// Get configuration from environment variables
+const firebaseConfig = getSecureFirebaseConfig();
 
 // Inicializar Firebase App
 let app;
 if (getApps().length === 0) {
   app = initializeApp(firebaseConfig);
   console.log(
-    "✅ Firebase App inicializada com configuração correta:",
+    "✅ Firebase App inicializada com configuração segura:",
     app.options.projectId,
   );
 } else {
@@ -39,7 +30,7 @@ export async function getCorrectFirestore() {
     await new Promise((resolve) => setTimeout(resolve, 100));
 
     db = getFirestore(app);
-    console.log("✅ Firestore inicializado com configuração correta");
+    console.log("✅ Firestore inicializado com configuração segura");
     return db;
   } catch (error: any) {
     console.error("❌ Erro ao inicializar Firestore:", error);
@@ -54,7 +45,7 @@ export async function testCorrectFirestore(): Promise<{
   data?: any;
 }> {
   try {
-    console.log("🧪 Testando Firestore com configuração correta...");
+    console.log("🧪 Testando Firestore com configuração segura...");
 
     const firestore = await getCorrectFirestore();
 
@@ -66,7 +57,7 @@ export async function testCorrectFirestore(): Promise<{
 
     // Tentar escrever dados
     const testData = {
-      message: "Teste com configuração correta",
+      message: "Teste com configuração segura",
       timestamp: serverTimestamp(),
       projectId: app.options.projectId,
       success: true,
@@ -84,8 +75,7 @@ export async function testCorrectFirestore(): Promise<{
 
       return {
         success: true,
-        message:
-          "Firestore funcionando PERFEITAMENTE com configuração correta!",
+        message: "Firestore funcionando PERFEITAMENTE com configuração segura!",
         data: {
           projectId: app.options.projectId,
           written: testData,
