@@ -26,8 +26,10 @@ const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PROD
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
-  // Verificação específica para produção
-  if (import.meta.env.PROD) {
+  // Verificação específica para produção - simplified for debugging
+  const isProduction =
+    typeof window !== "undefined" && window.location.hostname !== "localhost";
+  if (isProduction) {
     console.log("📱 Firebase em produção - verificando configuração...");
     try {
       // Verificar se configuração está completa
