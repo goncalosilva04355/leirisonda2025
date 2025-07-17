@@ -33,15 +33,34 @@ const shouldUseSafeMode = () => {
   const forceSimple =
     urlParams.get("simple") === "true" ||
     localStorage.getItem("forceSimpleApp") === "true";
+  const forceAdvanced =
+    urlParams.get("advanced") === "true" ||
+    localStorage.getItem("forceAdvancedApp") === "true";
   const isProduction = import.meta.env.PROD;
 
   console.log("🔍 Mode detection:", {
     forceSimple,
+    forceAdvanced,
     isProduction,
     url: window.location.href,
   });
 
-  return forceSimple;
+  // Se está forçando modo avançado, usar app completa
+  if (forceAdvanced) {
+    return false;
+  }
+
+  // Se está forçando modo simples, usar modo seguro
+  if (forceSimple) {
+    return true;
+  }
+
+  // Em produção, usar AppProduction por padrão se não foi especificado
+  if (isProduction) {
+    return true; // Usar modo produção simplificado por padrão
+  }
+
+  return false; // Desenvolvimento usa app completa
 };
 
 // App simplificado para produção/modo seguro
@@ -110,6 +129,7 @@ const SafeModeApp = () => {
           </button>
           <button
             onClick={() => {
+              localStorage.setItem("forceAdvancedApp", "true");
               localStorage.removeItem("forceSimpleApp");
               window.location.reload();
             }}
@@ -194,6 +214,7 @@ const SafeModeApp = () => {
         </p>
         <button
           onClick={() => {
+            localStorage.setItem("forceAdvancedApp", "true");
             localStorage.removeItem("forceSimpleApp");
             window.location.href = window.location.origin;
           }}
@@ -239,11 +260,36 @@ if (!rootElement) {
 try {
   console.log("🔄 Verificando modo de funcionamento...");
 
-  // Se estiver em modo seguro, usar app simplificada
+  // Se estiver em modo seguro ou produção, decidir qual app usar
   if (shouldUseSafeMode()) {
-    console.log("🛡️ Modo seguro ativo - usando app simplificada");
-    ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
-    console.log("✅ App simplificada renderizada!");
+    const isProduction = import.meta.env.PROD;
+    const forceSimple = localStorage.getItem("forceSimpleApp") === "true";
+
+    if (isProduction && !forceSimple) {
+      console.log("🏭 Modo produção ativo - usando AppProduction");
+
+      // Carregar AppProduction
+      import("./AppProduction")
+        .then(({ default: AppProduction }) => {
+          ReactDOM.createRoot(rootElement).render(
+            React.createElement(AppProduction),
+          );
+          console.log("✅ AppProduction renderizada com sucesso!");
+        })
+        .catch((error) => {
+          console.error(
+            "❌ Erro ao carregar AppProduction, usando fallback:",
+            error,
+          );
+          ReactDOM.createRoot(rootElement).render(
+            React.createElement(SafeModeApp),
+          );
+        });
+    } else {
+      console.log("🛡️ Modo seguro ativo - usando app simplificada");
+      ReactDOM.createRoot(rootElement).render(React.createElement(SafeModeApp));
+      console.log("✅ App simplificada renderizada!");
+    }
   } else {
     console.log("🚀 Tentando carregar app completa...");
 
@@ -259,20 +305,36 @@ try {
           })
           .catch((error) => {
             console.error(
-              "❌ Erro ao carregar ErrorBoundary, usando app simples:",
+              "❌ Erro ao carregar ErrorBoundary, usando app produção:",
               error,
             );
-            localStorage.setItem("forceSimpleApp", "true");
-            window.location.reload();
+            import("./AppProduction")
+              .then(({ default: AppProduction }) => {
+                ReactDOM.createRoot(rootElement).render(
+                  React.createElement(AppProduction),
+                );
+              })
+              .catch(() => {
+                localStorage.setItem("forceSimpleApp", "true");
+                window.location.reload();
+              });
           });
       })
       .catch((error) => {
         console.error(
-          "❌ Erro ao carregar App principal, usando app simples:",
+          "❌ Erro ao carregar App principal, usando app produção:",
           error,
         );
-        localStorage.setItem("forceSimpleApp", "true");
-        window.location.reload();
+        import("./AppProduction")
+          .then(({ default: AppProduction }) => {
+            ReactDOM.createRoot(rootElement).render(
+              React.createElement(AppProduction),
+            );
+          })
+          .catch(() => {
+            localStorage.setItem("forceSimpleApp", "true");
+            window.location.reload();
+          });
       });
   }
 } catch (error) {
