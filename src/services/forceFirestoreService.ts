@@ -1,139 +1,36 @@
+// SERVIÇO CONVERTIDO PARA REST API PURA - SEM SDK FIREBASE
 import {
-  collection,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  deleteDoc,
-  writeBatch,
-  query,
-  where,
-  orderBy,
-} from "firebase/firestore";
-import { getFirebaseFirestoreAsync } from "../firebase/firestoreConfig";
-import {
-  directFirebaseInit,
-  getDirectFirestore,
-} from "../utils/directFirebaseFix";
-import { waitForFirestore } from "../utils/waitForFirestore";
+  saveToFirestoreRest,
+  readFromFirestoreRest,
+  deleteFromFirestoreRest,
+} from "../utils/firestoreRestApi";
 
 /**
- * Serviço que força TODOS os dados a serem guardados no Firestore
- * NUNCA usar localStorage como armazenamento principal
+ * Serviço que usa APENAS REST API do Firestore
+ * Substitui completamente o Firebase SDK
  */
 class ForceFirestoreService {
-  private db: any = null;
+  private isReady = false;
 
-  private async getDB() {
-    if (!this.db) {
-      try {
-        console.log("🔄 ForceFirestore: Tentando inicialização direta...");
+  private async initialize(): Promise<boolean> {
+    if (this.isReady) return true;
 
-        // 1. Tentar direct firebase primeiro
-        const directDB = getDirectFirestore();
-        if (directDB) {
-          console.log(
-            "✅ ForceFirestore: Usando Firestore direto já inicializado",
-          );
-          this.db = directDB;
-          return this.db;
-        }
-
-        // 2. Tentar inicializar diretamente
-        console.log("🚀 ForceFirestore: Executando inicialização direta...");
-        const initResult = await directFirebaseInit();
-        if (initResult.ready && initResult.db) {
-          console.log("✅ ForceFirestore: Inicialização direta bem-sucedida");
-          this.db = initResult.db;
-          return this.db;
-        }
-
-        // 3. Fallback para método original
-        console.log("🔄 ForceFirestore: Fallback para método original...");
-        this.db = await getFirebaseFirestoreAsync();
-        if (this.db) {
-          console.log(
-            "✅ ForceFirestore: Firestore inicializado com sucesso (fallback)",
-          );
-        } else {
-          console.warn("⚠️ ForceFirestore: Firestore não está disponível");
-        }
-      } catch (error: any) {
-        console.error(
-          "❌ ForceFirestore: Erro ao inicializar Firestore:",
-          error.message,
-        );
-        this.db = null;
-      }
-    }
-    return this.db;
-  }
-
-  // Função para garantir que a DB está pronta com retry robusto
-  private async ensureDB(retries = 5): Promise<any> {
-    console.log(
-      `🔄 EnsureDB: Garantindo Firestore está pronto (máx ${retries} tentativas)`,
-    );
-
-    // 1. Primeiro tentar método rápido
-    let db = await this.getDB();
-    if (db) {
-      console.log("✅ EnsureDB: Firestore já estava pronto");
-      return db;
-    }
-
-    // 2. Usar método robusto de espera
-    console.log("🔍 EnsureDB: Usando método robusto de espera...");
     try {
-      db = await waitForFirestore(retries, 2000);
-      if (db) {
-        console.log("✅ EnsureDB: Firestore obtido via waitForFirestore");
-        this.db = db; // Cache para próximas chamadas
-        return db;
-      }
-    } catch (waitError: any) {
-      console.error("❌ EnsureDB: waitForFirestore falhou:", waitError.message);
+      console.log("🌐 ForceFirestore: Inicializando REST API...");
+
+      // Test REST API connection
+      await readFromFirestoreRest("test");
+      this.isReady = true;
+
+      console.log("✅ ForceFirestore: REST API inicializada com sucesso");
+      return true;
+    } catch (error: any) {
+      console.error(
+        "❌ ForceFirestore: Erro ao inicializar REST API:",
+        error.message,
+      );
+      return false;
     }
-
-    // 3. Última tentativa com getDB tradicional
-    console.log("🔄 EnsureDB: Última tentativa com método tradicional...");
-    for (let i = 0; i < retries; i++) {
-      try {
-        console.log(`🔍 Tentativa final ${i + 1}/${retries}...`);
-        db = await this.getDB();
-
-        if (db) {
-          console.log(
-            `✅ EnsureDB: Firestore obtido na tentativa final ${i + 1}`,
-          );
-          return db;
-        }
-
-        if (i < retries - 1) {
-          const delay = 2000 * (i + 1);
-          console.log(
-            `⏳ Aguardando ${delay}ms antes da próxima tentativa final...`,
-          );
-          await new Promise((resolve) => setTimeout(resolve, delay));
-        }
-      } catch (error: any) {
-        console.error(
-          `❌ EnsureDB: Erro na tentativa final ${i + 1}:`,
-          error.message,
-        );
-      }
-    }
-
-    const error = new Error(
-      `Firestore definitivamente não está disponível após todas as tentativas`,
-    );
-    console.error("❌ EnsureDB: FALHA FINAL:", error.message);
-    console.error("📝 EnsureDB: Verifique:");
-    console.error("  1. Configuração do Firebase");
-    console.error("  2. Variáveis de ambiente VITE_FIREBASE_*");
-    console.error("  3. Firebase Console - Firestore habilitado?");
-    console.error("  4. Rede/conectividade");
-    throw error;
   }
 
   // ==================== USERS ====================
@@ -144,18 +41,11 @@ class ForceFirestoreService {
     );
 
     try {
-      // Validar dados do utilizador
+      await this.initialize();
+
       if (!user) {
         throw new Error("Utilizador é null ou undefined");
       }
-
-      if (!user.email) {
-        console.warn("⚠️ Utilizador sem email:", user);
-      }
-
-      console.log("🔄 Obtendo instância do Firestore...");
-      const db = await this.ensureDB();
-      console.log("✅ Firestore obtido com sucesso");
 
       const userId = user.uid || user.id || `user-${Date.now()}`;
       console.log("🏷️ ID do utilizador:", userId);
@@ -174,38 +64,32 @@ class ForceFirestoreService {
         hasPassword: !!userData.password,
       });
 
-      console.log("📄 Criando referência do documento...");
-      const docRef = doc(db, "users", userId);
+      const success = await saveToFirestoreRest("users", userId, userData);
 
-      console.log("💾 Guardando no Firestore...");
-      await setDoc(docRef, userData);
-
-      console.log(
-        "✅ Utilizador guardado no Firestore com sucesso:",
-        user.email || userId,
-      );
-      return true;
+      if (success) {
+        console.log(
+          "✅ Utilizador guardado via REST API:",
+          user.email || userId,
+        );
+        return true;
+      } else {
+        console.error("❌ Falha ao guardar utilizador via REST API");
+        return false;
+      }
     } catch (error: any) {
-      console.error("❌ Erro detalhado ao guardar utilizador:", {
-        message: error.message,
-        code: error.code,
-        stack: error.stack,
-        userEmail: user?.email,
-        userId: user?.uid || user?.id,
-      });
-
-      // Não fazer throw para não quebrar o fluxo de login
+      console.error("❌ Erro ao guardar utilizador:", error);
       return false;
     }
   }
 
   async getUsers(): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const usersSnapshot = await getDocs(collection(db, "users"));
-      return usersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      await this.initialize();
+      const users = await readFromFirestoreRest("users");
+      console.log("✅ Utilizadores obtidos via REST API:", users.length);
+      return users;
     } catch (error: any) {
-      console.error("❌ Erro ao obter utilizadores do Firestore:", error);
+      console.error("❌ Erro ao obter utilizadores via REST API:", error);
       return [];
     }
   }
@@ -213,43 +97,55 @@ class ForceFirestoreService {
   // ==================== POOLS ====================
   async savePool(pool: any): Promise<string> {
     try {
-      const db = await this.ensureDB();
+      await this.initialize();
       const poolId = pool.id || `pool-${Date.now()}-${Math.random()}`;
 
-      await setDoc(doc(db, "pools", poolId), {
+      const poolData = {
         ...pool,
         id: poolId,
         updatedAt: new Date().toISOString(),
         savedToFirestore: true,
-      });
+      };
 
-      console.log("✅ Piscina guardada no Firestore:", poolId);
-      return poolId;
+      const success = await saveToFirestoreRest("piscinas", poolId, poolData);
+
+      if (success) {
+        console.log("✅ Piscina guardada via REST API:", poolId);
+        return poolId;
+      } else {
+        throw new Error("Falha ao guardar piscina via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao guardar piscina no Firestore:", error);
+      console.error("❌ Erro ao guardar piscina via REST API:", error);
       throw error;
     }
   }
 
   async getPools(): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const poolsSnapshot = await getDocs(collection(db, "pools"));
-      return poolsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      await this.initialize();
+      const pools = await readFromFirestoreRest("piscinas");
+      console.log("✅ Piscinas obtidas via REST API:", pools.length);
+      return pools;
     } catch (error: any) {
-      console.error("❌ Erro ao obter piscinas do Firestore:", error);
+      console.error("❌ Erro ao obter piscinas via REST API:", error);
       return [];
     }
   }
 
   async deletePool(poolId: string): Promise<boolean> {
     try {
-      const db = await this.ensureDB();
-      await deleteDoc(doc(db, "pools", poolId));
-      console.log("✅ Piscina eliminada do Firestore:", poolId);
-      return true;
+      await this.initialize();
+      const success = await deleteFromFirestoreRest("piscinas", poolId);
+
+      if (success) {
+        console.log("✅ Piscina eliminada via REST API:", poolId);
+        return true;
+      } else {
+        throw new Error("Falha ao eliminar piscina via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao eliminar piscina do Firestore:", error);
+      console.error("❌ Erro ao eliminar piscina via REST API:", error);
       throw error;
     }
   }
@@ -257,43 +153,55 @@ class ForceFirestoreService {
   // ==================== WORKS ====================
   async saveWork(work: any): Promise<string> {
     try {
-      const db = await this.ensureDB();
+      await this.initialize();
       const workId = work.id || `work-${Date.now()}-${Math.random()}`;
 
-      await setDoc(doc(db, "works", workId), {
+      const workData = {
         ...work,
         id: workId,
         updatedAt: new Date().toISOString(),
         savedToFirestore: true,
-      });
+      };
 
-      console.log("✅ Obra guardada no Firestore:", workId);
-      return workId;
+      const success = await saveToFirestoreRest("obras", workId, workData);
+
+      if (success) {
+        console.log("✅ Obra guardada via REST API:", workId);
+        return workId;
+      } else {
+        throw new Error("Falha ao guardar obra via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao guardar obra no Firestore:", error);
+      console.error("❌ Erro ao guardar obra via REST API:", error);
       throw error;
     }
   }
 
   async getWorks(): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const worksSnapshot = await getDocs(collection(db, "works"));
-      return worksSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      await this.initialize();
+      const works = await readFromFirestoreRest("obras");
+      console.log("✅ Obras obtidas via REST API:", works.length);
+      return works;
     } catch (error: any) {
-      console.error("❌ Erro ao obter obras do Firestore:", error);
+      console.error("❌ Erro ao obter obras via REST API:", error);
       return [];
     }
   }
 
   async deleteWork(workId: string): Promise<boolean> {
     try {
-      const db = await this.ensureDB();
-      await deleteDoc(doc(db, "works", workId));
-      console.log("✅ Obra eliminada do Firestore:", workId);
-      return true;
+      await this.initialize();
+      const success = await deleteFromFirestoreRest("obras", workId);
+
+      if (success) {
+        console.log("✅ Obra eliminada via REST API:", workId);
+        return true;
+      } else {
+        throw new Error("Falha ao eliminar obra via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao eliminar obra do Firestore:", error);
+      console.error("❌ Erro ao eliminar obra via REST API:", error);
       throw error;
     }
   }
@@ -301,47 +209,63 @@ class ForceFirestoreService {
   // ==================== MAINTENANCE ====================
   async saveMaintenance(maintenance: any): Promise<string> {
     try {
-      const db = await this.ensureDB();
+      await this.initialize();
       const maintenanceId =
         maintenance.id || `maintenance-${Date.now()}-${Math.random()}`;
 
-      await setDoc(doc(db, "maintenance", maintenanceId), {
+      const maintenanceData = {
         ...maintenance,
         id: maintenanceId,
         updatedAt: new Date().toISOString(),
         savedToFirestore: true,
-      });
+      };
 
-      console.log("✅ Manutenção guardada no Firestore:", maintenanceId);
-      return maintenanceId;
+      const success = await saveToFirestoreRest(
+        "manutencoes",
+        maintenanceId,
+        maintenanceData,
+      );
+
+      if (success) {
+        console.log("✅ Manutenção guardada via REST API:", maintenanceId);
+        return maintenanceId;
+      } else {
+        throw new Error("Falha ao guardar manutenção via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao guardar manutenção no Firestore:", error);
+      console.error("❌ Erro ao guardar manutenção via REST API:", error);
       throw error;
     }
   }
 
   async getMaintenance(): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const maintenanceSnapshot = await getDocs(collection(db, "maintenance"));
-      return maintenanceSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      await this.initialize();
+      const maintenance = await readFromFirestoreRest("manutencoes");
+      console.log("✅ Manutenções obtidas via REST API:", maintenance.length);
+      return maintenance;
     } catch (error: any) {
-      console.error("❌ Erro ao obter manutenções do Firestore:", error);
+      console.error("❌ Erro ao obter manutenções via REST API:", error);
       return [];
     }
   }
 
   async deleteMaintenance(maintenanceId: string): Promise<boolean> {
     try {
-      const db = await this.ensureDB();
-      await deleteDoc(doc(db, "maintenance", maintenanceId));
-      console.log("✅ Manutenção eliminada do Firestore:", maintenanceId);
-      return true;
+      await this.initialize();
+      const success = await deleteFromFirestoreRest(
+        "manutencoes",
+        maintenanceId,
+      );
+
+      if (success) {
+        console.log("✅ Manutenção eliminada via REST API:", maintenanceId);
+        return true;
+      } else {
+        throw new Error("Falha ao eliminar manutenção via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao eliminar manutenção do Firestore:", error);
+      console.error("❌ Erro ao eliminar manutenção via REST API:", error);
       throw error;
     }
   }
@@ -349,43 +273,59 @@ class ForceFirestoreService {
   // ==================== CLIENTS ====================
   async saveClient(client: any): Promise<string> {
     try {
-      const db = await this.ensureDB();
+      await this.initialize();
       const clientId = client.id || `client-${Date.now()}-${Math.random()}`;
 
-      await setDoc(doc(db, "clients", clientId), {
+      const clientData = {
         ...client,
         id: clientId,
         updatedAt: new Date().toISOString(),
         savedToFirestore: true,
-      });
+      };
 
-      console.log("✅ Cliente guardado no Firestore:", clientId);
-      return clientId;
+      const success = await saveToFirestoreRest(
+        "clientes",
+        clientId,
+        clientData,
+      );
+
+      if (success) {
+        console.log("✅ Cliente guardado via REST API:", clientId);
+        return clientId;
+      } else {
+        throw new Error("Falha ao guardar cliente via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao guardar cliente no Firestore:", error);
+      console.error("❌ Erro ao guardar cliente via REST API:", error);
       throw error;
     }
   }
 
   async getClients(): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const clientsSnapshot = await getDocs(collection(db, "clients"));
-      return clientsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      await this.initialize();
+      const clients = await readFromFirestoreRest("clientes");
+      console.log("✅ Clientes obtidos via REST API:", clients.length);
+      return clients;
     } catch (error: any) {
-      console.error("❌ Erro ao obter clientes do Firestore:", error);
+      console.error("❌ Erro ao obter clientes via REST API:", error);
       return [];
     }
   }
 
   async deleteClient(clientId: string): Promise<boolean> {
     try {
-      const db = await this.ensureDB();
-      await deleteDoc(doc(db, "clients", clientId));
-      console.log("✅ Cliente eliminado do Firestore:", clientId);
-      return true;
+      await this.initialize();
+      const success = await deleteFromFirestoreRest("clientes", clientId);
+
+      if (success) {
+        console.log("✅ Cliente eliminado via REST API:", clientId);
+        return true;
+      } else {
+        throw new Error("Falha ao eliminar cliente via REST API");
+      }
     } catch (error: any) {
-      console.error("❌ Erro ao eliminar cliente do Firestore:", error);
+      console.error("❌ Erro ao eliminar cliente via REST API:", error);
       throw error;
     }
   }
@@ -393,22 +333,28 @@ class ForceFirestoreService {
   // ==================== GENERIC DATA OPERATIONS ====================
   async saveData(collection: string, data: any, id?: string): Promise<string> {
     try {
-      const db = await this.ensureDB();
+      await this.initialize();
       const docId =
         id || data.id || `${collection}-${Date.now()}-${Math.random()}`;
 
-      await setDoc(doc(db, collection, docId), {
+      const docData = {
         ...data,
         id: docId,
         updatedAt: new Date().toISOString(),
         savedToFirestore: true,
-      });
+      };
 
-      console.log(`✅ Dados guardados no Firestore (${collection}):`, docId);
-      return docId;
+      const success = await saveToFirestoreRest(collection, docId, docData);
+
+      if (success) {
+        console.log(`✅ Dados guardados via REST API (${collection}):`, docId);
+        return docId;
+      } else {
+        throw new Error(`Falha ao guardar dados via REST API (${collection})`);
+      }
     } catch (error: any) {
       console.error(
-        `❌ Erro ao guardar dados no Firestore (${collection}):`,
+        `❌ Erro ao guardar dados via REST API (${collection}):`,
         error,
       );
       throw error;
@@ -417,12 +363,16 @@ class ForceFirestoreService {
 
   async getData(collectionName: string): Promise<any[]> {
     try {
-      const db = await this.ensureDB();
-      const snapshot = await getDocs(collection(db, collectionName));
-      return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      await this.initialize();
+      const data = await readFromFirestoreRest(collectionName);
+      console.log(
+        `✅ Dados obtidos via REST API (${collectionName}):`,
+        data.length,
+      );
+      return data;
     } catch (error: any) {
       console.error(
-        `❌ Erro ao obter dados do Firestore (${collectionName}):`,
+        `❌ Erro ao obter dados via REST API (${collectionName}):`,
         error,
       );
       return [];
@@ -431,16 +381,23 @@ class ForceFirestoreService {
 
   async deleteData(collectionName: string, docId: string): Promise<boolean> {
     try {
-      const db = await this.ensureDB();
-      await deleteDoc(doc(db, collectionName, docId));
-      console.log(
-        `✅ Dados eliminados do Firestore (${collectionName}):`,
-        docId,
-      );
-      return true;
+      await this.initialize();
+      const success = await deleteFromFirestoreRest(collectionName, docId);
+
+      if (success) {
+        console.log(
+          `✅ Dados eliminados via REST API (${collectionName}):`,
+          docId,
+        );
+        return true;
+      } else {
+        throw new Error(
+          `Falha ao eliminar dados via REST API (${collectionName})`,
+        );
+      }
     } catch (error: any) {
       console.error(
-        `❌ Erro ao eliminar dados do Firestore (${collectionName}):`,
+        `❌ Erro ao eliminar dados via REST API (${collectionName}):`,
         error,
       );
       throw error;
@@ -452,30 +409,19 @@ class ForceFirestoreService {
     operations: { collection: string; data: any; id?: string }[],
   ): Promise<string[]> {
     try {
-      const db = await this.ensureDB();
-      const batch = writeBatch(db);
+      await this.initialize();
       const ids: string[] = [];
 
-      operations.forEach(({ collection, data, id }) => {
-        const docId =
-          id || data.id || `${collection}-${Date.now()}-${Math.random()}`;
-        const docRef = doc(db, collection, docId);
-
-        batch.set(docRef, {
-          ...data,
-          id: docId,
-          updatedAt: new Date().toISOString(),
-          savedToFirestore: true,
-        });
-
+      // Process operations sequentially for REST API
+      for (const { collection, data, id } of operations) {
+        const docId = await this.saveData(collection, data, id);
         ids.push(docId);
-      });
+      }
 
-      await batch.commit();
-      console.log("✅ Batch guardado no Firestore:", ids.length, "documentos");
+      console.log("✅ Batch guardado via REST API:", ids.length, "documentos");
       return ids;
     } catch (error: any) {
-      console.error("❌ Erro ao guardar batch no Firestore:", error);
+      console.error("❌ Erro ao guardar batch via REST API:", error);
       throw error;
     }
   }
@@ -485,7 +431,7 @@ class ForceFirestoreService {
     success: boolean;
     migrated: number;
   }> {
-    console.log("🔄 MIGRAÇÃO: localStorage → Firestore (FORÇADA)");
+    console.log("🔄 MIGRAÇÃO: localStorage → REST API (FORÇADA)");
 
     let migrated = 0;
     const collections = [
@@ -497,6 +443,8 @@ class ForceFirestoreService {
     ];
 
     try {
+      await this.initialize();
+
       for (const collectionName of collections) {
         const localData = localStorage.getItem(collectionName);
         if (localData) {
@@ -508,14 +456,24 @@ class ForceFirestoreService {
               );
 
               const targetCollection =
-                collectionName === "mock-users" ? "users" : collectionName;
+                collectionName === "mock-users"
+                  ? "users"
+                  : collectionName === "pools"
+                    ? "piscinas"
+                    : collectionName === "works"
+                      ? "obras"
+                      : collectionName === "maintenance"
+                        ? "manutencoes"
+                        : collectionName === "clients"
+                          ? "clientes"
+                          : collectionName;
 
               for (const item of items) {
                 await this.saveData(targetCollection, item);
                 migrated++;
               }
 
-              // Limpar localStorage após migração bem-sucedida
+              // Clear localStorage after successful migration
               localStorage.removeItem(collectionName);
               console.log(
                 `✅ ${collectionName} migrado e limpo do localStorage`,
@@ -528,7 +486,7 @@ class ForceFirestoreService {
       }
 
       console.log(
-        `✅ Migração concluída: ${migrated} itens movidos para Firestore`,
+        `✅ Migração concluída: ${migrated} itens movidos para Firestore via REST API`,
       );
       return { success: true, migrated };
     } catch (error: any) {
@@ -544,24 +502,22 @@ class ForceFirestoreService {
     lastCheck: string;
   }> {
     try {
-      const db = await this.getDB();
-      const isReady = !!db;
-
+      const isReady = await this.initialize();
       const collections: { [key: string]: number } = {};
 
       if (isReady) {
         const collectionNames = [
           "users",
-          "pools",
-          "works",
-          "maintenance",
-          "clients",
+          "piscinas",
+          "obras",
+          "manutencoes",
+          "clientes",
         ];
 
         for (const name of collectionNames) {
           try {
-            const snapshot = await getDocs(collection(db, name));
-            collections[name] = snapshot.size;
+            const data = await readFromFirestoreRest(name);
+            collections[name] = data.length;
           } catch {
             collections[name] = 0;
           }
