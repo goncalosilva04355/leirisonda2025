@@ -1,6 +1,15 @@
 // Usar REST API do Firestore diretamente - contorna problemas do SDK
-const PROJECT_ID = import.meta.env.VITE_FIREBASE_PROJECT_ID || "";
-const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || "";
+// Função para detectar ambiente de desenvolvimento
+const isDevelopment = (): boolean => {
+  return import.meta.env.DEV || import.meta.env.NODE_ENV !== "production";
+};
+
+const PROJECT_ID =
+  import.meta.env.VITE_FIREBASE_PROJECT_ID ||
+  (isDevelopment() ? "leiria-1cfc9" : "");
+const API_KEY =
+  import.meta.env.VITE_FIREBASE_API_KEY ||
+  (isDevelopment() ? "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw" : "");
 
 export async function testFirestoreAPI(): Promise<{
   success: boolean;
