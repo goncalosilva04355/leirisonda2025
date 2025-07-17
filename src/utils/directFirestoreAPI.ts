@@ -1,6 +1,6 @@
 // Usar REST API do Firestore diretamente - contorna problemas do SDK
-const PROJECT_ID = "leiria-1cfc9";
-const API_KEY = "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw";
+const PROJECT_ID = import.meta.env.VITE_FIREBASE_PROJECT_ID || "";
+const API_KEY = import.meta.env.VITE_FIREBASE_API_KEY || "";
 
 export async function testFirestoreAPI(): Promise<{
   success: boolean;
