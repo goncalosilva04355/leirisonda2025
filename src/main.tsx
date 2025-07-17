@@ -68,6 +68,10 @@ import AppTest from "./AppTest";
 import AppMinimalTest from "./AppMinimalTest";
 // App limpo para produção
 import AppCleanProduction from "./AppCleanProduction";
+// App de diagnóstico de tela branca
+import AppWhiteScreenDebug from "./AppWhiteScreenDebug";
+// App ultra simples sem dependências
+import AppUltraSimple from "./AppUltraSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader

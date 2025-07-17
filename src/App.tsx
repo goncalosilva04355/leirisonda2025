@@ -1,8 +1,8 @@
-// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - RESOLVE TELA BRANCA EM DISPOSITIVOS MÓVEIS
-import {
-  initializeFirebaseMobile,
-  isFirebaseMobileReady,
-} from "./firebase/mobileFirebase";
+// CONFIGURAÇÃO FIREBASE MOBILE ROBUSTA - TEMPORARIAMENTE DESATIVADA
+// import {
+//   initializeFirebaseMobile,
+//   isFirebaseMobileReady,
+// } from "./firebase/mobileFirebase";
 
 // VERIFICADOR SIMPLES DE COLEÇÕES FIRESTORE
 // import "./utils/simpleFirestoreChecker";
@@ -121,7 +121,7 @@ import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
-import { productionAutoSync } from "./services/productionAutoSync"; // Sincronização automática para produç��o
+// import { productionAutoSync } from "./services/productionAutoSync"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
 // import "./utils/quickFirestoreDiagnostic"; // Diagnóstico rápido
@@ -163,11 +163,11 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
-import "./utils/emergencyUnblock"; // SISTEMA DE DESBLOQUEIO DE EMERGÊNCIA
-import "./utils/firestoreRestApi"; // REST API - FUNCIONA VIA HTTP (BYPASS SDK) - ATIVADO EM DESENVOLVIMENTO
-import "./utils/loopsStopped"; // CONFIRMAÇÃO DE QUE OS LOOPS FORAM PARADOS
-import "./utils/simpleDuplicateReport"; // RELATÓRIO SIMPLES DE DUPLICADOS SEM ELIMINAÇÃO
-import "./utils/cleanLocalStorage"; // LIMPEZA DE DUPLICADOS NO LOCALSTORAGE
+// import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
+// import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
 // SISTEMAS DE LIMPEZA AUTOMÁTICA DESATIVADOS PARA PARAR LOOPS
 // import "./utils/ultraDirectKill"; // ELIMINAÇÃO ULTRA-DIRETA SEM LOGS VISUAIS
 // import "./utils/urlForceCleanup"; // FORÇA LIMPEZA VIA URL OU DETECÇÃO AUTOMÁTICA
@@ -337,13 +337,13 @@ function App() {
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
   const [loginPageLoaded, setLoginPageLoaded] = useState(true); // Inicia como true para mostrar login imediatamente
 
-  // Firebase só inicia depois do utilizador fazer login
+  // Firebase só inicia depois do utilizador fazer login - TEMPORARIAMENTE DESATIVADO
   const initMobileFirebaseAfterLogin = async () => {
     try {
-      console.log("🔥 Utilizador fez login, iniciando Firebase Mobile...");
-      await initializeFirebaseMobile();
+      console.log("🔥 Firebase Mobile DESATIVADO para debugging");
+      // await initializeFirebaseMobile();
       setMobileFirebaseReady(true);
-      console.log("✅ Firebase Mobile inicializado APÓS login!");
+      console.log("✅ Firebase Mobile SALTADO!");
     } catch (error) {
       console.warn(
         "⚠️ Firebase Mobile falhou, continuando em modo local:",
@@ -2070,7 +2070,7 @@ function App() {
       const result = await authService.login(email, password, rememberMe);
 
       if (result.success && result.user) {
-        console.log("✅ Login successful for:", result.user.email);
+        console.log("�� Login successful for:", result.user.email);
 
         // Set user state and authentication
         setCurrentUser(result.user);
@@ -8269,7 +8269,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>���� Trabalhos realizados</li>
                         <li>�� Técnicos responsáveis</li>
                         <li>����� Datas e dura🔥es</li>
-                        <li>• Estados e observações</li>
+                        <li>• Estados e observa��ões</li>
                       </ul>
                     </div>
                     <button
@@ -11976,7 +11976,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observações Específicas do Furo
+                                Observaç��es Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">

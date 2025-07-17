@@ -1,30 +1,39 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 
-console.log("🚀 Inicializando aplicação...");
+console.log("🚀 Main-simple iniciando...");
 
-// Simple test component first
-function TestApp() {
+const SimpleApp: React.FC = () => {
+  console.log("📱 SimpleApp renderizando...");
+
   return (
-    <div className="min-h-screen bg-blue-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow">
-        <h1 className="text-2xl font-bold text-blue-600">
-          Teste de Carregamento - Leirisonda
-        </h1>
-        <p className="mt-4 text-gray-700">
-          Se vê esta mensagem, o React está a funcionar!
-        </p>
-        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded">
-          <p className="text-green-800">✅ Sistema operacional</p>
-          <p className="text-sm text-green-600 mt-1">
-            Data: {new Date().toLocaleString()}
-          </p>
-        </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#0891b2",
+        fontFamily: "Arial, sans-serif",
+        color: "white",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          color: "#0891b2",
+          padding: "40px",
+          borderRadius: "10px",
+          textAlign: "center",
+        }}
+      >
+        <h1>🏊‍♂️ Leirisonda Funciona!</h1>
+        <p>Se está a ver isto, o React está OK!</p>
+        <p>Hora: {new Date().toLocaleString()}</p>
       </div>
     </div>
   );
-}
+};
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -32,17 +41,20 @@ if (!rootElement) {
 }
 
 try {
-  ReactDOM.createRoot(rootElement).render(<TestApp />);
-  console.log("✅ Aplicação de teste renderizada!");
+  console.log("🔄 Tentando renderizar SimpleApp...");
+  ReactDOM.createRoot(rootElement).render(<SimpleApp />);
+  console.log("✅ SimpleApp renderizado com sucesso!");
 } catch (error) {
-  console.error("❌ Erro ao renderizar:", error);
-  // Fallback direto no DOM
+  console.error("❌ Erro ao renderizar SimpleApp:", error);
+
+  // Fallback HTML direto
   rootElement.innerHTML = `
-    <div style="min-height: 100vh; background: #f3f4f6; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-      <div style="background: white; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
-        <h1 style="color: #dc2626; font-size: 1.5rem; font-weight: bold;">Erro de Carregamento</h1>
-        <p style="margin-top: 1rem; color: #6b7280;">Erro: ${error.message}</p>
-        <button onclick="location.reload()" style="margin-top: 1rem; background: #3b82f6; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.25rem; cursor: pointer;">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #0891b2; font-family: Arial, sans-serif; color: white;">
+      <div style="background-color: white; color: #0891b2; padding: 40px; border-radius: 10px; text-align: center;">
+        <h1>🏊‍♂️ Leirisonda - Modo Emergência</h1>
+        <p>Erro no React, mas HTML funciona!</p>
+        <p>Erro: ${error.message}</p>
+        <button onclick="location.reload()" style="background: #0891b2; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
           Recarregar
         </button>
       </div>
