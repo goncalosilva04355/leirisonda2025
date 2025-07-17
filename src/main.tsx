@@ -44,34 +44,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
-// App simplificado funcional
-import AppSimpleFixed from "./AppSimpleFixed";
-// App mínimo para teste
-import AppMinimal from "./AppMinimal";
-// App diagnóstico
-import AppDiagnostic from "./AppDiagnostic";
-// App debug para diagnóstico de tela branca
-import AppDebug from "./AppDebug";
-// App simples e robusto
-import AppSimple from "./AppSimple";
-// App com sistema de fallback inteligente
-import AppWithFallback from "./AppWithFallback";
-// App funcional garantido
-import AppWorking from "./AppWorking";
-// App simplificado para produção
-import AppProduction from "./AppProduction";
-// App corrigido sem loops
-import AppFixed from "./AppFixed";
-// App de teste para diagnosticar
-import AppTest from "./AppTest";
-// App minimal para teste
-import AppMinimalTest from "./AppMinimalTest";
-// App limpo para produção
-import AppCleanProduction from "./AppCleanProduction";
-// App de diagnóstico de tela branca
-import AppWhiteScreenDebug from "./AppWhiteScreenDebug";
-// App ultra simples sem dependências
-import AppUltraSimple from "./AppUltraSimple";
+// App de teste simples
+import AppTestSimple from "./AppTestSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 // App Loader
