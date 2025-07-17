@@ -18,6 +18,17 @@ class ErrorBoundary extends Component<Props, State> {
 
   static getDerivedStateFromError(error: Error): State {
     console.error("🚨 Error Boundary caught error:", error);
+
+    // Log adicional para produção
+    if (import.meta?.env?.PROD) {
+      console.error("📱 PRODUÇÃO - Erro capturado:", {
+        message: error.message,
+        stack: error.stack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      });
+    }
+
     return { hasError: true, error };
   }
 

@@ -326,6 +326,67 @@ function App() {
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
 
+  // Fallback para produção em caso de erro
+  const [hasRenderError, setHasRenderError] = useState(false);
+
+  useEffect(() => {
+    // Detectar se estamos em produção e há problemas
+    const isProduction = import.meta.env.PROD;
+    if (isProduction) {
+      console.log("📱 Produção detectada - modo de fallback ativo");
+
+      // Verificar se imports essenciais estão disponíveis
+      try {
+        if (!React || !useState || !useEffect) {
+          throw new Error("React hooks não disponíveis");
+        }
+        console.log("✅ React e hooks verificados OK");
+      } catch (error) {
+        console.error("❌ Erro nos imports básicos:", error);
+        setHasRenderError(true);
+      }
+    }
+  }, []);
+
+  // Fallback UI se houver problemas de renderização
+  if (hasRenderError) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#0891b2",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "Arial, sans-serif",
+          textAlign: "center",
+          padding: "2rem",
+        }}
+      >
+        <div>
+          <h1>🔧 Leirisonda</h1>
+          <p>A aplicação está a carregar...</p>
+          <p>Se este problema persistir, recarregue a página.</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              background: "white",
+              color: "#0891b2",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            Recarregar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Debug: Check if App is being rendered multiple times with same timestamp
   if ((window as any).lastAppRenderTime === renderTime) {
     console.error("🚨 DUPLICATE APP RENDER DETECTED!", renderTime);
@@ -2424,7 +2485,7 @@ ${index + 1}. ${maint.poolName}
    Data Agendada: ${new Date(maint.scheduledDate).toLocaleDateString("pt-PT")}
    Técnico: ${maint.technician}
    Descrição: ${maint.description}
-   ${maint.notes ? `Observa📞🔥ões: ${maint.notes}` : ""}
+   ${maint.notes ? `Observa����🔥ões: ${maint.notes}` : ""}
 `,
   )
   .join("\n")}
@@ -6219,7 +6280,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -8198,7 +8259,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat���rios
+                          Relat�����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -9934,7 +9995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec📞ficas do Furo
+                          Observaç��es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -10563,7 +10624,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         defaultValue={editingMaintenance?.observations}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
-                        placeholder="Observações sobre a manutenção"
+                        placeholder="Observações sobre a manuten��ão"
                       />
                     </div>
 

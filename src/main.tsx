@@ -7,6 +7,9 @@ console.log("🚀 Inicializando aplicação...");
 // Production safety - prevent crashes
 import "./utils/productionSafety";
 
+// Production diagnostic
+import "./utils/productionDiagnostic";
+
 // Clear any flags that might force simple app
 import "./utils/clearAppFlags";
 
@@ -44,38 +47,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
-// App simplificado funcional
-import AppSimpleFixed from "./AppSimpleFixed";
-// App mínimo para teste
-import AppMinimal from "./AppMinimal";
-// App diagnóstico
-import AppDiagnostic from "./AppDiagnostic";
-// App debug para diagnóstico de tela branca
-import AppDebug from "./AppDebug";
-// App simples e robusto
-import AppSimple from "./AppSimple";
-// App com sistema de fallback inteligente
-import AppWithFallback from "./AppWithFallback";
-// App funcional garantido
-import AppWorking from "./AppWorking";
-// App simplificado para produção
-import AppProduction from "./AppProduction";
-// App corrigido sem loops
-import AppFixed from "./AppFixed";
-// App de teste para diagnosticar
-import AppTest from "./AppTest";
-// App minimal para teste
-import AppMinimalTest from "./AppMinimalTest";
-// App limpo para produção
-import AppCleanProduction from "./AppCleanProduction";
-// App de diagnóstico de tela branca
-import AppWhiteScreenDebug from "./AppWhiteScreenDebug";
-// App ultra simples sem dependências
-import AppUltraSimple from "./AppUltraSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
-// App Loader
-import AppLoader from "./components/AppLoader";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -93,6 +66,32 @@ try {
   console.log("🚀 Loading application...");
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
+
+  // Verificações específicas para produção
+  if (import.meta.env.PROD) {
+    console.log("📱 PRODUÇÃO: Verificando recursos essenciais...");
+
+    // Verificar se CSS está carregado
+    const cssLoaded = !!document.querySelector('style, link[rel="stylesheet"]');
+    console.log("🎨 CSS carregado:", cssLoaded);
+
+    // Verificar se React está disponível
+    console.log("⚛️ React disponível:", !!window.React || !!React);
+
+    // Verificar se há erros JavaScript anteriores
+    const hasErrors =
+      window.hasOwnProperty("__reactErrorOverlay") ||
+      document.querySelector(".error-overlay");
+    console.log("❌ Erros detectados:", hasErrors);
+
+    // Log de status final
+    console.log("📊 Status produção:", {
+      css: cssLoaded,
+      react: !!React,
+      errors: hasErrors,
+      timestamp: new Date().toISOString(),
+    });
+  }
 
   // SEMPRE usar App principal - desenvolvimento = produção
   const AppComponent = App;
