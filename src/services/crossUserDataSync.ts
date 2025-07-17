@@ -249,6 +249,8 @@ class CrossUserDataSyncService {
       return () => {};
     }
 
+    const db = getFirestoreInstance();
+
     // Setup Firestore listeners for global shared data
     const poolsListener = onSnapshot(
       query(collection(db, "pools"), orderBy("createdAt", "desc")),
