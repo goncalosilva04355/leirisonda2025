@@ -64,6 +64,32 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
+  // Verificações específicas para produção
+  if (import.meta.env.PROD) {
+    console.log("📱 PRODUÇÃO: Verificando recursos essenciais...");
+
+    // Verificar se CSS está carregado
+    const cssLoaded = !!document.querySelector('style, link[rel="stylesheet"]');
+    console.log("🎨 CSS carregado:", cssLoaded);
+
+    // Verificar se React está disponível
+    console.log("⚛️ React disponível:", !!window.React || !!React);
+
+    // Verificar se há erros JavaScript anteriores
+    const hasErrors =
+      window.hasOwnProperty("__reactErrorOverlay") ||
+      document.querySelector(".error-overlay");
+    console.log("❌ Erros detectados:", hasErrors);
+
+    // Log de status final
+    console.log("📊 Status produção:", {
+      css: cssLoaded,
+      react: !!React,
+      errors: hasErrors,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
   // SEMPRE usar App principal - desenvolvimento = produção
   const AppComponent = App;
   console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
