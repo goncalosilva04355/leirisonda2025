@@ -95,12 +95,9 @@ try {
     });
   }
 
-  // Em produção, usar versão simplificada para garantir estabilidade
-  const AppComponent = import.meta.env.PROD ? AppSimple : App;
-  console.log(
-    "📱 PRODUÇÃO: Usando App",
-    import.meta.env.PROD ? "simplificado" : "completo",
-  );
+  // Temporariamente usar AppSimple para testar
+  const AppComponent = AppSimple;
+  console.log("🧪 TESTE: Usando AppSimple temporariamente");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
