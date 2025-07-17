@@ -14,7 +14,7 @@ function isPlaceholder(value: string | undefined): boolean {
 export const LEIRIA_FIREBASE_CONFIG = {
   apiKey: !isPlaceholder(import.meta.env.VITE_FIREBASE_API_KEY)
     ? import.meta.env.VITE_FIREBASE_API_KEY!
-    : "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw", // API Key REAL do projeto leiria-1cfc9
+    : "placeholder-api-key", // Use environment variable
   authDomain: !isPlaceholder(import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
     ? import.meta.env.VITE_FIREBASE_AUTH_DOMAIN!
     : "leiria-1cfc9.firebaseapp.com",
