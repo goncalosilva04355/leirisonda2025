@@ -79,7 +79,7 @@ const getFirebaseConfig = () => {
 // Initialize Firebase App
 let firebaseApp: FirebaseApp | null = null;
 let firestore: Firestore | null = null;
-let auth: Auth | null = null;
+let authInstance: Auth | null = null;
 
 function initializeFirebase(): FirebaseApp {
   if (firebaseApp) {
@@ -129,17 +129,17 @@ export function getFirestoreInstance(): Firestore {
 
 // Get Auth instance
 export function getAuthInstance(): Auth {
-  if (!auth) {
+  if (!authInstance) {
     try {
       const app = getFirebaseApp();
-      auth = getAuth(app);
+      authInstance = getAuth(app);
       console.log("✅ Auth initialized");
     } catch (error: any) {
       console.error("❌ Auth initialization failed:", error.message);
       throw error;
     }
   }
-  return auth;
+  return authInstance;
 }
 
 // Check if Firebase is ready
@@ -196,7 +196,7 @@ export async function reinitializeFirebase(): Promise<boolean> {
     console.log("🔄 Reinitializing Firebase...");
     firebaseApp = null;
     firestore = null;
-    auth = null;
+    authInstance = null;
 
     // Get new instances
     const app = getFirebaseApp();
