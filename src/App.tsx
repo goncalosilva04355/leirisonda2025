@@ -6219,7 +6219,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "🎉 Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -8198,7 +8198,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat���rios
+                          Relat�����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -9934,7 +9934,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec📞ficas do Furo
+                          Observaç��es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -11062,6 +11062,29 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
       !!currentUser,
       "timestamp:",
       new Date().toISOString(),
+    );
+
+    // TESTE: Mostrar mensagem simples em vez do LoginPage
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "linear-gradient(135deg, #0891b2, #06b6d4)",
+          color: "white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "Arial, sans-serif",
+          textAlign: "center",
+        }}
+      >
+        <div>
+          <h1>🔧 Leirisonda</h1>
+          <p>Login necessário</p>
+          <p>isAuthenticated: {String(isAuthenticated)}</p>
+          <p>currentUser: {currentUser ? "Sim" : "Não"}</p>
+        </div>
+      </div>
     );
 
     if (showAdvancedSettings) {
