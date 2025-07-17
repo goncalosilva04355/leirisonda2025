@@ -32,6 +32,9 @@ class DirectAuthService {
       // Primeiro verificar emails hardcoded (para compatibilidade)
       const isHardcodedEmail = this.AUTHORIZED_EMAILS.includes(normalizedEmail);
 
+      // Garantir que o utilizador padrão existe no sistema
+      this.ensureDefaultUser();
+
       // Também verificar utilizadores criados no sistema
       const savedUsers = safeLocalStorage.getItem("app-users");
       let authorizedUser = null;
