@@ -4,7 +4,7 @@ import { getFirestore } from "firebase/firestore";
 
 // Configuração EXATA fornecida pelo cliente
 const firebaseConfig = {
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "placeholder-api-key",
   authDomain: "leiria-1cfc9.firebaseapp.com",
   databaseURL:
     "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
