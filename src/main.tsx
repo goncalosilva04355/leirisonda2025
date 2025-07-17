@@ -93,9 +93,6 @@ try {
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
   // Temporariamente usar diagnóstico para resolver tela branca
-  const { default: AppWhiteScreenDebug } = await import(
-    "./AppWhiteScreenDebug"
-  );
   const AppComponent = AppWhiteScreenDebug;
   console.log(
     "🔍 DIAGNÓSTICO: Usando componente de diagnóstico para resolver tela branca",
