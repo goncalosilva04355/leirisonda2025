@@ -215,13 +215,26 @@ if (isMobileDevice()) {
   autoInit();
 }
 
-// Exportar configuração para compatibilidade
-export const firebaseConfig = {
-  // Config não é necessária para REST API, mas mantemos para compatibilidade
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  projectId: "leiria-1cfc9",
-  restApiMode: true,
-};
+// Configuration for mobile Firebase using environment variables
+import { getSecureFirebaseConfig } from "../config/firebaseEnvSecure";
+
+// Get configuration from environment variables
+let firebaseConfig: any;
+try {
+  const config = getSecureFirebaseConfig();
+  firebaseConfig = {
+    apiKey: config.apiKey,
+    projectId: config.projectId,
+    restApiMode: true,
+  };
+} catch (error) {
+  console.error(
+    "❌ Firebase mobile configuration requires environment variables",
+  );
+  throw error;
+}
+
+export { firebaseConfig };
 
 export default {
   save: saveToFirebaseMobile,
