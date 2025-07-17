@@ -1,488 +1,331 @@
+// COMPONENTE ATUALIZADO PARA REST API - SEM SDK FIREBASE
 import React, { useState, useEffect } from "react";
 import {
-  Share,
-  Users,
-  Database,
-  RefreshCw,
-  CheckCircle,
-  AlertTriangle,
-  Info,
-  ArrowRight,
-  Globe,
-  Shield,
-} from "lucide-react";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
-  migrateToSharedData,
-  forceSyncAfterMigration,
-  checkSharedDataStructure,
-} from "../utils/migrateToSharedData";
-
-interface DataStructureInfo {
-  hasSharedData: boolean;
-  hasOldData: boolean;
-  sharedCounts: {
-    pools: number;
-    works: number;
-    maintenance: number;
-    clients: number;
-  };
-  oldCounts: {
-    pools: number;
-    works: number;
-    maintenance: number;
-    clients: number;
-  };
-}
+  Users,
+  Briefcase,
+  Waves,
+  Settings,
+  Download,
+  Upload,
+  Database,
+  Smartphone,
+} from "lucide-react";
+import { useUniversalDataSyncFixed } from "../hooks/useUniversalDataSyncFixed";
 
 export const SharedDataManager: React.FC = () => {
-  const [isChecking, setIsChecking] = useState(false);
-  const [isMigrating, setIsMigrating] = useState(false);
-  const [dataInfo, setDataInfo] = useState<DataStructureInfo | null>(null);
-  const [migrationResult, setMigrationResult] = useState<any>(null);
-  const [showDetails, setShowDetails] = useState(false);
+  const dataSync = useUniversalDataSyncFixed();
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // Check data structure on component mount
-  useEffect(() => {
-    checkDataStructure();
-  }, []);
-
-  const checkDataStructure = async () => {
-    setIsChecking(true);
-    try {
-      const info = await checkSharedDataStructure();
-      setDataInfo(info);
-      console.log("📊 Data structure check completed:", info);
-    } catch (error) {
-      console.error("Error checking data structure:", error);
-    } finally {
-      setIsChecking(false);
-    }
+  const stats = {
+    obras: dataSync.obras.length,
+    manutencoes: dataSync.manutencoes.length,
+    piscinas: dataSync.piscinas.length,
+    clientes: dataSync.clientes.length,
+    total: dataSync.totalItems,
   };
 
-  const handleMigrateData = async () => {
-    if (
-      !confirm(
-        "🚨 IMPORTANTE: Esta operação vai migrar todos os dados para uma estrutura partilhada onde TODOS os utilizadores veem os MESMOS dados. Isto resolve o problema de dados não partilhados. Continuar?",
-      )
-    ) {
-      return;
-    }
+  const exportData = () => {
+    const data = {
+      obras: dataSync.obras,
+      manutencoes: dataSync.manutencoes,
+      piscinas: dataSync.piscinas,
+      clientes: dataSync.clientes,
+      exported: new Date().toISOString(),
+    };
 
-    setIsMigrating(true);
-    setMigrationResult(null);
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `leirisonda-data-${new Date().toISOString().split("T")[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
-    try {
-      console.log("🚀 Iniciando migração para dados partilhados...");
-      const result = await migrateToSharedData();
-      setMigrationResult(result);
+  const handleFileImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-      if (result.success) {
-        // Force sync after migration
-        await forceSyncAfterMigration();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target?.result as string);
 
-        // Recheck data structure
-        await checkDataStructure();
+        // Import data back to the system
+        if (data.obras) dataSync.setObras(data.obras);
+        if (data.manutencoes) dataSync.setManutencoes(data.manutencoes);
+        if (data.piscinas) dataSync.setPiscinas(data.piscinas);
+        if (data.clientes) dataSync.setClientes(data.clientes);
 
-        alert(
-          `✅ MIGRAÇÃO CONCLUÍDA!\n\n` +
-            `Dados migrados:\n` +
-            `• Piscinas: ${result.migrated.pools}\n` +
-            `• Obras: ${result.migrated.works}\n` +
-            `• Manutenções: ${result.migrated.maintenance}\n` +
-            `• Clientes: ${result.migrated.clients}\n\n` +
-            `🌐 AGORA TODOS OS UTILIZADORES VEEM OS MESMOS DADOS!`,
-        );
-      } else {
-        alert("❌ Erro na migração. Verifique os logs para detalhes.");
+        console.log("✅ Dados importados com sucesso");
+      } catch (error) {
+        console.error("❌ Erro ao importar dados:", error);
       }
-    } catch (error) {
-      console.error("Migration error:", error);
-      alert(`❌ Erro durante a migração: ${error.message}`);
-    } finally {
-      setIsMigrating(false);
-    }
+    };
+    reader.readAsText(file);
   };
-
-  const handleForceSync = async () => {
-    try {
-      const success = await forceSyncAfterMigration();
-      if (success) {
-        alert("✅ Sincronização forçada concluída!");
-        await checkDataStructure();
-      } else {
-        alert("❌ Erro na sincronização. Verifique a conectividade.");
-      }
-    } catch (error) {
-      alert(`❌ Erro na sincronização: ${error.message}`);
-    }
-  };
-
-  const getStatusColor = (hasData: boolean) => {
-    return hasData ? "text-green-600" : "text-gray-400";
-  };
-
-  const getStatusIcon = (hasData: boolean) => {
-    return hasData ? (
-      <CheckCircle className="h-4 w-4 text-green-600" />
-    ) : (
-      <div className="h-4 w-4 rounded-full border-2 border-gray-300" />
-    );
-  };
-
-  const needsMigration = dataInfo?.hasOldData && !dataInfo?.hasSharedData;
-  const isPartiallyMigrated = dataInfo?.hasOldData && dataInfo?.hasSharedData;
-  const isFullyMigrated = !dataInfo?.hasOldData && dataInfo?.hasSharedData;
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <div className="flex items-center space-x-3 mb-4">
-          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Share className="h-4 w-4 text-blue-600" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">
-              Partilha de Dados Entre Utilizadores
-            </h2>
-            <p className="text-gray-600">
-              Gerir como os dados são partilhados entre todos os utilizadores do
-              sistema
-            </p>
-          </div>
-        </div>
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Database className="h-6 w-6" />
+            Gestor de Dados Partilhados
+          </CardTitle>
+          <CardDescription>
+            Gestão centralizada de todos os dados da aplicação usando REST API
+          </CardDescription>
+        </CardHeader>
+      </Card>
 
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <div className="flex items-center">
-              <Globe className="h-5 w-5 text-blue-600 mr-2" />
-              <div>
-                <div className="text-sm text-blue-600">Status da Partilha</div>
-                <div className="text-lg font-semibold text-blue-900">
-                  {isFullyMigrated
-                    ? "✅ Ativa"
-                    : needsMigration
-                      ? "❌ Inativa"
-                      : "⚠️ Parcial"}
-                </div>
-              </div>
-            </div>
-          </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid grid-cols-4 w-full">
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="sync">Sincronização</TabsTrigger>
+          <TabsTrigger value="export">Importar/Exportar</TabsTrigger>
+          <TabsTrigger value="mobile">Mobile</TabsTrigger>
+        </TabsList>
 
-          <div className="bg-green-50 p-4 rounded-lg">
-            <div className="flex items-center">
-              <Users className="h-5 w-5 text-green-600 mr-2" />
-              <div>
-                <div className="text-sm text-green-600">Dados Globais</div>
-                <div className="text-lg font-semibold text-green-900">
-                  {dataInfo
-                    ? Object.values(dataInfo.sharedCounts).reduce(
-                        (a, b) => a + b,
-                        0,
-                      )
-                    : "..."}{" "}
-                  itens
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-yellow-50 p-4 rounded-lg">
-            <div className="flex items-center">
-              <Shield className="h-5 w-5 text-yellow-600 mr-2" />
-              <div>
-                <div className="text-sm text-yellow-600">Dados Locais</div>
-                <div className="text-lg font-semibold text-yellow-900">
-                  {dataInfo
-                    ? Object.values(dataInfo.oldCounts).reduce(
-                        (a, b) => a + b,
-                        0,
-                      )
-                    : "..."}{" "}
-                  itens
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Status Indicators */}
-        {dataInfo && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-2">
-                <Info className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-gray-900">
-                  Estado da Partilha de Dados:
-                </span>
-              </div>
-              <button
-                onClick={() => setShowDetails(!showDetails)}
-                className="text-sm text-blue-600 hover:text-blue-700"
-              >
-                {showDetails ? "Ocultar" : "Ver"} Detalhes
-              </button>
-            </div>
-
-            {showDetails && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Shared Data */}
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h3 className="text-sm font-medium text-green-800 mb-3 flex items-center">
-                    <Globe className="h-4 w-4 mr-1" />
-                    Dados Partilhados (Todos os utilizadores veem)
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.sharedCounts.pools > 0)}
-                        <span className="text-sm">Piscinas</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.sharedCounts.pools > 0)}`}
-                      >
-                        {dataInfo.sharedCounts.pools}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.sharedCounts.works > 0)}
-                        <span className="text-sm">Obras</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.sharedCounts.works > 0)}`}
-                      >
-                        {dataInfo.sharedCounts.works}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.sharedCounts.maintenance > 0)}
-                        <span className="text-sm">Manutenções</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.sharedCounts.maintenance > 0)}`}
-                      >
-                        {dataInfo.sharedCounts.maintenance}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.sharedCounts.clients > 0)}
-                        <span className="text-sm">Clientes</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.sharedCounts.clients > 0)}`}
-                      >
-                        {dataInfo.sharedCounts.clients}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Old Data */}
-                <div className="bg-yellow-50 p-4 rounded-lg">
-                  <h3 className="text-sm font-medium text-yellow-800 mb-3 flex items-center">
-                    <Shield className="h-4 w-4 mr-1" />
-                    Dados Não Partilhados (Apenas local)
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.oldCounts.pools > 0)}
-                        <span className="text-sm">Piscinas</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.oldCounts.pools > 0)}`}
-                      >
-                        {dataInfo.oldCounts.pools}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.oldCounts.works > 0)}
-                        <span className="text-sm">Obras</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.oldCounts.works > 0)}`}
-                      >
-                        {dataInfo.oldCounts.works}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.oldCounts.maintenance > 0)}
-                        <span className="text-sm">Manutenções</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.oldCounts.maintenance > 0)}`}
-                      >
-                        {dataInfo.oldCounts.maintenance}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(dataInfo.oldCounts.clients > 0)}
-                        <span className="text-sm">Clientes</span>
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${getStatusColor(dataInfo.oldCounts.clients > 0)}`}
-                      >
-                        {dataInfo.oldCounts.clients}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 mt-6">
-          <button
-            onClick={checkDataStructure}
-            disabled={isChecking}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 flex items-center space-x-2"
-          >
-            <RefreshCw
-              className={`h-4 w-4 ${isChecking ? "animate-spin" : ""}`}
-            />
-            <span>{isChecking ? "Verificando..." : "Verificar Estado"}</span>
-          </button>
-
-          {needsMigration && (
-            <button
-              onClick={handleMigrateData}
-              disabled={isMigrating}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 flex items-center space-x-2"
-            >
-              <ArrowRight
-                className={`h-4 w-4 ${isMigrating ? "animate-pulse" : ""}`}
-              />
-              <span>
-                {isMigrating ? "Migrando..." : "Migrar para Dados Partilhados"}
-              </span>
-            </button>
-          )}
-
-          <button
-            onClick={handleForceSync}
-            className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center space-x-2"
-          >
-            <Database className="h-4 w-4" />
-            <span>Forçar Sincronização</span>
-          </button>
-        </div>
-
-        {/* Migration Result */}
-        {migrationResult && (
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">
-              Resultado da Migração:
-            </h3>
-            <div className="space-y-1 text-sm">
-              {migrationResult.success ? (
-                <div className="text-green-700">
-                  <div>✅ Migração concluída com sucesso!</div>
-                  <div>📊 Pools: {migrationResult.migrated.pools}</div>
-                  <div>🏗️ Obras: {migrationResult.migrated.works}</div>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
                   <div>
-                    🔧 Manutenções: {migrationResult.migrated.maintenance}
+                    <p className="text-sm font-medium text-gray-600">Obras</p>
+                    <p className="text-2xl font-bold">{stats.obras}</p>
                   </div>
-                  <div>👥 Clientes: {migrationResult.migrated.clients}</div>
+                  <Briefcase className="h-8 w-8 text-blue-500" />
                 </div>
-              ) : (
-                <div className="text-red-700">
-                  <div>❌ Erro na migração</div>
-                  {migrationResult.errors.map(
-                    (error: string, index: number) => (
-                      <div key={index}>• {error}</div>
-                    ),
-                  )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      Piscinas
+                    </p>
+                    <p className="text-2xl font-bold">{stats.piscinas}</p>
+                  </div>
+                  <Waves className="h-8 w-8 text-cyan-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      Manutenções
+                    </p>
+                    <p className="text-2xl font-bold">{stats.manutencoes}</p>
+                  </div>
+                  <Settings className="h-8 w-8 text-green-500" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      Clientes
+                    </p>
+                    <p className="text-2xl font-bold">{stats.clientes}</p>
+                  </div>
+                  <Users className="h-8 w-8 text-purple-500" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Estado dos Dados</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span>Total de registos:</span>
+                  <Badge variant="outline">{stats.total}</Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Última sincronização:</span>
+                  <Badge variant="outline">
+                    {dataSync.lastSync
+                      ? new Date(dataSync.lastSync).toLocaleString("pt-PT")
+                      : "Nunca"}
+                  </Badge>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Estado:</span>
+                  <Badge variant={dataSync.isLoading ? "secondary" : "default"}>
+                    {dataSync.isLoading ? "Sincronizando..." : "Pronto"}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sync" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sincronização com REST API</CardTitle>
+              <CardDescription>
+                Estado da sincronização com Firestore via REST API
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-2">
+                <Button
+                  onClick={dataSync.forceSyncAll}
+                  disabled={dataSync.isLoading}
+                  className="flex items-center gap-2"
+                >
+                  <Database className="h-4 w-4" />
+                  {dataSync.isLoading
+                    ? "Sincronizando..."
+                    : "Sincronizar Agora"}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                  className="flex items-center gap-2"
+                >
+                  <Settings className="h-4 w-4" />
+                  Recarregar Dados
+                </Button>
+              </div>
+
+              {dataSync.error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-red-800 text-sm">{dataSync.error}</p>
                 </div>
               )}
-            </div>
-          </div>
-        )}
-      </div>
 
-      {/* Information Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* How it works */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-blue-800 mb-2 flex items-center">
-            <Info className="h-4 w-4 mr-1" />
-            Como Funciona a Partilha de Dados
-          </h3>
-          <ul className="text-sm text-blue-700 space-y-1 list-disc list-inside">
-            <li>Dados partilhados são visíveis para TODOS os utilizadores</li>
-            <li>Alterações feitas por um utilizador aparecem para todos</li>
-            <li>Sincronização em tempo real entre dispositivos</li>
-            <li>Backup automático no Firebase</li>
-          </ul>
-        </div>
+              <div className="text-sm text-gray-600">
+                <p>✅ Sistema usando REST API direta</p>
+                <p>🌐 Conectividade: Firestore REST API</p>
+                <p>💾 Backup local: localStorage</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        {/* Current Status */}
-        <div
-          className={`border rounded-lg p-4 ${
-            isFullyMigrated
-              ? "bg-green-50 border-green-200"
-              : needsMigration
-                ? "bg-red-50 border-red-200"
-                : "bg-yellow-50 border-yellow-200"
-          }`}
-        >
-          <h3
-            className={`text-sm font-medium mb-2 flex items-center ${
-              isFullyMigrated
-                ? "text-green-800"
-                : needsMigration
-                  ? "text-red-800"
-                  : "text-yellow-800"
-            }`}
-          >
-            {isFullyMigrated ? (
-              <CheckCircle className="h-4 w-4 mr-1" />
-            ) : (
-              <AlertTriangle className="h-4 w-4 mr-1" />
-            )}
-            Estado Atual
-          </h3>
-          <div
-            className={`text-sm space-y-1 ${
-              isFullyMigrated
-                ? "text-green-700"
-                : needsMigration
-                  ? "text-red-700"
-                  : "text-yellow-700"
-            }`}
-          >
-            {isFullyMigrated && (
-              <>
-                <div>✅ Dados totalmente partilhados</div>
-                <div>✅ Todos os utilizadores veem os mesmos dados</div>
-                <div>✅ Sincronização ativa</div>
-              </>
-            )}
-            {needsMigration && (
-              <>
-                <div>❌ Dados NÃO estão partilhados</div>
-                <div>❌ Cada utilizador vê dados diferentes</div>
-                <div>❌ É necessário migrar para resolver</div>
-              </>
-            )}
-            {isPartiallyMigrated && (
-              <>
-                <div>⚠️ Migração parcial detectada</div>
-                <div>⚠️ Alguns dados podem não estar partilhados</div>
-                <div>⚠️ Recomenda-se completar a migração</div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
+        <TabsContent value="export" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Importar/Exportar Dados</CardTitle>
+              <CardDescription>
+                Backup e restauro de dados em formato JSON
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-2">
+                <Button
+                  onClick={exportData}
+                  className="flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Exportar Dados
+                </Button>
+
+                <div>
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileImport}
+                    style={{ display: "none" }}
+                    id="file-import"
+                  />
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      document.getElementById("file-import")?.click()
+                    }
+                    className="flex items-center gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Importar Dados
+                  </Button>
+                </div>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                <p>
+                  💡 O export inclui todos os dados: obras, piscinas,
+                  manutenções e clientes
+                </p>
+                <p>📄 Formato: JSON compatível com importação</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="mobile" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Smartphone className="h-6 w-6" />
+                Otimização Mobile
+              </CardTitle>
+              <CardDescription>
+                Funcionalidades específicas para dispositivos móveis
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-medium mb-2">💾 Armazenamento Local</h3>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>Dados salvos localmente</li>
+                    <li>Funciona offline</li>
+                    <li>Sincronização automática</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 border rounded-lg">
+                  <h3 className="font-medium mb-2">🌐 Conectividade</h3>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>REST API otimizada</li>
+                    <li>Sem dependência do SDK</li>
+                    <li>Backup automático na nuvem</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="text-sm text-gray-600">
+                <p>📱 Interface otimizada para mobile</p>
+                <p>⚡ Performance melhorada sem SDK</p>
+                <p>🔄 Sincronização eficiente</p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
+
+export default SharedDataManager;
