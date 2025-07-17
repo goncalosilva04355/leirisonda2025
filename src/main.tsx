@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import AppWithFallback from "./AppWithFallback";
 import "./index.css";
 
 console.log("🚀 Leirisonda - Inicializando aplicação...");
