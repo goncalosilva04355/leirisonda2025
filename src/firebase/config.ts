@@ -201,9 +201,9 @@ export async function reinitializeFirebase(): Promise<boolean> {
     // Get new instances
     const app = getFirebaseApp();
     const db = getFirestoreInstance();
-    const authInstance = getAuthInstance();
+    const authInstanceNew = getAuthInstance();
 
-    const success = app !== null && db !== null && authInstance !== null;
+    const success = app !== null && db !== null && authInstanceNew !== null;
     console.log(
       success
         ? "✅ Firebase reinitialized successfully"
