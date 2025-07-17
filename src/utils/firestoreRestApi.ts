@@ -190,19 +190,50 @@ export const readFromFirestoreRest = async (
       return [];
     }
 
-    // Read response body only once
+    // Handle 403 errors specifically
+    if (response.status === 403) {
+      console.error(
+        `❌ REST API: Acesso negado (403) para ${collection}:`,
+        "Verificar API key e regras de segurança do Firestore",
+      );
+      return [];
+    }
+
+    // Read response body only once with enhanced error handling
     let responseText: string;
     try {
-      responseText = await response.text();
+      // Try to read the response text with timeout
+      const textPromise = response.text();
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error("Timeout reading response")), 5000),
+      );
+
+      responseText = await Promise.race([textPromise, timeoutPromise]);
     } catch (readError) {
+      // Provide more specific error information
+      const errorDetails = {
+        status: response?.status,
+        statusText: response?.statusText,
+        url: response?.url,
+        ok: response?.ok,
+        type: response?.type,
+        redirected: response?.redirected,
+      };
+
       console.error(
         `❌ REST API: Erro ao ler resposta para ${collection}:`,
         readError,
-        "Response status:",
-        response?.status,
-        "Response headers:",
-        response?.headers,
+        "Response details:",
+        errorDetails,
       );
+
+      // For 403 errors, provide helpful message
+      if (response?.status === 403) {
+        console.error(
+          "🔒 Acesso negado - verificar configuração Firebase e regras de segurança",
+        );
+      }
+
       return [];
     }
 
