@@ -34,7 +34,6 @@
   [headers.values]
     Content-Type = "application/javascript"
     Cache-Control = "public, max-age=3600"
-    Service-Worker-Allowed = "/"
 
 [[headers]]
   for = "/assets/*"
