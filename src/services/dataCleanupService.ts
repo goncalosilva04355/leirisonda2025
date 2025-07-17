@@ -60,7 +60,7 @@ class DataCleanupService {
           );
           console.log(`Found ${poolsSnapshot.docs.length} pools to delete`);
           for (const poolDoc of poolsSnapshot.docs) {
-            await deleteDoc(doc(db, "pools", poolDoc.id));
+            await deleteDoc(doc(getFirestoreInstance(), "pools", poolDoc.id));
             result.details.firestoreDeleted.pools++;
           }
         } catch (error) {
@@ -74,7 +74,7 @@ class DataCleanupService {
           );
           console.log(`Found ${worksSnapshot.docs.length} works to delete`);
           for (const workDoc of worksSnapshot.docs) {
-            await deleteDoc(doc(db, "works", workDoc.id));
+            await deleteDoc(doc(getFirestoreInstance(), "works", workDoc.id));
             result.details.firestoreDeleted.works++;
           }
         } catch (error) {
@@ -90,7 +90,9 @@ class DataCleanupService {
             `Found ${maintenanceSnapshot.docs.length} maintenance records to delete`,
           );
           for (const maintenanceDoc of maintenanceSnapshot.docs) {
-            await deleteDoc(doc(db, "maintenance", maintenanceDoc.id));
+            await deleteDoc(
+              doc(getFirestoreInstance(), "maintenance", maintenanceDoc.id),
+            );
             result.details.firestoreDeleted.maintenance++;
           }
         } catch (error) {
@@ -104,7 +106,9 @@ class DataCleanupService {
           );
           console.log(`Found ${clientsSnapshot.docs.length} clients to delete`);
           for (const clientDoc of clientsSnapshot.docs) {
-            await deleteDoc(doc(db, "clients", clientDoc.id));
+            await deleteDoc(
+              doc(getFirestoreInstance(), "clients", clientDoc.id),
+            );
             result.details.firestoreDeleted.clients++;
           }
         } catch (error) {
@@ -120,7 +124,9 @@ class DataCleanupService {
             `Found ${interventionsSnapshot.docs.length} interventions to delete`,
           );
           for (const interventionDoc of interventionsSnapshot.docs) {
-            await deleteDoc(doc(db, "interventions", interventionDoc.id));
+            await deleteDoc(
+              doc(getFirestoreInstance(), "interventions", interventionDoc.id),
+            );
             result.details.firestoreDeleted.interventions++;
           }
         } catch (error) {
