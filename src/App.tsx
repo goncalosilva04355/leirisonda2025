@@ -179,9 +179,12 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
-console.log(
-  "🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - Firebase e REST API sempre ativos",
-);
+console.log("🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - mesma aplicação sempre");
+console.log("🌍 Environment:", {
+  prod: import.meta.env.PROD,
+  mode: import.meta.env.MODE,
+  base: import.meta.env.BASE_URL,
+});
 
 // Função para gerar IDs únicos e evitar colisões React
 let appIdCounter = 0;
@@ -239,7 +242,7 @@ console.error = (...args) => {
       console.warn("🚨 Stack trace:", new Error().stack);
 
       // Try to find where this timestamp is coming from
-      console.warn("🚨 Found timestamp in React key error");
+      console.warn("���� Found timestamp in React key error");
     }
   }
   return originalConsoleError.apply(console, args);
@@ -7867,7 +7870,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     type="submit"
                                     className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
                                   >
-                                    Aceder às Configuraç��es
+                                    Aceder ��s Configuraç��es
                                   </button>
                                 </form>
                               </div>
@@ -8742,7 +8745,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     !enableMapsRedirect || !client?.address
                                   }
                                 >
-                                  🎉{" "}
+                                  ��{" "}
                                   {client?.address ||
                                     "Endere��o não disponível"}
                                 </button>
