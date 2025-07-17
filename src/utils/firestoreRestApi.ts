@@ -2,6 +2,7 @@
 // Using REST API as confirmed working by user
 
 import { getRestApiConfig } from "./firebaseConfigHelper";
+import { queuedRestApiCall } from "./requestQueue";
 
 const config = getRestApiConfig();
 const PROJECT_ID = config.projectId;
