@@ -19,6 +19,12 @@ const AppWithFallback: React.FC = () => {
     const forceSimple = localStorage.getItem("forceSimpleApp");
     const lastError = localStorage.getItem("lastAppError");
 
+    console.log("🔍 AppWithFallback verificando flags:", {
+      forceSimple,
+      lastError,
+      retryCount,
+    });
+
     // TEMPORARIAMENTE: Always try main app first (remove flag)
     if (forceSimple === "true") {
       console.log("🔄 Removendo flag forceSimpleApp para tentar app principal");
@@ -87,8 +93,9 @@ const AppWithFallback: React.FC = () => {
     }
   }
 
+  // TEMPORARIAMENTE DESABILITADO: sempre tentar app principal
   // Se deve usar app simples ou se houve muitos erros
-  if (useSimpleApp || retryCount >= maxRetries) {
+  if (false && (useSimpleApp || retryCount >= maxRetries)) {
     console.log("📱 Usando app simples:", {
       useSimpleApp,
       retryCount,

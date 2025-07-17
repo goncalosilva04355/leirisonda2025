@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import AppWithFallback from "./AppWithFallback";
 import "./index.css";
 
 console.log("🚀 Leirisonda - Inicializando aplicação...");
@@ -14,10 +14,10 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 
 try {
-  root.render(<App />);
-  console.log("✅ App renderizada com sucesso");
+  root.render(<AppWithFallback />);
+  console.log("✅ AppWithFallback renderizada com sucesso");
 } catch (error) {
-  console.error("❌ Erro ao renderizar App:", error);
+  console.error("❌ Erro ao renderizar AppWithFallback:", error);
 
   // Fallback simples
   root.render(

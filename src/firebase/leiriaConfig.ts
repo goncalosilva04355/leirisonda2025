@@ -21,15 +21,15 @@ let db: Firestore | null = null;
 let auth: Auth | null = null;
 
 // Verificar se deve inicializar Firebase - SEMPRE ATIVO PARA DESENVOLVIMENTO IGUAL A PRODUÇÃO
-const IS_NETLIFY_BUILD =
-  import.meta.env.NETLIFY === "true" ||
-  import.meta.env.VITE_IS_NETLIFY === "true";
+const IS_NETLIFY_BUILD = false; // Simplified for debugging
 const FORCE_FIREBASE_PRODUCTION = true; // SEMPRE ATIVO - DESENVOLVIMENTO = PRODUÇÃO
 
 // Inicialização simples e única
 function initializeLeiria(): boolean {
-  // Verificação específica para produção
-  if (import.meta.env.PROD) {
+  // Verificação específica para produção - simplified for debugging
+  const isProduction =
+    typeof window !== "undefined" && window.location.hostname !== "localhost";
+  if (isProduction) {
     console.log("📱 Firebase em produção - verificando configuração...");
     try {
       // Verificar se configuração está completa
