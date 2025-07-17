@@ -214,6 +214,7 @@ const SafeModeApp = () => {
         </p>
         <button
           onClick={() => {
+            localStorage.setItem("forceAdvancedApp", "true");
             localStorage.removeItem("forceSimpleApp");
             window.location.href = window.location.origin;
           }}
