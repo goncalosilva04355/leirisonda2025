@@ -90,9 +90,14 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
+  // Temporariamente usar diagnóstico para resolver tela branca
+  const { default: AppWhiteScreenDebug } = await import(
+    "./AppWhiteScreenDebug"
+  );
+  const AppComponent = AppWhiteScreenDebug;
+  console.log(
+    "🔍 DIAGNÓSTICO: Usando componente de diagnóstico para resolver tela branca",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
