@@ -144,9 +144,7 @@ const AppWithFallback: React.FC = () => {
         }
       }}
     >
-      <Suspense fallback={<LoadingFallback />}>
-        <App />
-      </Suspense>
+      <App />
     </AppErrorBoundary>
   );
 };
