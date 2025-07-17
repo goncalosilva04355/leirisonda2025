@@ -94,9 +94,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Usar componente ultra simples primeiro
-  const AppComponent = AppUltraSimple;
-  console.log("🔍 TESTE: Usando componente ultra simples sem dependências");
+  // SEMPRE usar App principal - desenvolvimento = produção
+  const AppComponent = App;
+  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
