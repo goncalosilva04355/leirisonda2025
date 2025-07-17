@@ -94,11 +94,9 @@ try {
   console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
   console.log("🔍 Base URL:", import.meta.env.BASE_URL);
 
-  // Temporariamente usar diagnóstico para resolver tela branca
-  const AppComponent = AppWhiteScreenDebug;
-  console.log(
-    "🔍 DIAGNÓSTICO: Usando componente de diagnóstico para resolver tela branca",
-  );
+  // Usar componente ultra simples primeiro
+  const AppComponent = AppUltraSimple;
+  console.log("🔍 TESTE: Usando componente ultra simples sem dependências");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
