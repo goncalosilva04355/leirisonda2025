@@ -1,250 +1,166 @@
-/**
- * Indicador visual de status Firebase para dispositivos móveis
- */
-
+// COMPONENTE CONVERTIDO PARA REST API - SEM SDK FIREBASE
 import React, { useState, useEffect } from "react";
-import { CheckCircle, XCircle, AlertCircle, Loader } from "lucide-react";
+import {
+  readFromFirestoreRest,
+  saveToFirestoreRest,
+} from "../utils/firestoreRestApi";
 
 export const FirebaseStatusVisual: React.FC = () => {
   const [status, setStatus] = useState<{
     loading: boolean;
-    firebaseReady: boolean;
+    restApiReady: boolean;
     dbConnected: boolean;
-    authReady: boolean;
-    canRead: boolean;
-    canWrite: boolean;
+    dataCount: number;
     errors: string[];
   }>({
     loading: true,
-    firebaseReady: false,
+    restApiReady: false,
     dbConnected: false,
-    authReady: false,
-    canRead: false,
-    canWrite: false,
+    dataCount: 0,
     errors: [],
   });
 
   useEffect(() => {
-    testFirebaseStatus();
+    testRestApiStatus();
   }, []);
 
-  const testFirebaseStatus = async () => {
+  const testRestApiStatus = async () => {
     setStatus((prev) => ({ ...prev, loading: true, errors: [] }));
 
     const errors: string[] = [];
-    let firebaseReady = false;
+    let restApiReady = false;
     let dbConnected = false;
-    let authReady = false;
-    let canRead = false;
-    let canWrite = false;
+    let dataCount = 0;
 
     try {
-      // Test mobile Firebase configuration first
-      const { initializeMobileFirebase, resetMobileFirebase } = await import(
-        "../firebase/mobileConfig"
-      );
+      console.log("🌐 Testando REST API do Firestore...");
 
-      console.log("📱 Testando Firebase mobile config...");
-      const mobileResult = await initializeMobileFirebase();
+      // Test basic connectivity
+      const testData = await readFromFirestoreRest("test");
+      restApiReady = true;
+      console.log("✅ REST API conectada");
 
-      if (mobileResult.success) {
-        firebaseReady = true;
-        dbConnected = !!mobileResult.db;
-        authReady = !!mobileResult.auth;
-
-        if (mobileResult.db) {
-          // Test read/write with mobile config
-          try {
-            const { doc, getDoc, setDoc } = await import("firebase/firestore");
-            const testDoc = doc(mobileResult.db, "__test__", "mobile-test");
-
-            // Test read
-            await getDoc(testDoc);
-            canRead = true;
-
-            // Test write
-            await setDoc(testDoc, {
-              test: true,
-              timestamp: new Date().toISOString(),
-              device: "mobile",
-              config: "mobile-optimized",
-            });
-            canWrite = true;
-
-            console.log("✅ Mobile Firebase funcionando!");
-          } catch (rwError: any) {
-            errors.push(`Mobile R/W: ${rwError.code || rwError.message}`);
-          }
-        }
-
-        return; // Exit early if mobile config works
-      } else {
-        errors.push(`Mobile init: ${mobileResult.error}`);
-      }
-
-      // Fallback to original config
-      const { isFirebaseReady, getDB, getAuthService } = await import(
-        "../firebase/config"
-      );
-
-      firebaseReady = isFirebaseReady();
-      if (!firebaseReady) {
-        errors.push("Firebase não inicializado");
-      }
-
-      // Test Firestore
+      // Test read/write
       try {
-        const db = await getDB();
-        if (db) {
+        const testDoc = {
+          message: "Mobile test",
+          timestamp: new Date().toISOString(),
+          mobile: true,
+        };
+
+        const writeSuccess = await saveToFirestoreRest(
+          "test",
+          `mobile_${Date.now()}`,
+          testDoc,
+        );
+
+        if (writeSuccess) {
           dbConnected = true;
-
-          // Test read
-          const { doc, getDoc } = await import("firebase/firestore");
-          const testDoc = doc(db, "__test__", "mobile-test");
-          await getDoc(testDoc);
-          canRead = true;
-
-          // Test write
-          const { setDoc } = await import("firebase/firestore");
-          await setDoc(testDoc, {
-            test: true,
-            timestamp: new Date().toISOString(),
-            device: "mobile",
-          });
-          canWrite = true;
+          console.log("✅ REST API funcional (leitura/escrita)");
         } else {
-          errors.push("Firestore não disponível");
+          errors.push("Escrita REST API falhou");
         }
-      } catch (dbError: any) {
-        errors.push(`DB: ${dbError.code || dbError.message}`);
+      } catch (rwError: any) {
+        console.error("❌ Erro leitura/escrita REST API:", rwError);
+        errors.push(`Leitura/escrita: ${rwError.message}`);
       }
 
-      // Test Auth
+      // Count total data
       try {
-        const auth = await getAuthService();
-        authReady = !!auth;
-        if (!authReady) {
-          errors.push("Auth não disponível");
-        }
-      } catch (authError: any) {
-        errors.push(`Auth: ${authError.code || authError.message}`);
+        const [obras, piscinas, clientes, manutencoes] = await Promise.all([
+          readFromFirestoreRest("obras"),
+          readFromFirestoreRest("piscinas"),
+          readFromFirestoreRest("clientes"),
+          readFromFirestoreRest("manutencoes"),
+        ]);
+
+        dataCount =
+          obras.length + piscinas.length + clientes.length + manutencoes.length;
+        console.log(`📊 Total de dados: ${dataCount}`);
+      } catch (countError: any) {
+        console.warn("⚠️ Erro ao contar dados:", countError);
+        errors.push(`Contagem de dados: ${countError.message}`);
       }
     } catch (error: any) {
-      errors.push(`Erro geral: ${error.message}`);
+      console.error("❌ Erro na REST API:", error);
+      errors.push(`Conectividade: ${error.message}`);
     }
 
     setStatus({
       loading: false,
-      firebaseReady,
+      restApiReady,
       dbConnected,
-      authReady,
-      canRead,
-      canWrite,
+      dataCount,
       errors,
     });
   };
 
   const getOverallStatus = () => {
     if (status.loading) return "loading";
-    if (status.errors.length > 0) return "error";
-    if (
-      status.firebaseReady &&
-      status.dbConnected &&
-      status.authReady &&
-      status.canRead &&
-      status.canWrite
-    ) {
-      return "success";
-    }
-    return "warning";
-  };
-
-  const getStatusIcon = () => {
-    switch (getOverallStatus()) {
-      case "loading":
-        return <Loader className="w-5 h-5 animate-spin text-blue-500" />;
-      case "success":
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
-      case "error":
-        return <XCircle className="w-5 h-5 text-red-500" />;
-      case "warning":
-        return <AlertCircle className="w-5 h-5 text-yellow-500" />;
-      default:
-        return <AlertCircle className="w-5 h-5 text-gray-500" />;
-    }
+    if (status.restApiReady && status.dbConnected) return "success";
+    if (status.restApiReady) return "warning";
+    return "error";
   };
 
   const getStatusText = () => {
-    if (status.loading) return "Testando Firebase...";
+    if (status.loading) return "Testando REST API...";
 
     const overall = getOverallStatus();
-    if (overall === "success") return "Firebase OK ✅";
-    if (overall === "error") return "Firebase com problemas ❌";
-    return "Firebase parcialmente funcional ⚠️";
+    if (overall === "success") return "REST API OK ✅";
+    if (overall === "error") return "REST API com problemas ❌";
+    return "REST API parcialmente funcional ⚠️";
+  };
+
+  const getStatusColor = () => {
+    const overall = getOverallStatus();
+    if (overall === "success") return "text-green-600 bg-green-100";
+    if (overall === "error") return "text-red-600 bg-red-100";
+    if (overall === "warning") return "text-yellow-600 bg-yellow-100";
+    return "text-gray-600 bg-gray-100";
   };
 
   return (
-    <div className="fixed top-4 right-4 bg-white rounded-lg shadow-lg border p-3 max-w-xs z-50">
-      <div className="flex items-center space-x-2 mb-2">
-        {getStatusIcon()}
-        <span className="text-sm font-medium">{getStatusText()}</span>
-      </div>
-
-      <div className="space-y-1 text-xs">
-        <div
-          className={`flex items-center space-x-2 ${status.firebaseReady ? "text-green-600" : "text-red-600"}`}
-        >
+    <div className="fixed bottom-4 left-4 z-50">
+      <div
+        className={`px-3 py-2 rounded-lg text-sm font-medium ${getStatusColor()}`}
+      >
+        <div className="flex items-center space-x-2">
           <div
-            className={`w-2 h-2 rounded-full ${status.firebaseReady ? "bg-green-500" : "bg-red-500"}`}
+            className={`w-2 h-2 rounded-full ${status.restApiReady ? "bg-green-500" : "bg-red-500"}`}
           />
-          <span>Firebase App</span>
+          <span>REST API</span>
         </div>
 
-        <div
-          className={`flex items-center space-x-2 ${status.dbConnected ? "text-green-600" : "text-red-600"}`}
-        >
+        <div className="flex items-center space-x-2">
           <div
             className={`w-2 h-2 rounded-full ${status.dbConnected ? "bg-green-500" : "bg-red-500"}`}
           />
-          <span>Base Dados</span>
-        </div>
-
-        <div
-          className={`flex items-center space-x-2 ${status.authReady ? "text-green-600" : "text-red-600"}`}
-        >
-          <div
-            className={`w-2 h-2 rounded-full ${status.authReady ? "bg-green-500" : "bg-red-500"}`}
-          />
-          <span>Autenticação</span>
-        </div>
-
-        <div
-          className={`flex items-center space-x-2 ${status.canRead && status.canWrite ? "text-green-600" : "text-red-600"}`}
-        >
-          <div
-            className={`w-2 h-2 rounded-full ${status.canRead && status.canWrite ? "bg-green-500" : "bg-red-500"}`}
-          />
           <span>Leitura/Escrita</span>
+        </div>
+
+        {status.dataCount > 0 && (
+          <div className="text-xs mt-1">📊 {status.dataCount} documentos</div>
+        )}
+
+        {status.errors.length > 0 && (
+          <div className="text-xs mt-1 text-red-600">
+            ⚠️ {status.errors.length} erro(s)
+          </div>
+        )}
+      </div>
+
+      <div className="mt-2 text-xs text-center">
+        <div className={`px-2 py-1 rounded ${getStatusColor()}`}>
+          {getStatusText()}
         </div>
       </div>
 
-      {status.errors.length > 0 && (
-        <div className="mt-2 p-2 bg-red-50 rounded border border-red-200">
-          <div className="text-xs text-red-700 font-medium mb-1">Erros:</div>
-          {status.errors.map((error, index) => (
-            <div key={index} className="text-xs text-red-600">
-              • {error}
-            </div>
-          ))}
-        </div>
-      )}
-
       <button
-        onClick={testFirebaseStatus}
+        onClick={testRestApiStatus}
         className="w-full mt-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded hover:bg-blue-200"
         disabled={status.loading}
       >
-        {status.loading ? "Testando..." : "Testar Novamente"}
+        {status.loading ? "Testando..." : "Testar REST API"}
       </button>
     </div>
   );
