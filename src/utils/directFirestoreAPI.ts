@@ -1,6 +1,9 @@
-// Usar REST API do Firestore diretamente - contorna problemas do SDK
-const PROJECT_ID = "leiria-1cfc9";
-const API_KEY = "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw";
+// Use Firestore REST API directly - bypasses SDK issues
+import { getRestApiConfig } from "./firebaseConfigHelper";
+
+const config = getRestApiConfig();
+const PROJECT_ID = config.projectId;
+const API_KEY = config.apiKey;
 
 export async function testFirestoreAPI(): Promise<{
   success: boolean;
