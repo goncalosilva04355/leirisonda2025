@@ -38,6 +38,16 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
+// Create single root instance to avoid multiple createRoot warnings
+let globalRoot: ReactDOM.Root | null = null;
+
+const getOrCreateRoot = () => {
+  if (!globalRoot) {
+    globalRoot = ReactDOM.createRoot(rootElement);
+  }
+  return globalRoot;
+};
+
 // Emergency fallback - ALWAYS works
 function showEmergencyFallback(errorMessage = "") {
   console.log("🚨 ACTIVATING EMERGENCY FALLBACK");
