@@ -105,11 +105,42 @@ const FallbackApp = () => {
   );
 };
 
+// Simple App Loading Function
+const loadSimpleApp = async () => {
+  try {
+    console.log("📱 Carregando App simplificada...");
+    const { default: AppSimple } = await import("./AppSimple");
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(React.createElement(AppSimple));
+    console.log("✅ App simplificada carregada");
+  } catch (error) {
+    console.error("❌ Erro ao carregar App simplificada:", error);
+    // Final fallback
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(React.createElement(FallbackApp));
+    console.log("🛡️ Fallback final renderizado");
+  }
+};
+
 // Main App Loading Function
 const loadApp = async () => {
   try {
-    console.log("📦 Importando App principal...");
+    console.log("📦 Tentando carregar App principal...");
 
+    // Check if we should use simple app for production issues
+    const isProd = import.meta.env.PROD;
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceAdvanced = urlParams.get("advanced") === "true";
+    const useSimple = urlParams.get("simple") === "true";
+
+    // For production, default to simple app unless advanced is explicitly requested
+    if ((isProd && !forceAdvanced) || useSimple) {
+      console.log("📱 Usando versão simplificada para produção");
+      await loadSimpleApp();
+      return;
+    }
+
+    console.log("🚀 Carregando App avançada...");
     const [{ default: App }, { default: ErrorBoundary }] = await Promise.all([
       import("./App"),
       import("./components/ErrorBoundary").catch(() => ({
@@ -121,7 +152,7 @@ const loadApp = async () => {
       throw new Error("App component não carregado");
     }
 
-    console.log("✅ Componentes carregados com sucesso");
+    console.log("✅ Componentes avançados carregados");
 
     const root = ReactDOM.createRoot(rootElement);
 
@@ -130,41 +161,38 @@ const loadApp = async () => {
       root.render(
         React.createElement(ErrorBoundary, {}, React.createElement(App)),
       );
-      console.log("✅ App renderizada com ErrorBoundary");
+      console.log("✅ App avançada renderizada com ErrorBoundary");
     } else {
       root.render(React.createElement(App));
-      console.log("✅ App renderizada diretamente");
+      console.log("✅ App avançada renderizada diretamente");
     }
 
     // Verificar se renderizou após 2 segundos
     setTimeout(() => {
       if (rootElement.children.length === 0) {
-        console.warn("⚠️ Root ainda vazio, re-renderizando...");
-        root.render(React.createElement(App));
+        console.warn(
+          "⚠️ Root ainda vazio, fallback para versão simplificada...",
+        );
+        loadSimpleApp();
       }
     }, 2000);
   } catch (error) {
     console.error("❌ Erro ao carregar App principal:", error);
     console.error("Stack:", error.stack);
 
-    // Render fallback
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(React.createElement(FallbackApp));
-    console.log("🛡️ Fallback app renderizada");
+    // Try simple app
+    await loadSimpleApp();
   }
 };
 
-// Immediate load attempt
+// Start loading
 loadApp();
 
 // White screen detector and recovery
 setTimeout(() => {
   if (rootElement.children.length === 0) {
-    console.warn("�� TELA BRANCA DETECTADA! Ativando recuperação...");
-
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(React.createElement(FallbackApp));
-    console.log("🔧 Fallback de emergência ativado");
+    console.warn("🚨 TELA BRANCA DETECTADA! Ativando recuperação...");
+    loadSimpleApp();
   } else {
     console.log("✅ Aplicação carregada corretamente");
   }
