@@ -304,8 +304,14 @@ class DataCleanupService {
       console.log("Firebase cleanup service using fixed configuration");
 
       // Initialize Firebase services if not already done
-      if (db) {
+      try {
+        const db = getFirestoreInstance();
         console.log("Firestore is ready for user synchronization");
+      } catch (error) {
+        console.warn(
+          "Firestore not available for user synchronization:",
+          error,
+        );
       }
 
       if (realFirebaseService.isReady() || realFirebaseService.initialize()) {
