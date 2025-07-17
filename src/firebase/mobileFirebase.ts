@@ -217,9 +217,9 @@ if (isMobileDevice()) {
 
 // Exportar configuração para compatibilidade
 export const firebaseConfig = {
-  // Config não é necessária para REST API, mas mantemos para compatibilidade
-  apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-  projectId: "leiria-1cfc9",
+  // Config usando variáveis de ambiente para REST API
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
   restApiMode: true,
 };
 
