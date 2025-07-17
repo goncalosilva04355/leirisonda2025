@@ -326,10 +326,27 @@ const showNotification = (
 };
 
 function App() {
-  console.log("🚀 App component rendering...");
+  const renderTime = Date.now();
+  console.log("🚀 App component rendering at:", renderTime);
 
-  // Estado mínimo necessário
+  // Estado de renderização para qualquer ambiente
   const [hasRenderError, setHasRenderError] = useState(false);
+
+  useEffect(() => {
+    // Verificação básica independente do ambiente
+    console.log("📱 Verificando estado da aplicação...");
+
+    // Verificar se imports essenciais estão disponíveis
+    try {
+      if (!React || !useState || !useEffect) {
+        throw new Error("React hooks não disponíveis");
+      }
+      console.log("✅ React e hooks verificados OK");
+    } catch (error) {
+      console.error("❌ Erro nos imports básicos:", error);
+      setHasRenderError(true);
+    }
+  }, []);
 
   // Fallback UI se houver problemas de renderização
   if (hasRenderError) {
@@ -1814,7 +1831,7 @@ function App() {
               })
               .catch((fallbackError) => {
                 console.error(
-                  "�� Fallback Service Worker registration also failed:",
+                  "❌ Fallback Service Worker registration also failed:",
                   fallbackError,
                 );
               });
