@@ -129,6 +129,21 @@ export const saveToFirestoreRest = async (
 export const readFromFirestoreRest = async (
   collection: string,
 ): Promise<any[]> => {
+  // Validate Firebase configuration first
+  if (!PROJECT_ID || PROJECT_ID === "demo-value-set-for-production") {
+    console.warn(
+      `⚠️ REST API: Firebase PROJECT_ID não configurado. Definir variáveis VITE_FIREBASE_*`,
+    );
+    return [];
+  }
+
+  if (!API_KEY || API_KEY === "demo-value-set-for-production") {
+    console.warn(
+      `⚠️ REST API: Firebase API_KEY não configurado. Definir variáveis VITE_FIREBASE_*`,
+    );
+    return [];
+  }
+
   // Add small delay to prevent race conditions in concurrent calls
   await new Promise((resolve) => setTimeout(resolve, Math.random() * 100));
 
