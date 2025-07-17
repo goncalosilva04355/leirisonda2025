@@ -23,18 +23,10 @@ try {
     console.log("✅ Configuração carregada com sucesso");
   } catch (configError) {
     console.error("❌ Erro ao obter config Firebase:", configError);
-    // Usar configuração fixa como fallback
-    config = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      databaseURL:
-        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
-    };
+    // Fallback configuration error - environment variables required
+    throw new Error(
+      "Firebase configuration failed. Environment variables VITE_FIREBASE_* are required.",
+    );
     console.log("🔧 Usando configuração fixa como fallback");
   }
 
@@ -55,17 +47,9 @@ try {
 
   // Tentar novamente com configuração fixa
   try {
-    const fallbackConfig = {
-      apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-      authDomain: "leiria-1cfc9.firebaseapp.com",
-      databaseURL:
-        "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "leiria-1cfc9",
-      storageBucket: "leiria-1cfc9.firebasestorage.app",
-      messagingSenderId: "632599887141",
-      appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-      measurementId: "G-Q2QWQVH60L",
-    };
+    console.error(
+      "❌ Environment variables VITE_FIREBASE_* are required for Firebase configuration.",
+    );
 
     if (getApps().length === 0) {
       firebaseApp = initializeApp(fallbackConfig);
@@ -85,17 +69,9 @@ export function getFirebaseApp(): FirebaseApp | null {
       try {
         config = getFirebaseConfig();
       } catch {
-        config = {
-          apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
-          authDomain: "leiria-1cfc9.firebaseapp.com",
-          databaseURL:
-            "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "leiria-1cfc9",
-          storageBucket: "leiria-1cfc9.firebasestorage.app",
-          messagingSenderId: "632599887141",
-          appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
-          measurementId: "G-Q2QWQVH60L",
-        };
+        throw new Error(
+          "Firebase configuration failed. Environment variables VITE_FIREBASE_* are required.",
+        );
       }
 
       if (getApps().length === 0) {
@@ -132,7 +108,7 @@ export async function getAuth() {
   }
 }
 
-// Funções de compatibilidade
+// Funç��es de compatibilidade
 export const getAuthService = async () => {
   return getAuth();
 };
