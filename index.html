@@ -3,12 +3,81 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leirisonda</title>
-    <meta name="description" content="Sistema de gestão de piscinas" />
+
+    <!-- Primary Meta Tags -->
+    <title>Leirisonda - Sistema de Gestão de Piscinas</title>
+    <meta name="title" content="Leirisonda - Sistema de Gestão de Piscinas" />
+    <meta
+      name="description"
+      content="Sistema completo para gestão de piscinas, obras e manutenções. Controle total dos seus projetos em uma única plataforma."
+    />
+
+    <!-- Author -->
+    <meta name="author" content="Leirisonda" />
+
+    <!-- Keywords -->
+    <meta
+      name="keywords"
+      content="piscinas, gestão, obras, manutenção, construção, projetos"
+    />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+
+    <!-- PWA Theme -->
+    <meta name="theme-color" content="#0891b2" />
+    <meta name="background-color" content="#ffffff" />
+
+    <!-- Mobile Optimizations -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Leirisonda" />
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Security headers managed by Netlify configuration -->
+
+    <!-- Service Worker handled by application code -->
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback content for production white screen issues -->
+      <div
+        style="
+          min-height: 100vh;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-family: system-ui;
+        "
+      >
+        <div style="text-align: center">
+          <div style="font-size: 3rem; margin-bottom: 1rem">🏊‍♂️</div>
+          <h1 style="margin: 0 0 1rem 0; font-size: 2rem">Leirisonda</h1>
+          <p style="margin: 0; opacity: 0.8" id="loading-message">
+            Carregando aplicação...
+          </p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Fallback script to detect loading issues -->
+    <script>
+      setTimeout(function () {
+        if (document.getElementById("loading-message")) {
+          document.getElementById("loading-message").textContent =
+            "Problema de carregamento detectado. Tente recarregar a página.";
+        }
+      }, 5000);
+    </script>
   </body>
 </html>
