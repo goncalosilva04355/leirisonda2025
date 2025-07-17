@@ -13,29 +13,83 @@ export class DataProtectionService {
   private static readonly BACKUP_PREFIX = "BACKUP_";
   private static readonly TIMESTAMP_SUFFIX = "_timestamp";
 
+  // Função auxiliar para setItem seguro
+  private static safeSetItem(key: string, value: string): boolean {
+    try {
+      localStorage.setItem(key, value);
+      return true;
+    } catch (error: any) {
+      console.warn(`⚠️ Falha ao guardar ${key}:`, error.message);
+
+      // Se for quota exceeded, tentar limpar alguns backups antigos
+      if (
+        error.name === "QuotaExceededError" ||
+        error.message.includes("quota")
+      ) {
+        console.log("🧹 Quota excedida, limpando backups antigos...");
+        this.cleanOldBackups(3); // Manter apenas 3 backups
+
+        // Tentar novamente
+        try {
+          localStorage.setItem(key, value);
+          return true;
+        } catch (secondError: any) {
+          console.error(`❌ Falha mesmo após limpeza: ${secondError.message}`);
+          return false;
+        }
+      }
+      return false;
+    }
+  }
+
   // Criar backup completo de todos os dados críticos
   static createFullBackup(): void {
     const timestamp = new Date().toISOString();
     const backupData: any = {};
+    let successCount = 0;
+    let totalKeys = 0;
+
+    console.log("💾 Iniciando backup completo...");
 
     this.BACKUP_KEYS.forEach((key) => {
       const data = localStorage.getItem(key);
       if (data) {
+        totalKeys++;
         backupData[key] = data;
-        // Criar backup individual também
-        localStorage.setItem(`${this.BACKUP_PREFIX}${key}`, data);
-        localStorage.setItem(
+
+        // Tentar criar backup individual
+        const individualSuccess = this.safeSetItem(
+          `${this.BACKUP_PREFIX}${key}`,
+          data,
+        );
+        const timestampSuccess = this.safeSetItem(
           `${this.BACKUP_PREFIX}${key}${this.TIMESTAMP_SUFFIX}`,
           timestamp,
         );
+
+        if (individualSuccess && timestampSuccess) {
+          successCount++;
+        }
       }
     });
 
-    // Backup consolidado
-    localStorage.setItem("FULL_BACKUP", JSON.stringify(backupData));
-    localStorage.setItem("FULL_BACKUP_timestamp", timestamp);
+    // Tentar backup consolidado
+    const backupJson = JSON.stringify(backupData);
+    const consolidatedSuccess = this.safeSetItem("FULL_BACKUP", backupJson);
+    const timestampSuccess = this.safeSetItem(
+      "FULL_BACKUP_timestamp",
+      timestamp,
+    );
 
-    console.log("✅ Backup completo criado:", timestamp);
+    if (consolidatedSuccess && timestampSuccess) {
+      console.log(
+        `✅ Backup completo criado: ${successCount}/${totalKeys} itens`,
+      );
+    } else {
+      console.warn(
+        `⚠️ Backup parcial: ${successCount}/${totalKeys} itens salvos`,
+      );
+    }
   }
 
   // Verificar se há dados para restaurar
