@@ -25,7 +25,7 @@ async function buildServer() {
 
     // Use esbuild for faster compilation
     const { stdout, stderr } = await execAsync(
-      `npx esbuild ${serverFiles.join(" ")} --outdir=dist --platform=node --format=esm --target=node18 --bundle=false --external:express --external:cors --external:path`,
+      `npx esbuild ${serverFiles.join(" ")} --outdir=dist --platform=node --format=esm --target=node18`,
     );
 
     if (stderr) {
