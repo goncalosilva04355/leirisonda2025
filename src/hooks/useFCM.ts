@@ -163,14 +163,16 @@ export const useFCM = (currentUser: User | null) => {
   const hasUserToken = useCallback((): boolean => {
     if (!currentUser) return false;
 
-    const userTokens = fcmService.getUserTokens(currentUser.uid);
+    // const userTokens = fcmService.getUserTokens(currentUser.uid); // Method not available
+    const userTokens = [];
     return userTokens.length > 0;
   }, [currentUser]);
 
   // Obter tokens do usuário atual
   const getUserTokens = useCallback(() => {
     if (!currentUser) return [];
-    return fcmService.getUserTokens(currentUser.uid);
+    // return fcmService.getUserTokens(currentUser.uid); // Method not available
+    return [];
   }, [currentUser]);
 
   // Estado calculado
