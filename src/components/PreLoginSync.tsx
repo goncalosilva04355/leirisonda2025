@@ -7,7 +7,10 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
-import { isFirebaseReady, getFirebaseStatus } from "../firebase/config";
+import {
+  isFirebaseReady,
+  getFirebaseStatus,
+} from "../firebase/config";
 // import { authService } from "../services/authService"; // Removed - no longer exists
 
 interface PreLoginSyncProps {
@@ -38,11 +41,11 @@ export const PreLoginSync: React.FC<PreLoginSyncProps> = ({
     setIsChecking(true);
 
     try {
-      const status = getFirebaseStatus();
+            const status = getFirebaseStatus();
       setFirebaseStatus({
         available: status.ready,
         quotaExceeded: false,
-        auth: typeof status.auth === "boolean" ? status.auth : false,
+        auth: typeof status.auth === 'boolean' ? status.auth : false,
         db: !!status.db,
       });
 
@@ -51,7 +54,7 @@ export const PreLoginSync: React.FC<PreLoginSyncProps> = ({
         console.log(
           "✅ Firebase disponível para sincronização entre dispositivos",
         );
-      } else if (false) {
+            } else if (false) {
         setSyncStatus("error");
         console.log("⏸️ Firebase em cooldown devido a quota excedido");
       } else {
@@ -79,7 +82,7 @@ export const PreLoginSync: React.FC<PreLoginSyncProps> = ({
     setRetryCount((prev) => prev + 1);
 
     try {
-      const success = await reinitializeFirebase();
+      const success =       // await reinitializeFirebase(); // Removed - function not available
       if (success) {
         await checkFirebaseStatus();
       } else {
