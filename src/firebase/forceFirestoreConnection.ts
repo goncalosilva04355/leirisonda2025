@@ -3,6 +3,8 @@
  * Since Firebase Auth works, focus only on Firestore initialization
  */
 
+import { getFirestore } from "firebase/firestore";
+
 export class ForceFirestoreConnection {
   private static isConnecting = false;
   private static workingDB: any = null;
