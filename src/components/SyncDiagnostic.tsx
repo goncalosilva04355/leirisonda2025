@@ -62,7 +62,10 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
           const syncData = await realFirebaseService.syncAllData();
           firebaseData =
             syncData && typeof syncData === "object"
-              ? { works: syncData.works || [], users: syncData.users || [] }
+              ? {
+                  works: syncData.works || [],
+                  users: (syncData as any).users || [],
+                }
               : { works: [], users: [] };
         } catch (error) {
           console.warn("Failed to get Firebase data:", error);
