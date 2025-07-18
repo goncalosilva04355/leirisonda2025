@@ -36,3 +36,25 @@ export const db = app ? getFirestore(app) : null;
 export const auth = app ? getAuth(app) : null;
 export { app };
 export default app;
+
+// Functions for compatibility
+export const initializeMobileFirebase = async () => {
+  try {
+    return {
+      success: true,
+      app,
+      db,
+      auth,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
+
+export const resetMobileFirebase = async () => {
+  // Reset implementation if needed
+  return true;
+};
