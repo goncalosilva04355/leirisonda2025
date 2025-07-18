@@ -322,7 +322,7 @@ export const UserPermissionsManager: React.FC = () => {
     role: UserProfile["role"],
   ) => {
     try {
-      const success = await update(userId, { permissions, role });
+      const success = await update(userId, { permissions, role } as any);
 
       if (success) {
         setSuccessMessage("Permissões atualizadas com sucesso!");
