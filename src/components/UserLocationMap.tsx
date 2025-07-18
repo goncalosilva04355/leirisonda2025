@@ -166,11 +166,12 @@ export const UserLocationMap: React.FC<UserLocationMapProps> = ({
           if (response.ok) {
             const data = await response.json();
             if (data.display_name) {
-              locationData.address = data.display_name;
+              (locationData as any).address = data.display_name;
             }
           }
         } catch (err) {
-          locationData.address = `${locationData.latitude.toFixed(6)}, ${locationData.longitude.toFixed(6)}`;
+          (locationData as any).address =
+            `${locationData.latitude.toFixed(6)}, ${locationData.longitude.toFixed(6)}`;
         }
 
         // Save current user location
