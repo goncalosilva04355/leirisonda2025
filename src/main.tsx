@@ -8,7 +8,7 @@ import "./utils/loadFailedDetector";
 // Teste de imports críticos
 import "./utils/importTest";
 
-console.log("🚀 Leirisonda - Inicializando aplicação...");
+console.log("🚀 Leirisonda - Inicializando aplica��ão...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -74,7 +74,7 @@ function loadApp() {
   try {
     root.render(
       <AppWrapper>
-        <App />
+        <AppMinimal />
       </AppWrapper>,
     );
     console.log("✅ App principal renderizada com sucesso");
