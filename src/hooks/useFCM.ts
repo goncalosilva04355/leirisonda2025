@@ -29,7 +29,8 @@ export const useFCM = (currentUser: User | null) => {
   // Verificar status do FCM
   const checkFCMStatus = useCallback(async () => {
     try {
-      const status = fcmService.getStatus();
+      // const status = fcmService.getStatus(); // Method not available
+      const status = { supported: false, initialized: false, hasToken: false };
       const currentPermission = Notification.permission;
 
       setFCMStatus({
