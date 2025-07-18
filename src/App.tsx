@@ -7331,7 +7331,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>✅ Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
-                                <li>• Próximas intervenções</li>
+                                <li>• Pr��ximas intervenções</li>
                               </ul>
                             </div>
                             <button
@@ -7795,7 +7795,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instru��✅es
+                                      Instru�����es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -9815,7 +9815,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Observa✅ões */}
+                    {/* Observa✅��es */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -10139,9 +10139,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             editAssignedUsers.length > 0
                           ) {
                             try {
-                              const { pushNotificationService } = await import(
-                                "./services/pushNotificationService"
-                              );
+                              // Using statically imported pushNotificationService
 
                               // Comparar com utilizadores anteriormente atribuídos
                               const previousUsers =
