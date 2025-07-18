@@ -194,8 +194,8 @@ export class ForceFirestoreConnection {
 
       // Update global exports
       import("./config").then((config) => {
-        config["db"] = db;
-        console.log("✅ Updated config.ts with working Firestore");
+        // config["db"] = db; // Read-only property
+        console.log("✅ Would update config.ts with working Firestore");
       });
     } catch (error) {
       console.warn("⚠️ Could not update global services:", error);
