@@ -118,6 +118,7 @@ export const WorksDataDiagnostic: React.FC = () => {
       });
 
       // 5. Check for sync issues
+      const firebaseData = { works: [] }; // Placeholder
       if (works.length === 0 && firebaseData?.works?.length > 0) {
         diagnosticResults.push({
           status: "error",
