@@ -6,6 +6,13 @@ export default defineConfig({
   root: ".",
   publicDir: "public",
   base: "/",
+  build: {
+    rollupOptions: {
+      input: {
+        main: "./src/main-production.tsx",
+      },
+    },
+  },
   define: {
     global: "globalThis",
     __APP_VERSION__: JSON.stringify("1.0.0"),
