@@ -116,8 +116,12 @@ function BasicApp() {
             fontSize: "1rem",
             cursor: "pointer",
           }}
-          onMouseOver={(e) => (e.target.style.backgroundColor = "#2563eb")}
-          onMouseOut={(e) => (e.target.style.backgroundColor = "#3b82f6")}
+          onMouseOver={(e) =>
+            ((e.target as HTMLButtonElement).style.backgroundColor = "#2563eb")
+          }
+          onMouseOut={(e) =>
+            ((e.target as HTMLButtonElement).style.backgroundColor = "#3b82f6")
+          }
         >
           Entrar
         </button>
