@@ -52,7 +52,7 @@ export default function FirestoreDiagnostic() {
       const hasFirebaseVars = !!import.meta.env.VITE_FIREBASE_API_KEY;
       const forceFirebaseEnabled =
         import.meta.env.VITE_FORCE_FIREBASE === "true" ||
-        import.meta.env.VITE_FORCE_FIREBASE === true ||
+        import.meta.env.VITE_FORCE_FIREBASE === "true" ||
         forceFirebase;
 
       addDiagnostic({
