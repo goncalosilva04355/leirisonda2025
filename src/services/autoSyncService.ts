@@ -170,8 +170,68 @@ export class AutoSyncService {
         });
       });
 
-      // Atualizar localStorage automaticamente
-      localStorage.setItem(localStorageKey, JSON.stringify(data));
+      // Atualizar localStorage automaticamente com tratamento de erro
+      try {
+        const jsonData = JSON.stringify(data);
+
+        // Verificar se os dados não são muito grandes (limite ~5MB)
+        const dataSize = new Blob([jsonData]).size;
+        if (dataSize > 5000000) {
+          // 5MB
+          console.warn(
+            `⚠️ Dados muito grandes para localStorage (${Math.round(dataSize / 1024 / 1024)}MB), usando cache reduzido`,
+          );
+
+          // Tentar salvar apenas os primeiros 100 registros
+          const reducedData = data.slice(0, 100);
+          localStorage.setItem(localStorageKey, JSON.stringify(reducedData));
+          localStorage.setItem(`${localStorageKey}_truncated`, "true");
+        } else {
+          localStorage.setItem(localStorageKey, jsonData);
+          localStorage.removeItem(`${localStorageKey}_truncated`);
+        }
+
+        console.log(
+          `💾 ${collectionName}: ${data.length} registros salvos no localStorage`,
+        );
+      } catch (storageError) {
+        console.warn(
+          `⚠️ Erro ao salvar no localStorage (${collectionName}):`,
+          storageError,
+        );
+
+        // Tentar limpar espaço e tentar novamente
+        try {
+          // Limpar caches antigos
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.includes("_cache_") && key !== localStorageKey) {
+              localStorage.removeItem(key);
+            }
+          }
+
+          // Tentar novamente com dados reduzidos
+          const essentialData = data.slice(0, 50).map((item) => ({
+            id: item.id,
+            nome: item.nome,
+            email: item.email,
+            // Manter apenas campos essenciais
+          }));
+
+          localStorage.setItem(localStorageKey, JSON.stringify(essentialData));
+          localStorage.setItem(`${localStorageKey}_reduced`, "true");
+
+          console.log(
+            `💾 ${collectionName}: salvos ${essentialData.length} registros essenciais`,
+          );
+        } catch (finalError) {
+          console.error(
+            `❌ Falha definitiva ao salvar ${collectionName}:`,
+            finalError,
+          );
+          // Continuar sem localStorage - dados só ficarão em memória
+        }
+      }
 
       // Disparar evento customizado para atualizar UI
       window.dispatchEvent(
