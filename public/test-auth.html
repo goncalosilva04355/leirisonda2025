@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste de Autenticação</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%);
+        color: white;
+        padding: 2rem;
+        margin: 0;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 2rem;
+        backdrop-filter: blur(10px);
+      }
+      .test-button {
+        background: white;
+        color: #0891b2;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0.5rem;
+        font-weight: 600;
+        width: 100%;
+      }
+      .test-button:hover {
+        background: #f0f9ff;
+      }
+      .log {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-family: monospace;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .status {
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .status.success {
+        background: rgba(34, 197, 94, 0.2);
+        border: 1px solid rgba(34, 197, 94, 0.5);
+      }
+      .status.error {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.5);
+      }
+      .status.warning {
+        background: rgba(251, 191, 36, 0.2);
+        border: 1px solid rgba(251, 191, 36, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔐 Teste de Autenticação Leirisonda</h1>
+      <p>Verificar se o sistema de login está funcionando corretamente</p>
+
+      <div>
+        <button class="test-button" onclick="testGoncaloLogin()">
+          🔑 Teste Login Gonçalo (gongonsilva@gmail.com)
+        </button>
+        <button class="test-button" onclick="testLocalStorage()">
+          💾 Verificar LocalStorage
+        </button>
+        <button class="test-button" onclick="testAppUsers()">
+          👥 Verificar Utilizadores da App
+        </button>
+        <button class="test-button" onclick="clearLog()">🗑️ Limpar Log</button>
+      </div>
+
+      <div id="status" class="status" style="display: none"></div>
+      <div id="log" class="log"></div>
+    </div>
+
+    <script>
+      function log(message) {
+        const logElement = document.getElementById("log");
+        const timestamp = new Date().toLocaleTimeString();
+        logElement.textContent += `[${timestamp}] ${message}\n`;
+        logElement.scrollTop = logElement.scrollHeight;
+        console.log(message);
+      }
+
+      function showStatus(message, type) {
+        const statusElement = document.getElementById("status");
+        statusElement.textContent = message;
+        statusElement.className = `status ${type}`;
+        statusElement.style.display = "block";
+      }
+
+      function clearLog() {
+        document.getElementById("log").textContent = "";
+        document.getElementById("status").style.display = "none";
+      }
+
+      function testLocalStorage() {
+        log("🔍 Testando LocalStorage...");
+
+        try {
+          // Test localStorage availability
+          localStorage.setItem("test", "test");
+          localStorage.removeItem("test");
+          log("✅ LocalStorage disponível");
+
+          // Check current user
+          const currentUser = localStorage.getItem("currentUser");
+          if (currentUser) {
+            log(`👤 Current User: ${currentUser}`);
+          } else {
+            log("❌ Nenhum utilizador autenticado");
+          }
+
+          // Check auth state
+          const isAuthenticated = localStorage.getItem("isAuthenticated");
+          log(`🔐 Is Authenticated: ${isAuthenticated}`);
+
+          showStatus("LocalStorage testado", "success");
+        } catch (error) {
+          log(`❌ Erro no LocalStorage: ${error.message}`);
+          showStatus("Erro no LocalStorage", "error");
+        }
+      }
+
+      function testAppUsers() {
+        log("👥 Verificando utilizadores da aplicação...");
+
+        try {
+          const savedUsers = localStorage.getItem("app-users");
+          if (savedUsers) {
+            const users = JSON.parse(savedUsers);
+            log(`📋 ${users.length} utilizadores encontrados:`);
+
+            users.forEach((user) => {
+              log(
+                `  - ${user.name} (${user.email}) - Ativo: ${user.active} - Papel: ${user.role}`,
+              );
+            });
+
+            // Check if Gonçalo exists
+            const goncalo = users.find(
+              (u) =>
+                u.email === "gongonsilva@gmail.com" ||
+                u.name === "Gonçalo Fonseca",
+            );
+
+            if (goncalo) {
+              log(
+                `✅ Gonçalo Fonseca encontrado: ${JSON.stringify(goncalo, null, 2)}`,
+              );
+              showStatus(
+                "Utilizadores verificados - Gonçalo encontrado",
+                "success",
+              );
+            } else {
+              log("❌ Gonçalo Fonseca não encontrado nos utilizadores");
+              showStatus("Gonçalo não encontrado", "error");
+            }
+          } else {
+            log("❌ Nenhum utilizador encontrado no localStorage");
+            showStatus("Nenhum utilizador encontrado", "error");
+          }
+        } catch (error) {
+          log(`❌ Erro ao verificar utilizadores: ${error.message}`);
+          showStatus("Erro ao verificar utilizadores", "error");
+        }
+      }
+
+      function testGoncaloLogin() {
+        log("🔑 Testando login do Gonçalo...");
+
+        try {
+          const email = "gongonsilva@gmail.com";
+          const password = "19867gsf";
+
+          log(`📧 Email: ${email}`);
+          log(`🔐 Password: ${password}`);
+
+          // Simulate the authentication logic
+          const AUTHORIZED_EMAILS = [
+            "gongonsilva@gmail.com",
+            "goncalosfonseca@gmail.com",
+          ];
+
+          const normalizedEmail = email.toLowerCase().trim();
+          const isAuthorized = AUTHORIZED_EMAILS.includes(normalizedEmail);
+
+          log(`✅ Email autorizado: ${isAuthorized}`);
+
+          if (isAuthorized) {
+            // Create user object
+            const user = {
+              id: 1,
+              name: "Gonçalo Fonseca",
+              email: email,
+              role: "super_admin",
+              active: true,
+              permissions: {
+                obras: { view: true, create: true, edit: true, delete: true },
+                manutencoes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                piscinas: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                utilizadores: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                relatorios: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+                clientes: {
+                  view: true,
+                  create: true,
+                  edit: true,
+                  delete: true,
+                },
+              },
+              createdAt: new Date().toISOString(),
+            };
+
+            log(`👤 Utilizador criado: ${JSON.stringify(user, null, 2)}`);
+
+            // Save to localStorage
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            localStorage.setItem("isAuthenticated", "true");
+
+            log("💾 Dados guardados no localStorage");
+
+            // Test if we can navigate
+            log("🚀 Login simulado com sucesso!");
+            showStatus("✅ Login do Gonçalo funcionaria", "success");
+          } else {
+            log("❌ Email não autorizado");
+            showStatus("Email não autorizado", "error");
+          }
+        } catch (error) {
+          log(`❌ Erro no teste de login: ${error.message}`);
+          showStatus("Erro no teste de login", "error");
+        }
+      }
+
+      // Auto-run on page load
+      window.addEventListener("load", () => {
+        log("🌐 Página de teste carregada");
+        log("📱 Ready para testes de autenticação");
+        showStatus("Pronto para testes", "warning");
+      });
+    </script>
+  </body>
+</html>

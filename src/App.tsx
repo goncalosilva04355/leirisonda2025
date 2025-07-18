@@ -164,7 +164,7 @@ import { DataProtectionService } from "./utils/dataProtection";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO
+import "./utils/firestoreRestApi"; // ATIVADO PARA VERIFICAÇÃO
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
@@ -747,7 +747,7 @@ function App() {
     );
 
     // Verificações automáticas desabilitadas para resolver instabilidade
-    // Sistema funcionarnormalmente sem verificações constantes
+    // Sistema funcionarnormalmente sem verifica��ões constantes
     // Sistema funcionar normalmente sem verificações automáticas
   }, []);
 
@@ -6114,7 +6114,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               );
                               console.log("🔍 Current User:", currentUser);
                               console.log(
-                                "🔥 hasPermission clientes create:",
+                                "��� hasPermission clientes create:",
                                 hasPermission("clientes", "create"),
                               );
 
@@ -12245,7 +12245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            🔥🎉 {selectedPool.location}
+                            🔥�� {selectedPool.location}
                           </button>
                         </div>
                       </div>
