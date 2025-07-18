@@ -954,7 +954,8 @@ export function useDataSync(): SyncState & SyncActions {
     // Clear all data in Firebase if connected
     if (realFirebaseService.isReady()) {
       try {
-        await realFirebaseService.cleanAllData();
+        // await realFirebaseService.cleanAllData(); // Method not available via REST API
+        console.log("Clean all data not available via REST API");
       } catch (error) {
         console.warn("Failed to clean Firebase data:", error);
       }
