@@ -137,14 +137,14 @@ Para testar noutro dispositivo:
     }
   };
 
-    const checkFirebaseConfig = async () => {
+  const checkFirebaseConfig = async () => {
     try {
       const authInstance = await auth;
       setTestResult(`🔧 Diagnóstico da configuração Firebase:
 
 Firebase Auth disponível: ${authInstance ? "✅" : "❌"}
 Utilizador Firebase: ${authInstance?.currentUser ? "✅" : "❌"}
-Estado da persistência: �� Configurada para LOCAL (permite login entre dispositivos)
+Estado da persistência: ✅ Configurada para LOCAL (permite login entre dispositivos)
 
 ${
   authInstance?.currentUser
@@ -164,6 +164,9 @@ Utilizador atual:
 4. As regras de segurança devem permitir acesso autenticado
 
 🔗 Firebase Console: https://console.firebase.google.com/project/leirisonda-16f8b`);
+    } catch (error) {
+      setTestResult("❌ Erro ao verificar configuração Firebase");
+    }
   };
 
   return (
