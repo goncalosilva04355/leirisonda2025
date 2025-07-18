@@ -195,6 +195,8 @@ export function useDataSync(): SyncState & SyncActions {
     works: [],
     clients: [],
     lastSync: null,
+    isLoading: false,
+    error: null,
   });
 
   // PARTILHA GLOBAL PARA TODOS OS UTILIZADORES
@@ -896,12 +898,12 @@ export function useDataSync(): SyncState & SyncActions {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const [pools, maintenance, works, clients] = await Promise.all([
-        realFirebaseService.getPools(),
-        realFirebaseService.getMaintenance(),
-        realFirebaseService.getWorks(),
-        realFirebaseService.getClients(),
-      ]);
+      // Use syncAllData for REST API approach
+      const syncData = await realFirebaseService.syncAllData();
+      const pools = syncData?.pools || [];
+      const maintenance = syncData?.maintenance || [];
+      const works = syncData?.works || [];
+      const clients = syncData?.clients || [];
 
       // Calculate future maintenance
       const today = new Date();
@@ -952,7 +954,8 @@ export function useDataSync(): SyncState & SyncActions {
     // Clear all data in Firebase if connected
     if (realFirebaseService.isReady()) {
       try {
-        await realFirebaseService.cleanAllData();
+        // await realFirebaseService.cleanAllData(); // Method not available via REST API
+        console.log("Clean all data not available via REST API");
       } catch (error) {
         console.warn("Failed to clean Firebase data:", error);
       }

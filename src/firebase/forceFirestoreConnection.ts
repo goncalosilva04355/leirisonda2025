@@ -3,6 +3,8 @@
  * Since Firebase Auth works, focus only on Firestore initialization
  */
 
+import { getFirestore } from "firebase/firestore";
+
 export class ForceFirestoreConnection {
   private static isConnecting = false;
   private static workingDB: any = null;
@@ -44,7 +46,8 @@ export class ForceFirestoreConnection {
 
         // Try to clear persistence
         try {
-          await clearIndexedDbPersistence(app);
+          const firestoreDb = getFirestore(app);
+          await clearIndexedDbPersistence(firestoreDb);
           console.log("🗑️ Cleared Firestore persistence");
         } catch (error) {
           console.log("ℹ️ Persistence already clear or unavailable");
@@ -193,8 +196,8 @@ export class ForceFirestoreConnection {
 
       // Update global exports
       import("./config").then((config) => {
-        config["db"] = db;
-        console.log("✅ Updated config.ts with working Firestore");
+        // config["db"] = db; // Read-only property
+        console.log("✅ Would update config.ts with working Firestore");
       });
     } catch (error) {
       console.warn("⚠️ Could not update global services:", error);

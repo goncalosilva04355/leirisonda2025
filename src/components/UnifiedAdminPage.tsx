@@ -766,20 +766,18 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
                               className={`px-2 py-1 text-xs font-medium rounded-full ${
                                 user.role === "super_admin"
                                   ? "bg-red-100 text-red-800"
-                                  : user.role === "admin"
-                                    ? "bg-purple-100 text-purple-800"
-                                    : user.role === "manager"
+                                  : user.role === "manager"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : user.role === "technician"
                                       ? "bg-blue-100 text-blue-800"
                                       : "bg-gray-100 text-gray-800"
                               }`}
                             >
                               {user.role === "super_admin"
                                 ? "Super Admin"
-                                : user.role === "admin"
-                                  ? "Admin"
-                                  : user.role === "manager"
-                                    ? "Gestor"
-                                    : "Técnico"}
+                                : user.role === "manager"
+                                  ? "Gestor"
+                                  : "Técnico"}
                             </span>
                             {user.email !== "gongonsilva@gmail.com" && (
                               <button

@@ -5,6 +5,7 @@ export interface AuthorizedUser {
   email: string;
   name: string;
   role: "super_admin" | "manager" | "technician";
+  permissions?: any;
 }
 
 export const AUTHORIZED_USERS: AuthorizedUser[] = [

@@ -21,8 +21,8 @@ export class AggressiveFirebaseFix {
   // Firebase config from centralized environment
   private static async getConfig() {
     try {
-      const { getLegacyFirebaseConfig } = await import("../config/firebaseEnv");
-      return getLegacyFirebaseConfig();
+      const { getFirebaseConfig } = await import("../config/firebaseEnv");
+      return getFirebaseConfig();
     } catch (error) {
       console.error("❌ Erro ao carregar config Firebase:", error);
       return null;

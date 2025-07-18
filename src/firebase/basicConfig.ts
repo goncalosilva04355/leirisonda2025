@@ -188,7 +188,7 @@ export const auth = null;
 // Funções de compatibilidade
 export const getDBAsync = async () => {
   if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return null;
-  return await getFirebaseFirestoreAsync();
+  return await testFirebaseFirestore();
 };
 
 export const getAuthService = async () => {
@@ -198,7 +198,7 @@ export const getAuthService = async () => {
 
 export const attemptFirestoreInit = async () => {
   if (!IS_NETLIFY_BUILD && !import.meta.env.VITE_FORCE_FIREBASE) return null;
-  return await getFirebaseFirestoreAsync();
+  return await testFirebaseFirestore();
 };
 
 export const waitForFirebaseInit = () =>

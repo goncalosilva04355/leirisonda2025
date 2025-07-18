@@ -75,7 +75,7 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
 
           setFixResult(
             `✅ PROBLEMA RESOLVIDO!\n\n` +
-              `🌐 Dados migrados para estrutura global:\n` +
+              `�� Dados migrados para estrutura global:\n` +
               `• Piscinas: ${migrationResult.migrated.pools}\n` +
               `• Obras: ${migrationResult.migrated.works}\n` +
               `• Manutenções: ${migrationResult.migrated.maintenance}\n` +
@@ -114,14 +114,17 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
     if (!dataStructure) return 0;
     const { sharedCounts } = dataStructure;
     return Object.values(sharedCounts).reduce(
-      (total: number, count: number) => total + count,
+      (total: number, count: unknown) =>
+        total + (typeof count === "number" ? count : 0),
       0,
     );
   };
 
   const isProblemDetected = () => {
     const hasLocalData = getCurrentDataCount() > 0;
-    const hasSharedData = getSharedDataCount() > 0;
+    const sharedDataCount = getSharedDataCount();
+    const hasSharedData =
+      typeof sharedDataCount === "number" && sharedDataCount > 0;
 
     // Problem exists if we have local data but no shared data, or vice versa
     return (hasLocalData && !hasSharedData) || (!hasLocalData && hasSharedData);
@@ -234,7 +237,7 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
                 </div>
                 <div className="border-t pt-1 flex justify-between font-semibold">
                   <span>Total:</span>
-                  <span>{getSharedDataCount()}</span>
+                  <span>{String(getSharedDataCount())}</span>
                 </div>
               </div>
             ) : (

@@ -44,7 +44,7 @@ export const UserAssignmentHelper: React.FC<UserAssignmentHelperProps> = ({
         const parsedUsers = JSON.parse(savedUsers);
         // Filter only active users that can be assigned to works
         let availableUsers = parsedUsers.filter(
-          (user: User) => user.active && user.role !== "viewer",
+          (user: User) => user.active && user.role !== "user",
         );
 
         // Ensure Gonçalo Fonseca is always available for assignment

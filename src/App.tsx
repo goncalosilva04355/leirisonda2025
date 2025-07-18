@@ -86,10 +86,11 @@ import FirestoreTest from "./components/FirestoreTest";
 // import "./utils/clearModalStates";
 
 // Firebase Quota Recovery - recuperar operações bloqueadas
-import {
-  autoRecoverOnInit,
-  FirebaseQuotaRecovery,
-} from "./utils/firebaseQuotaRecovery";
+// TEMPORARIAMENTE COMENTADO PARA DEBUG
+// import {
+//   autoRecoverOnInit,
+//   FirebaseQuotaRecovery,
+// } from "./utils/firebaseQuotaRecovery";
 
 // Security: Startup cleanup to prevent blocked users from accessing
 // import "./utils/startupCleanup"; // TEMPORARIAMENTE DESATIVADO - estava a eliminar utilizadores automaticamente
@@ -546,7 +547,7 @@ function App() {
     console.log("🔍 Verificando e recuperando quota Firebase...");
 
     // Tentar recuperaç��o automática
-    autoRecoverOnInit();
+    // autoRecoverOnInit(); // TEMPORARIAMENTE COMENTADO PARA DEBUG
   }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
@@ -4561,7 +4562,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ����� {maint.location}
+                                    ������� {maint.location}
                                   </button>
                                 </div>
                               )}
@@ -7888,7 +7889,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }}
                                     className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm mr-3"
                                   >
-                                    Configurações Avançadas
+                                    Configuraç��es Avançadas
                                   </button>
                                   <button
                                     onClick={closeSettings}

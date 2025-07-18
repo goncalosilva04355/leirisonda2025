@@ -13,7 +13,19 @@ import {
   UserCheck,
   Settings,
 } from "lucide-react";
-import { authService, UserProfile } from "../services/authService";
+// import { authService, UserProfile } from "../services/authService"; // Removed
+type UserProfile = {
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt?: any;
+  updatedAt?: any;
+  permissions?: any;
+  uid?: string;
+  active?: boolean;
+  [key: string]: any; // Allow any additional properties
+};
 import { useUsers } from "../hooks/useFirestore";
 
 interface PermissionsEditorProps {
@@ -310,7 +322,7 @@ export const UserPermissionsManager: React.FC = () => {
     role: UserProfile["role"],
   ) => {
     try {
-      const success = await update(userId, { permissions, role });
+      const success = await update(userId, { permissions, role } as any);
 
       if (success) {
         setSuccessMessage("Permissões atualizadas com sucesso!");

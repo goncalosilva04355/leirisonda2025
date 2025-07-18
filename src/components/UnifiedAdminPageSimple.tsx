@@ -229,7 +229,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
               name: updatedUser.name,
               email: updatedUser.email,
               role: updatedUser.role,
-              permissions: updatedUser.permissions,
+              permissions: updatedUser.permissions || {},
             }
           : user,
       );
@@ -823,7 +823,8 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                           }
                                           onChange={(e) => {
                                             const permissions = {
-                                              ...editingUser.permissions,
+                                              ...(editingUser.permissions ||
+                                                {}),
                                             };
                                             if (!permissions[key])
                                               permissions[key] = {};
@@ -831,7 +832,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                               e.target.checked;
                                             setEditingUser({
                                               ...editingUser,
-                                              permissions,
+                                              permissions: permissions,
                                             });
                                           }}
                                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
@@ -933,19 +934,19 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                               className={`px-2 py-1 text-xs font-medium rounded-full ${
                                 user.role === "super_admin"
                                   ? "bg-red-100 text-red-800"
-                                  : user.role === "admin"
+                                  : user.role === "manager"
                                     ? "bg-purple-100 text-purple-800"
-                                    : user.role === "manager"
+                                    : user.role === "technician"
                                       ? "bg-blue-100 text-blue-800"
                                       : "bg-gray-100 text-gray-800"
                               }`}
                             >
                               {user.role === "super_admin"
                                 ? "Super Admin"
-                                : user.role === "admin"
-                                  ? "Admin"
-                                  : user.role === "manager"
-                                    ? "Gestor"
+                                : user.role === "manager"
+                                  ? "Gestor"
+                                  : user.role === "technician"
+                                    ? "Técnico"
                                     : "Técnico"}
                             </span>
                             <button

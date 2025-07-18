@@ -2,6 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
+// Ativar detector de erros Load Failed
+import "./utils/loadFailedDetector";
+
+// Teste de imports críticos
+import "./utils/importTest";
+
 console.log("🚀 Leirisonda - Inicializando aplicação...");
 
 const rootElement = document.getElementById("root");
@@ -58,13 +64,22 @@ function renderFallback(error?: any) {
   );
 }
 
-// Import App diretamente para evitar problemas em produção
+// Import App e AppWrapper
 import App from "./App";
+import AppMinimal from "./AppMinimal";
+import AppWrapper from "./AppWrapper";
+import ProgressiveLoader from "./components/ProgressiveLoader";
 
 // Renderizar app
 function loadApp() {
   try {
-    root.render(<App />);
+    root.render(
+      <AppWrapper>
+        <ProgressiveLoader>
+          <App />
+        </ProgressiveLoader>
+      </AppWrapper>,
+    );
     console.log("✅ App principal renderizada com sucesso");
   } catch (error) {
     console.error("❌ Erro ao carregar App:", error);

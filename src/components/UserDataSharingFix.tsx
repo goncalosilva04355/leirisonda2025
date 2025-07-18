@@ -50,7 +50,8 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
       );
 
       // 1. Check Firebase Authentication
-      if (!auth || !auth.currentUser) {
+      const authInstance = await auth;
+      if (!authInstance || !authInstance.currentUser) {
         results.push({
           issue: "Autenticação Firebase",
           description: "Utilizador não autenticado no Firebase",
@@ -60,7 +61,7 @@ export function UserDataSharingFix({ currentUser }: UserDataSharingFixProps) {
       } else {
         results.push({
           issue: "Autenticação Firebase",
-          description: `Utilizador autenticado: ${auth.currentUser.email}`,
+          description: `Utilizador autenticado: ${authInstance.currentUser.email}`,
           status: "success",
         });
       }

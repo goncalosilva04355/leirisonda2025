@@ -85,14 +85,15 @@ export function DataSharingStatus({ onFixApplied }: DataSharingStatusProps) {
 
         console.log("🔗 Dados do Firebase recebidos:", realtimeData);
 
-        if (realtimeData) {
+        if (realtimeData && typeof realtimeData === "object") {
+          const data = realtimeData as any;
           realtimeDbStatus = {
             connected: true,
             dataCount:
-              realtimeData.works.length +
-              realtimeData.pools.length +
-              realtimeData.maintenance.length +
-              realtimeData.clients.length,
+              (data.works?.length || 0) +
+              (data.pools?.length || 0) +
+              (data.maintenance?.length || 0) +
+              (data.clients?.length || 0),
           };
         }
       } catch (error) {

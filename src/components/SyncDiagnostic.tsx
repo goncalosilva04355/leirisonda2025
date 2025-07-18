@@ -35,7 +35,9 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
 
   const loadDiagnosticData = async () => {
     try {
-      const currentUser = authService.getCurrentUserProfile();
+      const currentUser = JSON.parse(
+        localStorage.getItem("currentUser") || "null",
+      );
       const firebaseStatus = {
         isInitialized: realFirebaseService.initialize(),
         isReady: realFirebaseService.isReady(),
@@ -58,7 +60,13 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
       if (firebaseStatus.isReady) {
         try {
           const syncData = await realFirebaseService.syncAllData();
-          firebaseData = syncData || { works: [], users: [] };
+          firebaseData =
+            syncData && typeof syncData === "object"
+              ? {
+                  works: syncData.works || [],
+                  users: (syncData as any).users || [],
+                }
+              : { works: [], users: [] };
         } catch (error) {
           console.warn("Failed to get Firebase data:", error);
         }
@@ -89,7 +97,7 @@ export const SyncDiagnostic: React.FC<SyncDiagnosticProps> = ({
 
       console.log("📝 Creating work with data:", workData);
 
-      await addWork(workData);
+      await addWork(workData as any);
 
       console.log("✅ Work created successfully");
 

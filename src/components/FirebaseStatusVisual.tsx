@@ -40,80 +40,89 @@ export const FirebaseStatusVisual: React.FC = () => {
 
     try {
       // Test mobile Firebase configuration first
-      const { initializeMobileFirebase, resetMobileFirebase } = await import(
-        "../firebase/mobileConfig"
-      );
+      try {
+        const mobileConfig = await import("../firebase/mobileConfig");
+        if (mobileConfig.initializeMobileFirebase) {
+          console.log("📱 Testando Firebase mobile config...");
+          const mobileResult = await mobileConfig.initializeMobileFirebase();
 
-      console.log("📱 Testando Firebase mobile config...");
-      const mobileResult = await initializeMobileFirebase();
+          if (mobileResult.success) {
+            firebaseReady = true;
+            dbConnected = !!mobileResult.db;
+            authReady = !!mobileResult.auth;
 
-      if (mobileResult.success) {
-        firebaseReady = true;
-        dbConnected = !!mobileResult.db;
-        authReady = !!mobileResult.auth;
+            if (mobileResult.db) {
+              // Test read/write with mobile config
+              try {
+                const { doc, getDoc, setDoc } = await import(
+                  "firebase/firestore"
+                );
+                const testDoc = doc(mobileResult.db, "__test__", "mobile-test");
 
-        if (mobileResult.db) {
-          // Test read/write with mobile config
-          try {
-            const { doc, getDoc, setDoc } = await import("firebase/firestore");
-            const testDoc = doc(mobileResult.db, "__test__", "mobile-test");
+                // Test read
+                await getDoc(testDoc);
+                canRead = true;
 
-            // Test read
-            await getDoc(testDoc);
-            canRead = true;
+                // Test write
+                await setDoc(testDoc, {
+                  test: true,
+                  timestamp: new Date().toISOString(),
+                  device: "mobile",
+                  config: "mobile-optimized",
+                });
+                canWrite = true;
 
-            // Test write
-            await setDoc(testDoc, {
-              test: true,
-              timestamp: new Date().toISOString(),
-              device: "mobile",
-              config: "mobile-optimized",
-            });
-            canWrite = true;
+                console.log("✅ Mobile Firebase funcionando!");
+              } catch (rwError: any) {
+                errors.push(`Mobile R/W: ${rwError.code || rwError.message}`);
+              }
+            }
 
-            console.log("✅ Mobile Firebase funcionando!");
-          } catch (rwError: any) {
-            errors.push(`Mobile R/W: ${rwError.code || rwError.message}`);
+            return; // Exit early if mobile config works
+          } else {
+            errors.push(`Mobile init: ${mobileResult.error}`);
           }
         }
-
-        return; // Exit early if mobile config works
-      } else {
-        errors.push(`Mobile init: ${mobileResult.error}`);
+      } catch (mobileError) {
+        console.log("📱 Mobile config não disponível, usando config padrão");
       }
 
       // Fallback to original config
-      const { isFirebaseReady, getDB, getAuthService } = await import(
-        "../firebase/config"
-      );
+      const config = await import("../firebase/config");
 
-      firebaseReady = isFirebaseReady();
-      if (!firebaseReady) {
-        errors.push("Firebase não inicializado");
+      if (config.isFirebaseReady) {
+        firebaseReady = config.isFirebaseReady();
+        if (!firebaseReady) {
+          errors.push("Firebase não inicializado");
+        }
       }
 
       // Test Firestore
       try {
-        const db = await getDB();
-        if (db) {
-          dbConnected = true;
+        if (config.getDB) {
+          const db = await config.getDB();
+          if (db) {
+            dbConnected = true;
 
-          // Test read
-          const { doc, getDoc } = await import("firebase/firestore");
-          const testDoc = doc(db, "__test__", "mobile-test");
-          await getDoc(testDoc);
-          canRead = true;
+            // Test read
+            const { doc, getDoc } = await import("firebase/firestore");
+            const testDoc = doc(db, "__test__", "mobile-test");
+            await getDoc(testDoc);
+            canRead = true;
 
-          // Test write
-          const { setDoc } = await import("firebase/firestore");
-          await setDoc(testDoc, {
-            test: true,
-            timestamp: new Date().toISOString(),
-            device: "mobile",
-          });
-          canWrite = true;
+            // Test write
+            const { setDoc } = await import("firebase/firestore");
+            await setDoc(testDoc, {
+              test: true,
+              timestamp: new Date().toISOString(),
+              device: "mobile",
+            });
+            canWrite = true;
+          } else {
+            errors.push("Firestore não disponível");
+          }
         } else {
-          errors.push("Firestore não disponível");
+          errors.push("getDB não disponível");
         }
       } catch (dbError: any) {
         errors.push(`DB: ${dbError.code || dbError.message}`);
@@ -121,10 +130,14 @@ export const FirebaseStatusVisual: React.FC = () => {
 
       // Test Auth
       try {
-        const auth = await getAuthService();
-        authReady = !!auth;
-        if (!authReady) {
-          errors.push("Auth não disponível");
+        if (config.getAuthService) {
+          const auth = await config.getAuthService();
+          authReady = !!auth;
+          if (!authReady) {
+            errors.push("Auth não disponível");
+          }
+        } else {
+          errors.push("getAuthService não disponível");
         }
       } catch (authError: any) {
         errors.push(`Auth: ${authError.code || authError.message}`);

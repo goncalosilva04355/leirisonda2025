@@ -32,7 +32,9 @@ export const PrivateBrowsingTest: React.FC = () => {
     const jsonTestSuccess = storageUtils.setJson(testKey + "_json", {
       test: true,
     });
-    const jsonTestRead = storageUtils.getJson(testKey + "_json")?.test === true;
+    const jsonData = storageUtils.getJson(testKey + "_json") as any;
+    const jsonTestRead =
+      jsonData && typeof jsonData === "object" && jsonData.test === true;
 
     setStorageTest({
       localStorage: localStorageSuccess && localStorageRead,

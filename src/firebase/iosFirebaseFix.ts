@@ -3,6 +3,8 @@
  * Clears all caches, forces reinitialization, and uses iOS-optimized settings
  */
 
+import { getFirestore } from "firebase/firestore";
+
 export class IOSFirebaseFix {
   private static isFixing = false;
   private static fixAttempts = 0;
@@ -92,7 +94,8 @@ export class IOSFirebaseFix {
 
       // Try to clear IndexedDB cache first
       try {
-        await clearIndexedDbPersistence(app);
+        const firestoreDb = getFirestore(app);
+        await clearIndexedDbPersistence(firestoreDb);
         console.log("🗑️ Cleared IndexedDB persistence");
       } catch (error) {
         console.log("ℹ️ IndexedDB already clear or unavailable");
