@@ -1841,9 +1841,6 @@ function App() {
         // Initialize push notification service
         setTimeout(async () => {
           try {
-            const { pushNotificationService } = await import(
-              "./services/pushNotificationService"
-            );
             await pushNotificationService.startNotificationService();
 
             // Save device token for current user if authenticated
@@ -4636,7 +4633,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manuten������es
+                          Futuras Manuten����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -8978,7 +8975,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={4}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            placeholder="Informaç��es relevantes sobre o cliente, preferências, histórico, etc."
+                            placeholder="Informações relevantes sobre o cliente, preferências, histórico, etc."
                           />
                         </div>
                       </div>
