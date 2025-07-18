@@ -13,7 +13,8 @@ import {
   UserCheck,
   Settings,
 } from "lucide-react";
-import { authService, UserProfile } from "../services/authService";
+// import { authService, UserProfile } from "../services/authService"; // Removed
+type UserProfile = any;
 import { useUsers } from "../hooks/useFirestore";
 
 interface PermissionsEditorProps {
