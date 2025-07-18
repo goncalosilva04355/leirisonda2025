@@ -75,7 +75,7 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
 
           setFixResult(
             `✅ PROBLEMA RESOLVIDO!\n\n` +
-              `🌐 Dados migrados para estrutura global:\n` +
+              `�� Dados migrados para estrutura global:\n` +
               `• Piscinas: ${migrationResult.migrated.pools}\n` +
               `• Obras: ${migrationResult.migrated.works}\n` +
               `• Manutenções: ${migrationResult.migrated.maintenance}\n` +
@@ -114,7 +114,8 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
     if (!dataStructure) return 0;
     const { sharedCounts } = dataStructure;
     return Object.values(sharedCounts).reduce(
-      (total: number, count: number) => total + count,
+      (total: number, count: unknown) =>
+        total + (typeof count === "number" ? count : 0),
       0,
     );
   };
