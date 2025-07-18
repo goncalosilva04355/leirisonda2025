@@ -3,6 +3,8 @@
  * Clears all caches, forces reinitialization, and uses iOS-optimized settings
  */
 
+import { getFirestore } from "firebase/firestore";
+
 export class IOSFirebaseFix {
   private static isFixing = false;
   private static fixAttempts = 0;
