@@ -1,6 +1,7 @@
 import React from "react";
 
-function AppMinimal() {
+// App minimal para teste de Load Failed
+export default function AppMinimal() {
   return (
     <div
       style={{
@@ -16,14 +17,11 @@ function AppMinimal() {
       }}
     >
       <div>
-        <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
+        <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
           🚀 Leirisonda
         </h1>
-        <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
+        <p style={{ fontSize: "1.5rem", marginBottom: "2rem" }}>
           Sistema de Gestão de Piscinas
-        </p>
-        <p style={{ fontSize: "1rem", marginBottom: "2rem" }}>
-          Versão mínima para teste do Netlify
         </p>
         <div
           style={{
@@ -33,17 +31,14 @@ function AppMinimal() {
             marginBottom: "2rem",
           }}
         >
-          <p style={{ fontSize: "0.9rem", margin: 0 }}>
-            URL: {window.location.href}
-          </p>
-          <p style={{ fontSize: "0.9rem", margin: "0.5rem 0 0 0" }}>
-            Timestamp: {new Date().toLocaleString()}
-          </p>
+          <p>✅ App carregada com sucesso</p>
+          <p>🔍 Teste de Load Failed - Versão Minimal</p>
+          <p>{new Date().toLocaleString()}</p>
         </div>
         <button
           onClick={() => {
-            console.log("Botão clickado");
-            alert("Aplicação funcional!");
+            console.log("Testando botão...");
+            alert("App minimal funcionando!");
           }}
           style={{
             background: "white",
@@ -53,6 +48,7 @@ function AppMinimal() {
             borderRadius: "0.5rem",
             fontSize: "1rem",
             cursor: "pointer",
+            fontWeight: "bold",
           }}
         >
           Testar Funcionalidade
@@ -61,5 +57,3 @@ function AppMinimal() {
     </div>
   );
 }
-
-export default AppMinimal;
