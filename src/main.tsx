@@ -95,9 +95,9 @@ try {
     });
   }
 
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
+  // Usar App simples temporariamente para debug de produção
+  const AppComponent = AppSimple;
+  console.log("📱 DEBUG PRODUÇÃO: Usando App simples para testar");
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
