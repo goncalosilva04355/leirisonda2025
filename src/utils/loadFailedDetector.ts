@@ -1,99 +1,99 @@
-// Detect and auto-fix Load failed errors
-export function setupLoadFailedDetector() {
-  console.log("🔍 Configurando detector de 'Load failed'...");
+/**
+ * Detector de erros "Load failed" para diagnosticar problemas de carregamento
+ */
 
-  // Counter for Load failed occurrences
-  let loadFailedCount = 0;
+// Capturar erros de módulos não carregados
+window.addEventListener("error", (event) => {
+  if (event.message && event.message.includes("Load failed")) {
+    console.error("🚨 LOAD FAILED DETECTADO:", {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      error: event.error,
+      stack: event.error?.stack,
+    });
 
-  // Store original console methods
-  const originalError = console.error;
-  const originalWarn = console.warn;
-  const originalLog = console.log;
+    // Mostrar notificação visual
+    showLoadFailedNotification(event.message);
+  }
+});
 
-  // Override console methods to detect Load failed
-  const interceptConsole = (method: any, name: string) => {
-    return function (...args: any[]) {
-      const message = args.join(" ");
+// Capturar erros de Promise rejeitadas (módulos ES6)
+window.addEventListener("unhandledrejection", (event) => {
+  const reason = event.reason;
+  if (
+    reason &&
+    (reason.message?.includes("Load failed") ||
+      reason.message?.includes("Failed to fetch") ||
+      reason.message?.includes("Loading chunk"))
+  ) {
+    console.error("🚨 PROMISE REJECTION - LOAD FAILED:", {
+      reason: reason,
+      stack: reason?.stack,
+    });
 
-      if (message.includes("Load failed")) {
-        loadFailedCount++;
+    showLoadFailedNotification(
+      reason.message || "Erro de carregamento de módulo",
+    );
+  }
+});
 
-        console.info(`
-🔍 LOAD FAILED DETECTADO #${loadFailedCount}
-- Método: ${name}
-- Mensagem: ${message}
-- Status: TRATADO AUTOMATICAMENTE
-- Sistema: FUNCIONANDO NORMALMENTE
-        `);
+function showLoadFailedNotification(message: string) {
+  // Criar notificação visual
+  const notification = document.createElement("div");
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #dc2626;
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10000;
+    max-width: 400px;
+    font-family: system-ui;
+    font-size: 14px;
+  `;
 
-        // Don't show the original error
-        return;
-      }
+  notification.innerHTML = `
+    <div style="font-weight: bold; margin-bottom: 8px;">⚠️ Erro de Carregamento</div>
+    <div style="margin-bottom: 12px;">${message}</div>
+    <button onclick="window.location.reload()" style="
+      background: white;
+      color: #dc2626;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    ">Recarregar Página</button>
+  `;
 
-      // Call original method for other messages
-      method.apply(console, args);
-    };
-  };
+  document.body.appendChild(notification);
 
-  // Override console methods
-  console.error = interceptConsole(originalError, "error");
-  console.warn = interceptConsole(originalWarn, "warn");
-  console.log = interceptConsole(originalLog, "log");
-
-  // Restore original methods after a while
+  // Remover após 10 segundos
   setTimeout(() => {
-    console.error = originalError;
-    console.warn = originalWarn;
-    console.log = originalLog;
-
-    if (loadFailedCount > 0) {
-      console.info(`🎯 RESUMO LOAD FAILED:
-- Total detectados: ${loadFailedCount}
-- Todos tratados automaticamente
-- Sistema funcionando normalmente
-- Console methods restaurados`);
-    } else {
-      console.log("✅ Nenhum Load failed detectado");
+    if (notification.parentNode) {
+      notification.parentNode.removeChild(notification);
     }
-  }, 20000); // 20 seconds
-
-  // Global detection for unhandled Load failed
-  window.addEventListener("error", (event) => {
-    if (event.message?.includes("Load failed")) {
-      loadFailedCount++;
-      console.info(
-        `🔍 Load failed detectado em window.error #${loadFailedCount} - TRATADO`,
-      );
-      event.preventDefault(); // Prevent default error handling
-    }
-  });
-
-  window.addEventListener("unhandledrejection", (event) => {
-    const reason = event.reason?.message || String(event.reason);
-    if (reason.includes("Load failed")) {
-      loadFailedCount++;
-      console.info(
-        `🔍 Load failed detectado em unhandledrejection #${loadFailedCount} - TRATADO`,
-      );
-      event.preventDefault(); // Prevent default rejection handling
-    }
-  });
-
-  console.log("✅ Detector de Load failed configurado por 20 segundos");
-
-  // Make stats available globally
-  (window as any).loadFailedStats = {
-    getCount: () => loadFailedCount,
-    isActive: true,
-  };
-
-  // Deactivate after timeout
-  setTimeout(() => {
-    (window as any).loadFailedStats.isActive = false;
-  }, 20000);
+  }, 10000);
 }
 
-// Auto-setup
-setupLoadFailedDetector();
+// Verificar se fetch está disponível
+if (!window.fetch) {
+  console.error("🚨 FETCH API não disponível - possível causa de Load failed");
+}
 
-export default setupLoadFailedDetector;
+// Verificar se ES6 modules estão sendo suportados
+try {
+  new Function('import("")');
+  console.log("✅ ES6 modules suportados");
+} catch (error) {
+  console.error(
+    "🚨 ES6 modules não suportados - possível causa de Load failed",
+  );
+}
+
+console.log("🔍 Load Failed Detector ativo");
