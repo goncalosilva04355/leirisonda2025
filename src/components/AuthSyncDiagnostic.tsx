@@ -137,15 +137,17 @@ Para testar noutro dispositivo:
     }
   };
 
-  const checkFirebaseConfig = () => {
-    setTestResult(`🔧 Diagnóstico da configuração Firebase:
+    const checkFirebaseConfig = async () => {
+    try {
+      const authInstance = await auth;
+      setTestResult(`🔧 Diagnóstico da configuração Firebase:
 
-Firebase Auth disponível: ${auth ? "✅" : "❌"}
-Utilizador Firebase: ${auth?.currentUser ? "✅" : "❌"}
+Firebase Auth disponível: ${authInstance ? "✅" : "❌"}
+Utilizador Firebase: ${authInstance?.currentUser ? "✅" : "❌"}
 Estado da persistência: ✅ Configurada para LOCAL (permite login entre dispositivos)
 
 ${
-  auth?.currentUser
+  authInstance?.currentUser
     ? `
 Utilizador atual:
 - UID: ${auth.currentUser.uid}
