@@ -195,6 +195,8 @@ export function useDataSync(): SyncState & SyncActions {
     works: [],
     clients: [],
     lastSync: null,
+    isLoading: false,
+    error: null,
   });
 
   // PARTILHA GLOBAL PARA TODOS OS UTILIZADORES
