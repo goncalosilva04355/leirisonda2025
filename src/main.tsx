@@ -61,9 +61,9 @@ function renderFallback(error?: any) {
 // Tentar carregar App dinamicamente
 async function loadApp() {
   try {
-    const { default: App } = await import("./App");
+    const { default: App } = await import("./App-simple-test");
     root.render(<App />);
-    console.log("✅ App principal renderizada com sucesso");
+    console.log("✅ App de teste renderizada com sucesso");
   } catch (error) {
     console.error("❌ Erro ao carregar App:", error);
     renderFallback(error);
