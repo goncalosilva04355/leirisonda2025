@@ -15,7 +15,7 @@
     "dev": "vite",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "build:server": "npx tsc server/index.ts server/node-build.ts server/routes/demo.ts shared/api.ts shared/types.ts --outDir dist/server --target es2020 --module esnext --moduleResolution bundler --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck",
+    "build:server": "node build-server.js",
     "start": "node dist/server/node-build.js",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
