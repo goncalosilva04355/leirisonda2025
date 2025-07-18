@@ -44,7 +44,8 @@ export class ForceFirestoreConnection {
 
         // Try to clear persistence
         try {
-          await clearIndexedDbPersistence(app);
+          const firestoreDb = getFirestore(app);
+          await clearIndexedDbPersistence(firestoreDb);
           console.log("🗑️ Cleared Firestore persistence");
         } catch (error) {
           console.log("ℹ️ Persistence already clear or unavailable");
