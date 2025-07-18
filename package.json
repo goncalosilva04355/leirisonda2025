@@ -23,7 +23,9 @@
     "builder:force-push": "echo 'Syncing ai_main_9fcae005c620 branch to GitHub...'",
     "builder:fix-sync": "echo 'Fixing Builder.io GitHub integration...'",
     "github:create-branch": "echo 'Creating branch ai_main_9fcae005c620 on GitHub...'",
-    "firebase:update": "node scripts/update-firebase-config.js"
+    "firebase:update": "node scripts/update-firebase-config.js",
+    "deploy:firebase": "npm run build && firebase deploy --only hosting",
+    "firebase:deploy": "firebase deploy --only hosting"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.0",
