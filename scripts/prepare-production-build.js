@@ -22,7 +22,11 @@ try {
   execSync("npm run build:client", { stdio: "inherit" });
 
   // 2. Verificar se o ficheiro dist/index.html existe
-  const distIndexPath = path.join(process.cwd(), "dist", "index.html");
+  const distIndexPath = path.join(
+    path.dirname(__dirname),
+    "dist",
+    "index.html",
+  );
   if (!fs.existsSync(distIndexPath)) {
     throw new Error("❌ Ficheiro dist/index.html não encontrado");
   }
