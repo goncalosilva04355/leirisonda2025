@@ -122,7 +122,9 @@ export const DataSharingFixManager: React.FC<DataSharingFixManagerProps> = ({
 
   const isProblemDetected = () => {
     const hasLocalData = getCurrentDataCount() > 0;
-    const hasSharedData = getSharedDataCount() > 0;
+    const sharedDataCount = getSharedDataCount();
+    const hasSharedData =
+      typeof sharedDataCount === "number" && sharedDataCount > 0;
 
     // Problem exists if we have local data but no shared data, or vice versa
     return (hasLocalData && !hasSharedData) || (!hasLocalData && hasSharedData);
