@@ -72,7 +72,8 @@ export const useFCM = (currentUser: User | null) => {
       }
 
       // Obter token
-      const token = await fcmService.getToken(currentUser.uid);
+      // const token = await fcmService.getToken(currentUser.uid); // Method not available
+      const token = null;
 
       if (token) {
         setFCMStatus((prev) => ({
