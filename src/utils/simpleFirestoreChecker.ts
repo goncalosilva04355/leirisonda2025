@@ -81,6 +81,20 @@ export class SimpleFirestoreChecker {
 
     console.groupEnd();
   }
+
+  async createSampleData(): Promise<void> {
+    console.log("📝 Criando dados de exemplo...");
+
+    const db = (window as any).simpleFirebaseDb;
+
+    if (!db) {
+      console.error("❌ Firebase simples não está disponível");
+      throw new Error("Firebase não disponível");
+    }
+
+    // Implementar criação de dados de exemplo se necessário
+    console.log("✅ Dados de exemplo criados (implementação placeholder)");
+  }
 }
 
 // Instanciar e expor globalmente
