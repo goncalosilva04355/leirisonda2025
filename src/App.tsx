@@ -166,7 +166,7 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-import "./utils/firestoreRestApi"; // ATIVADO PARA VERIFICAÇÃO
+// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODUÇÃO
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
