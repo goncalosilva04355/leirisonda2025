@@ -92,7 +92,8 @@ export class IOSFirebaseFix {
 
       // Try to clear IndexedDB cache first
       try {
-        await clearIndexedDbPersistence(app);
+        const firestoreDb = getFirestore(app);
+        await clearIndexedDbPersistence(firestoreDb);
         console.log("🗑️ Cleared IndexedDB persistence");
       } catch (error) {
         console.log("ℹ️ IndexedDB already clear or unavailable");
