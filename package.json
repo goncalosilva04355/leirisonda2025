@@ -16,6 +16,7 @@
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "node build-server.js",
+    "build:production": "node scripts/prepare-production-build.js",
     "start": "node dist/server/node-build.js",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
