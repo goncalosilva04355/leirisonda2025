@@ -1,25 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import AppWithFallback from "./AppWithFallback";
+import App from "./App";
 import "./index.css";
 
-console.log("🚀 Leirisonda - Inicializando aplicação...");
+console.log("🚀 Leirisonda - Inicializando aplicação principal diretamente...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Create root and render immediately
+// Create root and render App directly
 const root = ReactDOM.createRoot(rootElement);
 
 try {
-  root.render(<AppWithFallback />);
-  console.log("✅ AppWithFallback renderizada com sucesso");
+  root.render(<App />);
+  console.log("✅ App principal renderizada com sucesso");
 } catch (error) {
-  console.error("❌ Erro ao renderizar AppWithFallback:", error);
+  console.error("❌ Erro ao renderizar App principal:", error);
 
-  // Fallback simples
+  // Fallback simples apenas se houver erro crítico
   root.render(
     <div
       style={{
@@ -40,6 +40,9 @@ try {
         </h1>
         <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
           Sistema de Gestão de Piscinas
+        </p>
+        <p style={{ marginBottom: "2rem", fontSize: "0.9rem" }}>
+          Erro: {error?.message || "Erro desconhecido"}
         </p>
         <button
           onClick={() => window.location.reload()}

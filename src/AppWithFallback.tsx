@@ -82,7 +82,8 @@ const AppWithFallback: React.FC = () => {
         }),
       );
 
-      this.props.onError(error.message);
+      // TEMPORARIAMENTE DESABILITADO: não chamar onError para forçar app principal
+      // this.props.onError(error.message);
     }
 
     render() {
@@ -95,7 +96,7 @@ const AppWithFallback: React.FC = () => {
 
   // TEMPORARIAMENTE DESABILITADO: sempre tentar app principal
   // Se deve usar app simples ou se houve muitos erros
-  if (false && (useSimpleApp || retryCount >= maxRetries)) {
+  if (false) {
     console.log("📱 Usando app simples:", {
       useSimpleApp,
       retryCount,
