@@ -936,7 +936,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                   ? "bg-red-100 text-red-800"
                                   : user.role === "manager"
                                     ? "bg-purple-100 text-purple-800"
-                                    : user.role === "manager"
+                                    : user.role === "technician"
                                       ? "bg-blue-100 text-blue-800"
                                       : "bg-gray-100 text-gray-800"
                               }`}
@@ -945,8 +945,8 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                 ? "Super Admin"
                                 : user.role === "manager"
                                   ? "Gestor"
-                                  : user.role === "manager"
-                                    ? "Gestor"
+                                  : user.role === "technician"
+                                    ? "Técnico"
                                     : "Técnico"}
                             </span>
                             <button
