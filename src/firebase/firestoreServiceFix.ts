@@ -24,10 +24,8 @@ export class FirestoreServiceFix {
         app = existingApps[0];
         console.log("✅ Found existing Firebase app");
       } else {
-        const { getLegacyFirebaseConfig } = await import(
-          "../config/firebaseEnv"
-        );
-        const config = getLegacyFirebaseConfig();
+        const { getFirebaseConfig } = await import("../config/firebaseEnv");
+        const config = getFirebaseConfig();
 
         app = initializeApp(config);
         console.log("✅ Initialized new Firebase app");
