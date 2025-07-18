@@ -141,7 +141,7 @@ import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
 import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
 import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
-import { UserProfile } from "./services/robustLoginService";
+import { UserProfile, robustLoginService } from "./services/robustLoginService";
 import { DataProtectionService } from "./utils/dataProtection";
 
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
@@ -3197,7 +3197,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("❌ Login error:", error);
+              console.error("��� Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
@@ -8138,7 +8138,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven✅��es
+                                    Histórico de interven�����es
                                   </p>
                                 </div>
                               </div>
