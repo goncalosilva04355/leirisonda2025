@@ -5,13 +5,17 @@
  * Este script garante que o index.html correto seja usado
  */
 
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { execSync } from "child_process";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 console.log("🚀 Preparando build de produção para Builder.io...");
 
 // 1. Executar o build de produção
-const { execSync } = require("child_process");
 
 try {
   console.log("📦 Executando build de produção...");
