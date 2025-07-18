@@ -1,204 +1,120 @@
-import React, { useState, useEffect } from "react";
-import LoginSimple from "./LoginSimple";
+import React, { useState } from "react";
+import { Building2, User, LogIn } from "lucide-react";
 
-// Simple storage utilities
-const safeLocalStorage = {
-  getItem: (key: string) => {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  },
-  setItem: (key: string, value: string) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch {}
-  },
-  removeItem: (key: string) => {
-    try {
-      localStorage.removeItem(key);
-    } catch {}
-  },
-};
-
-const AppSimple = () => {
+function AppSimple() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: "",
+  });
+  const [loginError, setLoginError] = useState("");
 
-  useEffect(() => {
-    console.log("🚀 App Simples inicializada");
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
 
-    // Initialize with clean state
-    setIsAuthenticated(false);
-    setCurrentUser(null);
-
-    // Clear any invalid auth state
-    safeLocalStorage.removeItem("currentUser");
-    safeLocalStorage.removeItem("isAuthenticated");
-
-    setIsLoading(false);
-  }, []);
-
-  const handleLogin = (user: any) => {
-    console.log("✅ Login realizado:", user);
-    setCurrentUser(user);
-    setIsAuthenticated(true);
-    safeLocalStorage.setItem("currentUser", JSON.stringify(user));
-    safeLocalStorage.setItem("isAuthenticated", "true");
+    // Simular login simples
+    if (
+      loginForm.email === "gongonsilva@gmail.com" &&
+      loginForm.password === "19867gsf"
+    ) {
+      setIsAuthenticated(true);
+      setLoginError("");
+    } else {
+      setLoginError("Credenciais inválidas");
+    }
   };
 
-  const handleLogout = () => {
-    console.log("🚪 Logout realizado");
-    setCurrentUser(null);
-    setIsAuthenticated(false);
-    safeLocalStorage.removeItem("currentUser");
-    safeLocalStorage.removeItem("isAuthenticated");
-  };
-
-  // Loading state
-  if (isLoading) {
+  if (isAuthenticated) {
     return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "system-ui",
-          textAlign: "center",
-        }}
-      >
-        <div>
-          <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔧</div>
-          <h1 style={{ fontSize: "2rem", marginBottom: "1rem" }}>Leirisonda</h1>
-          <p>Carregando...</p>
+      <div className="min-h-screen bg-gradient-to-br from-cyan-500 to-blue-600">
+        <div className="container mx-auto px-4 py-8">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Building2 className="w-8 h-8 text-cyan-600" />
+              <h1 className="text-2xl font-bold text-gray-800">Leirisonda</h1>
+            </div>
+
+            <div className="text-center py-8">
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">
+                Bem-vindo ao Sistema de Gestão
+              </h2>
+              <p className="text-gray-600 mb-6">
+                A aplicação está a funcionar corretamente em produção.
+              </p>
+
+              <button
+                onClick={() => setIsAuthenticated(false)}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
-  // Not authenticated - show login
-  if (!isAuthenticated) {
-    return (
-      <LoginSimple
-        onLogin={handleLogin}
-        onError={(error) => console.error("❌ Erro no login:", error)}
-      />
-    );
-  }
-
-  // Authenticated - show main app
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
-        color: "white",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontFamily: "system-ui",
-        textAlign: "center",
-        padding: "2rem",
-      }}
-    >
-      <div style={{ maxWidth: "600px" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔧</div>
-        <h1
-          style={{
-            fontSize: "2.5rem",
-            margin: "0 0 1rem 0",
-            fontWeight: "bold",
-          }}
-        >
-          Leirisonda
-        </h1>
-        <p
-          style={{
-            fontSize: "1.125rem",
-            margin: "0 0 2rem 0",
-            opacity: 0.9,
-          }}
-        >
-          Bem-vindo, {currentUser?.name || "Utilizador"}!
-        </p>
-        <p style={{ marginBottom: "2rem" }}>
-          Aplicação funcionando corretamente. A versão completa estará
-          disponível em breve.
-        </p>
-
-        <div style={{ marginBottom: "2rem" }}>
-          <button
-            onClick={() => {
-              console.log("🔄 Tentando carregar app principal...");
-              window.location.href = window.location.origin + "?advanced=true";
-            }}
-            style={{
-              background: "white",
-              color: "#0891b2",
-              border: "none",
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              fontSize: "1.125rem",
-              fontWeight: "bold",
-              cursor: "pointer",
-              marginBottom: "1rem",
-              display: "block",
-              width: "100%",
-            }}
-          >
-            Carregar App Completa
-          </button>
-
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <button
-              onClick={handleLogout}
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.3)",
-                padding: "0.75rem 1.5rem",
-                borderRadius: "0.375rem",
-                fontSize: "1rem",
-                cursor: "pointer",
-                flex: 1,
-              }}
-            >
-              Sair
-            </button>
-
-            <button
-              onClick={() => {
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.reload();
-              }}
-              style={{
-                background: "rgba(255,255,255,0.2)",
-                color: "white",
-                border: "1px solid rgba(255,255,255,0.3)",
-                padding: "0.75rem 1.5rem",
-                borderRadius: "0.375rem",
-                fontSize: "1rem",
-                cursor: "pointer",
-                flex: 1,
-              }}
-            >
-              Limpar Cache
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <Building2 className="w-8 h-8 text-cyan-600" />
+          <h1 className="text-2xl font-bold text-gray-800">Leirisonda</h1>
         </div>
 
-        <p style={{ fontSize: "0.875rem", opacity: 0.7 }}>
-          Versão simplificada ativa - Sistema funcionando corretamente
-        </p>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              value={loginForm.email}
+              onChange={(e) =>
+                setLoginForm({ ...loginForm, email: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              placeholder="email@exemplo.com"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              value={loginForm.password}
+              onChange={(e) =>
+                setLoginForm({ ...loginForm, password: e.target.value })
+              }
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              placeholder="********"
+              required
+            />
+          </div>
+
+          {loginError && (
+            <div className="text-red-600 text-sm text-center">{loginError}</div>
+          )}
+
+          <button
+            type="submit"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+          >
+            <LogIn className="w-4 h-4" />
+            Entrar
+          </button>
+        </form>
+
+        <div className="mt-6 text-center text-sm text-gray-500">
+          <p>Teste: gongonsilva@gmail.com / 19867gsf</p>
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default AppSimple;
