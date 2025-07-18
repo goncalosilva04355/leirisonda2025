@@ -5,6 +5,9 @@ import "./index.css";
 // Ativar detector de erros Load Failed
 import "./utils/loadFailedDetector";
 
+// Teste de imports críticos
+import "./utils/importTest";
+
 console.log("🚀 Leirisonda - Inicializando aplicação...");
 
 const rootElement = document.getElementById("root");
