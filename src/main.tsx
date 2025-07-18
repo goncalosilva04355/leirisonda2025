@@ -61,12 +61,11 @@ function renderFallback(error?: any) {
 // Tentar carregar App dinamicamente
 async function loadApp() {
   try {
-    // Usar App mínimo primeiro para testar Netlify
-    const { default: AppMinimal } = await import("./AppMinimal");
-    root.render(<AppMinimal />);
-    console.log("✅ App mínimo renderizado com sucesso");
+    const { default: App } = await import("./App");
+    root.render(<App />);
+    console.log("✅ App principal renderizada com sucesso");
   } catch (error) {
-    console.error("❌ Erro ao carregar App mínimo:", error);
+    console.error("❌ Erro ao carregar App:", error);
     renderFallback(error);
   }
 }
