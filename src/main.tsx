@@ -2,13 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// Ativar detector de erros Load Failed
-import "./utils/loadFailedDetector";
-
-// Teste de imports críticos
-import "./utils/importTest";
-
-console.log("🚀 Leirisonda - Inicializando aplicação...");
+console.log("🚀 Leirisonda PWA - Inicializando aplicação atualizada...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -17,7 +11,7 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement);
 
-// Função para renderizar fallback
+// Função para renderizar fallback em caso de erro
 function renderFallback(error?: any) {
   root.render(
     <div
@@ -55,6 +49,7 @@ function renderFallback(error?: any) {
             borderRadius: "0.5rem",
             fontSize: "1rem",
             cursor: "pointer",
+            fontWeight: "500",
           }}
         >
           Recarregar
@@ -66,21 +61,17 @@ function renderFallback(error?: any) {
 
 // Import App e AppWrapper
 import App from "./App";
-import AppMinimal from "./AppMinimal";
 import AppWrapper from "./AppWrapper";
-import ProgressiveLoader from "./components/ProgressiveLoader";
 
-// Renderizar app
+// Renderizar app diretamente sem ProgressiveLoader
 function loadApp() {
   try {
     root.render(
       <AppWrapper>
-        <ProgressiveLoader>
-          <App />
-        </ProgressiveLoader>
+        <App />
       </AppWrapper>,
     );
-    console.log("✅ App principal renderizada com sucesso");
+    console.log("✅ App principal renderizada com sucesso - versão limpa");
   } catch (error) {
     console.error("❌ Erro ao carregar App:", error);
     renderFallback(error);
