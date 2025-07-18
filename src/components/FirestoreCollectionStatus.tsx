@@ -22,7 +22,7 @@ export function FirestoreCollectionStatus() {
   const checkCollections = async () => {
     setLoading(true);
     try {
-      const checker = new FirestoreCollectionChecker();
+      const checker = new SimpleFirestoreChecker();
       const results = await checker.checkAllCollections();
       setCollections(results);
       setLastCheck(new Date().toLocaleTimeString());
@@ -39,7 +39,7 @@ export function FirestoreCollectionStatus() {
   const createSampleData = async () => {
     setLoading(true);
     try {
-      const checker = new FirestoreCollectionChecker();
+      const checker = new SimpleFirestoreChecker();
       await checker.createSampleData();
 
       // Verificar novamente após criar dados
