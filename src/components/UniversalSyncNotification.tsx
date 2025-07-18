@@ -172,7 +172,7 @@ export function UniversalSyncNotification() {
         )}
       </div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes shrink {
           from {
             width: 100%;
