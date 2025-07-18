@@ -14,7 +14,17 @@ import {
   Settings,
 } from "lucide-react";
 // import { authService, UserProfile } from "../services/authService"; // Removed
-type UserProfile = any;
+type UserProfile = {
+  id?: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt?: any;
+  updatedAt?: any;
+  permissions?: any;
+  uid?: string;
+  active?: boolean;
+};
 import { useUsers } from "../hooks/useFirestore";
 
 interface PermissionsEditorProps {
@@ -136,7 +146,7 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
                 <thead>
                   <tr className="bg-gray-50">
                     <th className="border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700">
-                      Módulo
+                      M��dulo
                     </th>
                     {Object.entries(actionNames).map(([action, label]) => (
                       <th
