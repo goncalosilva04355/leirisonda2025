@@ -157,6 +157,9 @@ export const getFirebaseStatus = () => {
     initialized: firebaseApp !== null,
     ready: firebaseApp !== null,
     status: firebaseApp ? "ready" : "not_initialized",
+    app: firebaseApp,
+    auth: auth,
+    db: null, // Will be implemented when needed
   };
 };
 
