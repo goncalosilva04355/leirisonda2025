@@ -97,9 +97,12 @@ try {
     });
   }
 
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
+  // Usar versão otimizada para produção
+  const AppComponent = import.meta.env.PROD ? AppProduction : App;
+  console.log(
+    "📱 PRODUÇÃO: Usando versão otimizada",
+    import.meta.env.PROD ? "AppProduction" : "App",
+  );
 
   ReactDOM.createRoot(rootElement).render(
     // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
