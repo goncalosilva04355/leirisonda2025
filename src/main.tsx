@@ -61,13 +61,18 @@ function renderFallback(error?: any) {
   );
 }
 
-// Import App diretamente para evitar problemas em produção
+// Import App e AppWrapper
 import App from "./App";
+import AppWrapper from "./AppWrapper";
 
 // Renderizar app
 function loadApp() {
   try {
-    root.render(<App />);
+    root.render(
+      <AppWrapper>
+        <App />
+      </AppWrapper>,
+    );
     console.log("✅ App principal renderizada com sucesso");
   } catch (error) {
     console.error("❌ Erro ao carregar App:", error);
