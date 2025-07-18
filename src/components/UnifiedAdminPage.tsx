@@ -775,11 +775,9 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
                             >
                               {user.role === "super_admin"
                                 ? "Super Admin"
-                                : user.role === "super_admin"
-                                  ? "Admin"
-                                  : user.role === "manager"
-                                    ? "Gestor"
-                                    : "Técnico"}
+                                : user.role === "manager"
+                                  ? "Gestor"
+                                  : "Técnico"}
                             </span>
                             {user.email !== "gongonsilva@gmail.com" && (
                               <button
