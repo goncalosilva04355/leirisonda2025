@@ -144,15 +144,15 @@ Para testar noutro dispositivo:
 
 Firebase Auth disponível: ${authInstance ? "✅" : "❌"}
 Utilizador Firebase: ${authInstance?.currentUser ? "✅" : "❌"}
-Estado da persistência: ✅ Configurada para LOCAL (permite login entre dispositivos)
+Estado da persistência: �� Configurada para LOCAL (permite login entre dispositivos)
 
 ${
   authInstance?.currentUser
     ? `
 Utilizador atual:
-- UID: ${auth.currentUser.uid}
-- Email: ${auth.currentUser.email}
-- Verificado: ${auth.currentUser.emailVerified ? "Sim" : "Não"}
+- UID: ${authInstance.currentUser.uid}
+- Email: ${authInstance.currentUser.email}
+- Verificado: ${authInstance.currentUser.emailVerified ? "Sim" : "Não"}
 `
     : ""
 }
