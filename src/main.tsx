@@ -47,6 +47,8 @@ window.addEventListener("unhandledrejection", (event) => {
 
 // App original reparado
 import App from "./App";
+// App simples para debug
+import AppSimple from "./AppSimple";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 
