@@ -50,7 +50,7 @@ export const DeviceSyncManager: React.FC = () => {
 
     setSyncStatus({
       firebase: status.ready,
-      quotaExceeded: status.quotaExceeded || false,
+      quotaExceeded: false, // Default to false as this property doesn't exist in status
       lastSync: lastSyncTime ? new Date(lastSyncTime) : null,
       syncing: false,
     });
