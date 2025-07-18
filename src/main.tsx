@@ -41,7 +41,7 @@ window.addEventListener("unhandledrejection", (event) => {
     return;
   }
 
-  console.error("�� Unhandled promise rejection:", event.reason);
+  console.error("❌ Unhandled promise rejection:", event.reason);
   console.error("❌ Promise:", event.promise);
 });
 
@@ -49,6 +49,8 @@ window.addEventListener("unhandledrejection", (event) => {
 import App from "./App";
 // App simples para debug
 import AppSimple from "./AppSimple";
+// App produção otimizada
+import AppProduction from "./App-Production";
 // Error Boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 
