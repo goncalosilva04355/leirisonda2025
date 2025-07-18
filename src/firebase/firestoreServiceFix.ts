@@ -144,10 +144,8 @@ export class FirestoreServiceFix {
           }
         }
 
-        const { getLegacyFirebaseConfig } = await import(
-          "../config/firebaseEnv"
-        );
-        const config = getLegacyFirebaseConfig();
+        const { getFirebaseConfig } = await import("../config/firebaseEnv");
+        const config = getFirebaseConfig();
 
         const app = initializeApp(config, `firestore-fix-${Date.now()}`);
         return getFirestore(app);
