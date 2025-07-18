@@ -68,6 +68,7 @@ function renderFallback(error?: any) {
 import App from "./App";
 import AppMinimal from "./AppMinimal";
 import AppWrapper from "./AppWrapper";
+import ProgressiveLoader from "./components/ProgressiveLoader";
 
 // Renderizar app
 function loadApp() {
