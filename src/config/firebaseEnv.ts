@@ -60,7 +60,7 @@ export function getFirebaseConfig() {
     console.log("✅ Firebase: CONFIGURADO COM VARIÁVEIS DO NETLIFY");
     console.log("🚀 Projeto ativo:", config.projectId);
     console.log("🔑 API Key configurada:", config.apiKey ? "✅" : "❌");
-    console.log("🏠 Auth Domain:", config.authDomain);
+    console.log("�� Auth Domain:", config.authDomain);
   } else if (usingNetlifyVars) {
     console.log("⚠️ Firebase: usando variáveis mas não no Netlify");
     console.log("🔄 Projeto:", config.projectId);
@@ -70,13 +70,32 @@ export function getFirebaseConfig() {
     console.log("🎯 Projeto fallback:", config.projectId);
   }
 
-  // Verificar se a configuração é válida
+  // Verificar se a configuração é válida (mas não falhar no Netlify)
   if (!config.apiKey || !config.projectId || !config.authDomain) {
     console.error("❌ Configuração Firebase inválida:", {
       apiKey: !!config.apiKey,
       projectId: !!config.projectId,
       authDomain: !!config.authDomain,
     });
+
+    // Se estiver no Netlify e faltar config, usar fallback em vez de falhar
+    if (isNetlifyBuild) {
+      console.warn(
+        "🚨 Netlify: usando configuração de fallback devido a vars ausentes",
+      );
+      return {
+        apiKey: "AIzaSyBM6gvL9L6K0CEnM3s5ZzPGqHzut7idLQw",
+        authDomain: "leiria-1cfc9.firebaseapp.com",
+        databaseURL:
+          "https://leiria-1cfc9-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "leiria-1cfc9",
+        storageBucket: "leiria-1cfc9.firebasestorage.app",
+        messagingSenderId: "632599887141",
+        appId: "1:632599887141:web:1290b471d41fc3ad64eecc",
+        measurementId: "G-Q2QWQVH60L",
+      };
+    }
+
     throw new Error("Configuração Firebase inválida");
   }
 
