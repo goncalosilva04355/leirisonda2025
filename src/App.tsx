@@ -547,7 +547,7 @@ function App() {
     console.log("🔍 Verificando e recuperando quota Firebase...");
 
     // Tentar recuperaç��o automática
-    autoRecoverOnInit();
+    // autoRecoverOnInit(); // TEMPORARIAMENTE COMENTADO PARA DEBUG
   }, []);
 
   // Firebase handles auth state automatically - no manual clearing needed
@@ -4562,7 +4562,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }`}
                                     disabled={!enableMapsRedirect}
                                   >
-                                    ����� {maint.location}
+                                    ������� {maint.location}
                                   </button>
                                 </div>
                               )}
