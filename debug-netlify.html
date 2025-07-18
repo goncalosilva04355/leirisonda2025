@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Netlify - Leirisonda</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .container {
+        text-align: center;
+        max-width: 600px;
+      }
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+      p {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+      }
+      .debug-info {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🚀 Leirisonda Debug</h1>
+      <p>Sistema de Gestão de Piscinas</p>
+
+      <div class="debug-info">
+        <h3>Debug Information:</h3>
+        <p><strong>URL:</strong> <span id="url"></span></p>
+        <p><strong>Timestamp:</strong> <span id="timestamp"></span></p>
+        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+      </div>
+
+      <p>Se você está vendo esta página, o Netlify está funcionando!</p>
+    </div>
+
+    <script>
+      document.getElementById("url").textContent = window.location.href;
+      document.getElementById("timestamp").textContent =
+        new Date().toLocaleString();
+      document.getElementById("userAgent").textContent = navigator.userAgent;
+    </script>
+  </body>
+</html>
