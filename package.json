@@ -13,9 +13,10 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
-    "start": "node dist/server/node-build.mjs",
+    "build:server": "npx tsc server/index.ts server/node-build.ts server/routes/demo.ts shared/api.ts shared/types.ts --outDir dist/server --target es2020 --module esnext --moduleResolution bundler --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck",
+    "start": "node dist/server/node-build.js",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc --noEmit --skipLibCheck",
