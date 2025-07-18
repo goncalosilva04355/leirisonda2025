@@ -44,7 +44,7 @@ export async function initializeFirebaseComplete(): Promise<InitializationStatus
           firebase: false,
           firestore: false,
           error: "Modo local ativo - dados guardados no localStorage",
-          localMode: true,
+          // localMode: true, // Not part of InitializationStatus type
         };
         return initializationStatus;
       }
