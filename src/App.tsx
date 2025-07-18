@@ -2933,9 +2933,6 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
 
         // Try to register with robustLoginService
         try {
-          const { robustLoginService } = await import(
-            "./services/robustLoginService"
-          );
           const result = await robustLoginService.register(
             userForm.email,
             userForm.password,
@@ -3197,7 +3194,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 setLoginError("Login incorreto");
               }
             } catch (error: any) {
-              console.error("��� Login error:", error);
+              console.error("❌ Login error:", error);
               setLoginError("Login incorreto");
             }
           }}
@@ -8138,7 +8135,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     Relatório de Manutenções
                                   </h3>
                                   <p className="text-sm text-gray-600">
-                                    Histórico de interven�����es
+                                    Histórico de interven✅��es
                                   </p>
                                 </div>
                               </div>
