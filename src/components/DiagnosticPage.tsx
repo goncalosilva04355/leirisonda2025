@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { AlertCircle, CheckCircle, XCircle, Loader } from "lucide-react";
 import LoginTest from "./LoginTest";
+import * as firebaseModule from "../firebase/leiriaConfig";
 
 interface DiagnosticResult {
   name: string;
@@ -140,7 +141,7 @@ export const DiagnosticPage: React.FC = () => {
     });
     try {
       // Tentar importar Firebase
-      const firebaseModule = await import("../firebase/leiriaConfig");
+      // Using statically imported firebaseModule
       const isReady = firebaseModule.isFirebaseReady();
 
       updateDiagnostic("firebase", {

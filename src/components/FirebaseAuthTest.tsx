@@ -11,10 +11,10 @@ export const FirebaseAuthTest: React.FC = () => {
     setResult("Testing...");
 
     try {
-      console.log("Auth object:", auth);
-      console.log("Auth config:", auth?.config);
+      const authInstance = await auth;
+      console.log("Auth object:", authInstance);
 
-      if (!auth) {
+      if (!authInstance) {
         setResult("ERROR: Auth not initialized");
         return;
       }
@@ -26,7 +26,7 @@ export const FirebaseAuthTest: React.FC = () => {
       console.log("Attempting registration with:", testEmail);
 
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        authInstance,
         testEmail,
         testPassword,
       );

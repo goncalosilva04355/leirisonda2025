@@ -140,6 +140,8 @@ export const DangerousUserDeletion: React.FC = () => {
         details: {
           localStorageKeysCleared: [],
           sessionStorageCleared: false,
+          indexedDBCleared: false,
+          firebaseAuthCleared: false,
           superAdminRecreated: false,
           errors: [error.message],
         },
@@ -614,7 +616,7 @@ export const DangerousUserDeletion: React.FC = () => {
                     {nuclearCleanupResult.details.localStorageKeysCleared.map(
                       (key, index) => (
                         <div key={index} className="font-mono">
-                          • {key}
+                          �� {key}
                         </div>
                       ),
                     )}

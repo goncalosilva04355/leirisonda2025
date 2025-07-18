@@ -1,51 +1,43 @@
-import React, { useState } from "react";
-import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
+import React from "react";
 
 function AppSimpleTest() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loginError, setLoginError] = useState("");
-
-  const handleLogin = async (
-    email: string,
-    password: string,
-    rememberMe?: boolean,
-  ) => {
-    console.log("🔑 Teste login:", email);
-    setLoginError("");
-
-    // Simular login básico
-    if (email === "gongonsilva@gmail.com" && password === "19867gsf") {
-      setIsAuthenticated(true);
-      console.log("✅ Login simulado com sucesso");
-    } else {
-      setLoginError("Credenciais inválidas");
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <LoginPage
-        onLogin={handleLogin}
-        loginError={loginError}
-        isLoading={false}
-      />
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-green-600 mb-4">
-          🎉 App Funcionando!
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0891b2 0%, #0284c7 100%)",
+        color: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "system-ui",
+        textAlign: "center",
+        padding: "2rem",
+      }}
+    >
+      <div>
+        <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
+          🚀 Leirisonda
         </h1>
-        <p className="text-gray-700">
-          Login realizado com sucesso. O problema estava identificado.
+        <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
+          Sistema de Gestão de Piscinas
+        </p>
+        <p style={{ fontSize: "0.9rem", marginBottom: "2rem" }}>
+          Aplicação está funcionando! ✅
         </p>
         <button
-          onClick={() => setIsAuthenticated(false)}
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          onClick={() => console.log("Button clicked!")}
+          style={{
+            background: "white",
+            color: "#0891b2",
+            border: "none",
+            padding: "1rem 2rem",
+            borderRadius: "0.5rem",
+            fontSize: "1rem",
+            cursor: "pointer",
+          }}
         >
-          Logout
+          Teste
         </button>
       </div>
     </div>

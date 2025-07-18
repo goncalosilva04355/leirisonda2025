@@ -59,8 +59,9 @@ export const CrossDeviceUserManager: React.FC = () => {
 
     try {
       // Create user in Firebase Auth
+      const authInstance = await auth;
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        authInstance,
         user.email,
         password,
       );

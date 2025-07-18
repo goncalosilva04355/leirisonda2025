@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import App from "./App";
 import "./index.css";
 
-console.log("🚀 Leirisonda - Inicializando aplicação...");
+console.log("🚀 Leirisonda - Aplicação de Produção iniciando...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -11,7 +12,7 @@ if (!rootElement) {
 
 const root = ReactDOM.createRoot(rootElement);
 
-// Função para renderizar fallback
+// Função para renderizar fallback em caso de erro
 function renderFallback(error?: any) {
   root.render(
     <div
@@ -58,19 +59,11 @@ function renderFallback(error?: any) {
   );
 }
 
-// Import App diretamente para evitar problemas em produção
-import App from "./App";
-
-// Renderizar app
-function loadApp() {
-  try {
-    root.render(<App />);
-    console.log("✅ App principal renderizada com sucesso");
-  } catch (error) {
-    console.error("❌ Erro ao carregar App:", error);
-    renderFallback(error);
-  }
+// Renderizar app diretamente para produção
+try {
+  root.render(<App />);
+  console.log("✅ App de produção renderizada com sucesso");
+} catch (error) {
+  console.error("❌ Erro ao carregar App de produção:", error);
+  renderFallback(error);
 }
-
-// Inicializar app
-loadApp();

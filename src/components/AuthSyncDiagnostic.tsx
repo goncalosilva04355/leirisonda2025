@@ -22,42 +22,51 @@ export const AuthSyncDiagnostic: React.FC = () => {
 
   useEffect(() => {
     // Monitor Firebase auth state
-    if (auth) {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setAuthState((prev) => ({
-            ...prev,
-            isLoggedIn: true,
-            user: {
-              uid: user.uid,
-              email: user.email,
-              displayName: user.displayName,
-            },
-            authMethod: "firebase",
-          }));
-        } else {
-          // Check if mock auth has a user
-          const mockUser = localStorage.getItem("mock-current-user");
-          if (mockUser) {
-            setAuthState((prev) => ({
-              ...prev,
-              isLoggedIn: true,
-              user: JSON.parse(mockUser),
-              authMethod: "mock",
-            }));
-          } else {
-            setAuthState((prev) => ({
-              ...prev,
-              isLoggedIn: false,
-              user: null,
-              authMethod: "none",
-            }));
-          }
-        }
-      });
+    const setupAuth = async () => {
+      try {
+        const authInstance = await auth;
+        if (authInstance) {
+          const unsubscribe = onAuthStateChanged(authInstance, (user) => {
+            if (user) {
+              setAuthState((prev) => ({
+                ...prev,
+                isLoggedIn: true,
+                user: {
+                  uid: user.uid,
+                  email: user.email,
+                  displayName: user.displayName,
+                },
+                authMethod: "firebase",
+              }));
+            } else {
+              // Check if mock auth has a user
+              const mockUser = localStorage.getItem("mock-current-user");
+              if (mockUser) {
+                setAuthState((prev) => ({
+                  ...prev,
+                  isLoggedIn: true,
+                  user: JSON.parse(mockUser),
+                  authMethod: "mock",
+                }));
+              } else {
+                setAuthState((prev) => ({
+                  ...prev,
+                  isLoggedIn: false,
+                  user: null,
+                  authMethod: "none",
+                }));
+              }
+            }
+          });
 
-      return () => unsubscribe();
-    }
+          return () => unsubscribe();
+        }
+      } catch (error) {
+        console.error("Error setting up auth:", error);
+      }
+    };
+
+    setupAuth();
   }, []);
 
   const testAuth = async () => {
@@ -128,31 +137,36 @@ Para testar noutro dispositivo:
     }
   };
 
-  const checkFirebaseConfig = () => {
-    setTestResult(`🔧 Diagnóstico da configuração Firebase:
+  const checkFirebaseConfig = async () => {
+    try {
+      const authInstance = await auth;
+      setTestResult(`🔧 Diagnóstico da configuração Firebase:
 
-Firebase Auth disponível: ${auth ? "✅" : "❌"}
-Utilizador Firebase: ${auth?.currentUser ? "✅" : "❌"}
+Firebase Auth disponível: ${authInstance ? "✅" : "❌"}
+Utilizador Firebase: ${authInstance?.currentUser ? "✅" : "❌"}
 Estado da persistência: ✅ Configurada para LOCAL (permite login entre dispositivos)
 
 ${
-  auth?.currentUser
+  authInstance?.currentUser
     ? `
 Utilizador atual:
-- UID: ${auth.currentUser.uid}
-- Email: ${auth.currentUser.email}
-- Verificado: ${auth.currentUser.emailVerified ? "Sim" : "Não"}
+- UID: ${authInstance.currentUser.uid}
+- Email: ${authInstance.currentUser.email}
+- Verificado: ${authInstance.currentUser.emailVerified ? "Sim" : "Não"}
 `
     : ""
 }
 
-📋 Verificações necessárias no Firebase Console:
+��� Verificações necessárias no Firebase Console:
 1. Authentication > Sign-in method > Email/Password deve estar ativado
 2. Authentication > Users deve mostrar o utilizador criado
 3. Firestore Database deve estar configurado
 4. As regras de segurança devem permitir acesso autenticado
 
 🔗 Firebase Console: https://console.firebase.google.com/project/leirisonda-16f8b`);
+    } catch (error) {
+      setTestResult("❌ Erro ao verificar configuração Firebase");
+    }
   };
 
   return (
@@ -163,7 +177,7 @@ Utilizador atual:
 
       <div className="mb-4 p-4 bg-gray-100 rounded-md">
         <h4 className="font-semibold mb-2">Estado Atual:</h4>
-        <p>Autenticado: {authState.isLoggedIn ? "✅ Sim" : "❌ Não"}</p>
+        <p>Autenticado: {authState.isLoggedIn ? "✅ Sim" : "�� Não"}</p>
         <p>Método: {authState.authMethod}</p>
         {authState.user && (
           <div className="mt-2">
