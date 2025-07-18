@@ -75,7 +75,9 @@ function loadApp() {
   try {
     root.render(
       <AppWrapper>
-        <App />
+        <ProgressiveLoader>
+          <App />
+        </ProgressiveLoader>
       </AppWrapper>,
     );
     console.log("✅ App principal renderizada com sucesso");
