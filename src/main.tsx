@@ -2,6 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
+// Ativar detector de erros Load Failed
+import "./utils/loadFailedDetector";
+
 console.log("🚀 Leirisonda - Inicializando aplicação...");
 
 const rootElement = document.getElementById("root");
