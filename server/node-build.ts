@@ -1,5 +1,5 @@
 import path from "path";
-import { createServer } from "./index";
+import { createServer } from "./index.js";
 import * as express from "express";
 
 const app = createServer();
@@ -31,7 +31,7 @@ app.listen(port, "0.0.0.0", () => {
 
 // Graceful shutdown
 process.on("SIGTERM", () => {
-  console.log("�� Received SIGTERM, shutting down gracefully");
+  console.log("🛑 Received SIGTERM, shutting down gracefully");
   process.exit(0);
 });
 
