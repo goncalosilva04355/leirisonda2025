@@ -898,12 +898,12 @@ export function useDataSync(): SyncState & SyncActions {
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
-      const [pools, maintenance, works, clients] = await Promise.all([
-        realFirebaseService.getPools(),
-        realFirebaseService.getMaintenance(),
-        realFirebaseService.getWorks(),
-        realFirebaseService.getClients(),
-      ]);
+      // Use syncAllData for REST API approach
+      const syncData = await realFirebaseService.syncAllData();
+      const pools = syncData?.pools || [];
+      const maintenance = syncData?.maintenance || [];
+      const works = syncData?.works || [];
+      const clients = syncData?.clients || [];
 
       // Calculate future maintenance
       const today = new Date();
