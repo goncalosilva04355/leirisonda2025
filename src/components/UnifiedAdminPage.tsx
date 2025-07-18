@@ -766,7 +766,7 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
                               className={`px-2 py-1 text-xs font-medium rounded-full ${
                                 user.role === "super_admin"
                                   ? "bg-red-100 text-red-800"
-                                  : user.role === "admin"
+                                  : user.role === "super_admin"
                                     ? "bg-purple-100 text-purple-800"
                                     : user.role === "manager"
                                       ? "bg-blue-100 text-blue-800"
@@ -775,7 +775,7 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
                             >
                               {user.role === "super_admin"
                                 ? "Super Admin"
-                                : user.role === "admin"
+                                : user.role === "super_admin"
                                   ? "Admin"
                                   : user.role === "manager"
                                     ? "Gestor"
