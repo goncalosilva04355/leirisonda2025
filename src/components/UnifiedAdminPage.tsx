@@ -768,7 +768,7 @@ export const UnifiedAdminPage: React.FC<UnifiedAdminPageProps> = ({
                                   ? "bg-red-100 text-red-800"
                                   : user.role === "manager"
                                     ? "bg-blue-100 text-blue-800"
-                                    : user.role === "manager"
+                                    : user.role === "technician"
                                       ? "bg-blue-100 text-blue-800"
                                       : "bg-gray-100 text-gray-800"
                               }`}
