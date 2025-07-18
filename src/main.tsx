@@ -58,10 +58,12 @@ function renderFallback(error?: any) {
   );
 }
 
-// Tentar carregar App dinamicamente
-async function loadApp() {
+// Import App diretamente para evitar problemas em produção
+import App from "./App";
+
+// Renderizar app
+function loadApp() {
   try {
-    const { default: App } = await import("./App");
     root.render(<App />);
     console.log("✅ App principal renderizada com sucesso");
   } catch (error) {
