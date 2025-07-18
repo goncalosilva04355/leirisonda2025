@@ -24,6 +24,7 @@ type UserProfile = {
   permissions?: any;
   uid?: string;
   active?: boolean;
+  [key: string]: any; // Allow any additional properties
 };
 import { useUsers } from "../hooks/useFirestore";
 
@@ -146,7 +147,7 @@ const PermissionsEditor: React.FC<PermissionsEditorProps> = ({
                 <thead>
                   <tr className="bg-gray-50">
                     <th className="border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700">
-                      M��dulo
+                      Módulo
                     </th>
                     {Object.entries(actionNames).map(([action, label]) => (
                       <th
