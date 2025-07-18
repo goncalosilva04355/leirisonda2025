@@ -1,0 +1,58 @@
+# Source files (only include dist/)
+src/
+server/
+shared/
+public/
+
+# Build tools and configs  
+*.config.js
+*.config.ts
+*.config.cjs
+vite.config.*
+tailwind.config.*
+tsconfig.*
+build-server.js
+
+# Dependencies (will be installed from package.json)
+node_modules/
+
+# Development files
+.env
+.env.local
+.env.development
+.env.test
+
+# Version control
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# Documentation and markdown
+*.md
+docs/
+
+# Test files
+**/*.test.*
+**/*.spec.*
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Mobile build directories
+android/
+ios/
+
+# Other build outputs not needed in container
+dist-production/
