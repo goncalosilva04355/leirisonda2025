@@ -142,6 +142,11 @@ export const getDBAsync = async () => {
   return null;
 };
 
+export const getDB = async () => {
+  // Implementar quando necessário
+  return null;
+};
+
 export const attemptFirestoreInit = async () => {
   return getFirebaseApp();
 };
