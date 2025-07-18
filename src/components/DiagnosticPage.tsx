@@ -141,7 +141,7 @@ export const DiagnosticPage: React.FC = () => {
     });
     try {
       // Tentar importar Firebase
-      const firebaseModule = await import("../firebase/leiriaConfig");
+      // Using statically imported firebaseModule
       const isReady = firebaseModule.isFirebaseReady();
 
       updateDiagnostic("firebase", {
