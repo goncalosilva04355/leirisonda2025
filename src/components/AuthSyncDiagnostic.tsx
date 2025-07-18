@@ -20,47 +20,53 @@ export const AuthSyncDiagnostic: React.FC = () => {
   const [testResult, setTestResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     // Monitor Firebase auth state
     const setupAuth = async () => {
       try {
         const authInstance = await auth;
         if (authInstance) {
           const unsubscribe = onAuthStateChanged(authInstance, (user) => {
-        if (user) {
-          setAuthState((prev) => ({
-            ...prev,
-            isLoggedIn: true,
-            user: {
-              uid: user.uid,
-              email: user.email,
-              displayName: user.displayName,
-            },
-            authMethod: "firebase",
-          }));
-        } else {
-          // Check if mock auth has a user
-          const mockUser = localStorage.getItem("mock-current-user");
-          if (mockUser) {
-            setAuthState((prev) => ({
-              ...prev,
-              isLoggedIn: true,
-              user: JSON.parse(mockUser),
-              authMethod: "mock",
-            }));
-          } else {
-            setAuthState((prev) => ({
-              ...prev,
-              isLoggedIn: false,
-              user: null,
-              authMethod: "none",
-            }));
-          }
-        }
-      });
+            if (user) {
+              setAuthState((prev) => ({
+                ...prev,
+                isLoggedIn: true,
+                user: {
+                  uid: user.uid,
+                  email: user.email,
+                  displayName: user.displayName,
+                },
+                authMethod: "firebase",
+              }));
+            } else {
+              // Check if mock auth has a user
+              const mockUser = localStorage.getItem("mock-current-user");
+              if (mockUser) {
+                setAuthState((prev) => ({
+                  ...prev,
+                  isLoggedIn: true,
+                  user: JSON.parse(mockUser),
+                  authMethod: "mock",
+                }));
+              } else {
+                setAuthState((prev) => ({
+                  ...prev,
+                  isLoggedIn: false,
+                  user: null,
+                  authMethod: "none",
+                }));
+              }
+            }
+          });
 
-      return () => unsubscribe();
-    }
+          return () => unsubscribe();
+        }
+      } catch (error) {
+        console.error("Error setting up auth:", error);
+      }
+    };
+
+    setupAuth();
   }, []);
 
   const testAuth = async () => {
@@ -166,7 +172,7 @@ Utilizador atual:
 
       <div className="mb-4 p-4 bg-gray-100 rounded-md">
         <h4 className="font-semibold mb-2">Estado Atual:</h4>
-        <p>Autenticado: {authState.isLoggedIn ? "✅ Sim" : "❌ Não"}</p>
+        <p>Autenticado: {authState.isLoggedIn ? "✅ Sim" : "�� Não"}</p>
         <p>Método: {authState.authMethod}</p>
         {authState.user && (
           <div className="mt-2">
