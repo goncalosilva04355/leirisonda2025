@@ -20,10 +20,13 @@ export const AuthSyncDiagnostic: React.FC = () => {
   const [testResult, setTestResult] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+    useEffect(() => {
     // Monitor Firebase auth state
-    if (auth) {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const setupAuth = async () => {
+      try {
+        const authInstance = await auth;
+        if (authInstance) {
+          const unsubscribe = onAuthStateChanged(authInstance, (user) => {
         if (user) {
           setAuthState((prev) => ({
             ...prev,
@@ -146,7 +149,7 @@ Utilizador atual:
     : ""
 }
 
-📋 Verificações necessárias no Firebase Console:
+��� Verificações necessárias no Firebase Console:
 1. Authentication > Sign-in method > Email/Password deve estar ativado
 2. Authentication > Users deve mostrar o utilizador criado
 3. Firestore Database deve estar configurado
