@@ -1,25 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
 import "./index.css";
 
-console.log("🚀 Leirisonda - Inicializando aplicação principal diretamente...");
+console.log("🚀 Leirisonda - Inicializando aplicação...");
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Create root and render App directly
 const root = ReactDOM.createRoot(rootElement);
 
-try {
-  root.render(<App />);
-  console.log("✅ App principal renderizada com sucesso");
-} catch (error) {
-  console.error("❌ Erro ao renderizar App principal:", error);
-
-  // Fallback simples apenas se houver erro crítico
+// Função para renderizar fallback
+function renderFallback(error?: any) {
   root.render(
     <div
       style={{
@@ -36,14 +29,16 @@ try {
     >
       <div>
         <h1 style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>
-          🔧 Leirisonda
+          🚀 Leirisonda
         </h1>
         <p style={{ fontSize: "1.125rem", marginBottom: "2rem" }}>
           Sistema de Gestão de Piscinas
         </p>
-        <p style={{ marginBottom: "2rem", fontSize: "0.9rem" }}>
-          Erro: {error?.message || "Erro desconhecido"}
-        </p>
+        {error && (
+          <p style={{ marginBottom: "2rem", fontSize: "0.9rem" }}>
+            Erro: {error?.message || "Erro desconhecido"}
+          </p>
+        )}
         <button
           onClick={() => window.location.reload()}
           style={{
@@ -62,3 +57,18 @@ try {
     </div>,
   );
 }
+
+// Tentar carregar App dinamicamente
+async function loadApp() {
+  try {
+    const { default: App } = await import("./App");
+    root.render(<App />);
+    console.log("✅ App principal renderizada com sucesso");
+  } catch (error) {
+    console.error("❌ Erro ao carregar App:", error);
+    renderFallback(error);
+  }
+}
+
+// Inicializar app
+loadApp();
