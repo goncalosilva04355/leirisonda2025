@@ -229,7 +229,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
               name: updatedUser.name,
               email: updatedUser.email,
               role: updatedUser.role,
-              permissions: updatedUser.permissions,
+              permissions: updatedUser.permissions || {},
             }
           : user,
       );
@@ -823,7 +823,8 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                           }
                                           onChange={(e) => {
                                             const permissions = {
-                                              ...editingUser.permissions,
+                                              ...(editingUser.permissions ||
+                                                {}),
                                             };
                                             if (!permissions[key])
                                               permissions[key] = {};
@@ -831,7 +832,7 @@ export const UnifiedAdminPageSimple: React.FC<UnifiedAdminPageProps> = ({
                                               e.target.checked;
                                             setEditingUser({
                                               ...editingUser,
-                                              permissions,
+                                              permissions: permissions,
                                             });
                                           }}
                                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
