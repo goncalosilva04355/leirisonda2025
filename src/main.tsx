@@ -66,6 +66,7 @@ function renderFallback(error?: any) {
 
 // Import App e AppWrapper
 import App from "./App";
+import AppMinimal from "./AppMinimal";
 import AppWrapper from "./AppWrapper";
 
 // Renderizar app
