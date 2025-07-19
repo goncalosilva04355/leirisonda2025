@@ -74,7 +74,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         console.log("📭 No saved credentials found");
       }
     } catch (error) {
-      console.error("❌ Error in LoginPage useEffect:", error);
+      console.error("��� Error in LoginPage useEffect:", error);
     }
   }, [onLogin]);
 
@@ -174,7 +174,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
         <div className="text-center mb-8">
           <div className="bg-white rounded-lg shadow-lg p-4 mx-auto border border-gray-200 max-w-sm">
             <img
-              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+              src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F6be78283c66547fb9e1cffc759adffce?format=webp&width=800"
               alt="Leirisonda - Furos e Captações de Água, Lda"
               className="w-full h-auto object-contain"
               style={{ maxHeight: "80px" }}
