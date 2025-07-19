@@ -36,11 +36,11 @@ if (isBuilderIO()) {
     }
   };
 
-  // Desabilitar alguns listeners de eventos que podem causar refresh
+  // Reduce event listener interference - only filter high-frequency events
   const originalAddEventListener = window.addEventListener;
   window.addEventListener = (event, handler, options) => {
-    // Filtrar eventos que podem causar refresh desnecessário
-    if (["resize", "scroll", "mousemove", "touchmove"].includes(event)) {
+    // Only filter very high-frequency events that can cause performance issues
+    if (["mousemove", "touchmove"].includes(event)) {
       return;
     }
     return originalAddEventListener.call(window, event, handler, options);
