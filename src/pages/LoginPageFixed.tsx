@@ -252,6 +252,25 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
+
+            {/* Dicas de login para desenvolvimento */}
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+              <h4 className="text-sm font-medium text-blue-800 mb-2">
+                Utilizadores de teste:
+              </h4>
+              <div className="text-xs text-blue-600 space-y-1">
+                <div>
+                  📧 <strong>gongonsilva@gmail.com</strong> | 🔑 qualquer
+                  password (3+ caracteres)
+                </div>
+                <div>
+                  📧 <strong>admin@leirisonda.com</strong> | 🔑 admin123
+                </div>
+                <div>
+                  📧 <strong>teste@leirisonda.com</strong> | 🔑 teste123
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </div>
