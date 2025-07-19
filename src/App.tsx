@@ -375,7 +375,7 @@ function App() {
 
   // App render tracking cleaned up
 
-  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN ESTAR CARREGADO
+  // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ AP��S LOGIN ESTAR CARREGADO
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
   const [loginPageLoaded, setLoginPageLoaded] = useState(true); // Inicia como true para mostrar login imediatamente
 
@@ -4698,7 +4698,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ? "Agendado"
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
-                                    : "Conclu✅do"}
+                                    : "Conclu���do"}
                               </span>
                             </div>
                             <p className="text-gray-600 mb-1">{maint.type}</p>
@@ -5227,7 +5227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }}
                                 className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                               >
-                                🔄 Recarregar Utilizadores
+                                �� Recarregar Utilizadores
                               </button>
                             </div>
                           )}
@@ -11919,7 +11919,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�������vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
@@ -12434,13 +12434,19 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
           {showAdminLogin && !isAdminAuthenticated && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white rounded-lg max-w-md w-full mx-4">
-                <AdminLogin
-                  onLogin={() => {
-                    setIsAdminAuthenticated(true);
-                    setShowAdminLogin(false);
-                  }}
-                  onBack={() => setShowAdminLogin(false)}
-                />
+                <React.Suspense
+                  fallback={
+                    <div className="p-4 text-center">Carregando...</div>
+                  }
+                >
+                  <AdminLogin
+                    onLogin={() => {
+                      setIsAdminAuthenticated(true);
+                      setShowAdminLogin(false);
+                    }}
+                    onBack={() => setShowAdminLogin(false)}
+                  />
+                </React.Suspense>
               </div>
             </div>
           )}
