@@ -61,7 +61,17 @@ export default defineConfig({
     },
     watch: {
       // Reduzir watch sensitivity
-      ignored: ["**/node_modules/**", "**/dist/**"],
+      ignored: [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/test-*.html",
+        "**/debug-*.html",
+        "**/webhook-*.html",
+        "**/leirisonda-pwa-nova/**",
+        "**/pwa-nova/**",
+        "**/public/test-*.html",
+        "**/public/debug-*.html",
+      ],
       usePolling: false,
     },
   },
