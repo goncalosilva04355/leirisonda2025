@@ -166,7 +166,7 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODUÇÃO
+import "./utils/firestoreRestApi"; // ATIVADO - usando REST API conforme configurado
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
@@ -1100,7 +1100,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("���� Loading users from localStorage...");
+      console.log("������ Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
