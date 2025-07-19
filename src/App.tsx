@@ -294,7 +294,7 @@ console.error = (...args) => {
 // import "./utils/authDiagnostic";
 
 // Indicador de status da aplicação
-// import AppStatusIndicator from "./components/AppStatusIndicator";
+import AppStatusIndicator from "./components/AppStatusIndicator";
 import RenderTracker from "./components/RenderTracker";
 
 // DESENVOLVIMENTO = PRODUÇÃO - utilizador admin real
@@ -2571,7 +2571,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT�����RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -10001,7 +10001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec��ficas do Furo
+                          Observaç��es Espec����ficas do Furo
                         </label>
                         <textarea
                           rows={3}
