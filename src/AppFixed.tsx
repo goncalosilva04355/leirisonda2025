@@ -467,10 +467,13 @@ const App: React.FC = () => {
         )}
       </header>
 
-      {/* Conteúdo Principal com Dashboard Original da Leirisonda */}
+      {/* Conteúdo Principal - DASHBOARD ORIGINAL EXATO DO APP.TSX */}
       {currentPage === "home" && (
         <div className="min-h-screen bg-gray-50">
-          {/* Dashboard Content - ORIGINAL LEIRISONDA RESTAURADO */}
+          {/* Pull-to-refresh indicator */}
+          <RefreshIndicator isRefreshing={refreshing} />
+
+          {/* Dashboard Content - Mobile First Design */}
           <div className="px-4 py-4 space-y-4">
             {/* Welcome Header Original */}
             <div
