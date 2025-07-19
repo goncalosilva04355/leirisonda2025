@@ -439,7 +439,7 @@ function App() {
       console.log("✅ Firebase Mobile SALTADO!");
     } catch (error) {
       console.warn(
-        "⚠️ Firebase Mobile falhou, continuando em modo local:",
+        "��️ Firebase Mobile falhou, continuando em modo local:",
         error,
       );
       setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
@@ -756,7 +756,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("���SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -825,12 +825,10 @@ function App() {
       );
     };
   }, []);
-  // DADOS OFFLINE-FIRST - Sistema local com sync em background
+    // DADOS OFFLINE-FIRST - Sistema local com sync em background
   // Substituindo universalSync por dados offline-first
   const obras: any[] = JSON.parse(localStorage.getItem("obras") || "[]");
-  const manutencoes: any[] = JSON.parse(
-    localStorage.getItem("manutencoes") || "[]",
-  );
+  const manutencoes: any[] = JSON.parse(localStorage.getItem("manutencoes") || "[]");
   const piscinas: any[] = JSON.parse(localStorage.getItem("piscinas") || "[]");
   const clientes: any[] = JSON.parse(localStorage.getItem("clientes") || "[]");
   const syncLoading = false;
@@ -3660,8 +3658,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        dataSync.updateWork(work.id, {
-                                          status: "in_progress",
+                                                                                // dataSync.updateWork(work.id, { status: "in_progress",
                                         });
                                         showNotification(
                                           "Obra Iniciada",
@@ -5670,7 +5667,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <textarea
                             rows={3}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Observaç���es sobre a obra..."
+                            placeholder="Observaç��es sobre a obra..."
                           />
                         </div>
 
@@ -8387,7 +8384,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <strong>{works.length}</strong> obras registadas
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
-                        <li>��� Orçamentos e custos</li>
+                        <li>• Orçamentos e custos</li>
                         <li>• Prazos e cronogramas</li>
                         <li>📞 Equipas responsáveis</li>
                         <li>€ Estados de progresso</li>
@@ -11251,7 +11248,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("�� Login attempt for:", email);
+            // console.log("��� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
