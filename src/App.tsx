@@ -349,7 +349,7 @@ const showNotification = (
 
 function App() {
   const renderTime = Date.now();
-  console.log("🚀 App component rendering at:", renderTime);
+  console.log("��� App component rendering at:", renderTime);
 
   // WebKit error prevention wrapper
   const safeExecute = useCallback((fn: () => void, errorContext: string) => {
@@ -701,8 +701,8 @@ function App() {
       // Force refresh works
       window.dispatchEvent(new CustomEvent("forceRefreshWorks"));
 
-      // Universal sync
-      await universalSync.forceSyncAll?.();
+      // Universal sync - desabilitado (SDK)
+      // await universalSync.forceSyncAll?.();
 
       console.log("�� Dashboard atualizado com sucesso!");
     } catch (error) {
