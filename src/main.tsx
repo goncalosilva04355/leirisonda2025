@@ -4,6 +4,9 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Chunk load error handler - must be imported early
+import "./utils/chunkLoadErrorHandler";
+
 // Error boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 
