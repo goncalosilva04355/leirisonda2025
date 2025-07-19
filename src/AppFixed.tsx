@@ -470,11 +470,9 @@ const App: React.FC = () => {
       {/* Conteúdo Principal */}
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         {currentPage === "home" && (
-          <div className="px-4 py-6 sm:px-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Dashboard</h1>
-
-            {/* Cards de Resumo */}
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+          <div className="min-h-screen bg-gray-50">
+            {/* Dashboard Content - Mobile First Design - ORIGINAL LEIRISONDA */}
+            <div className="px-4 py-4 space-y-4">
               <div className="bg-white overflow-hidden shadow rounded-lg">
                 <div className="p-5">
                   <div className="flex items-center">
