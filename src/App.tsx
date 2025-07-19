@@ -133,8 +133,13 @@ import { autoSyncService } from "./services/autoSyncService";
 
 // SECURITY: RegisterForm for super admin only
 import { RegisterForm } from "./components/RegisterForm";
-import { AdminLogin } from "./admin/AdminLogin";
-import { AdminPage } from "./admin/AdminPage";
+// Lazy load admin components to reduce initial bundle
+const AdminLogin = React.lazy(() =>
+  import("./admin/AdminLogin").then((m) => ({ default: m.AdminLogin })),
+);
+const AdminPage = React.lazy(() =>
+  import("./admin/AdminPage").then((m) => ({ default: m.AdminPage })),
+);
 import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
@@ -1507,7 +1512,7 @@ function App() {
     }
 
     const syncAllData = async () => {
-      // Aguardar um pouco para o Firestore estar pronto APÓS LOGIN
+      // Aguardar um pouco para o Firestore estar pronto AP��S LOGIN
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (isFirestoreReady()) {
@@ -7268,7 +7273,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat��������rios do Sistema
+                            Relat���������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
@@ -8130,7 +8135,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat���rio de Obras
+                                    Relat��rio de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
@@ -8364,7 +8369,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>������� Hist✅rico de serviços</li>
+                        <li>������ Hist✅rico de serviços</li>
                         <li>����� Informações contratuais</li>
                       </ul>
                     </div>
