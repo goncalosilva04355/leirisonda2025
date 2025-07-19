@@ -135,8 +135,8 @@ const getFirebaseFirestore = () => {
   return null;
 };
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
-// import { firestoreService } from "./services/firestoreService"; // SDK
-import { firestoreService } from "./services/firestoreDataServiceRest"; // REST API
+// import { firestoreService } from "./services/firestoreService"; // SDK desabilitado
+// import { firestoreServiceRest as firestoreService } from "./services/firestoreDataServiceRest"; // REST API
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -612,7 +612,7 @@ function App() {
         hasConflictingProjects ||
         hasQuotaIssues
       ) {
-        console.log("����� Firebase conflict detected on mobile device");
+        console.log("��� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -1587,7 +1587,7 @@ function App() {
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
-        console.log("��� Dados serão salvos apenas no localStorage");
+        console.log("�� Dados serão salvos apenas no localStorage");
       }
     };
 
@@ -7264,7 +7264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura��������ões
+                        Configura������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -11061,7 +11061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>�������</span>
-                  <span>Dados da intervenção</span>
+                  <span>Dados da interven��ão</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✅</span>
@@ -12059,7 +12059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observaç���es Específicas do Furo
+                                Observaç��es Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
