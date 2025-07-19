@@ -10,8 +10,21 @@ import ErrorBoundary from "./components/ErrorBoundary";
 // Main app
 import App from "./App";
 
-// Global error handler
+// Enhanced global error handler for production stability
 window.addEventListener("error", (event) => {
+  // Handle webkit masked URL errors specifically
+  if (event.filename && event.filename.includes("webkit-masked-url")) {
+    console.warn("⚠️ WebKit masked URL error handled:", {
+      message: event.message,
+      lineno: event.lineno,
+      colno: event.colno,
+      timestamp: new Date().toISOString(),
+    });
+    event.preventDefault();
+    return;
+  }
+
+  // Handle other global errors
   console.error("❌ Global error:", event.error);
 });
 
@@ -20,10 +33,11 @@ window.addEventListener("unhandledrejection", (event) => {
   if (
     event.reason &&
     (event.reason.toString().includes("firebase") ||
-      event.reason.toString().includes("messaging"))
+      event.reason.toString().includes("messaging") ||
+      event.reason.toString().includes("webkit-masked-url"))
   ) {
     console.warn(
-      "⚠️ Firebase messaging error handled gracefully:",
+      "⚠️ Firebase/WebKit error handled gracefully:",
       event.reason.message || event.reason,
     );
     event.preventDefault();
