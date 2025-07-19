@@ -168,7 +168,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
   );
 
   return (
-    <div className="min-h-screen bg-blue-200 flex items-center justify-center">
+    <div className="min-h-screen bg-blue-600 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         {/* Logo Leirisonda */}
         <div className="text-center mb-8">
@@ -248,7 +248,7 @@ export const LoginPageFixed: React.FC<LoginPageProps> = ({
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-300 text-white py-2 px-4 rounded-md hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? "A entrar..." : "Entrar"}
             </button>
