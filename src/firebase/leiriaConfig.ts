@@ -108,6 +108,38 @@ function initializeLeiria(): boolean {
   }
 }
 
+// Test Firestore connection for ReadableStream issues
+async function testFirestoreConnection() {
+  if (!db) return;
+
+  try {
+    // Simple connection test without reading streams
+    const { doc, getDoc } = await import("firebase/firestore");
+    const testDocRef = doc(db, "test", "connection");
+
+    // Use timeout to prevent hanging on ReadableStream issues
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Connection timeout")), 10000);
+    });
+
+    await Promise.race([getDoc(testDocRef), timeoutPromise]);
+
+    console.log("✅ Firestore connection test successful");
+  } catch (error) {
+    console.warn("⚠️ Firestore connection test failed:", error);
+
+    // If ReadableStream error, mark as offline mode
+    if (
+      error.message?.includes("ReadableStream") ||
+      error.message?.includes("getReader") ||
+      error.message?.includes("initializeReadableStreamDefaultReader")
+    ) {
+      console.log("📱 Switching to offline mode due to ReadableStream issues");
+      (window as any).FIRESTORE_OFFLINE_MODE = true;
+    }
+  }
+}
+
 // Getters públicos
 export function getFirebaseApp(): FirebaseApp | null {
   if (!app && FORCE_FIREBASE_PRODUCTION) initializeLeiria();
