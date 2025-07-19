@@ -7,16 +7,19 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   VITE_IS_NETLIFY = "true"
 
-# Redirects para SPA - excluir assets
-[[redirects]]
-  from = "/assets/*"
-  to = "/assets/:splat"
-  status = 200
-
+# Redirects para SPA - excluir assets e ficheiros estáticos
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Role = ["admin"]}
+
+# Catch-all para SPA (mas não para assets)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
 
 # Headers específicos
 [[headers]]
