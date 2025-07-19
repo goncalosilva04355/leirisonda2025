@@ -4,6 +4,9 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// ReadableStream polyfill - must be imported first for Firebase compatibility
+import "./utils/readableStreamPolyfill";
+
 // Builder.io optimizations - must be imported first
 import "./utils/builderioOptimizations";
 
