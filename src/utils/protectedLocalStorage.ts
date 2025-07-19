@@ -39,15 +39,26 @@ export class ProtectedLocalStorage {
   }
 
   static removeItem(key: string): void {
-    // Se é uma chave crítica, fazer backup antes de remover
-    if (CRITICAL_KEYS.includes(key)) {
-      console.log(`🔒 Backup automático antes de remover: ${key}`);
-      DataProtectionService.autoBackupBeforeOperation(`remove_${key}`);
+    // Verificar se já estamos numa operação de removeItem para evitar recursão
+    if ((window as any).__protectedStorageInProgress) {
+      return originalLocalStorage.removeItem(key);
     }
 
-    // Remover usando método original
-    originalLocalStorage.removeItem(key);
-    console.log(`🗑️ Dados removidos: ${key}`);
+    try {
+      (window as any).__protectedStorageInProgress = true;
+
+      // Se é uma chave crítica, fazer backup antes de remover
+      if (CRITICAL_KEYS.includes(key)) {
+        console.log(`🔒 Backup automático antes de remover: ${key}`);
+        DataProtectionService.autoBackupBeforeOperation(`remove_${key}`);
+      }
+
+      // Remover usando método original
+      originalLocalStorage.removeItem(key);
+      console.log(`🗑️ Dados removidos: ${key}`);
+    } finally {
+      (window as any).__protectedStorageInProgress = false;
+    }
   }
 
   static clear(): void {
