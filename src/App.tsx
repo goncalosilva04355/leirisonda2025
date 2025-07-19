@@ -431,7 +431,7 @@ function App() {
   // Firebase só inicia depois do utilizador fazer login - TEMPORARIAMENTE DESATIVADO
   const initMobileFirebaseAfterLogin = async () => {
     try {
-      console.log("🔥 Firebase Mobile DESATIVADO para debugging");
+      console.log("��� Firebase Mobile DESATIVADO para debugging");
       // await initializeFirebaseMobile();
       setMobileFirebaseReady(true);
       console.log("✅ Firebase Mobile SALTADO!");
@@ -688,8 +688,8 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  const universalSync = useUniversalDataSync();
-  const dataSync = useDataSyncSimple();
+  // const universalSync = useUniversalDataSync(); // SDK desabilitado
+  // const dataSync = useDataSyncSimple(); // SDK desabilitado
 
   // Função de refresh para Pull-to-Refresh
   const handleDashboardRefresh = useCallback(async (): Promise<void> => {
@@ -1488,7 +1488,7 @@ function App() {
   /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("��� Passo 3: Iniciando teste completo do Firestore...");
+      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -2670,7 +2670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         generateCompletePDF();
         break;
       default:
-        console.warn("Tipo de relat��rio não reconhecido:", type);
+        console.warn("Tipo de relatório não reconhecido:", type);
     }
   };
 
@@ -4215,7 +4215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </p>
                                   <p className="text-gray-400 text-xs mt-1">
                                     Tente pesquisar por cliente, obra, piscina,
-                                    data ou técnico
+                                    data ou t��cnico
                                   </p>
                                 </div>
                               )}
@@ -4449,7 +4449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manuten���ão</span>
+                      <span>Nova Manuten��ão</span>
                     </button>
                   </div>
                 </div>
