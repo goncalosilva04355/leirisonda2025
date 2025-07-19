@@ -399,7 +399,7 @@ function App() {
         <div>
           <h1>🔧 Leirisonda</h1>
           <p>A aplicação está a carregar...</p>
-          <p>Se este problema persistir, recarregue a página.</p>
+          <p>Se este problema persistir, recarregue a p��gina.</p>
           <button
             onClick={() => window.location.reload()}
             style={{
@@ -439,7 +439,7 @@ function App() {
       console.log("✅ Firebase Mobile SALTADO!");
     } catch (error) {
       console.warn(
-        "��️ Firebase Mobile falhou, continuando em modo local:",
+        "⚠️ Firebase Mobile falhou, continuando em modo local:",
         error,
       );
       setMobileFirebaseReady(true); // Permitir que app continue mesmo sem Firebase
@@ -756,7 +756,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL ATIVA - Disabled to prevent infinite re-renders
   // useEffect(() => {
-  //   console.log("���SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
+  //   console.log("€SINCRONIZAÇÃO UNIVERSAL ATIVA:", {
   //     obras: universalSync.obras.length,
   //     manutencoes: universalSync.manutencoes.length,
   //     piscinas: universalSync.piscinas.length,
@@ -849,7 +849,22 @@ function App() {
   const deleteManutencao = () => {};
   const deletePiscina = () => {};
   const deleteCliente = () => {};
-  const forceSyncAll = () => {};
+    const forceSyncAll = () => {};
+
+  // DataSync offline para compatibilidade
+  const dataSync = {
+    updateWork: () => {},
+    deletePool: () => {},
+    deleteMaintenance: () => {},
+    addClient: () => {},
+    deleteClient: () => {},
+    updatePool: () => {},
+    updateMaintenance: () => {},
+    pools: piscinas,
+    maintenances: manutencoes,
+    clients: clientes,
+    works: obras
+  };
 
   // Debug: Check for duplicate keys in data
   useEffect(() => {
@@ -1630,7 +1645,7 @@ function App() {
               setAutoSyncActive(true);
               console.log("�� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
-              console.error("��� Erro na segunda tentativa:", retryError);
+              console.error("���� Erro na segunda tentativa:", retryError);
             }
           }, 5000);
         }
@@ -8422,7 +8437,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
                         <li>������ Hist✅rico de serviços</li>
-                        <li>����� Informações contratuais</li>
+                        <li>������� Informações contratuais</li>
                       </ul>
                     </div>
                     <button
@@ -11248,7 +11263,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
             password: string,
             rememberMe: boolean = false,
           ) => {
-            // console.log("��� Login attempt for:", email);
+            // console.log("�� Login attempt for:", email);
 
             // Clear any previous errors
             setLoginError("");
