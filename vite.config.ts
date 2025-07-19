@@ -14,7 +14,7 @@ export default defineConfig({
     outDir: "dist",
     chunkSizeWarningLimit: 2000,
     sourcemap: "inline", // Inline sourcemap para melhor debug
-    minify: "terser", // Usar terser para minificação mais robusta
+    minify: "esbuild", // Usar esbuild para compatibilidade webkit
     target: "es2020", // Target mais específico
     rollupOptions: {
       output: {
