@@ -295,7 +295,7 @@ console.error = (...args) => {
 
 // Indicador de status da aplicação
 // import AppStatusIndicator from "./components/AppStatusIndicator";
-// import RenderTracker from "./components/RenderTracker";
+import RenderTracker from "./components/RenderTracker";
 
 // DESENVOLVIMENTO = PRODUÇÃO - utilizador admin real
 const initialUsers = [
@@ -5129,7 +5129,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               safeLocalStorage.getItem("app-users");
                             console.log(
-                              "🎉 USERS NO LOCALSTORAGE (app-users):",
+                              "�� USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
