@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leirisonda - Debug Produção</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 2rem;
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+      }
+      .debug-panel {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .status {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+        border-radius: 4px;
+      }
+      .ok {
+        background: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+      button {
+        background: #0891b2;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0.5rem;
+      }
+      pre {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="debug-panel">
+      <h1>🔧 Leirisonda - Debug Produção</h1>
+
+      <h2>Status da Aplicação</h2>
+      <div id="status-container">
+        <div class="status" id="loading-status">⏳ Verificando...</div>
+      </div>
+
+      <h2>Verificações</h2>
+      <button onclick="runChecks()">Executar Verificações</button>
+      <button onclick="checkMainApp()">Testar App Principal</button>
+      <button onclick="clearCache()">Limpar Cache</button>
+
+      <h2>Logs</h2>
+      <pre id="logs"></pre>
+
+      <h2>Informações do Sistema</h2>
+      <pre id="system-info"></pre>
+    </div>
+
+    <script>
+      const logs = [];
+
+      function log(message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const logMessage = `[${timestamp}] ${message}`;
+        logs.push(logMessage);
+        document.getElementById("logs").textContent = logs.join("\n");
+        console.log(logMessage);
+      }
+
+      function updateStatus(id, message, type = "ok") {
+        const element =
+          document.getElementById(id) || document.createElement("div");
+        element.className = `status ${type}`;
+        element.textContent = message;
+        element.id = id;
+        document.getElementById("status-container").appendChild(element);
+      }
+
+      function runChecks() {
+        log("Iniciando verificações...");
+
+        // Verificar ambiente
+        const isProduction = window.location.hostname !== "localhost";
+        log(`Ambiente: ${isProduction ? "Produção" : "Desenvolvimento"}`);
+        updateStatus(
+          "env-status",
+          `Ambiente: ${isProduction ? "Produção" : "Desenvolvimento"}`,
+          isProduction ? "ok" : "warning",
+        );
+
+        // Verificar recursos
+        const hasCSS = document.styleSheets.length > 0;
+        log(`CSS carregado: ${hasCSS}`);
+        updateStatus(
+          "css-status",
+          `CSS: ${hasCSS ? "OK" : "ERRO"}`,
+          hasCSS ? "ok" : "error",
+        );
+
+        // Verificar erros no console
+        let hasErrors = false;
+        const originalError = console.error;
+        console.error = (...args) => {
+          hasErrors = true;
+          log(`ERRO: ${args.join(" ")}`);
+          return originalError.apply(console, args);
+        };
+
+        setTimeout(() => {
+          updateStatus(
+            "errors-status",
+            `Erros: ${hasErrors ? "Detectados" : "Nenhum"}`,
+            hasErrors ? "error" : "ok",
+          );
+        }, 1000);
+
+        // Verificar conexão de rede
+        fetch("/")
+          .then(() => {
+            log("Conexão de rede: OK");
+            updateStatus("network-status", "Rede: OK", "ok");
+          })
+          .catch((error) => {
+            log(`Erro de rede: ${error.message}`);
+            updateStatus("network-status", "Rede: ERRO", "error");
+          });
+      }
+
+      function checkMainApp() {
+        log("Tentando carregar aplicação principal...");
+
+        fetch("/")
+          .then((response) => response.text())
+          .then((html) => {
+            const hasMainScript =
+              html.includes("src/main.tsx") || html.includes("main.");
+            log(`Script principal encontrado: ${hasMainScript}`);
+            updateStatus(
+              "main-app-status",
+              `App Principal: ${hasMainScript ? "Encontrado" : "Não encontrado"}`,
+              hasMainScript ? "ok" : "error",
+            );
+          })
+          .catch((error) => {
+            log(`Erro ao verificar app principal: ${error.message}`);
+            updateStatus("main-app-status", "App Principal: ERRO", "error");
+          });
+      }
+
+      function clearCache() {
+        log("Limpando cache...");
+
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            registrations.forEach((registration) => {
+              registration.unregister();
+              log("Service worker removido");
+            });
+          });
+        }
+
+        if ("caches" in window) {
+          caches.keys().then((names) => {
+            names.forEach((name) => {
+              caches.delete(name);
+              log(`Cache removido: ${name}`);
+            });
+          });
+        }
+
+        localStorage.clear();
+        sessionStorage.clear();
+        log("Storage limpo");
+
+        updateStatus("cache-status", "Cache limpo", "ok");
+      }
+
+      // Carregar informações do sistema
+      function loadSystemInfo() {
+        const info = {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          cookieEnabled: navigator.cookieEnabled,
+          onLine: navigator.onLine,
+          url: window.location.href,
+          referrer: document.referrer,
+          timestamp: new Date().toISOString(),
+        };
+
+        document.getElementById("system-info").textContent = JSON.stringify(
+          info,
+          null,
+          2,
+        );
+      }
+
+      // Executar verificações iniciais
+      window.addEventListener("load", () => {
+        log("Página de debug carregada");
+        loadSystemInfo();
+        runChecks();
+      });
+    </script>
+  </body>
+</html>
