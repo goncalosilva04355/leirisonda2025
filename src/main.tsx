@@ -7,6 +7,9 @@ console.log("🚀 Inicializando aplicação...");
 // Builder.io optimizations - must be imported first
 import "./utils/builderioOptimizations";
 
+// Firestore error handler - must be imported early
+import "./utils/firestoreErrorHandler";
+
 // Chunk load error handler - must be imported early
 import "./utils/chunkLoadErrorHandler";
 
