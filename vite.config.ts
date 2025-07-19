@@ -5,77 +5,19 @@ export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
-  optimizeDeps: {
-    include: ["react", "react-dom", "lucide-react"],
-  },
-  base: "/", // Corrigir para produção Netlify
+  base: "/",
   define: {
     global: "globalThis",
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
-  },
-  resolve: {
-    alias: {
-      react: "react",
-      "react-dom": "react-dom",
-    },
   },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 2000,
     sourcemap: false,
     minify: "esbuild",
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          // React e dependências principais - manter juntas
-          if (
-            id.includes("node_modules/react") ||
-            id.includes("node_modules/react-dom") ||
-            id.includes("node_modules/react-dom/client")
-          ) {
-            return "react-vendor";
-          }
-
-          // UI components
-          if (id.includes("lucide-react") || id.includes("framer-motion")) {
-            return "ui-vendor";
-          }
-          // PDF generation
-          if (id.includes("jspdf") || id.includes("html2canvas")) {
-            return "pdf-vendor";
-          }
-          // Separar arquivos da aplicação dos vendor
-          if (id.includes("node_modules")) {
-            return "vendor";
-          }
-        },
-      },
-    },
   },
   server: {
     port: 5173,
     host: true,
-    hmr: {
-      // Reduzir freqüência de HMR para evitar refreshes no Builder.io
-      overlay: false, // Desativar overlay de erros
-    },
-    watch: {
-      // Reduzir watch sensitivity
-      ignored: [
-        "**/node_modules/**",
-        "**/dist/**",
-        "**/test-*.html",
-        "**/debug-*.html",
-        "**/webhook-*.html",
-        "**/leirisonda-pwa-nova/**",
-        "**/pwa-nova/**",
-        "**/public/test-*.html",
-        "**/public/debug-*.html",
-      ],
-      usePolling: false,
-    },
-  },
-  css: {
-    postcss: "./postcss.config.cjs",
   },
 });
