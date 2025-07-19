@@ -431,7 +431,7 @@ function App() {
   // Firebase só inicia depois do utilizador fazer login - TEMPORARIAMENTE DESATIVADO
   const initMobileFirebaseAfterLogin = async () => {
     try {
-      console.log("��� Firebase Mobile DESATIVADO para debugging");
+      console.log("🔥 Firebase Mobile DESATIVADO para debugging");
       // await initializeFirebaseMobile();
       setMobileFirebaseReady(true);
       console.log("✅ Firebase Mobile SALTADO!");
@@ -1662,7 +1662,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1870,7 +1870,7 @@ function App() {
         // Initialize push notification service
         setTimeout(async () => {
           try {
-            await pushNotificationService.startNotificationService();
+            // await pushNotificationService.startNotificationService(); // SDK desabilitado
 
             // Save device token for current user if authenticated
             if (currentUser?.id || currentUser?.email) {
@@ -4215,7 +4215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   </p>
                                   <p className="text-gray-400 text-xs mt-1">
                                     Tente pesquisar por cliente, obra, piscina,
-                                    data ou t��cnico
+                                    data ou técnico
                                   </p>
                                 </div>
                               )}
