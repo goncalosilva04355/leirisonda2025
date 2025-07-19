@@ -118,6 +118,22 @@ import { syncManager } from "./utils/syncManager";
 //   isFirestoreReady,
 //   getFirebaseFirestore,
 // } from "./firebase/leiriaConfig";
+
+// Funções de compatibilidade para REST API
+const isFirestoreReady = () => {
+  // REST API está sempre "pronto" - não precisa de inicialização SDK
+  return true;
+};
+
+const isFirebaseReady = () => {
+  // REST API está sempre "pronto" - não precisa de inicialização SDK
+  return true;
+};
+
+const getFirebaseFirestore = () => {
+  // REST API não usa instância de Firestore, retorna null para compatibilidade
+  return null;
+};
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
@@ -529,7 +545,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("������ Persistência reparada automaticamente");
+        //     console.log("����� Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -1616,7 +1632,7 @@ function App() {
         }
       } else {
         console.log(
-          "���� Firestore n��o disponível, tentando novamente em 10 segundos...",
+          "���� Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -2268,7 +2284,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est��������� ativo após login
+        // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -7223,7 +7239,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Interven��ão</span>
+                        <span>Guardar Intervenção</span>
                       </button>
                     </div>
                   </form>
@@ -7414,7 +7430,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>����️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
-                                <li>• Clientes e localizações</li>
+                                <li>• Clientes e localizaç��es</li>
                               </ul>
                             </div>
                             <button
@@ -7664,7 +7680,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç�����es do Sistema
+                              Informaç����es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
@@ -11951,7 +11967,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            🚰 Detalhes do Furo de Água
+                            ��� Detalhes do Furo de Água
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
