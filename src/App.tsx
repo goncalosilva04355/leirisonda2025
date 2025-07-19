@@ -373,12 +373,7 @@ function App() {
     );
   }
 
-  // Debug: Check if App is being rendered multiple times with same timestamp
-  if ((window as any).lastAppRenderTime === renderTime) {
-    console.error("🚨 DUPLICATE APP RENDER DETECTED!", renderTime);
-    console.trace("Stack trace for duplicate render:");
-  }
-  (window as any).lastAppRenderTime = renderTime;
+  // App render tracking cleaned up
 
   // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN ESTAR CARREGADO
   const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
@@ -2036,7 +2031,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manutenção Programada",
+          type: "Manutenç��o Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -7931,7 +7926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN���ÃO: Esta opera✅ão é
+                                        ������� ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
