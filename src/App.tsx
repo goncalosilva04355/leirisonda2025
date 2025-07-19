@@ -136,7 +136,7 @@ const getFirebaseFirestore = () => {
 };
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 // import { firestoreService } from "./services/firestoreService"; // SDK desabilitado
-import { firestoreServiceRest as firestoreService } from "./services/firestoreDataServiceRest"; // REST API
+import { firestoreService } from "./services/firestoreServiceRestAdapter"; // REST API Adapter
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -354,7 +354,7 @@ function App() {
     try {
       return fn();
     } catch (error) {
-      console.warn(`⚠️ Safe execution failed in ${errorContext}:`, error);
+      console.warn(`⚠�� Safe execution failed in ${errorContext}:`, error);
       return null;
     }
   }, []);
@@ -1657,7 +1657,7 @@ function App() {
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
-  // Listeners para atualiza����ões automáticas da UI
+  // Listeners para atualiza��ões automáticas da UI
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
@@ -1724,7 +1724,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç��������es
+    // Adicionar listeners para todas as coleç����������es
     const collections = [
       "obras",
       "piscinas",
@@ -2001,7 +2001,9 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert("Por favor, preencha os campos obrigat€rios (Piscina e T��cnico).");
+      alert(
+        "Por favor, preencha os campos obrigat€rios (Piscina e T����cnico).",
+      );
       return;
     }
 
@@ -3579,7 +3581,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   👤 Cliente:
                                 </span>
                                 <span className="text-sm text-gray-900">
-                                  {work.client || "N��o especificado"}
+                                  {work.client || "N����o especificado"}
                                 </span>
                               </div>
                               {work.contact && (
@@ -6327,7 +6329,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "���� Cliente adicionado com sucesso:",
+                                    "��� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -8989,7 +8991,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic���el)
+                            Pessoa de Contacto (se aplic�����el)
                           </label>
                           <input
                             type="text"
@@ -11193,8 +11195,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura����ções
-                avançadas
+                Insira a palavra-passe para aceder às configura📞ções avançadas
               </p>
             </div>
 
