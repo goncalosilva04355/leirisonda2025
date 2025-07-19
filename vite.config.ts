@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 2000,
-    sourcemap: "inline", // Inline sourcemap para melhor debug
+    sourcemap: false, // Disable sourcemap in production to prevent webkit errors
     minify: "esbuild", // Usar esbuild para compatibilidade webkit
     target: "es2020", // Target mais específico
     rollupOptions: {
@@ -43,7 +43,7 @@ export default defineConfig({
       },
       // Evitar warnings e erros em produção
       onwarn(warning, warn) {
-        // Ignorar warnings específicos que podem causar problemas webkit
+        // Ignorar warnings espec��ficos que podem causar problemas webkit
         if (warning.code === "THIS_IS_UNDEFINED") return;
         if (warning.code === "EVAL") return;
         warn(warning);
