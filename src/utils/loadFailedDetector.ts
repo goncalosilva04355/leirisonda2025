@@ -32,6 +32,25 @@ window.addEventListener("error", (event) => {
       stack: event.error?.stack,
     });
   }
+
+  // Catch Firebase ReadableStream errors
+  if (
+    event.message &&
+    (event.message.includes("ReadableStream") ||
+      event.message.includes("getReader") ||
+      event.message.includes("initializeReadableStreamDefaultReader"))
+  ) {
+    console.error("🔥 FIREBASE READABLESTREAM ERROR:", {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      stack: event.error?.stack,
+    });
+
+    showLoadFailedNotification(
+      "Erro de conectividade Firebase - Modo offline ativo",
+    );
+  }
 });
 
 // Capturar erros de Promise rejeitadas (módulos ES6)
