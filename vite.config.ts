@@ -5,6 +5,9 @@ export default defineConfig({
   plugins: [react()],
   root: ".",
   publicDir: "public",
+  optimizeDeps: {
+    include: ["react", "react-dom", "lucide-react"],
+  },
   base: "/", // Corrigir para produção Netlify
   define: {
     global: "globalThis",
