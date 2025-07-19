@@ -169,6 +169,18 @@ if (FORCE_FIREBASE_PRODUCTION) {
   initializeLeiria();
 }
 
+// Listen for reinitialize events from error handler
+window.addEventListener("reinitializeFirestore", () => {
+  console.log("🔄 Reinitializing Firestore due to error...");
+  db = null;
+  auth = null;
+  app = null;
+
+  setTimeout(() => {
+    initializeLeiria();
+  }, 1000);
+});
+
 // Exportações
 export { app, db, auth };
 export default { app, db, auth };
