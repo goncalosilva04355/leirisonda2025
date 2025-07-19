@@ -349,7 +349,7 @@ const showNotification = (
 
 function App() {
   const renderTime = Date.now();
-  console.log("��� App component rendering at:", renderTime);
+  console.log("🚀 App component rendering at:", renderTime);
 
   // WebKit error prevention wrapper
   const safeExecute = useCallback((fn: () => void, errorContext: string) => {
@@ -709,7 +709,7 @@ function App() {
       console.error("������ Erro durante refresh do Dashboard:", error);
       throw error; // Re-throw para mostrar feedback visual de erro
     }
-  }, [universalSync]);
+  }, []); // universalSync removido
 
   // Pull-to-refresh hook
   let pullToRefresh = {
@@ -4438,7 +4438,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Manuten✅ões
+                          Manuten✅��es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Histórico de manutenções realizadas
