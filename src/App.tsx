@@ -20,7 +20,7 @@
 // import "./utils/globalErrorHandler";
 // import "./utils/safeFetch";
 // import "./utils/safeFirestoreTestFixed";
-// import "./utils/loadFailedDetector";
+import "./utils/loadFailedDetector";
 
 // TESTES ABRANGENTES FIREBASE/FIRESTORE
 // import "./utils/comprehensiveFirebaseTest";
@@ -8130,7 +8130,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 </div>
                                 <div>
                                   <h3 className="text-lg font-semibold text-gray-900">
-                                    Relat��rio de Obras
+                                    Relat���rio de Obras
                                   </h3>
                                   <p className="text-sm text-gray-600">
                                     Lista de projetos
@@ -8364,7 +8364,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>• Dados de contacto</li>
                         <li>✅ Piscinas associadas</li>
-                        <li>������ Hist✅rico de serviços</li>
+                        <li>������� Hist✅rico de serviços</li>
                         <li>����� Informações contratuais</li>
                       </ul>
                     </div>
