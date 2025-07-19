@@ -7,16 +7,16 @@ console.log("🔍 React verificação:", React);
 console.log("🔍 ReactDOM verificação:", ReactDOM);
 
 // Production safety - prevent crashes
-import "./utils/productionSafety";
+// import "./utils/productionSafety";
 
 // Production diagnostic
-import "./utils/productionDiagnostic";
+// import "./utils/productionDiagnostic";
 
 // CRÍTICO: Fix Firebase em produção
-import "./utils/productionFirebaseFix";
+// import "./utils/productionFirebaseFix";
 
 // Clear any flags that might force simple app
-import "./utils/clearAppFlags";
+// import "./utils/clearAppFlags";
 
 // Adicionar error boundary e tratamento global de erros
 window.addEventListener("error", (event) => {
