@@ -211,10 +211,11 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
   const createLocalStorageObserver = useCallback(() => {
     const originalSetItem = localStorage.setItem.bind(localStorage);
     const originalRemoveItem = localStorage.removeItem.bind(localStorage);
+    const originalGetItem = localStorage.getItem.bind(localStorage);
 
     // Override setItem
     localStorage.setItem = function (key: string, value: string) {
-      const oldValue = localStorage.getItem(key);
+      const oldValue = originalGetItem(key); // Use original getItem to avoid recursion
       originalSetItem(key, value);
 
       if (finalConfig.collections.includes(key) && value !== oldValue) {
@@ -225,7 +226,7 @@ export const useAutoDataSync = (config: Partial<AutoSyncConfig> = {}) => {
 
     // Override removeItem
     localStorage.removeItem = function (key: string) {
-      const hadItem = localStorage.getItem(key) !== null;
+      const hadItem = originalGetItem(key) !== null; // Use original getItem to avoid recursion
       originalRemoveItem(key);
 
       if (finalConfig.collections.includes(key) && hadItem) {

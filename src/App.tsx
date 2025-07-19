@@ -102,15 +102,15 @@ import {
   storageUtils,
 } from "./utils/storageUtils";
 
-// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 // import { fcmService } from "./services/fcmService";
-// import NotificationCenter from "./components/NotificationCenter";
+import NotificationCenter from "./components/NotificationCenter";
 
-// import { syncManager } from "./utils/syncManager";
+import { syncManager } from "./utils/syncManager";
 // import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import {
   isFirebaseReady,
@@ -294,8 +294,8 @@ console.error = (...args) => {
 // import "./utils/authDiagnostic";
 
 // Indicador de status da aplicação
-// import AppStatusIndicator from "./components/AppStatusIndicator";
-// import RenderTracker from "./components/RenderTracker";
+import AppStatusIndicator from "./components/AppStatusIndicator";
+import RenderTracker from "./components/RenderTracker";
 
 // DESENVOLVIMENTO = PRODUÇÃO - utilizador admin real
 const initialUsers = [
@@ -1100,7 +1100,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from localStorage...");
+      console.log("���� Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -1553,7 +1553,7 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log(
-          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+          "🔥 Iniciando sincronizaç��o com Firebase Leiria APÓS LOGIN...",
         );
         console.log("✅ Firebase Leiria pronto para uso");
 
@@ -1592,7 +1592,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
+          console.log("✅ Sincroniza��ão automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2571,7 +2571,7 @@ ${index + 1}. ${client.name}
 
   const generateCompletePDF = () => {
     const content = `
-LEIRISONDA - RELAT���RIO COMPLETO DO SISTEMA
+LEIRISONDA - RELAT�����RIO COMPLETO DO SISTEMA
 Data: ${new Date().toLocaleDateString("pt-PT")}
 
 RESUMO EXECUTIVO:
@@ -3295,7 +3295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras necessitam atenç��o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -4807,7 +4807,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa���ões Básicas */}
+                    {/* Informa���ões B��sicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -5129,7 +5129,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             const localStorageUsers =
                               safeLocalStorage.getItem("app-users");
                             console.log(
-                              "🎉 USERS NO LOCALSTORAGE (app-users):",
+                              "�� USERS NO LOCALSTORAGE (app-users):",
                               localStorageUsers,
                             );
 
@@ -5386,7 +5386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
@@ -7339,7 +7339,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localiza��ão</li>
+                                <li>��� Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
@@ -8334,7 +8334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>��� Técnicos responsáveis</li>
                         <li>������� Datas e dura🔥es</li>
                         <li>• Estados e observa��ões</li>
                       </ul>
@@ -10001,7 +10001,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec��ficas do Furo
+                          Observaç��es Espec����ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -12258,7 +12258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa��ões do Cliente
+                        Informa����es do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
