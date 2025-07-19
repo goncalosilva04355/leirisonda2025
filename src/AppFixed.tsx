@@ -1,4 +1,4 @@
-// Aplicação Leirisonda COMPLETA com correções para produção
+// Aplicação Leirisonda COMPLETA com dashboard original restaurado
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Building2,
@@ -467,174 +467,320 @@ const App: React.FC = () => {
         )}
       </header>
 
-      {/* Conteúdo Principal */}
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {currentPage === "home" && (
-          <div className="min-h-screen bg-gray-50">
-            {/* Dashboard Content - Mobile First Design - ORIGINAL LEIRISONDA */}
-            <div className="px-4 py-4 space-y-4">
-              <div className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Wrench className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          Obras Ativas
-                        </dt>
-                        <dd className="text-lg font-medium text-gray-900">
-                          {obras.length}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
+      {/* Conteúdo Principal com Dashboard Original da Leirisonda */}
+      {currentPage === "home" && (
+        <div className="min-h-screen bg-gray-50">
+          {/* Dashboard Content - ORIGINAL LEIRISONDA RESTAURADO */}
+          <div className="px-4 py-4 space-y-4">
+            {/* Welcome Header Original */}
+            <div
+              className="rounded-lg p-4 shadow-sm relative overflow-hidden"
+              style={{
+                backgroundColor: "#0891b2",
+                backgroundImage:
+                  "url('https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F7d1ac6645d4249ecbd385606606de4a6?format=webp&width=800')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              {/* Overlay para melhor legibilidade do texto */}
+              <div className="absolute inset-0 bg-white bg-opacity-60 rounded-lg"></div>
 
-              <div className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Waves className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          Piscinas
-                        </dt>
-                        <dd className="text-lg font-medium text-gray-900">
-                          {piscinas.length}
-                        </dd>
-                      </dl>
-                    </div>
+              {/* Conteúdo por cima do overlay */}
+              <div className="relative z-10">
+                {/* Logo and Time Row */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="w-32 h-12 bg-white rounded shadow-sm p-2">
+                    <img
+                      src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
+                      alt="Leirisonda - Furos e Captações de Água, Lda"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
+                  <span className="text-sm text-gray-800 font-medium">
+                    {new Date().toLocaleTimeString("pt-PT", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
                 </div>
-              </div>
 
-              <div className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Users className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          Clientes
-                        </dt>
-                        <dd className="text-lg font-medium text-gray-900">
-                          {clientes.length}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white overflow-hidden shadow rounded-lg">
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Database className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          Status
-                        </dt>
-                        <dd className="text-lg font-medium text-green-600">
-                          {syncStatus}
-                        </dd>
-                      </dl>
-                    </div>
-                  </div>
+                {/* Main Content */}
+                <div className="text-center mb-3">
+                  <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                    Olá, {currentUser?.nome || "Gonçalo Fonseca"}
+                  </h1>
+                  <p className="text-gray-800 text-sm font-medium">
+                    {new Date().toLocaleDateString("pt-PT", {
+                      weekday: "long",
+                      day: "2-digit",
+                      month: "long",
+                    })}
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Ações Rápidas */}
-            <div className="bg-white shadow rounded-lg p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4">
-                Ações Rápidas
+            {/* Status Cards Originais */}
+            <div className="space-y-3">
+              {/* Pendentes */}
+              <button
+                onClick={() => setCurrentPage("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Pendentes
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Obras necessitam atenção
+                    </p>
+                  </div>
+                  <div className="text-4xl font-bold text-gray-900">
+                    {
+                      obras.filter(
+                        (w) =>
+                          w.status === "pending" || w.status === "pendente",
+                      ).length
+                    }
+                  </div>
+                </div>
+              </button>
+
+              {/* Em Progresso */}
+              <button
+                onClick={() => setCurrentPage("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Em Progresso
+                    </h3>
+                    <p className="text-sm text-gray-500">Obras em andamento</p>
+                  </div>
+                  <div className="text-4xl font-bold text-gray-900">
+                    {
+                      obras.filter(
+                        (w) =>
+                          w.status === "in_progress" ||
+                          w.status === "em_progresso",
+                      ).length
+                    }
+                  </div>
+                </div>
+              </button>
+
+              {/* Concluídas */}
+              <button
+                onClick={() => setCurrentPage("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Concluídas
+                    </h3>
+                    <p className="text-sm text-gray-500">Obras finalizadas</p>
+                  </div>
+                  <div className="text-4xl font-bold text-gray-900">
+                    {
+                      obras.filter(
+                        (w) =>
+                          w.status === "completed" || w.status === "concluida",
+                      ).length
+                    }
+                  </div>
+                </div>
+              </button>
+
+              {/* Falta de Folhas de Obra */}
+              <button
+                onClick={() => setCurrentPage("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Falta de Folhas de Obra
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Obras necessitam documentação
+                    </p>
+                  </div>
+                  <div className="text-4xl font-bold text-gray-900">
+                    {obras.filter((w) => !w.hasWorkSheet).length}
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            {/* Lista das Obras Atribuídas */}
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Obras Atribuídas
               </h2>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <button
-                  onClick={() => setCurrentPage("obras")}
-                  className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Nova Obra
-                </button>
-                <button
-                  onClick={() => setCurrentPage("piscinas")}
-                  className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Nova Piscina
-                </button>
-                <button
-                  onClick={() => setCurrentPage("clientes")}
-                  className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Novo Cliente
-                </button>
+              {obras.length > 0 ? (
+                <div className="space-y-3">
+                  {obras.slice(0, 3).map((obra, index) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-3"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-medium text-gray-900">
+                          {obra.title || obra.client || `Obra ${index + 1}`}
+                        </h3>
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full ${
+                            obra.status === "completed"
+                              ? "bg-green-100 text-green-800"
+                              : obra.status === "in_progress"
+                                ? "bg-orange-100 text-orange-800"
+                                : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {obra.status === "completed"
+                            ? "Concluída"
+                            : obra.status === "in_progress"
+                              ? "Em Progresso"
+                              : "Pendente"}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500 mb-2">
+                        {obra.address ||
+                          obra.location ||
+                          "Localização não definida"}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600">
+                          Cliente: {obra.client || "Não atribuído"}
+                        </span>
+                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                          Ver Detalhes
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">
+                  Nenhuma obra atribuída encontrada.
+                </p>
+              )}
+            </div>
+
+            {/* Próximas Manutenções */}
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Próximas Manutenções
+              </h2>
+              {manutencoes.length > 0 ? (
+                <div className="space-y-3">
+                  {manutencoes.slice(0, 3).map((manutencao, index) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-3"
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-medium text-gray-900">
+                          {manutencao.type || `Manutenção ${index + 1}`}
+                        </h3>
+                        <span className="text-xs text-gray-500">
+                          {manutencao.scheduledDate
+                            ? new Date(
+                                manutencao.scheduledDate,
+                              ).toLocaleDateString("pt-PT")
+                            : "Data não definida"}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        Piscina: {manutencao.poolName || "Não especificada"}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500 text-center py-4">
+                  Nenhuma manutenção agendada.
+                </p>
+              )}
+            </div>
+
+            {/* Estatísticas Rápidas */}
+            <div className="bg-white rounded-lg shadow-sm p-4">
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Resumo do Sistema
+              </h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-600">
+                    {piscinas.length}
+                  </div>
+                  <div className="text-sm text-gray-500">Piscinas</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
+                    {clientes.length}
+                  </div>
+                  <div className="text-sm text-gray-500">Clientes</div>
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Outras páginas - placeholder */}
-        {currentPage === "obras" && (
-          <div className="px-4 py-6 sm:px-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
-              Gestão de Obras
-            </h1>
-            <div className="bg-white shadow rounded-lg p-6">
-              <p className="text-gray-500">
-                Módulo de obras em desenvolvimento com sistema offline-first.
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Total de obras: {obras.length}
-              </p>
-            </div>
+      {/* Outras páginas */}
+      {currentPage === "obras" && (
+        <div className="px-4 py-6 sm:px-0">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            Gestão de Obras
+          </h1>
+          <div className="bg-white shadow rounded-lg p-6">
+            <p className="text-gray-500">
+              Módulo de obras em desenvolvimento com sistema offline-first.
+            </p>
+            <p className="text-sm text-gray-400 mt-2">
+              Total de obras: {obras.length}
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
-        {currentPage === "piscinas" && (
-          <div className="px-4 py-6 sm:px-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
-              Gestão de Piscinas
-            </h1>
-            <div className="bg-white shadow rounded-lg p-6">
-              <p className="text-gray-500">
-                Módulo de piscinas em desenvolvimento com sistema offline-first.
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Total de piscinas: {piscinas.length}
-              </p>
-            </div>
+      {currentPage === "piscinas" && (
+        <div className="px-4 py-6 sm:px-0">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            Gestão de Piscinas
+          </h1>
+          <div className="bg-white shadow rounded-lg p-6">
+            <p className="text-gray-500">
+              Módulo de piscinas em desenvolvimento com sistema offline-first.
+            </p>
+            <p className="text-sm text-gray-400 mt-2">
+              Total de piscinas: {piscinas.length}
+            </p>
           </div>
-        )}
+        </div>
+      )}
 
-        {currentPage === "clientes" && (
-          <div className="px-4 py-6 sm:px-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
-              Gestão de Clientes
-            </h1>
-            <div className="bg-white shadow rounded-lg p-6">
-              <p className="text-gray-500">
-                Módulo de clientes em desenvolvimento com sistema offline-first.
-              </p>
-              <p className="text-sm text-gray-400 mt-2">
-                Total de clientes: {clientes.length}
-              </p>
-            </div>
+      {currentPage === "clientes" && (
+        <div className="px-4 py-6 sm:px-0">
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">
+            Gestão de Clientes
+          </h1>
+          <div className="bg-white shadow rounded-lg p-6">
+            <p className="text-gray-500">
+              Módulo de clientes em desenvolvimento com sistema offline-first.
+            </p>
+            <p className="text-sm text-gray-400 mt-2">
+              Total de clientes: {clientes.length}
+            </p>
           </div>
-        )}
-      </main>
+        </div>
+      )}
 
       {/* Notificações */}
       {notification.isVisible && (
