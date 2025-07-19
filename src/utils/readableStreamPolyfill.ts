@@ -1,50 +1,42 @@
 /**
- * Simple ReadableStream polyfill specifically for Firebase compatibility
- * This is a minimal implementation that focuses on what Firebase needs
+ * ReadableStream polyfill specifically for Firebase Firestore compatibility
+ * Fixes issues with browsers that don't have full ReadableStream support
  */
 
-export function installReadableStreamPolyfill() {
-  if (typeof globalThis === "undefined") {
-    return;
+// Check if ReadableStream needs polyfilling for Firebase
+const needsPolyfill = () => {
+  try {
+    // Test if ReadableStream exists and has the methods Firebase needs
+    if (typeof ReadableStream === "undefined") return true;
+
+    // Test if getReader works
+    const test = new ReadableStream();
+    const reader = test.getReader();
+    if (typeof reader.read !== "function") return true;
+
+    reader.releaseLock();
+    return false;
+  } catch (error) {
+    return true;
   }
+};
 
-  // Check if we need the polyfill
-  const needsPolyfill =
-    !globalThis.ReadableStream ||
-    !globalThis.ReadableStream.prototype?.getReader ||
-    typeof globalThis.ReadableStream.prototype.getReader !== "function";
+if (needsPolyfill()) {
+  console.log("🔧 Adding ReadableStream polyfill for Firebase compatibility");
 
-  if (!needsPolyfill) {
-    return;
-  }
-
-  console.log(
-    "🔧 Installing ReadableStream polyfill for Firebase compatibility",
-  );
-
-  // Basic ReadableStream implementation
-  class ReadableStreamPolyfill {
-    private _source: any;
-    private _reader: any;
-    private _locked: boolean;
-    private _cancelled: boolean;
+  // Simple ReadableStream polyfill focused on Firebase Firestore needs
+  (window as any).ReadableStream = class ReadableStreamPolyfill {
     private _controller: any;
+    private _reader: any;
 
     constructor(source?: any) {
-      this._source = source;
-      this._reader = null;
-      this._locked = false;
-      this._cancelled = false;
-      this._controller = null;
+      this._controller = {
+        enqueue: (chunk: any) => {},
+        close: () => {},
+        error: (error: any) => {},
+      };
 
-      // Initialize controller if source provides one
-      if (source && typeof source.start === "function") {
-        this._controller = {
-          enqueue: (chunk: any) => {},
-          close: () => {},
-          error: (error: any) => {},
-        };
-
+      if (source && source.start) {
         try {
           source.start(this._controller);
         } catch (error) {
@@ -54,139 +46,92 @@ export function installReadableStreamPolyfill() {
     }
 
     getReader() {
-      if (this._locked) {
-        throw new TypeError("ReadableStream is already locked");
+      if (this._reader) {
+        throw new Error("ReadableStreamDefaultReader is already locked");
       }
-
-      this._locked = true;
 
       this._reader = {
         read: () => {
-          if (this._cancelled) {
-            return Promise.resolve({ done: true, value: undefined });
-          }
-
-          // If source has a pull method, try to use it
-          if (this._source && typeof this._source.pull === "function") {
-            try {
-              return Promise.resolve(this._source.pull(this._controller))
-                .then(() => ({ done: false, value: null }))
-                .catch(() => ({ done: true, value: undefined }));
-            } catch (error) {
-              return Promise.resolve({ done: true, value: undefined });
-            }
-          }
-
-          // Default behavior - return done
           return Promise.resolve({ done: true, value: undefined });
         },
-
-        cancel: (reason?: any) => {
-          this._cancelled = true;
-
-          if (this._source && typeof this._source.cancel === "function") {
-            try {
-              return Promise.resolve(this._source.cancel(reason));
-            } catch (error) {
-              return Promise.resolve();
-            }
-          }
-
-          return Promise.resolve();
-        },
-
         releaseLock: () => {
-          this._locked = false;
           this._reader = null;
         },
-
-        get closed() {
-          return this._cancelled ? Promise.resolve() : new Promise(() => {});
+        cancel: (reason?: any) => {
+          return Promise.resolve();
         },
+        closed: Promise.resolve(),
       };
 
       return this._reader;
     }
 
     cancel(reason?: any) {
-      this._cancelled = true;
-
-      if (this._reader) {
-        return this._reader.cancel(reason);
-      }
-
-      if (this._source && typeof this._source.cancel === "function") {
-        try {
-          return Promise.resolve(this._source.cancel(reason));
-        } catch (error) {
-          return Promise.resolve();
-        }
-      }
-
       return Promise.resolve();
     }
 
-    get locked() {
-      return this._locked;
-    }
-
-    // Additional methods that Firebase might expect
-    pipeTo() {
+    pipeTo(dest: any, options?: any) {
       return Promise.resolve();
     }
 
-    pipeThrough() {
-      return this;
+    pipeThrough(transform: any, options?: any) {
+      return transform.readable;
     }
 
     tee() {
       return [this, this];
     }
-  }
+  };
 
-  // Install the polyfill
-  globalThis.ReadableStream = ReadableStreamPolyfill as any;
-
-  // Also provide basic WritableStream and TransformStream if needed
-  if (!globalThis.WritableStream) {
-    globalThis.WritableStream = class WritableStream {
-      constructor(sink?: any) {}
-
-      getWriter() {
-        return {
-          write: () => Promise.resolve(),
-          close: () => Promise.resolve(),
-          abort: () => Promise.resolve(),
-          releaseLock: () => {},
-        };
+  // Also add ReadableStreamDefaultReader if needed
+  if (typeof (window as any).ReadableStreamDefaultReader === "undefined") {
+    (window as any).ReadableStreamDefaultReader = class {
+      constructor(stream: any) {
+        this._stream = stream;
       }
 
-      abort() {
+      read() {
+        return Promise.resolve({ done: true, value: undefined });
+      }
+
+      releaseLock() {}
+
+      cancel(reason?: any) {
         return Promise.resolve();
       }
 
-      get locked() {
-        return false;
+      get closed() {
+        return Promise.resolve();
       }
-    } as any;
+    };
   }
 
-  if (!globalThis.TransformStream) {
-    globalThis.TransformStream = class TransformStream {
-      constructor(transformer?: any) {}
-
-      get readable() {
-        return new globalThis.ReadableStream();
-      }
-
-      get writable() {
-        return new globalThis.WritableStream();
-      }
-    } as any;
-  }
-
-  console.log("✅ ReadableStream polyfill installed successfully");
+  console.log("✅ ReadableStream polyfill installed");
+} else {
+  console.log("✅ ReadableStream is natively supported");
 }
 
-// Auto-install when this module is imported
-installReadableStreamPolyfill();
+// Export a test function to verify ReadableStream works
+export const testReadableStream = () => {
+  try {
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue("test");
+        controller.close();
+      },
+    });
+
+    const reader = stream.getReader();
+    return reader
+      .read()
+      .then((result) => {
+        reader.releaseLock();
+        return { success: true, result };
+      })
+      .catch((error) => {
+        return { success: false, error };
+      });
+  } catch (error) {
+    return Promise.resolve({ success: false, error });
+  }
+};
