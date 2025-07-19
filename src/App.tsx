@@ -166,7 +166,7 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODUÇÃO
+// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODU��ÃO
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
@@ -204,22 +204,13 @@ const generateUniqueKey = (baseKey: string): string => {
   return `${baseKey}-${counter}-${Date.now()}`;
 };
 
-// Debug function to detect duplicate keys
+// Debug function to detect duplicate keys - cleaned up
 const checkForDuplicateKeys = (
   array: any[],
   fieldName: string = "id",
 ): void => {
-  if (!Array.isArray(array)) return;
-
-  const keys = array
-    .map((item) => item[fieldName])
-    .filter((key) => key !== undefined);
-  const duplicates = keys.filter((key, index) => keys.indexOf(key) !== index);
-
-  if (duplicates.length > 0) {
-    console.warn(`🚨 Duplicate keys detected in ${fieldName}:`, duplicates);
-    console.warn(`🚨 Full array:`, array);
-  }
+  // Function disabled to prevent console noise
+  return;
 };
 
 // Debug function - cleaned up to prevent console errors
@@ -351,7 +342,7 @@ function App() {
         }}
       >
         <div>
-          <h1>🔧 Leirisonda</h1>
+          <h1>��� Leirisonda</h1>
           <p>A aplicação está a carregar...</p>
           <p>Se este problema persistir, recarregue a página.</p>
           <button
@@ -2031,7 +2022,7 @@ function App() {
         const futureMaintenance = {
           poolId: interventionData.poolId,
           poolName: interventionData.poolName,
-          type: "Manutenç��o Programada",
+          type: "Manutenção Programada",
           scheduledDate: maintenanceForm.nextMaintenance,
           technician: interventionData.technician,
           status: "scheduled" as const,
@@ -2386,7 +2377,7 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    // Manter histórico de navegação simples
+    // Manter histórico de navega��ão simples
     const sectionHistory = {
       "nova-obra": "obras",
       "nova-manutencao": "manutencoes",
@@ -6255,7 +6246,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permiss��o para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -7926,7 +7917,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������� ATEN���ÃO: Esta opera✅ão é
+                                        ������ ATEN���ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8234,7 +8225,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat�����rios
+                          Relat�������rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -9970,7 +9961,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec��ficas do Furo
+                          Observaç����es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
