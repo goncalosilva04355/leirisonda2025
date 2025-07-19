@@ -425,7 +425,7 @@ function App() {
   (window as any).lastAppRenderTime = renderTime;
 
   // INICIALIZAÇÃO FIREBASE MOBILE ROBUSTA - SÓ APÓS LOGIN ESTAR CARREGADO
-  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para não bloquear renderização
+  const [mobileFirebaseReady, setMobileFirebaseReady] = useState(true); // Inicia como true para n��o bloquear renderização
   const [loginPageLoaded, setLoginPageLoaded] = useState(true); // Inicia como true para mostrar login imediatamente
 
   // Firebase só inicia depois do utilizador fazer login - TEMPORARIAMENTE DESATIVADO
@@ -458,7 +458,7 @@ function App() {
   //   refreshStatus,
   // } = useForceFirestore();
 
-  // Substitu��do por REST API - ATIVO EM DESENVOLVIMENTO
+  // Substitu����do por REST API - ATIVO EM DESENVOLVIMENTO
   const firestoreInitialized = true; // REST API sempre pronta
   const firestoreStatus = "REST API ativa (desenvolvimento = produção)";
   const refreshStatus = () => console.log("REST API n��o precisa refresh");
@@ -688,7 +688,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-  // const universalSync = useUniversalDataSync(); // SDK desabilitado
+    // const universalSync = useUniversalDataSync(); // SDK desabilitado
   // const dataSync = useDataSyncSimple(); // SDK desabilitado
 
   // Função de refresh para Pull-to-Refresh
@@ -1536,7 +1536,7 @@ function App() {
               }
             } catch (writeError) {
               console.warn(
-                "���€ Passo 3: Erro nas operaç€es Firestore:",
+                "�����€ Passo 3: Erro nas operaç€es Firestore:",
                 writeError,
               );
               console.log(
@@ -1662,7 +1662,7 @@ function App() {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
       // console.log(
-      //   `����� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
+      //   `���� UI atualizada automaticamente: ${collection} (${data.length} itens)`,
       // );
 
       // Forçar re-render dos dados universais se necessário
@@ -1870,11 +1870,11 @@ function App() {
         // Initialize push notification service
         setTimeout(async () => {
           try {
-            // await pushNotificationService.startNotificationService(); // SDK desabilitado
+                        // // await pushNotificationService.startNotificationService(); // SDK desabilitado
 
             // Save device token for current user if authenticated
             if (currentUser?.id || currentUser?.email) {
-              await pushNotificationService.saveDeviceToken(
+              // await pushNotificationService.saveDeviceToken(
                 String(currentUser.id) || currentUser.email,
               );
             }
@@ -6029,7 +6029,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                 for (const user of workData.assignedUsers) {
-                                  await pushNotificationService.notifyObraAssignment(
+                                  // await pushNotificationService.notifyObraAssignment(
                                     workData,
                                     typeof user === "string" ? user : user.id,
                                   );
@@ -10185,7 +10185,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 newUsers.length > 0 ? editAssignedUsers : [];
 
                               for (const user of usersToNotify) {
-                                await pushNotificationService.notifyObraAssignment(
+                                // await pushNotificationService.notifyObraAssignment(
                                   { ...updateData, id: editingWork.id },
                                   String(user.id),
                                 );
