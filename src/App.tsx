@@ -422,7 +422,7 @@ function App() {
     setTimeout(() => {
       if ((window as any).firestoreRestApi) {
         setRestApiStatus("ativo");
-        console.log("✅ REST API verificado e ativo no desenvolvimento!");
+        // console.log("✅ REST API verificado e ativo no desenvolvimento!");
       } else {
         setRestApiStatus("aguardando");
         console.log("�� REST API ainda não verificado...");
@@ -1840,7 +1840,10 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log("���� Notification clicked, navigating...", event.data);
+            console.log(
+              "����� Notification clicked, navigating...",
+              event.data,
+            );
 
             const { data } = event.data;
 
@@ -2236,7 +2239,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est�������� ativo após login
+        // Garantir que auto sync est���������� ativo após login
         setTimeout(async () => {
           try {
             console.log("���� Verificando auto sync após login...");
@@ -3884,7 +3887,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {work.title}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {work.client} • {work.location}
+                                            {work.client} �� {work.location}
                                           </p>
                                         </div>
                                       </div>
@@ -7035,7 +7038,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -11919,7 +11922,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic�������vel */}
+                      {/* Detalhes do Furo de Água - Se aplic��������vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
