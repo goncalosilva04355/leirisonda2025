@@ -48,14 +48,11 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Lazy load do App principal para evitar problemas de inicialização
-const LazyApp = React.lazy(() =>
-  import("./App").catch((error) => {
-    console.error("❌ Erro ao carregar App principal:", error);
-    // Fallback para versão simplificada se o App principal falhar
-    return import("./AppSimple");
-  }),
+// Usar AppSimple diretamente para evitar erros do App principal
+console.log(
+  "🔄 Carregando AppSimple diretamente devido a erros no App principal",
 );
+const LazyApp = React.lazy(() => import("./AppSimple"));
 
 const AppWithSuspense: React.FC = () => {
   return (
