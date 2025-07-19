@@ -732,10 +732,12 @@ function App() {
     // Sistema funcionar normalmente sem verificações automáticas
   }, []);
 
+  // Clickable links settings - moved up before useEffect
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
+
   // Sincronizar configurações entre componentes
   useEffect(() => {
-    // Verificar modo emergência
-
     const handlePhoneDialerToggle = (event: CustomEvent) => {
       setEnablePhoneDialer(event.detail.enabled);
       safeLocalStorage.setItem(
@@ -3656,7 +3658,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecer��o aqui
+                          As futuras manutenções aparecer����o aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -10237,7 +10239,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç��da piscina"
+                          placeholder="Localizaç����da piscina"
                           required
                         />
                       </div>
