@@ -54,7 +54,11 @@ if (!rootElement) {
 try {
   console.log("🔄 Tentando renderizar aplicação...");
 
-  ReactDOM.createRoot(rootElement).render(<App />);
+  ReactDOM.createRoot(rootElement).render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>,
+  );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
