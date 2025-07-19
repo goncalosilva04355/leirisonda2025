@@ -85,7 +85,7 @@ import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
 // Limpar estados que causam modais indesejados
 // import "./utils/clearModalStates";
 
-// Firebase Quota Recovery - recuperar opera��ões bloqueadas
+// Firebase Quota Recovery - recuperar operações bloqueadas
 // TEMPORARIAMENTE COMENTADO PARA DEBUG
 // import {
 //   autoRecoverOnInit,
@@ -136,7 +136,8 @@ const getFirebaseFirestore = () => {
 };
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 // import { firestoreService } from "./services/firestoreService"; // SDK desabilitado
-import { firestoreService } from "./services/firestoreServiceRestAdapter"; // REST API Adapter
+// import { firestoreService } from "./services/firestoreServiceRestAdapter"; // REST API com problemas fetch
+import { firestoreService } from "./services/firestoreServiceOfflineAdapter"; // OFFLINE-FIRST
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 // import { autoSyncService } from "./services/autoSyncService"; // SDK - desabilitado para REST API
@@ -792,7 +793,7 @@ function App() {
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
-      console.log("��� Phone dialer synchronized:", event.detail.enabled);
+      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
     };
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
@@ -2324,7 +2325,7 @@ function App() {
           }
         }, 500);
       } else {
-        console.warn("❌ Login failed:", result.error);
+        console.warn("�� Login failed:", result.error);
         setLoginError("Login incorreto");
       }
     } catch (error) {
@@ -7015,7 +7016,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom������tico",
+                          "Enchimento autom����tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7355,7 +7356,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>��� Estado e localiza��ão</li>
-                                <li>�� Informações de clientes</li>
+                                <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
                               </ul>
@@ -10074,7 +10075,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Trabalho Realizado
                           const observations = (
                             inputs[10] as HTMLTextAreaElement
-                          ).value; // Observa�����es
+                          ).value; // Observa������es
 
                           // Prepare update data
                           let updateData: any = {
