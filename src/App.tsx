@@ -102,7 +102,7 @@ import {
   storageUtils,
 } from "./utils/storageUtils";
 
-// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
@@ -1100,7 +1100,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("🔄 Loading users from localStorage...");
+      console.log("���� Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -1592,7 +1592,7 @@ function App() {
 
         try {
           await autoSyncService.startAutoSync();
-          console.log("✅ Sincronização automática TOTALMENTE ATIVA!");
+          console.log("✅ Sincroniza��ão automática TOTALMENTE ATIVA!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -3295,7 +3295,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Pendentes
                         </h3>
                         <p className="text-sm text-gray-500">
-                          Obras necessitam atenção
+                          Obras necessitam atenç��o
                         </p>
                       </div>
                       <div className="text-4xl font-bold text-gray-900">
@@ -7339,7 +7339,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 registadas
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
-                                <li>✅ Estado e localiza��ão</li>
+                                <li>��� Estado e localiza��ão</li>
                                 <li>• Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
