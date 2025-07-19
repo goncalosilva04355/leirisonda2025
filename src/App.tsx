@@ -166,7 +166,7 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODU��ÃO
+// import "./utils/firestoreRestApi"; // TEMPORARIAMENTE DESATIVADO PARA PRODUÇÃO
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
@@ -294,7 +294,6 @@ const showNotification = (
 
 function App() {
   const renderTime = Date.now();
-  console.log("🚀 App component rendering at:", renderTime);
 
   // WebKit error prevention wrapper
   const safeExecute = useCallback((fn: () => void, errorContext: string) => {
@@ -342,7 +341,7 @@ function App() {
         }}
       >
         <div>
-          <h1>��� Leirisonda</h1>
+          <h1>🔧 Leirisonda</h1>
           <p>A aplicação está a carregar...</p>
           <p>Se este problema persistir, recarregue a página.</p>
           <button
@@ -2377,7 +2376,7 @@ function App() {
 
   // Fixed back button function
   const handleGoBack = () => {
-    // Manter histórico de navega��ão simples
+    // Manter histórico de navegação simples
     const sectionHistory = {
       "nova-obra": "obras",
       "nova-manutencao": "manutencoes",
@@ -6246,7 +6245,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permiss��o para criar clientes. Contacte o administrador.",
+                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -7300,7 +7299,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>✅ Estado e localiza��ão</li>
-                                <li>• Informações de clientes</li>
+                                <li>• Informaç��es de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
                               </ul>
@@ -8225,7 +8224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat�������rios
+                          Relat�����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -9961,7 +9960,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç����es Espec��ficas do Furo
+                          Observaç��es Espec��ficas do Furo
                         </label>
                         <textarea
                           rows={3}
