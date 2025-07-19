@@ -112,11 +112,12 @@ import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
 // import { clearQuotaProtection } from "./utils/clearQuotaProtection";
-import {
-  isFirebaseReady,
-  isFirestoreReady,
-  getFirebaseFirestore,
-} from "./firebase/leiriaConfig";
+// Firebase SDK desabilitado - usando REST API
+// import {
+//   isFirebaseReady,
+//   isFirestoreReady,
+//   getFirebaseFirestore,
+// } from "./firebase/leiriaConfig";
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreService";
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
@@ -528,7 +529,7 @@ function App() {
 
         //   if (repaired) {
         //     setPersistenceIssueDetected(false);
-        //     console.log("����� Persistência reparada automaticamente");
+        //     console.log("������ Persistência reparada automaticamente");
         //   } else {
         //     console.error(
         //       "⚠️ N��o foi possível reparar a persistência automaticamente",
@@ -1100,7 +1101,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("������ Loading users from localStorage...");
+      console.log("���� Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -1615,7 +1616,7 @@ function App() {
         }
       } else {
         console.log(
-          "���� Firestore não disponível, tentando novamente em 10 segundos...",
+          "���� Firestore n��o disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -2267,7 +2268,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est�������� ativo após login
+        // Garantir que auto sync est��������� ativo após login
         setTimeout(async () => {
           try {
             console.log("��� Verificando auto sync após login...");
@@ -7222,7 +7223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center space-x-2"
                       >
                         <Save className="h-4 w-4" />
-                        <span>Guardar Intervenção</span>
+                        <span>Guardar Interven��ão</span>
                       </button>
                     </div>
                   </form>
@@ -7663,7 +7664,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {/* System Information */}
                           <div className="bg-gray-50 rounded-lg p-6">
                             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                              Informaç����es do Sistema
+                              Informaç�����es do Sistema
                             </h3>
                             <div className="grid gap-3">
                               <div className="flex justify-between py-2 border-b border-gray-100">
