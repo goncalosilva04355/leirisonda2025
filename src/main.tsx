@@ -4,6 +4,9 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
+// Builder.io optimizations - must be imported first
+import "./utils/builderioOptimizations";
+
 // Chunk load error handler - must be imported early
 import "./utils/chunkLoadErrorHandler";
 
