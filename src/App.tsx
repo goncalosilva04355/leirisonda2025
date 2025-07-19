@@ -1627,7 +1627,7 @@ function App() {
               setAutoSyncActive(true);
               console.log("�� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
-              console.error("❌ Erro na segunda tentativa:", retryError);
+              console.error("��� Erro na segunda tentativa:", retryError);
             }
           }, 5000);
         }
@@ -1873,14 +1873,13 @@ function App() {
                         // // await pushNotificationService.startNotificationService(); // SDK desabilitado
 
             // Save device token for current user if authenticated
-            if (currentUser?.id || currentUser?.email) {
-              // await pushNotificationService.saveDeviceToken(
-                String(currentUser.id) || currentUser.email,
-              );
+                        if (currentUser?.id || currentUser?.email) {
+              // await pushNotificationService.saveDeviceToken(String(currentUser.id) || currentUser.email);
+              console.log("📱 Notificações push desabilitadas (SDK)");
             }
           } catch (error) {
             console.warn(
-              "⚠️ Erro ao inicializar serviço de notificações:",
+              "⚠�� Erro ao inicializar serviço de notificações:",
               error,
             );
           }
