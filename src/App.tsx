@@ -135,7 +135,8 @@ const getFirebaseFirestore = () => {
   return null;
 };
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
-import { firestoreService } from "./services/firestoreService";
+// import { firestoreService } from "./services/firestoreService"; // SDK
+import { firestoreService } from "./services/firestoreDataServiceRest"; // REST API
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -611,7 +612,7 @@ function App() {
         hasConflictingProjects ||
         hasQuotaIssues
       ) {
-        console.log("��� Firebase conflict detected on mobile device");
+        console.log("����� Firebase conflict detected on mobile device");
         setTimeout(() => setShowMobileFirebaseFix(true), 2000); // Delay para não interferir com carregamento
       }
     };
@@ -1586,7 +1587,7 @@ function App() {
         }
       } else {
         console.log("📱 Firebase Leiria não disponível - modo offline ativo");
-        console.log("�� Dados serão salvos apenas no localStorage");
+        console.log("��� Dados serão salvos apenas no localStorage");
       }
     };
 
@@ -7263,7 +7264,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura������ões
+                        Configura��������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -7430,7 +7431,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 <li>����️ Estado dos projetos</li>
                                 <li>�� Equipas atribuídas</li>
                                 <li>• Prazos e or��amentos</li>
-                                <li>• Clientes e localizaç��es</li>
+                                <li>• Clientes e localizações</li>
                               </ul>
                             </div>
                             <button
@@ -11967,7 +11968,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
-                            ��� Detalhes do Furo de Água
+                            🚰 Detalhes do Furo de Água
                           </h3>
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
@@ -12058,7 +12059,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           {selectedWork.boreObservations && (
                             <div className="mt-4">
                               <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Observaç��es Específicas do Furo
+                                Observaç���es Específicas do Furo
                               </label>
                               <div className="bg-cyan-50 border border-cyan-200 rounded-lg p-3">
                                 <p className="text-gray-900">
