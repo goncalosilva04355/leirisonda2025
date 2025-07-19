@@ -157,12 +157,12 @@ import AdminSidebar from "./components/AdminSidebar";
 import { LoginPageFixed as LoginPage } from "./pages/LoginPageFixed";
 import UnifiedAdminPageSimple from "./components/UnifiedAdminPageSimple";
 
-import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync";
-import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed";
+// import { useDataSync as useDataSyncSimple } from "./hooks/useDataSync"; // SDK
+// import { useUniversalDataSyncFixed as useUniversalDataSync } from "./hooks/useUniversalDataSyncFixed"; // SDK
 import { authServiceWrapperSafe as authService } from "./services/authServiceWrapperSafe";
 import { UserProfile, robustLoginService } from "./services/robustLoginService";
-import { DataProtectionService } from "./utils/dataProtection";
-import { pushNotificationService } from "./services/pushNotificationService";
+// import { DataProtectionService } from "./utils/dataProtection"; // SDK
+// import { pushNotificationService } from "./services/pushNotificationService"; // SDK
 
 // Desativados durante desenvolvimento para evitar refresh no Builder.io
 // Firebase works silently in background - no diagnostics or UI needed
@@ -1488,7 +1488,7 @@ function App() {
   /*
   useEffect(() => {
     const testFirestoreStep3 = async () => {
-      console.log("🔥 Passo 3: Iniciando teste completo do Firestore...");
+      console.log("��� Passo 3: Iniciando teste completo do Firestore...");
 
       // Aguardar um pouco para Firebase se inicializar
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -2670,7 +2670,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         generateCompletePDF();
         break;
       default:
-        console.warn("Tipo de relatório não reconhecido:", type);
+        console.warn("Tipo de relat��rio não reconhecido:", type);
     }
   };
 
@@ -4449,7 +4449,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center space-x-2"
                     >
                       <Plus className="h-4 w-4" />
-                      <span>Nova Manuten��ão</span>
+                      <span>Nova Manuten���ão</span>
                     </button>
                   </div>
                 </div>
