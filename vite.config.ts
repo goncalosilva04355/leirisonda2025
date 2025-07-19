@@ -12,7 +12,7 @@ export default defineConfig({
   },
   build: {
     outDir: "dist",
-    chunkSizeWarningLimit: 2000,
+    chunkSizeWarningLimit: 1000,
     sourcemap: false, // Disable sourcemap in production to prevent webkit errors
     minify: "esbuild", // Usar esbuild para compatibilidade webkit
     target: "es2020", // Target mais específico
