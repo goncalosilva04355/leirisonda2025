@@ -222,33 +222,7 @@ const checkForDuplicateKeys = (
   }
 };
 
-// Debug: Intercept React warnings about duplicate keys
-const problemTimestamps = [
-  "1752604451507",
-  "1752602368414",
-  "1752578821484",
-  "1752582282132",
-  "1752574634617",
-  "1752517424794",
-  "1752582282133",
-];
-
-const originalConsoleError = console.error;
-console.error = (...args) => {
-  const message = args.join(" ");
-  if (message.includes("same key")) {
-    const foundTimestamp = problemTimestamps.find((ts) => message.includes(ts));
-    if (foundTimestamp) {
-      console.warn(`🚨 FOUND PROBLEM TIMESTAMP: ${foundTimestamp}`);
-      console.warn("🚨 Full message:", message);
-      console.warn("🚨 Stack trace:", new Error().stack);
-
-      // Try to find where this timestamp is coming from
-      console.warn("🚨 Found timestamp in React key error");
-    }
-  }
-  return originalConsoleError.apply(console, args);
-};
+// Debug function - cleaned up to prevent console errors
 // import "./utils/verifyProject"; // VERIFICAR que está usando leiria-1cfc9
 // import "./utils/firebaseStatus"; // STATUS dos serviços Firebase
 // import "./utils/testDataPersistence";
