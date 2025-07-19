@@ -533,7 +533,7 @@ function App() {
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificaç��o
+        // Aguardar um pouco antes de iniciar verificaç���o
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -825,10 +825,12 @@ function App() {
       );
     };
   }, []);
-    // DADOS OFFLINE-FIRST - Sistema local com sync em background
+  // DADOS OFFLINE-FIRST - Sistema local com sync em background
   // Substituindo universalSync por dados offline-first
   const obras: any[] = JSON.parse(localStorage.getItem("obras") || "[]");
-  const manutencoes: any[] = JSON.parse(localStorage.getItem("manutencoes") || "[]");
+  const manutencoes: any[] = JSON.parse(
+    localStorage.getItem("manutencoes") || "[]",
+  );
   const piscinas: any[] = JSON.parse(localStorage.getItem("piscinas") || "[]");
   const clientes: any[] = JSON.parse(localStorage.getItem("clientes") || "[]");
   const syncLoading = false;
@@ -849,7 +851,7 @@ function App() {
   const deleteManutencao = () => {};
   const deletePiscina = () => {};
   const deleteCliente = () => {};
-    const forceSyncAll = () => {};
+  const forceSyncAll = () => {};
 
   // DataSync offline para compatibilidade
   const dataSync = {
@@ -863,7 +865,7 @@ function App() {
     pools: piscinas,
     maintenances: manutencoes,
     clients: clientes,
-    works: obras
+    works: obras,
   };
 
   // Debug: Check for duplicate keys in data
@@ -3673,8 +3675,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                                                                // dataSync.updateWork(work.id, { status: "in_progress",
-                                        });
+                                        // dataSync.updateWork(work.id, { status: "in_progress" });
                                         showNotification(
                                           "Obra Iniciada",
                                           `A obra "${work.client}" foi iniciada`,
@@ -4552,7 +4553,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu🎉do"
+                                      ? "Conclu����do"
                                       : maint.status}
                               </span>
                             </div>
