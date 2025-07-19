@@ -168,7 +168,19 @@ export const readFromFirestoreRest = async (
     }
   } catch (error: any) {
     console.error(`❌ REST API: Erro ao ler ${collection}:`, error?.message);
-    return [];
+
+    // Fallback: ler do localStorage se REST API falhar
+    console.log(`💾 Fallback: Lendo do localStorage...`);
+    try {
+      const localData = JSON.parse(localStorage.getItem(collection) || "[]");
+      console.log(
+        `✅ Fallback: ${collection} lido do localStorage (${localData.length} itens)`,
+      );
+      return localData;
+    } catch (localError) {
+      console.error("❌ Fallback localStorage também falhou:", localError);
+      return [];
+    }
   }
 };
 
