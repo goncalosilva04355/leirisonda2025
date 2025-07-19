@@ -7,14 +7,7 @@
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
   VITE_IS_NETLIFY = "true"
 
-# Redirects para SPA - excluir assets e ficheiros estáticos
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  conditions = {Role = ["admin"]}
-
-# Catch-all para SPA (mas não para assets)
+# Redirects para SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
