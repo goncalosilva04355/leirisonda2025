@@ -10,6 +10,9 @@ import "./utils/productionSafety";
 // Production diagnostic
 import "./utils/productionDiagnostic";
 
+// CRÍTICO: Fix Firebase em produção
+import "./utils/productionFirebaseFix";
+
 // Clear any flags that might force simple app
 import "./utils/clearAppFlags";
 
