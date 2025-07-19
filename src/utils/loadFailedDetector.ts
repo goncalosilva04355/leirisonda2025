@@ -17,6 +17,21 @@ window.addEventListener("error", (event) => {
     // Mostrar notificação visual
     showLoadFailedNotification(event.message);
   }
+
+  // Also catch React rendering errors that might be causing the issue
+  if (
+    event.message &&
+    (event.message.includes("Cannot read") ||
+      event.message.includes("undefined") ||
+      event.message.includes("renderWithHooks"))
+  ) {
+    console.error("🚨 REACT RENDERING ERROR:", {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      stack: event.error?.stack,
+    });
+  }
 });
 
 // Capturar erros de Promise rejeitadas (módulos ES6)
