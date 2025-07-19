@@ -1,184 +1,154 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-export default function AppDiagnostic() {
-  const [error, setError] = useState<string | null>(null);
-  const [step, setStep] = useState<string>("Carregando componentes base...");
-
-  useEffect(() => {
-    const testComponents = async () => {
-      try {
-        setStep("Testando React basics...");
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
-        setStep("Testando imports de ícones...");
-        const { Building2 } = await import("lucide-react");
-
-        setStep("Testando hooks...");
-        const { usePullToRefresh } = await import("./hooks/usePullToRefresh");
-
-        setStep("Testando services...");
-        const { authServiceWrapperSafe } = await import(
-          "./services/authServiceWrapperSafe"
-        );
-
-        setStep("Testando Firebase...");
-        const { isFirebaseReady } = await import("./firebase/leiriaConfig");
-
-        setStep("Testando LoginPageFixed...");
-        const { LoginPageFixed } = await import("./pages/LoginPageFixed");
-
-        setStep("Todos os componentes carregados com sucesso!");
-      } catch (err: any) {
-        console.error("Erro durante teste de componentes:", err);
-        setError(`${step}\nErro: ${err.message}\nStack: ${err.stack}`);
-      }
-    };
-
-    testComponents();
-  }, []);
-
-  if (error) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#fef2f2",
-          fontFamily: "system-ui",
-          padding: "1rem",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: "white",
-            padding: "2rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-            maxWidth: "600px",
-            width: "100%",
-          }}
-        >
-          <h1
-            style={{
-              color: "#dc2626",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              marginBottom: "1rem",
-            }}
-          >
-            Erro Encontrado!
-          </h1>
-          <div
-            style={{
-              backgroundColor: "#fef2f2",
-              border: "1px solid #fecaca",
-              borderRadius: "0.375rem",
-              padding: "1rem",
-              marginBottom: "1rem",
-            }}
-          >
-            <pre
-              style={{
-                color: "#dc2626",
-                fontSize: "0.875rem",
-                whiteSpace: "pre-wrap",
-                fontFamily: "monospace",
-              }}
-            >
-              {error}
-            </pre>
-          </div>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              backgroundColor: "#3b82f6",
-              color: "white",
-              padding: "0.5rem 1rem",
-              border: "none",
-              borderRadius: "0.375rem",
-              cursor: "pointer",
-              marginRight: "0.5rem",
-            }}
-          >
-            Recarregar
-          </button>
-          <button
-            onClick={() => {
-              localStorage.clear();
-              sessionStorage.clear();
-              window.location.reload();
-            }}
-            style={{
-              backgroundColor: "#dc2626",
-              color: "white",
-              padding: "0.5rem 1rem",
-              border: "none",
-              borderRadius: "0.375rem",
-              cursor: "pointer",
-            }}
-          >
-            Limpar Cache
-          </button>
-        </div>
-      </div>
-    );
-  }
+const AppDiagnostic: React.FC = () => {
+  console.log("🧪 AppDiagnostic carregado");
 
   return (
     <div
       style={{
         minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#f3f4f6",
-        fontFamily: "system-ui",
         padding: "1rem",
+        fontFamily: "system-ui",
       }}
     >
       <div
         style={{
-          backgroundColor: "white",
+          background: "white",
           padding: "2rem",
           borderRadius: "0.5rem",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          maxWidth: "600px",
+          width: "100%",
           textAlign: "center",
-          maxWidth: "400px",
         }}
       >
-        <div
-          style={{
-            width: "48px",
-            height: "48px",
-            border: "4px solid #e5e7eb",
-            borderTop: "4px solid #3b82f6",
-            borderRadius: "50%",
-            animation: "spin 1s linear infinite",
-            margin: "0 auto 1rem",
-          }}
-        />
         <h1
           style={{
-            color: "#1f2937",
-            fontSize: "1.5rem",
+            color: "#2563eb",
+            fontSize: "2rem",
             fontWeight: "bold",
             marginBottom: "1rem",
           }}
         >
-          Leirisonda
+          🔍 Leirisonda - Diagnóstico
         </h1>
-        <p style={{ color: "#6b7280", marginBottom: "1rem" }}>{step}</p>
-        <style>
-          {`
-            @keyframes spin {
-              0% { transform: rotate(0deg); }
-              100% { transform: rotate(360deg); }
-            }
-          `}
-        </style>
+
+        <p
+          style={{
+            marginBottom: "1rem",
+            color: "#6b7280",
+            fontSize: "1.1rem",
+          }}
+        >
+          ✅ A aplicação está funcionando!
+        </p>
+
+        <div
+          style={{
+            background: "#f0f9ff",
+            border: "1px solid #bae6fd",
+            borderRadius: "0.375rem",
+            padding: "1rem",
+            marginBottom: "1rem",
+            textAlign: "left",
+          }}
+        >
+          <h3
+            style={{
+              color: "#0369a1",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Status do Sistema:
+          </h3>
+          <ul
+            style={{
+              color: "#0369a1",
+              fontSize: "0.875rem",
+              margin: 0,
+              paddingLeft: "1.5rem",
+            }}
+          >
+            <li>✅ React carregado</li>
+            <li>✅ Vite build funcionando</li>
+            <li>✅ CSS aplicado</li>
+            <li>✅ JavaScript executando</li>
+          </ul>
+        </div>
+
+        <div
+          style={{
+            background: "#fefce8",
+            border: "1px solid #fde047",
+            borderRadius: "0.375rem",
+            padding: "1rem",
+            marginBottom: "1rem",
+            textAlign: "left",
+          }}
+        >
+          <h3
+            style={{
+              color: "#a16207",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            Informações Técnicas:
+          </h3>
+          <div
+            style={{
+              color: "#a16207",
+              fontSize: "0.75rem",
+              fontFamily: "monospace",
+            }}
+          >
+            <p>Timestamp: {new Date().toLocaleString("pt-PT")}</p>
+            <p>User Agent: {navigator.userAgent.substring(0, 50)}...</p>
+            <p>URL: {window.location.href}</p>
+            <p>
+              Ambiente: {import.meta.env.PROD ? "Produção" : "Desenvolvimento"}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => {
+            console.log("🔄 Recarregando aplicação principal...");
+            // Trocar para a aplicação principal
+            window.location.href = window.location.origin;
+          }}
+          style={{
+            background: "#3b82f6",
+            color: "white",
+            padding: "0.75rem 1.5rem",
+            border: "none",
+            borderRadius: "0.375rem",
+            cursor: "pointer",
+            fontSize: "1rem",
+            fontWeight: "bold",
+          }}
+        >
+          🚀 Carregar Aplicação Principal
+        </button>
+
+        <p
+          style={{
+            color: "#9ca3af",
+            fontSize: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          Se esta página aparece, o problema não é com o build ou hosting.
+          <br />O problema está na aplicação principal (App.tsx).
+        </p>
       </div>
     </div>
   );
-}
+};
+
+export default AppDiagnostic;
