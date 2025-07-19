@@ -191,12 +191,13 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import "./utils/enhancedDebugDuplicates"; // Debug melhorado com análise detalhada
 // import "./utils/startupDuplicateCheck"; // Verificação e limpeza automática no startup
 // import "./utils/emergencyCleanup"; // Sistema de emergência para limpeza total
-console.log("🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - mesma aplicação sempre");
-console.log("🌍 Environment:", {
-  prod: import.meta.env.PROD,
-  mode: import.meta.env.MODE,
-  base: import.meta.env.BASE_URL,
-});
+// Builder.io optimization - reduce console logs
+// console.log("🔥 App.tsx: DESENVOLVIMENTO = PRODUÇÃO - mesma aplicação sempre");
+// console.log("🌍 Environment:", {
+//   prod: import.meta.env.PROD,
+//   mode: import.meta.env.MODE,
+//   base: import.meta.env.BASE_URL,
+// });
 
 // Função para gerar IDs únicos e evitar colisões React
 let appIdCounter = 0;
@@ -1840,10 +1841,7 @@ function App() {
         // Listen for messages from service worker (notification clicks)
         navigator.serviceWorker.addEventListener("message", (event) => {
           if (event.data.type === "NOTIFICATION_CLICK") {
-            console.log(
-              "����� Notification clicked, navigating...",
-              event.data,
-            );
+            console.log("���� Notification clicked, navigating...", event.data);
 
             const { data } = event.data;
 
@@ -2239,7 +2237,7 @@ function App() {
           }
         }, 100);
 
-        // Garantir que auto sync est���������� ativo após login
+        // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
             console.log("���� Verificando auto sync após login...");
@@ -3887,7 +3885,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {work.title}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {work.client} �� {work.location}
+                                            {work.client} • {work.location}
                                           </p>
                                         </div>
                                       </div>
@@ -5149,7 +5147,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             </div>
                           )}
 
-                          {/* Botão para recarregar utilizadores quando lista est�� vazia */}
+                          {/* Botão para recarregar utilizadores quando lista est���� vazia */}
                           {users.length === 0 && (
                             <div className="mb-3">
                               <button
@@ -5994,7 +5992,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 }
                               } catch (notificationError) {
                                 console.warn(
-                                  "⚠️ Erro ao enviar notificações:",
+                                  "⚠��� Erro ao enviar notificações:",
                                   notificationError,
                                 );
                                 // Não bloquear a criação da obra por falha de notificação
@@ -7038,7 +7036,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <textarea
                           rows={4}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                          placeholder="Observaç�����es, recomendações, próxima manutenção..."
+                          placeholder="Observaç����es, recomendações, próxima manutenção..."
                           value={maintenanceForm.observations}
                           onChange={(e) =>
                             setMaintenanceForm({
@@ -11873,7 +11871,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
                             <label className="block text-sm font-medium text-gray-700">
-                              Orçamento
+                              Or��amento
                             </label>
                             <p className="text-gray-900">
                               {selectedWork.budget
@@ -11922,7 +11920,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic��������vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�������vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
@@ -12225,7 +12223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             }`}
                             disabled={!enableMapsRedirect}
                           >
-                            🔥�� {selectedPool.location}
+                            ������ {selectedPool.location}
                           </button>
                         </div>
                       </div>
