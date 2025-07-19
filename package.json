@@ -95,7 +95,6 @@
     "@vitejs/plugin-react-swc": "^3.10.2",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
