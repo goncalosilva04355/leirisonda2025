@@ -15,6 +15,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 2000,
     sourcemap: false,
     minify: "esbuild",
+    rollupOptions: {
+      input: {
+        main: "./index.html",
+      },
+    },
   },
   server: {
     port: 5173,
