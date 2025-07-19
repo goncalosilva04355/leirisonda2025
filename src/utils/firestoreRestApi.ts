@@ -113,7 +113,22 @@ export const saveToFirestoreRest = async (
       `❌ REST API: Erro ao guardar ${collection}/${errorDocumentId}:`,
       error?.message,
     );
-    return null;
+
+    // Fallback: salvar no localStorage se REST API falhar
+    console.log(`💾 Fallback: Salvando no localStorage...`);
+    try {
+      const localData = JSON.parse(localStorage.getItem(collection) || "[]");
+      const newItem = { ...data, id: errorDocumentId };
+      localData.push(newItem);
+      localStorage.setItem(collection, JSON.stringify(localData));
+      console.log(
+        `✅ Fallback: ${collection}/${errorDocumentId} salvo no localStorage`,
+      );
+      return errorDocumentId;
+    } catch (localError) {
+      console.error("❌ Fallback localStorage também falhou:", localError);
+      return null;
+    }
   }
 };
 
