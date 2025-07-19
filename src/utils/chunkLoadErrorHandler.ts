@@ -68,6 +68,20 @@ window.addEventListener("error", (event) => {
 // Handle unhandled promise rejections from failed chunks
 window.addEventListener("unhandledrejection", (event) => {
   const error = event.reason;
+
+  // Handle Vite client errors specifically - don't reload for these
+  if (
+    error &&
+    typeof error === "object" &&
+    (error.message?.includes("@vite/client") ||
+      error.stack?.includes("@vite/client"))
+  ) {
+    console.warn("🚨 Vite client error caught and handled:", error);
+    event.preventDefault(); // Prevent default error handling
+    return; // Don't reload for Vite client errors
+  }
+
+  // Handle chunk loading errors
   if (
     error &&
     typeof error === "object" &&
