@@ -688,7 +688,7 @@ function App() {
 
   // SINCRONIZAÇÃO UNIVERSAL - Versão completa funcional
   // Firebase ativo como solicitado - Fixed version
-    // const universalSync = useUniversalDataSync(); // SDK desabilitado
+  // const universalSync = useUniversalDataSync(); // SDK desabilitado
   // const dataSync = useDataSyncSimple(); // SDK desabilitado
 
   // Função de refresh para Pull-to-Refresh
@@ -1870,10 +1870,10 @@ function App() {
         // Initialize push notification service
         setTimeout(async () => {
           try {
-                        // // await pushNotificationService.startNotificationService(); // SDK desabilitado
+            // // await pushNotificationService.startNotificationService(); // SDK desabilitado
 
             // Save device token for current user if authenticated
-                        if (currentUser?.id || currentUser?.email) {
+            if (currentUser?.id || currentUser?.email) {
               // await pushNotificationService.saveDeviceToken(String(currentUser.id) || currentUser.email);
               console.log("📱 Notificações push desabilitadas (SDK)");
             }
@@ -2544,7 +2544,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: ��${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -6028,7 +6028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                 for (const user of workData.assignedUsers) {
-                                                                    // await pushNotificationService.notifyObraAssignment(workData, typeof user === "string" ? user : user.id);
+                                  // await pushNotificationService.notifyObraAssignment(workData, typeof user === "string" ? user : user.id);
                                   console.log(
                                     "📢 Notificação enviada para utilizador:",
                                     typeof user === "string" ? user : user.id,
@@ -7808,7 +7808,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       Estado:{" "}
                                       {enableMapsRedirect
                                         ? "🔥 Ativo"
-                                        : "⭕ Inativo"}
+                                        : "��� Inativo"}
                                     </p>
                                   </div>
                                 </div>
@@ -9379,7 +9379,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Orçamento:
+                                    Or��amento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
@@ -10181,10 +10181,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 newUsers.length > 0 ? editAssignedUsers : [];
 
                               for (const user of usersToNotify) {
-                                // await pushNotificationService.notifyObraAssignment(
-                                  { ...updateData, id: editingWork.id },
-                                  String(user.id),
-                                );
+                                // await pushNotificationService.notifyObraAssignment({ ...updateData, id: editingWork.id }, String(user.id));
                               }
 
                               if (newUsers.length > 0) {
@@ -10194,7 +10191,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                             } catch (error) {
                               console.error(
-                                "❌ Erro ao enviar notificações:",
+                                "❌ Erro ao enviar notifica��ões:",
                                 error,
                               );
                             }
@@ -10431,7 +10428,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalaç��o
+                          ).value; // Data de Instalaç✅o
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
