@@ -2,7 +2,12 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      // Otimizações específicas para Builder.io
+      fastRefresh: false, // Desabilitar fast refresh no Builder.io
+    }),
+  ],
   root: ".",
   publicDir: "public",
   base: "/", // Corrigir para produção Netlify
