@@ -1608,8 +1608,8 @@ function App() {
       if (isFirestoreReady()) {
         console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
-        try {
-          // await autoSyncService.startAutoSync(); // SDK - desabilitado para REST API
+                try {
+          // // await autoSyncService.startAutoSync(); // SDK - desabilitado para REST API
           console.log("✅ Sincronização REST API ativa!");
 
           // Adicionar indicador visual
@@ -1623,9 +1623,9 @@ function App() {
           // Try again if it fails
           setTimeout(async () => {
             try {
-              await autoSyncService.startAutoSync();
+              // await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
-              console.log("��� AutoSync ativado na segunda tentativa!");
+              console.log("�� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
               console.error("❌ Erro na segunda tentativa:", retryError);
             }
@@ -1638,7 +1638,7 @@ function App() {
         setTimeout(async () => {
           if (isFirestoreReady()) {
             try {
-              await autoSyncService.startAutoSync();
+              // await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
               console.log("✅ AutoSync ativado após aguardar Firestore!");
             } catch (error) {
@@ -1652,7 +1652,7 @@ function App() {
     initAutoSync();
 
     // Cleanup quando componente for desmontado
-    return () => {
+        return () => {
       // autoSyncService.stopAutoSync(); // SDK - desabilitado para REST API
     };
   }, [isAuthenticated]); // Só executa quando faz login
@@ -1691,7 +1691,7 @@ function App() {
         if (isFirestoreReady()) {
           // Usar método específico para garantir auto sync após login
           const autoSyncStarted =
-            await autoSyncService.ensureAutoSyncAfterLogin();
+            // await autoSyncService.ensureAutoSyncAfterLogin();
 
           if (autoSyncStarted) {
             setAutoSyncActive(true);
@@ -1706,9 +1706,9 @@ function App() {
             if (isFirestoreReady()) {
               try {
                 const autoSyncStarted =
-                  await autoSyncService.ensureAutoSyncAfterLogin();
+                  // await autoSyncService.ensureAutoSyncAfterLogin();
                 setAutoSyncActive(autoSyncStarted);
-                console.log("✅ Auto sync garantido após aguardar Firestore!");
+                console.log("✅ Auto sync garantido ap��s aguardar Firestore!");
               } catch (error) {
                 console.error(
                   "❌ Erro ao garantir auto sync ap��s aguardar:",
@@ -2104,7 +2104,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -2292,7 +2292,7 @@ function App() {
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
-                await autoSyncService.ensureAutoSyncAfterLogin();
+                // await autoSyncService.ensureAutoSyncAfterLogin();
               setAutoSyncActive(autoSyncStarted);
 
               if (autoSyncStarted) {
@@ -2307,7 +2307,7 @@ function App() {
                 if (isFirestoreReady()) {
                   try {
                     const autoSyncStarted =
-                      await autoSyncService.ensureAutoSyncAfterLogin();
+                      // await autoSyncService.ensureAutoSyncAfterLogin();
                     setAutoSyncActive(autoSyncStarted);
                     console.log(
                       "��� Auto sync garantido após aguardar Firestore!",
@@ -2392,7 +2392,7 @@ function App() {
     );
 
     if (advancedPassword === "19867") {
-      alert("�� Palavra-passe correcta! A abrir configurações...");
+      alert("✅ Palavra-passe correcta! A abrir configurações...");
       setAdvancedPasswordError("");
 
       // Usar timeout para garantir que o estado é atualizado
@@ -4662,7 +4662,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Futuras Manuten����es
+                          Futuras Manuten�����es
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Manutenç€es agendadas e programadas
@@ -8283,7 +8283,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat�������rios
+                          Relat�����rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -10019,7 +10019,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec������ficas do Furo
+                          Observaç��es Espec����ficas do Furo
                         </label>
                         <textarea
                           rows={3}
@@ -11964,7 +11964,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                       </div>
 
-                      {/* Detalhes do Furo de Água - Se aplic�����vel */}
+                      {/* Detalhes do Furo de Água - Se aplic�������vel */}
                       {selectedWork.type === "furo" && (
                         <div className="border-l-4 border-cyan-500 pl-4">
                           <h3 className="text-lg font-semibold text-cyan-700 mb-4">
