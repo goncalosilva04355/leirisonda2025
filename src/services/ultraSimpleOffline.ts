@@ -14,11 +14,15 @@ class UltraSimpleOfflineService {
     try {
       console.log("🔧 Criando obra...");
       const workId = generateServiceId("work");
-      await saveToFirestoreRest("works", workId, {
-        ...workData,
-        id: workId,
-        createdAt: new Date().toISOString(),
-      });
+      await saveToFirestoreRest(
+        "works",
+        {
+          ...workData,
+          id: workId,
+          createdAt: new Date().toISOString(),
+        },
+        workId,
+      );
       const id = workId;
       console.log("✅ Obra criada:", id);
       return id;
@@ -32,11 +36,15 @@ class UltraSimpleOfflineService {
     try {
       console.log("🏊 Criando piscina...");
       const poolId = generateServiceId("pool");
-      await saveToFirestoreRest("pools", poolId, {
-        ...poolData,
-        id: poolId,
-        createdAt: new Date().toISOString(),
-      });
+      await saveToFirestoreRest(
+        "pools",
+        {
+          ...poolData,
+          id: poolId,
+          createdAt: new Date().toISOString(),
+        },
+        poolId,
+      );
       const id = poolId;
       console.log("✅ Piscina criada:", id);
       return id;
@@ -50,11 +58,15 @@ class UltraSimpleOfflineService {
     try {
       console.log("🔧 Criando manutenção...");
       const maintenanceId = generateServiceId("maintenance");
-      await saveToFirestoreRest("maintenance", maintenanceId, {
-        ...maintenanceData,
-        id: maintenanceId,
-        createdAt: new Date().toISOString(),
-      });
+      await saveToFirestoreRest(
+        "maintenance",
+        {
+          ...maintenanceData,
+          id: maintenanceId,
+          createdAt: new Date().toISOString(),
+        },
+        maintenanceId,
+      );
       const id = maintenanceId;
       console.log("✅ Manutenção criada:", id);
       return id;
@@ -68,11 +80,15 @@ class UltraSimpleOfflineService {
     try {
       console.log("👤 Criando cliente...");
       const clientId = generateServiceId("client");
-      await saveToFirestoreRest("clients", clientId, {
-        ...clientData,
-        id: clientId,
-        createdAt: new Date().toISOString(),
-      });
+      await saveToFirestoreRest(
+        "clients",
+        {
+          ...clientData,
+          id: clientId,
+          createdAt: new Date().toISOString(),
+        },
+        clientId,
+      );
       const id = clientId;
       console.log("✅ Cliente criado:", id);
       return id;

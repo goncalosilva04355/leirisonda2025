@@ -72,19 +72,22 @@ const convertFromFirestoreFormat = (firestoreData: any): any => {
 // Função para guardar dados via REST API
 export const saveToFirestoreRest = async (
   collection: string,
-  documentId: string,
   data: any,
-): Promise<boolean> => {
+  documentId?: string,
+): Promise<string | null> => {
   try {
-    console.log(`🌐 REST API: Guardando ${collection}/${documentId}...`);
+    // Generate document ID if not provided
+    const finalDocumentId = documentId || Date.now().toString();
+
+    console.log(`🌐 REST API: Guardando ${collection}/${finalDocumentId}...`);
 
     const firestoreData = convertToFirestoreFormat({
       ...data,
-      id: documentId,
+      id: finalDocumentId,
       updatedAt: new Date().toISOString(),
     });
 
-    const url = `${FIRESTORE_BASE_URL}/${collection}/${documentId}?key=${API_KEY}`;
+    const url = `${FIRESTORE_BASE_URL}/${collection}/${finalDocumentId}?key=${API_KEY}`;
 
     const response = await fetch(url, {
       method: "PATCH",
@@ -96,20 +99,21 @@ export const saveToFirestoreRest = async (
 
     if (response.ok) {
       console.log(
-        `✅ REST API: ${collection}/${documentId} guardado com sucesso`,
+        `✅ REST API: ${collection}/${finalDocumentId} guardado com sucesso`,
       );
-      return true;
+      return finalDocumentId;
     } else {
       const errorText = await response.text();
       console.error(`❌ REST API: Erro ${response.status}:`, errorText);
-      return false;
+      return null;
     }
   } catch (error: any) {
+    const errorDocumentId = documentId || Date.now().toString();
     console.error(
-      `❌ REST API: Erro ao guardar ${collection}/${documentId}:`,
+      `❌ REST API: Erro ao guardar ${collection}/${errorDocumentId}:`,
       error?.message,
     );
-    return false;
+    return null;
   }
 };
 
@@ -198,7 +202,7 @@ const testRestApi = async () => {
       test: true,
     };
 
-    const saved = await saveToFirestoreRest("test", "rest-api-test", testData);
+    const saved = await saveToFirestoreRest("test", testData, "rest-api-test");
 
     if (saved) {
       console.log("✅ REST API: Teste de escrita PASSOU");

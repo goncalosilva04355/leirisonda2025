@@ -379,8 +379,8 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
         console.log("🔥 Salvando obra no Firestore:", obra.id);
         const firestoreSaved = await saveToFirestoreRest(
           "obras",
-          obra.id,
           obra,
+          obra.id,
         );
 
         if (firestoreSaved) {
@@ -450,8 +450,8 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           console.log("🔥 Salvando manutenção no Firestore:", manutencao.id);
           const firestoreSaved = await saveToFirestoreRest(
             "manutencoes",
-            manutencao.id,
             manutencao,
+            manutencao.id,
           );
 
           if (firestoreSaved) {
@@ -513,8 +513,8 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           console.log("🔥 Salvando piscina no Firestore:", piscina.id);
           const firestoreSaved = await saveToFirestoreRest(
             "piscinas",
-            piscina.id,
             piscina,
+            piscina.id,
           );
 
           if (firestoreSaved) {
@@ -576,8 +576,8 @@ export function useUniversalDataSyncFixed(): UniversalSyncState &
           console.log("🔥 Salvando cliente no Firestore:", cliente.id);
           const firestoreSaved = await saveToFirestoreRest(
             "clientes",
-            cliente.id,
             cliente,
+            cliente.id,
           );
 
           if (firestoreSaved) {
