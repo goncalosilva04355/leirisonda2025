@@ -1546,7 +1546,7 @@ function App() {
           }
         } else {
           console.log(
-            "���️ Passo 3: Firestore não disponível, usando localStorage",
+            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
           );
         }
       } catch (error) {
@@ -1625,7 +1625,7 @@ function App() {
             try {
               await autoSyncService.startAutoSync();
               setAutoSyncActive(true);
-              console.log("�� AutoSync ativado na segunda tentativa!");
+              console.log("��� AutoSync ativado na segunda tentativa!");
             } catch (retryError) {
               console.error("❌ Erro na segunda tentativa:", retryError);
             }
@@ -1653,7 +1653,7 @@ function App() {
 
     // Cleanup quando componente for desmontado
     return () => {
-      autoSyncService.stopAutoSync();
+      // autoSyncService.stopAutoSync(); // SDK - desabilitado para REST API
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
@@ -2104,7 +2104,7 @@ function App() {
       const nextDate = new Date(
         maintenanceForm.nextMaintenance,
       ).toLocaleDateString("pt-PT");
-      alertMessage += `\n\nPróxima manutenção agendada para: ${nextDate}`;
+      alertMessage += `\n\nPróxima manutenç��o agendada para: ${nextDate}`;
     }
 
     alert(alertMessage);
@@ -2288,7 +2288,7 @@ function App() {
         // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
-            console.log("��� Verificando auto sync ap��s login...");
+            console.log("��� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -2392,7 +2392,7 @@ function App() {
     );
 
     if (advancedPassword === "19867") {
-      alert("✅ Palavra-passe correcta! A abrir configurações...");
+      alert("�� Palavra-passe correcta! A abrir configurações...");
       setAdvancedPasswordError("");
 
       // Usar timeout para garantir que o estado é atualizado
@@ -6538,7 +6538,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Caracter���sticas especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter✅sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -8283,7 +8283,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <h1 className="text-2xl font-bold text-gray-900">
-                          Relat�����rios
+                          Relat�������rios
                         </h1>
                         <p className="text-gray-600 text-sm">
                           Gere relatórios detalhados em PDF
@@ -10019,7 +10019,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Observaç��es Espec����ficas do Furo
+                          Observaç��es Espec������ficas do Furo
                         </label>
                         <textarea
                           rows={3}
