@@ -1546,7 +1546,7 @@ function App() {
           }
         } else {
           console.log(
-            "⚠️ Passo 3: Firestore não disponível, usando localStorage",
+            "���️ Passo 3: Firestore não disponível, usando localStorage",
           );
         }
       } catch (error) {
@@ -1609,8 +1609,8 @@ function App() {
         console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
         try {
-          await autoSyncService.startAutoSync();
-          console.log("✅ Sincroniza��ão automática TOTALMENTE ATIVA!");
+          // await autoSyncService.startAutoSync(); // SDK - desabilitado para REST API
+          console.log("✅ Sincronização REST API ativa!");
 
           // Adicionar indicador visual
           setAutoSyncActive(true);
@@ -2288,7 +2288,7 @@ function App() {
         // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
-            console.log("��� Verificando auto sync após login...");
+            console.log("��� Verificando auto sync ap��s login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -3681,7 +3681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   ) : null;
                 })()}
 
-                {/* Pr��ximas Manutenções */}
+                {/* Próximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <button
@@ -6538,7 +6538,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <textarea
                         rows={3}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Caracter✅sticas especiais, equipamentos adicionais, notas importantes..."
+                        placeholder="Caracter���sticas especiais, equipamentos adicionais, notas importantes..."
                       />
                     </div>
 
@@ -10013,7 +10013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Selecionar voltagem
                             </option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif������sico)</option>
+                            <option value="400V">400V (trif����sico)</option>
                           </select>
                         </div>
                       </div>
