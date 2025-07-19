@@ -13,8 +13,9 @@ export default defineConfig({
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 2000,
-    sourcemap: true,
-    minify: "esbuild",
+    sourcemap: "inline", // Inline sourcemap para melhor debug
+    minify: "terser", // Usar terser para minificação mais robusta
+    target: "es2020", // Target mais específico
     rollupOptions: {
       output: {
         manualChunks: (id) => {
@@ -39,6 +40,13 @@ export default defineConfig({
             return "vendor";
           }
         },
+      },
+      // Evitar warnings e erros em produção
+      onwarn(warning, warn) {
+        // Ignorar warnings específicos que podem causar problemas webkit
+        if (warning.code === "THIS_IS_UNDEFINED") return;
+        if (warning.code === "EVAL") return;
+        warn(warning);
       },
     },
   },
