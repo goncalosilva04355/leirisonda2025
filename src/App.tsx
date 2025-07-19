@@ -425,7 +425,7 @@ function App() {
         console.log("✅ REST API verificado e ativo no desenvolvimento!");
       } else {
         setRestApiStatus("aguardando");
-        console.log("⏳ REST API ainda não verificado...");
+        console.log("�� REST API ainda não verificado...");
       }
     }, 1000);
   }, []);
@@ -801,27 +801,27 @@ function App() {
     syncStatus,
   } = universalSync;
 
-  // Debug: Check for duplicate keys in data
-  useEffect(() => {
-    console.log("🔍 Verificando dados carregados:", {
-      obras: obras.length,
-      manutencoes: manutencoes.length,
-      piscinas: piscinas.length,
-      clientes: clientes.length,
-    });
+  // Debug: Check for duplicate keys in data - DISABLED to prevent Builder.io refreshes
+  // useEffect(() => {
+  //   console.log("🔍 Verificando dados carregados:", {
+  //     obras: obras.length,
+  //     manutencoes: manutencoes.length,
+  //     piscinas: piscinas.length,
+  //     clientes: clientes.length,
+  //   });
 
-    checkForDuplicateKeys(obras, "id");
-    checkForDuplicateKeys(manutencoes, "id");
-    checkForDuplicateKeys(piscinas, "id");
-    checkForDuplicateKeys(clientes, "id");
+  //   checkForDuplicateKeys(obras, "id");
+  //   checkForDuplicateKeys(manutencoes, "id");
+  //   checkForDuplicateKeys(piscinas, "id");
+  //   checkForDuplicateKeys(clientes, "id");
 
-    // Check for timestamp-based IDs that might be duplicating
-    obras.forEach((obra) => {
-      if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
-        console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
-      }
-    });
-  }, [obras, manutencoes, piscinas, clientes]);
+  //   // Check for timestamp-based IDs that might be duplicating
+  //   obras.forEach((obra) => {
+  //     if (obra.id && obra.id.toString().match(/^\d{13}$/)) {
+  //       console.warn("🚨 Obra com ID timestamp detectada:", obra.id, obra);
+  //     }
+  //   });
+  // }, [obras, manutencoes, piscinas, clientes]);
 
   // Mapear dados universais para compatibilidade com código existente
   const pools = piscinas;
@@ -2231,7 +2231,7 @@ function App() {
             setActiveSection(hash);
           } else {
             // Default to dashboard when no hash is present
-            console.log("������� Navigating to dashboard");
+            console.log("��������� Navigating to dashboard");
             navigateToSection("dashboard");
           }
         }, 100);
@@ -3223,7 +3223,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="w-32 h-12 bg-white rounded shadow-sm p-2">
                         <img
                           src="https://cdn.builder.io/api/v1/image/assets%2Fcc309d103d0b4ade88d90ee94cb2f741%2F9413eeead84d4fecb67b4e817e791c86?format=webp&width=800"
-                          alt="Leirisonda - Furos e Captações de Água, Lda"
+                          alt="Leirisonda - Furos e Captações de ��gua, Lda"
                           className="w-full h-full object-contain"
                         />
                       </div>
@@ -11963,7 +11963,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               <p className="text-gray-900 font-mono">
                                 {selectedWork.pumpDepth
                                   ? `${selectedWork.pumpDepth} m`
-                                  : "Não especificado"}
+                                  : "N��o especificado"}
                               </p>
                             </div>
                             <div>
