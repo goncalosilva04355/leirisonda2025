@@ -27,14 +27,26 @@ export default defineConfig({
             return "react-vendor";
           }
 
+          // Firebase - separate chunk for better caching
+          if (id.includes("firebase") || id.includes("firestore")) {
+            return "firebase-vendor";
+          }
+
           // UI components
           if (id.includes("lucide-react") || id.includes("framer-motion")) {
             return "ui-vendor";
           }
-          // PDF generation
+
+          // PDF generation - lazy load
           if (id.includes("jspdf") || id.includes("html2canvas")) {
             return "pdf-vendor";
           }
+
+          // Large utilities that can be lazy loaded
+          if (id.includes("date-fns") || id.includes("xlsx")) {
+            return "utils-vendor";
+          }
+
           // Separar arquivos da aplicação dos vendor
           if (id.includes("node_modules")) {
             return "vendor";
