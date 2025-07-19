@@ -13,10 +13,10 @@ const CRITICAL_KEYS = [
 
 // Guardar referências originais antes de interceptar
 const originalLocalStorage = {
-  setItem: localStorage.setItem.bind(localStorage),
-  getItem: localStorage.getItem.bind(localStorage),
-  removeItem: localStorage.removeItem.bind(localStorage),
-  clear: localStorage.clear.bind(localStorage),
+  setItem: Storage.prototype.setItem.bind(localStorage),
+  getItem: Storage.prototype.getItem.bind(localStorage),
+  removeItem: Storage.prototype.removeItem.bind(localStorage),
+  clear: Storage.prototype.clear.bind(localStorage),
 };
 
 // Wrapper para localStorage que faz backup automático
