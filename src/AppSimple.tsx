@@ -1,53 +1,141 @@
 import React, { useState } from "react";
-import { Building2, User, LogIn } from "lucide-react";
 
-function AppSimple() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loginForm, setLoginForm] = useState({
-    email: "",
-    password: "",
-  });
-  const [loginError, setLoginError] = useState("");
+const AppSimple: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<"login" | "dashboard">(
+    "login",
+  );
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+
+  console.log("🚀 AppSimple carregado");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🔑 Tentativa de login:", loginForm.email);
 
-    // Simular login simples
-    if (
-      loginForm.email === "gongonsilva@gmail.com" &&
-      loginForm.password === "19867gsf"
-    ) {
-      setIsAuthenticated(true);
-      setLoginError("");
-    } else {
-      setLoginError("Credenciais inválidas");
+    // Login simples para teste
+    if (loginForm.email && loginForm.password) {
+      setCurrentPage("dashboard");
     }
   };
 
-  if (isAuthenticated) {
+  if (currentPage === "dashboard") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-cyan-500 to-blue-600">
-        <div className="container mx-auto px-4 py-8">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-6">
-              <Building2 className="w-8 h-8 text-cyan-600" />
-              <h1 className="text-2xl font-bold text-gray-800">Leirisonda</h1>
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#f3f4f6",
+          padding: "1rem",
+          fontFamily: "system-ui",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "1200px",
+            margin: "0 auto",
+          }}
+        >
+          <header
+            style={{
+              background: "white",
+              padding: "1rem 2rem",
+              borderRadius: "0.5rem",
+              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              marginBottom: "2rem",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <h1
+              style={{
+                color: "#1f2937",
+                fontSize: "1.5rem",
+                fontWeight: "bold",
+                margin: 0,
+              }}
+            >
+              🏊 Leirisonda - Dashboard Simplificado
+            </h1>
+            <button
+              onClick={() => setCurrentPage("login")}
+              style={{
+                background: "#ef4444",
+                color: "white",
+                padding: "0.5rem 1rem",
+                border: "none",
+                borderRadius: "0.25rem",
+                cursor: "pointer",
+              }}
+            >
+              Sair
+            </button>
+          </header>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "1rem",
+            }}
+          >
+            <div
+              style={{
+                background: "white",
+                padding: "1.5rem",
+                borderRadius: "0.5rem",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <h2 style={{ color: "#1f2937", marginBottom: "1rem" }}>
+                ✅ Sistema Funcionando
+              </h2>
+              <p style={{ color: "#6b7280", marginBottom: "1rem" }}>
+                Esta é uma versão simplificada da aplicação Leirisonda, sem
+                Firebase ou outras dependências complexas.
+              </p>
+              <p style={{ color: "#059669", fontSize: "0.875rem" }}>
+                ✅ Se esta página aparece, o problema da página branca não é com
+                React ou Vite.
+              </p>
             </div>
 
-            <div className="text-center py-8">
-              <h2 className="text-xl font-semibold text-gray-700 mb-4">
-                Bem-vindo ao Sistema de Gestão
+            <div
+              style={{
+                background: "white",
+                padding: "1.5rem",
+                borderRadius: "0.5rem",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <h2 style={{ color: "#1f2937", marginBottom: "1rem" }}>
+                🔍 Diagnóstico
               </h2>
-              <p className="text-gray-600 mb-6">
-                A aplicação está a funcionar corretamente em produção.
-              </p>
+              <ul style={{ color: "#6b7280", paddingLeft: "1.5rem" }}>
+                <li>✅ React funcionando</li>
+                <li>✅ Roteamento básico funcionando</li>
+                <li>✅ Estado funcionando</li>
+                <li>✅ Eventos funcionando</li>
+                <li>✅ CSS aplicado</li>
+              </ul>
+            </div>
 
-              <button
-                onClick={() => setIsAuthenticated(false)}
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
-              >
-                Logout
-              </button>
+            <div
+              style={{
+                background: "white",
+                padding: "1.5rem",
+                borderRadius: "0.5rem",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <h2 style={{ color: "#1f2937", marginBottom: "1rem" }}>
+                🛠 Próximos Passos
+              </h2>
+              <ol style={{ color: "#6b7280", paddingLeft: "1.5rem" }}>
+                <li>Verificar erro específico no Firebase</li>
+                <li>Revisar importações problemáticas</li>
+                <li>Simplificar App.tsx principal</li>
+                <li>Teste gradual de componentes</li>
+              </ol>
             </div>
           </div>
         </div>
@@ -56,65 +144,140 @@ function AppSimple() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Building2 className="w-8 h-8 text-cyan-600" />
-          <h1 className="text-2xl font-bold text-gray-800">Leirisonda</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "1rem",
+        fontFamily: "system-ui",
+      }}
+    >
+      <div
+        style={{
+          background: "white",
+          padding: "2rem",
+          borderRadius: "0.5rem",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <h1
+            style={{
+              color: "#1f2937",
+              fontSize: "1.5rem",
+              fontWeight: "bold",
+              marginBottom: "0.5rem",
+            }}
+          >
+            🏊 Leirisonda
+          </h1>
+          <p style={{ color: "#6b7280", fontSize: "0.875rem" }}>
+            Versão Simplificada - Teste de Produção
+          </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form
+          onSubmit={handleLogin}
+          style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+        >
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              style={{
+                display: "block",
+                color: "#374151",
+                fontSize: "0.875rem",
+                fontWeight: "500",
+                marginBottom: "0.25rem",
+              }}
+            >
               Email
             </label>
             <input
               type="email"
               value={loginForm.email}
               onChange={(e) =>
-                setLoginForm({ ...loginForm, email: e.target.value })
+                setLoginForm((prev) => ({ ...prev, email: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              placeholder="email@exemplo.com"
+              placeholder="exemplo@email.com"
               required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                border: "1px solid #d1d5db",
+                borderRadius: "0.25rem",
+                fontSize: "1rem",
+                boxSizing: "border-box",
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
+            <label
+              style={{
+                display: "block",
+                color: "#374151",
+                fontSize: "0.875rem",
+                fontWeight: "500",
+                marginBottom: "0.25rem",
+              }}
+            >
+              Palavra-passe
             </label>
             <input
               type="password"
               value={loginForm.password}
               onChange={(e) =>
-                setLoginForm({ ...loginForm, password: e.target.value })
+                setLoginForm((prev) => ({ ...prev, password: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              placeholder="********"
+              placeholder="Digite sua senha"
               required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                border: "1px solid #d1d5db",
+                borderRadius: "0.25rem",
+                fontSize: "1rem",
+                boxSizing: "border-box",
+              }}
             />
           </div>
 
-          {loginError && (
-            <div className="text-red-600 text-sm text-center">{loginError}</div>
-          )}
-
           <button
             type="submit"
-            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+            style={{
+              width: "100%",
+              background: "#3b82f6",
+              color: "white",
+              padding: "0.75rem",
+              border: "none",
+              borderRadius: "0.25rem",
+              fontSize: "1rem",
+              fontWeight: "500",
+              cursor: "pointer",
+            }}
           >
-            <LogIn className="w-4 h-4" />
             Entrar
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>Teste: gongonsilva@gmail.com / 19867gsf</p>
-        </div>
+        <p
+          style={{
+            color: "#9ca3af",
+            fontSize: "0.75rem",
+            textAlign: "center",
+            marginTop: "1rem",
+          }}
+        >
+          Versão de teste - {new Date().toLocaleString("pt-PT")}
+        </p>
       </div>
     </div>
   );
-}
+};
 
 export default AppSimple;
