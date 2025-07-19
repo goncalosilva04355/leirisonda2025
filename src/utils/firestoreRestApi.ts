@@ -198,7 +198,7 @@ const testRestApi = async () => {
       test: true,
     };
 
-    const saved = await saveToFirestoreRest("test", "rest-api-test", testData);
+    const saved = await saveToFirestoreRest("test", testData, "rest-api-test");
 
     if (saved) {
       console.log("✅ REST API: Teste de escrita PASSOU");
