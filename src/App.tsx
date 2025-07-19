@@ -1608,7 +1608,7 @@ function App() {
       if (isFirestoreReady()) {
         console.log("���� Iniciando sincronização automática APÓS LOGIN...");
 
-                try {
+        try {
           // // await autoSyncService.startAutoSync(); // SDK - desabilitado para REST API
           console.log("✅ Sincronização REST API ativa!");
 
@@ -1652,7 +1652,7 @@ function App() {
     initAutoSync();
 
     // Cleanup quando componente for desmontado
-        return () => {
+    return () => {
       // autoSyncService.stopAutoSync(); // SDK - desabilitado para REST API
     };
   }, [isAuthenticated]); // Só executa quando faz login
@@ -1690,8 +1690,8 @@ function App() {
 
         if (isFirestoreReady()) {
           // Usar método específico para garantir auto sync após login
-          const autoSyncStarted =
-            // await autoSyncService.ensureAutoSyncAfterLogin();
+          // const autoSyncStarted = await autoSyncService.ensureAutoSyncAfterLogin();
+          const autoSyncStarted = true; // REST API sempre ativo
 
           if (autoSyncStarted) {
             setAutoSyncActive(true);
@@ -1707,7 +1707,7 @@ function App() {
               try {
                 const autoSyncStarted =
                   // await autoSyncService.ensureAutoSyncAfterLogin();
-                setAutoSyncActive(autoSyncStarted);
+                  setAutoSyncActive(autoSyncStarted);
                 console.log("✅ Auto sync garantido ap��s aguardar Firestore!");
               } catch (error) {
                 console.error(
@@ -2293,7 +2293,7 @@ function App() {
             if (isFirestoreReady()) {
               const autoSyncStarted =
                 // await autoSyncService.ensureAutoSyncAfterLogin();
-              setAutoSyncActive(autoSyncStarted);
+                setAutoSyncActive(autoSyncStarted);
 
               if (autoSyncStarted) {
                 console.log("�� Auto sync garantido após login!");
@@ -2308,7 +2308,7 @@ function App() {
                   try {
                     const autoSyncStarted =
                       // await autoSyncService.ensureAutoSyncAfterLogin();
-                    setAutoSyncActive(autoSyncStarted);
+                      setAutoSyncActive(autoSyncStarted);
                     console.log(
                       "��� Auto sync garantido após aguardar Firestore!",
                     );
@@ -3995,7 +3995,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                             {pool.name}
                                           </p>
                                           <p className="text-sm text-gray-600">
-                                            {pool.client} €{pool.location}
+                                            {pool.client} ��{pool.location}
                                           </p>
                                         </div>
                                       </div>
@@ -4297,7 +4297,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <option key="all">Todos os estados</option>
                       <option key="active">Ativa</option>
                       <option key="inactive">Inativa</option>
-                      <option key="maintenance">Em Manutenção</option>
+                      <option key="maintenance">Em Manuten��ão</option>
                     </select>
                   </div>
                 </div>
@@ -10286,7 +10286,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç��da piscina"
+                          placeholder="Localizaç����da piscina"
                           required
                         />
                       </div>
