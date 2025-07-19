@@ -10,6 +10,9 @@ export default defineConfig({
     global: "globalThis",
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version || "1.0.0"),
   },
+  optimizeDeps: {
+    include: ["react", "react-dom", "scheduler"],
+  },
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 2000,
