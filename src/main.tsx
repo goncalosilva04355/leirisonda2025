@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
-console.log("🔍 React verificação:", React);
-console.log("🔍 ReactDOM verificação:", ReactDOM);
+// console.log("🔍 React verificação:", React);
+// console.log("🔍 ReactDOM verificação:", ReactDOM);
 
 // Production safety - prevent crashes
 // import "./utils/productionSafety";
