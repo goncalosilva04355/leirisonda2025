@@ -75,6 +75,7 @@ export default defineConfig({
       overlay: false, // Desativar overlay de erros
       port: 5174, // Porta separada para HMR
       timeout: 60000, // Timeout maior para evitar reconexões frequentes
+      clientPort: 5174, // Porta do cliente HMR
     },
     watch: {
       // Reduzir watch sensitivity drasticamente
