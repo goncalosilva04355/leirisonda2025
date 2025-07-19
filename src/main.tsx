@@ -7,8 +7,8 @@ console.log("🚀 Inicializando aplicação...");
 // Error boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 
-// Main app - using simple version for testing
-import App from "./App-simple";
+// Main app
+import App from "./App";
 
 // Enhanced global error handler for production stability
 window.addEventListener("error", (event) => {
