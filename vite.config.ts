@@ -24,10 +24,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // React e dependências principais
+          // React e dependências principais - manter juntas
           if (
             id.includes("node_modules/react") ||
-            id.includes("node_modules/react-dom")
+            id.includes("node_modules/react-dom") ||
+            id.includes("node_modules/react-dom/client")
           ) {
             return "react-vendor";
           }
