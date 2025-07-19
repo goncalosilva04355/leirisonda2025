@@ -68,14 +68,14 @@ function throttle(func: Function, limit: number) {
   };
 }
 
-// Desabilitar hot reload quando em Builder.io
-if (isBuilderIO() && import.meta.hot) {
-  import.meta.hot.dispose(() => {
-    // Cleanup function
-  });
-
-  // Desabilitar auto-reload
-  import.meta.hot.decline();
-}
+// Don't interfere with Vite HMR - this was causing errors
+// if (isBuilderIO() && import.meta.hot) {
+//   import.meta.hot.dispose(() => {
+//     // Cleanup function
+//   });
+//
+//   // Desabilitar auto-reload
+//   import.meta.hot.decline();
+// }
 
 export { isBuilderIO };
