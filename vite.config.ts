@@ -66,13 +66,25 @@ export default defineConfig({
     port: 5173,
     host: true,
     hmr: {
-      // Reduzir freqüência de HMR para evitar refreshes no Builder.io
+      // Configurações específicas para reduzir refreshes no Builder.io
       overlay: false, // Desativar overlay de erros
+      port: 5174, // Porta separada para HMR
+      timeout: 60000, // Timeout maior para evitar reconexões frequentes
     },
     watch: {
-      // Reduzir watch sensitivity
-      ignored: ["**/node_modules/**", "**/dist/**"],
+      // Reduzir watch sensitivity drasticamente
+      ignored: [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/.git/**",
+        "**/coverage/**",
+        "**/temp/**",
+        "**/*.md",
+        "**/*.txt",
+        "**/*.log",
+      ],
       usePolling: false,
+      interval: 1000, // Intervalo maior entre verificações
     },
   },
   css: {
