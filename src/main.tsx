@@ -71,7 +71,9 @@ try {
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
       <AppErrorHandler>
-        <App />
+        <SafeAppWrapper>
+          <App />
+        </SafeAppWrapper>
       </AppErrorHandler>
     </ErrorBoundary>,
   );
