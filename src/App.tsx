@@ -136,7 +136,7 @@ const getFirebaseFirestore = () => {
 };
 import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 // import { firestoreService } from "./services/firestoreService"; // SDK desabilitado
-// import { firestoreServiceRest as firestoreService } from "./services/firestoreDataServiceRest"; // REST API
+import { firestoreServiceRest as firestoreService } from "./services/firestoreDataServiceRest"; // REST API
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
 import { autoSyncService } from "./services/autoSyncService";
@@ -1657,7 +1657,7 @@ function App() {
     };
   }, [isAuthenticated]); // Só executa quando faz login
 
-  // Listeners para atualiza��ões automáticas da UI
+  // Listeners para atualiza����ões automáticas da UI
   useEffect(() => {
     const handleDataUpdate = (event: CustomEvent) => {
       const { data, collection } = event.detail;
@@ -6327,7 +6327,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 try {
                                   dataSync.addClient(newClient);
                                   console.log(
-                                    "��� Cliente adicionado com sucesso:",
+                                    "���� Cliente adicionado com sucesso:",
                                     newClient,
                                   );
                                 } catch (error) {
@@ -11061,7 +11061,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
               <div className="space-y-1 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <span>�������</span>
-                  <span>Dados da interven��ão</span>
+                  <span>Dados da intervenção</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>✅</span>
@@ -11193,7 +11193,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 Área Protegida
               </h1>
               <p className="text-gray-600">
-                Insira a palavra-passe para aceder às configura📞ções avançadas
+                Insira a palavra-passe para aceder às configura����ções
+                avançadas
               </p>
             </div>
 
