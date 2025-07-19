@@ -100,5 +100,5 @@ export class ProtectedLocalStorage {
   }
 }
 
-// Auto-ativar proteção
-ProtectedLocalStorage.interceptLocalStorage();
+// Auto-ativar proteção (DESATIVADO para prevenir recursão)
+// ProtectedLocalStorage.interceptLocalStorage();
