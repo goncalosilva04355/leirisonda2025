@@ -584,11 +584,11 @@ const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Status Cards Originais */}
+            {/* Status Cards - ORIGINAL EXATO */}
             <div className="space-y-3">
               {/* Pendentes */}
               <button
-                onClick={() => setCurrentPage("obras")}
+                onClick={() => navigateToSection("obras")}
                 className="w-full bg-white rounded-lg border-l-4 border-red-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center justify-between">
@@ -601,19 +601,23 @@ const App: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-4xl font-bold text-gray-900">
-                    {
-                      obras.filter(
-                        (w) =>
-                          w.status === "pending" || w.status === "pendente",
-                      ).length
-                    }
+                    {(() => {
+                      // Filtrar obras pendentes atribuídas ao utilizador atual
+                      const pendingWorks = works.filter((w) => {
+                        const isPending =
+                          w.status === "pending" || w.status === "pendente";
+                        const isAssignedToUser = isWorkAssignedToCurrentUser(w);
+                        return isPending && isAssignedToUser;
+                      });
+                      return pendingWorks.length;
+                    })()}
                   </div>
                 </div>
               </button>
 
               {/* Em Progresso */}
               <button
-                onClick={() => setCurrentPage("obras")}
+                onClick={() => navigateToSection("obras")}
                 className="w-full bg-white rounded-lg border-l-4 border-orange-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center justify-between">
@@ -624,20 +628,24 @@ const App: React.FC = () => {
                     <p className="text-sm text-gray-500">Obras em andamento</p>
                   </div>
                   <div className="text-4xl font-bold text-gray-900">
-                    {
-                      obras.filter(
-                        (w) =>
+                    {(() => {
+                      // Filtrar obras em progresso atribuídas ao utilizador atual
+                      const inProgressWorks = works.filter((w) => {
+                        const isInProgress =
                           w.status === "in_progress" ||
-                          w.status === "em_progresso",
-                      ).length
-                    }
+                          w.status === "em_progresso";
+                        const isAssignedToUser = isWorkAssignedToCurrentUser(w);
+                        return isInProgress && isAssignedToUser;
+                      });
+                      return inProgressWorks.length;
+                    })()}
                   </div>
                 </div>
               </button>
 
               {/* Concluídas */}
               <button
-                onClick={() => setCurrentPage("obras")}
+                onClick={() => navigateToSection("obras")}
                 className="w-full bg-white rounded-lg border-l-4 border-green-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center justify-between">
@@ -648,32 +656,89 @@ const App: React.FC = () => {
                     <p className="text-sm text-gray-500">Obras finalizadas</p>
                   </div>
                   <div className="text-4xl font-bold text-gray-900">
-                    {
-                      obras.filter(
-                        (w) =>
-                          w.status === "completed" || w.status === "concluida",
-                      ).length
-                    }
+                    {(() => {
+                      const completedWorks = works.filter((w) => {
+                        const isCompleted =
+                          w.status === "completed" || w.status === "concluida";
+                        const isAssignedToUser =
+                          currentUser &&
+                          ((w.assignedTo &&
+                            (w.assignedTo === currentUser.nome ||
+                              w.assignedTo
+                                .toLowerCase()
+                                .includes(currentUser.nome.toLowerCase()) ||
+                              currentUser.nome
+                                .toLowerCase()
+                                .includes(w.assignedTo.toLowerCase()))) ||
+                            (w.assignedUsers &&
+                              w.assignedUsers.some(
+                                (user) =>
+                                  user.name === currentUser.nome ||
+                                  user.id === currentUser.id,
+                              )) ||
+                            (w.assignedUserIds &&
+                              w.assignedUserIds.includes(currentUser.id)));
+                        return isCompleted && isAssignedToUser;
+                      });
+                      return completedWorks.length;
+                    })()}
                   </div>
                 </div>
               </button>
 
               {/* Falta de Folhas de Obra */}
               <button
-                onClick={() => setCurrentPage("obras")}
-                className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+                onClick={() => navigateToSection("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-blue-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="text-left">
                     <h3 className="text-lg font-semibold text-gray-900">
                       Falta de Folhas de Obra
                     </h3>
-                    <p className="text-sm text-gray-500">
-                      Obras necessitam documentação
-                    </p>
+                    <p className="text-sm text-gray-500">Folhas não geradas</p>
                   </div>
                   <div className="text-4xl font-bold text-gray-900">
-                    {obras.filter((w) => !w.hasWorkSheet).length}
+                    {(() => {
+                      // Filtrar obras sem folha gerada atribuídas ao utilizador atual (excluir concluídas)
+                      const worksWithoutSheets = works.filter((w) => {
+                        const isNotCompleted =
+                          w.status !== "completed" && w.status !== "concluida";
+                        const noSheetGenerated = !w.folhaGerada;
+                        const isAssignedToUser = isWorkAssignedToCurrentUser(w);
+                        return (
+                          isNotCompleted && noSheetGenerated && isAssignedToUser
+                        );
+                      });
+                      return worksWithoutSheets.length;
+                    })()}
+                  </div>
+                </div>
+              </button>
+
+              {/* Obras Atribuídas */}
+              <button
+                onClick={() => navigateToSection("obras")}
+                className="w-full bg-white rounded-lg border-l-4 border-purple-500 p-4 shadow-sm hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="text-left">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Obras Atribuídas
+                    </h3>
+                    <p className="text-sm text-gray-500">Atribuídas a mim</p>
+                  </div>
+                  <div className="text-4xl font-bold text-gray-900">
+                    {(() => {
+                      // Filtrar TODAS as obras atribuídas ao utilizador atual (excluir concluídas)
+                      const assignedWorks = works.filter((w) => {
+                        const isNotCompleted =
+                          w.status !== "completed" && w.status !== "concluida";
+                        const isAssignedToUser = isWorkAssignedToCurrentUser(w);
+                        return isAssignedToUser; // Mostrar apenas obras atribuídas ao utilizador
+                      });
+                      return assignedWorks.length;
+                    })()}
                   </div>
                 </div>
               </button>
