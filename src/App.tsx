@@ -304,7 +304,14 @@ const showNotification = (
 };
 
 function App() {
-  const renderTime = Date.now();
+  // Defensive programming to prevent rendering errors
+  try {
+    // Ensure React hooks are available
+    if (!React || !useState || !useEffect || !useCallback || !useMemo) {
+      throw new Error('React hooks not available');
+    }
+
+    const renderTime = Date.now();
 
   // WebKit error prevention wrapper
   const safeExecute = useCallback((fn: () => void, errorContext: string) => {
