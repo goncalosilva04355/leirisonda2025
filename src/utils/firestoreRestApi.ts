@@ -72,9 +72,9 @@ const convertFromFirestoreFormat = (firestoreData: any): any => {
 // Função para guardar dados via REST API
 export const saveToFirestoreRest = async (
   collection: string,
-  documentId: string,
   data: any,
-): Promise<boolean> => {
+  documentId?: string,
+): Promise<string | null> => {
   try {
     console.log(`🌐 REST API: Guardando ${collection}/${documentId}...`);
 
