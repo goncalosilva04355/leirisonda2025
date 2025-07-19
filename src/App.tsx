@@ -6028,10 +6028,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   );
 
                                 for (const user of workData.assignedUsers) {
-                                  // await pushNotificationService.notifyObraAssignment(
-                                    workData,
-                                    typeof user === "string" ? user : user.id,
-                                  );
+                                                                    // await pushNotificationService.notifyObraAssignment(workData, typeof user === "string" ? user : user.id);
                                   console.log(
                                     "📢 Notificação enviada para utilizador:",
                                     typeof user === "string" ? user : user.id,
@@ -10434,7 +10431,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           ).value; // Sistema de Filtração
                           const installationDate = (
                             inputs[8] as HTMLInputElement
-                          ).value; // Data de Instalaç✅o
+                          ).value; // Data de Instalaç��o
                           const clientPhone = (inputs[9] as HTMLInputElement)
                             .value; // Telefone do Cliente
                           const clientEmail = (inputs[10] as HTMLInputElement)
