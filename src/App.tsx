@@ -331,6 +331,16 @@ function App() {
   const renderTime = Date.now();
   console.log("🚀 App component rendering at:", renderTime);
 
+  // WebKit error prevention wrapper
+  const safeExecute = useCallback((fn: () => void, errorContext: string) => {
+    try {
+      return fn();
+    } catch (error) {
+      console.warn(`⚠️ Safe execution failed in ${errorContext}:`, error);
+      return null;
+    }
+  }, []);
+
   // Estado de renderização para qualquer ambiente
   const [hasRenderError, setHasRenderError] = useState(false);
 
@@ -1492,7 +1502,7 @@ function App() {
               // Escrever teste
               await setDoc(testDoc, testData);
               console.log(
-                "📝 Passo 3: Dados escritos no Firestore com sucesso",
+                "���� Passo 3: Dados escritos no Firestore com sucesso",
               );
 
               // Ler teste
@@ -1605,7 +1615,7 @@ function App() {
         }
       } else {
         console.log(
-          "�� Firestore não disponível, tentando novamente em 10 segundos...",
+          "���� Firestore não disponível, tentando novamente em 10 segundos...",
         );
         setTimeout(async () => {
           if (isFirestoreReady()) {
@@ -4217,7 +4227,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Piscinas
                         </h1>
                         <p className="text-gray-600 text-sm">
-                          Gest🔥o de piscinas no sistema
+                          Gest����o de piscinas no sistema
                         </p>
                       </div>
                     </div>
@@ -10559,7 +10569,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Custo (€)
+                          Custo (���)
                         </label>
                         <input
                           type="number"
