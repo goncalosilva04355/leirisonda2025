@@ -108,7 +108,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
 // import { fcmService } from "./services/fcmService";
-// import NotificationCenter from "./components/NotificationCenter";
+import NotificationCenter from "./components/NotificationCenter";
 
 import { syncManager } from "./utils/syncManager";
 // import { clearQuotaProtection } from "./utils/clearQuotaProtection";
@@ -1553,7 +1553,7 @@ function App() {
 
       if (isFirestoreReady()) {
         console.log(
-          "🔥 Iniciando sincronização com Firebase Leiria APÓS LOGIN...",
+          "🔥 Iniciando sincronizaç��o com Firebase Leiria APÓS LOGIN...",
         );
         console.log("✅ Firebase Leiria pronto para uso");
 
@@ -4807,7 +4807,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                 {/* Form */}
                 <div className="bg-white rounded-lg p-6 shadow-sm">
                   <form className="space-y-8">
-                    {/* Informa���ões Básicas */}
+                    {/* Informa���ões B��sicas */}
                     <div>
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -12258,7 +12258,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     {/* Informações do Cliente */}
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">
-                        Informa��ões do Cliente
+                        Informa����es do Cliente
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
