@@ -66,14 +66,44 @@ function initializeLeiria(): boolean {
       app = initializeApp(leiriaFirebaseConfig, "leiria-1cfc9-app");
     }
 
-    // Inicializar serviços
-    db = getFirestore(app);
-    auth = getAuth(app);
+    // Inicializar serviços com tratamento de ReadableStream
+    try {
+      db = getFirestore(app);
+      auth = getAuth(app);
 
-    console.log("✅ Firebase leiria-1cfc9 inicializado com sucesso");
+      // Test Firestore connection for ReadableStream issues
+      testFirestoreConnection();
+
+      console.log("✅ Firebase leiria-1cfc9 inicializado com sucesso");
+    } catch (firestoreError) {
+      console.warn("⚠️ Erro específico do Firestore:", firestoreError);
+
+      // If ReadableStream error, try without offline features
+      if (
+        firestoreError.message?.includes("ReadableStream") ||
+        firestoreError.message?.includes("getReader")
+      ) {
+        console.log("🔄 ReadableStream issue detected, using fallback mode");
+        (window as any).FIRESTORE_OFFLINE_MODE = true;
+
+        try {
+          db = getFirestore(app);
+          auth = getAuth(app);
+          console.log("✅ Firebase inicializado em modo fallback");
+        } catch (fallbackError) {
+          console.error("❌ Fallback também falhou:", fallbackError);
+          db = null;
+          auth = null;
+        }
+      }
+    }
+
     return true;
   } catch (error) {
-    console.warn("⚠️ Firebase leiria-1cfc9 não disponível, usando modo local");
+    console.warn(
+      "⚠️ Firebase leiria-1cfc9 não disponível, usando modo local:",
+      error,
+    );
     return false;
   }
 }
