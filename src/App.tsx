@@ -85,7 +85,7 @@ import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
 // Limpar estados que causam modais indesejados
 // import "./utils/clearModalStates";
 
-// Firebase Quota Recovery - recuperar operações bloqueadas
+// Firebase Quota Recovery - recuperar opera��ões bloqueadas
 // TEMPORARIAMENTE COMENTADO PARA DEBUG
 // import {
 //   autoRecoverOnInit,
@@ -184,7 +184,8 @@ import { UserProfile, robustLoginService } from "./services/robustLoginService";
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
-import "./utils/firestoreRestApi"; // ATIVADO - usando REST API conforme configurado
+// import "./utils/firestoreRestApi"; // REST API com problemas de fetch
+import "./utils/offlineFirestoreApi"; // OFFLINE-FIRST - localStorage priorizado
 // import "./utils/loopsStopped"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/simpleDuplicateReport"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/cleanLocalStorage"; // TEMPORARIAMENTE DESATIVADO
@@ -791,7 +792,7 @@ function App() {
         "enablePhoneDialer",
         event.detail.enabled.toString(),
       );
-      console.log("📞 Phone dialer synchronized:", event.detail.enabled);
+      console.log("��� Phone dialer synchronized:", event.detail.enabled);
     };
 
     const handleMapsRedirectToggle = (event: CustomEvent) => {
@@ -2544,7 +2545,7 @@ ${index + 1}. ${work.title}
    Data Início: ${new Date(work.startDate).toLocaleDateString("pt-PT")}
    ${work.endDate ? `Data Fim: ${new Date(work.endDate).toLocaleDateString("pt-PT")}` : ""}
    ${work.budget ? `Orçamento: €${work.budget.toLocaleString("pt-PT")}` : ""}
-   ${work.actualCost ? `Custo Real: ��${work.actualCost.toLocaleString("pt-PT")}` : ""}
+   ${work.actualCost ? `Custo Real: €${work.actualCost.toLocaleString("pt-PT")}` : ""}
    Respons��vel: ${work.assignedTo}
    Descrição: ${work.description}
 `,
@@ -7014,7 +7015,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           "Limpeza de pré-filtro",
                           "Limpeza filtro areia/vidro",
                           "Verificação alimentação",
-                          "Enchimento autom����tico",
+                          "Enchimento autom������tico",
                           "Limpeza linha de água",
                           "Limpeza do fundo",
                           "Limpeza das paredes",
@@ -7354,7 +7355,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               </p>
                               <ul className="text-xs text-gray-500 space-y-1">
                                 <li>��� Estado e localiza��ão</li>
-                                <li>• Informações de clientes</li>
+                                <li>�� Informações de clientes</li>
                                 <li>• Histórico de manutenções</li>
                                 <li>• Pr��ximas intervenções</li>
                               </ul>
@@ -7808,7 +7809,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       Estado:{" "}
                                       {enableMapsRedirect
                                         ? "🔥 Ativo"
-                                        : "��� Inativo"}
+                                        : "⭕ Inativo"}
                                     </p>
                                   </div>
                                 </div>
@@ -9379,7 +9380,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               {work.budget && (
                                 <div>
                                   <span className="font-medium">
-                                    Or��amento:
+                                    Orçamento:
                                   </span>{" "}
                                   €{work.budget}
                                 </div>
@@ -10191,7 +10192,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               }
                             } catch (error) {
                               console.error(
-                                "❌ Erro ao enviar notifica��ões:",
+                                "❌ Erro ao enviar notificações:",
                                 error,
                               );
                             }
