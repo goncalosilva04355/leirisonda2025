@@ -19,6 +19,7 @@ import "./utils/chunkLoadErrorHandler";
 // Error boundary
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppErrorHandler from "./components/AppErrorHandler";
+import SafeAppWrapper from "./components/SafeAppWrapper";
 
 // Main app
 import App from "./App";
