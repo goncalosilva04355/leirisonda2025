@@ -4,28 +4,15 @@ import "./index.css";
 
 console.log("🚀 Inicializando aplicação...");
 
-// Production safety - prevent crashes
-import "./utils/productionSafety";
+// Error boundary
+import ErrorBoundary from "./components/ErrorBoundary";
 
-// Production diagnostic
-import "./utils/productionDiagnostic";
+// Main app
+import App from "./App";
 
-// CRÍTICO: Fix Firebase em produção
-import "./utils/productionFirebaseFix";
-
-// Clear any flags that might force simple app
-import "./utils/clearAppFlags";
-
-// Adicionar error boundary e tratamento global de erros
+// Global error handler
 window.addEventListener("error", (event) => {
   console.error("❌ Global error:", event.error);
-  console.error("❌ Error details:", {
-    message: event.message,
-    filename: event.filename,
-    lineno: event.lineno,
-    colno: event.colno,
-    stack: event.error?.stack,
-  });
 });
 
 window.addEventListener("unhandledrejection", (event) => {
@@ -33,29 +20,17 @@ window.addEventListener("unhandledrejection", (event) => {
   if (
     event.reason &&
     (event.reason.toString().includes("firebase") ||
-      event.reason.toString().includes("messaging") ||
-      event.reason.toString().includes("_FirebaseError"))
+      event.reason.toString().includes("messaging"))
   ) {
     console.warn(
       "⚠️ Firebase messaging error handled gracefully:",
       event.reason.message || event.reason,
     );
-    event.preventDefault(); // Prevent the error from being logged as unhandled
+    event.preventDefault();
     return;
   }
-
   console.error("❌ Unhandled promise rejection:", event.reason);
-  console.error("❌ Promise:", event.promise);
 });
-
-// App original reparado
-import App from "./App";
-// App simples para debug
-import AppSimple from "./AppSimple";
-// App produção otimizada
-import AppProduction from "./App-Production";
-// Error Boundary
-import ErrorBoundary from "./components/ErrorBoundary";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -64,57 +39,15 @@ if (!rootElement) {
 
 try {
   console.log("🔄 Tentando renderizar aplicação...");
-  console.log("🔍 Root element:", rootElement);
-  console.log(
-    "🔍 CSS imported:",
-    !!document.querySelector('style, link[rel="stylesheet"]'),
-  );
-
-  console.log("🚀 Loading application...");
-  console.log("🔍 Environment:", import.meta.env.MODE, import.meta.env.PROD);
-  console.log("🔍 Base URL:", import.meta.env.BASE_URL);
-
-  // Verificações específicas para produção
-  if (import.meta.env.PROD) {
-    console.log("📱 PRODUÇÃO: Verificando recursos essenciais...");
-
-    // Verificar se CSS está carregado
-    const cssLoaded = !!document.querySelector('style, link[rel="stylesheet"]');
-    console.log("🎨 CSS carregado:", cssLoaded);
-
-    // Verificar se React está disponível
-    console.log("⚛️ React disponível:", !!window.React || !!React);
-
-    // Verificar se há erros JavaScript anteriores
-    const hasErrors =
-      window.hasOwnProperty("__reactErrorOverlay") ||
-      document.querySelector(".error-overlay");
-    console.log("❌ Erros detectados:", hasErrors);
-
-    // Log de status final
-    console.log("📊 Status produção:", {
-      css: cssLoaded,
-      react: !!React,
-      errors: hasErrors,
-      timestamp: new Date().toISOString(),
-    });
-  }
-
-  // SEMPRE usar App principal - desenvolvimento = produção
-  const AppComponent = App;
-  console.log("📱 PRODUÇÃO = DESENVOLVIMENTO: Usando App principal completo");
 
   ReactDOM.createRoot(rootElement).render(
-    // <React.StrictMode> // Temporarily disabled to fix duplicate key warnings
     <ErrorBoundary>
-      <AppComponent />
+      <App />
     </ErrorBoundary>,
-    // </React.StrictMode>
   );
   console.log("✅ Aplicação renderizada com sucesso!");
 } catch (error) {
   console.error("❌ Erro ao renderizar App:", error);
-  console.error("❌ Stack trace:", error.stack);
 
   // Fallback: Simple error display
   rootElement.innerHTML = `
