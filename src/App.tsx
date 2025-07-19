@@ -1301,9 +1301,7 @@ function App() {
   const [selectedMaintenance, setSelectedMaintenance] = useState(null);
   const [viewingMaintenance, setViewingMaintenance] = useState(false);
 
-  // Clickable links settings
-  const [enablePhoneDialer, setEnablePhoneDialer] = useState(false);
-  const [enableMapsRedirect, setEnableMapsRedirect] = useState(false);
+  // Clickable links settings - declared earlier to avoid temporal dead zone
 
   // Settings toggle functions with persistence
   const togglePhoneDialer = (enabled: boolean) => {
@@ -2241,7 +2239,7 @@ function App() {
         // Garantir que auto sync est�������� ativo após login
         setTimeout(async () => {
           try {
-            console.log("��� Verificando auto sync após login...");
+            console.log("���� Verificando auto sync após login...");
 
             if (isFirestoreReady()) {
               const autoSyncStarted =
@@ -3658,7 +3656,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           Nenhuma manutenç✅endada
                         </p>
                         <p className="text-gray-400 text-xs mt-1">
-                          As futuras manutenções aparecer����o aqui
+                          As futuras manutenções aparecer��o aqui
                         </p>
                         {hasPermission("manutencoes", "create") && (
                           <button
@@ -7863,7 +7861,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                       setIsAdvancedUnlocked(true);
                                       setShowAdvancedSettings(true);
 
-                                      // Forçar update com timeout
+                                      // For��ar update com timeout
                                       setTimeout(() => {
                                         setIsAdvancedUnlocked(true);
                                       }, 10);
@@ -7928,7 +7926,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                         </li>
                                       </ul>
                                       <p className="text-red-700 text-sm font-medium mb-3">
-                                        ������ ATEN���ÃO: Esta opera✅ão é
+                                        ������ ATEN�����ÃO: Esta opera✅ão é
                                         irreversível!
                                       </p>
                                       <button
@@ -8269,7 +8267,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>🔍 Estado e localização</li>
-                        <li>������ Informa��ões de clientes</li>
+                        <li>�������� Informa��ões de clientes</li>
                         <li>• Histórico de manuten��ões</li>
                         <li>• Próximas interven��ões</li>
                       </ul>
@@ -9686,7 +9684,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           <Users className="h-4 w-4 text-blue-600" />
                         </div>
                         <h3 className="text-lg font-semibold text-gray-900">
-                          Técnicos Atribuídos
+                          Técnicos Atribu��dos
                         </h3>
                       </div>
 
@@ -10133,7 +10131,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   ),
                               );
 
-                              // Se há novos utilizadores, notificar todos (novos + existentes para atualização)
+                              // Se há novos utilizadores, notificar todos (novos + existentes para atualizaç��o)
                               const usersToNotify =
                                 newUsers.length > 0 ? editAssignedUsers : [];
 
@@ -10239,7 +10237,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           type="text"
                           defaultValue={editingPool?.location}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          placeholder="Localizaç����da piscina"
+                          placeholder="Localizaç��da piscina"
                           required
                         />
                       </div>
