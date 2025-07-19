@@ -132,7 +132,12 @@ import { autoSyncService } from "./services/autoSyncService";
 // import "./firebase/initializationHelper"; // Helper robusto para inicialização completa do Firebase
 
 // SECURITY: RegisterForm for super admin only
-import { RegisterForm } from "./components/RegisterForm";
+// Lazy load register form
+const RegisterForm = React.lazy(() =>
+  import("./components/RegisterForm").then((m) => ({
+    default: m.RegisterForm,
+  })),
+);
 // Lazy load admin components to reduce initial bundle
 const AdminLogin = React.lazy(() =>
   import("./admin/AdminLogin").then((m) => ({ default: m.AdminLogin })),
@@ -1512,7 +1517,7 @@ function App() {
     }
 
     const syncAllData = async () => {
-      // Aguardar um pouco para o Firestore estar pronto AP��S LOGIN
+      // Aguardar um pouco para o Firestore estar pronto APÓS LOGIN
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (isFirestoreReady()) {
@@ -7273,7 +7278,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <div className="space-y-6">
                         <div>
                           <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                            Relat���������rios do Sistema
+                            Relat��������rios do Sistema
                           </h2>
                           <p className="text-gray-600 mb-6">
                             Gere relatórios detalhados em PDF sobre piscinas,
