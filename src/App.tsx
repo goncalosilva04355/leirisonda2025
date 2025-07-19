@@ -110,7 +110,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 // import { fcmService } from "./services/fcmService";
 // import NotificationCenter from "./components/NotificationCenter";
 
-// import { syncManager } from "./utils/syncManager";
+import { syncManager } from "./utils/syncManager";
 // import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import {
   isFirebaseReady,
