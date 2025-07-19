@@ -883,7 +883,7 @@ function App() {
 
   const addWork = async (data: any) => {
     try {
-      console.log("🔧 addWork iniciado com Firestore ativo");
+      console.log("�� addWork iniciado com Firestore ativo");
 
       // Usar serviço offline-first com Firebase Leiria
       const firestoreId = await ultraSimpleOfflineService.createWork(data);
@@ -7215,7 +7215,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        Configura������ões
+                        Configura��������ões
                       </h1>
                       <p className="text-gray-600 text-sm">
                         Configurações do sistema, relatórios e utilizadores
@@ -11300,13 +11300,17 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
         {showAdminLogin && !isAdminAuthenticated && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg max-w-md w-full mx-4">
-              <AdminLogin
-                onLogin={() => {
-                  setIsAdminAuthenticated(true);
-                  setShowAdminLogin(false);
-                }}
-                onBack={() => setShowAdminLogin(false)}
-              />
+              <React.Suspense
+                fallback={<div className="p-4 text-center">Carregando...</div>}
+              >
+                <AdminLogin
+                  onLogin={() => {
+                    setIsAdminAuthenticated(true);
+                    setShowAdminLogin(false);
+                  }}
+                  onBack={() => setShowAdminLogin(false)}
+                />
+              </React.Suspense>
             </div>
           </div>
         )}
