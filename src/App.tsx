@@ -533,7 +533,7 @@ function App() {
     // Monitorização automática de persistência de dados
     const initDataPersistenceMonitoring = async () => {
       try {
-        // Aguardar um pouco antes de iniciar verificaç���o
+        // Aguardar um pouco antes de iniciar verificaç��o
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Verificar estado da persistência
@@ -825,12 +825,10 @@ function App() {
       );
     };
   }, []);
-  // DADOS OFFLINE-FIRST - Sistema local com sync em background
+    // DADOS OFFLINE-FIRST - Sistema local com sync em background
   // Substituindo universalSync por dados offline-first
   const obras: any[] = JSON.parse(localStorage.getItem("obras") || "[]");
-  const manutencoes: any[] = JSON.parse(
-    localStorage.getItem("manutencoes") || "[]",
-  );
+  const manutencoes: any[] = JSON.parse(localStorage.getItem("manutencoes") || "[]");
   const piscinas: any[] = JSON.parse(localStorage.getItem("piscinas") || "[]");
   const clientes: any[] = JSON.parse(localStorage.getItem("clientes") || "[]");
   const syncLoading = false;
@@ -851,7 +849,7 @@ function App() {
   const deleteManutencao = () => {};
   const deletePiscina = () => {};
   const deleteCliente = () => {};
-  const forceSyncAll = () => {};
+    const forceSyncAll = () => {};
 
   // DataSync offline para compatibilidade
   const dataSync = {
@@ -865,7 +863,7 @@ function App() {
     pools: piscinas,
     maintenances: manutencoes,
     clients: clientes,
-    works: obras,
+    works: obras
   };
 
   // Debug: Check for duplicate keys in data
@@ -1138,7 +1136,7 @@ function App() {
   // Load users from localStorage on app start, Firestore only after login
   useEffect(() => {
     const loadUsers = async () => {
-      console.log("���� Loading users from localStorage...");
+      console.log("����� Loading users from localStorage...");
 
       try {
         // SÓ carregar do Firestore se estiver autenticado
@@ -3675,7 +3673,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        // dataSync.updateWork(work.id, { status: "in_progress" });
+                                                                                                                        // // dataSync.updateWork(work.id, { status: "in_progress" });
                                         showNotification(
                                           "Obra Iniciada",
                                           `A obra "${work.client}" foi iniciada`,
@@ -4423,7 +4421,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a piscina "${pool.name}"?`,
-                                    () => dataSync.deletePool(pool.id),
+                                    () => // dataSync.deletePool(pool.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -4553,7 +4551,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   : maint.status === "in_progress"
                                     ? "Em Progresso"
                                     : maint.status === "completed"
-                                      ? "Conclu����do"
+                                      ? "Conclu🎉do"
                                       : maint.status}
                               </span>
                             </div>
@@ -4648,7 +4646,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
-                                    () => dataSync.deleteMaintenance(maint.id),
+                                    () => // dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -4800,7 +4798,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar a manutenç��o "${maint.type}" da ${maint.poolName}?`,
-                                    () => dataSync.deleteMaintenance(maint.id),
+                                    () => // dataSync.deleteMaintenance(maint.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -5547,7 +5545,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     2 polegadas
                                   </option>
                                   <option key="2.5" value="2.5">
-                                    2½ polegadas
+                                    2�� polegadas
                                   </option>
                                   <option key="3" value="3">
                                     3 polegadas
@@ -6318,7 +6316,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 // Check permissions first
                                 if (!hasPermission("clientes", "create")) {
                                   alert(
-                                    "��� Não tem permissão para criar clientes. Contacte o administrador.",
+                                    "���� Não tem permissão para criar clientes. Contacte o administrador.",
                                   );
                                   console.error(
                                     "❌ PERMISS📞O NEGADA: clientes.create",
@@ -6339,7 +6337,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 };
 
                                 try {
-                                  dataSync.addClient(newClient);
+                                  // dataSync.addClient(newClient);
                                   console.log(
                                     "��� Cliente adicionado com sucesso:",
                                     newClient,
@@ -8472,7 +8470,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>����� Resumo executivo</li>
                         <li>• Estatísticas gerais</li>
-                        <li>🎉 Dados consolidados</li>
+                        <li>�� Dados consolidados</li>
                         <li>• An���lise de performance</li>
                       </ul>
                     </div>
@@ -8815,7 +8813,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                 onClick={() =>
                                   confirmDelete(
                                     `Tem a certeza que deseja apagar o cliente "${client.name}"?`,
-                                    () => dataSync.deleteClient(client.id),
+                                    () => // dataSync.deleteClient(client.id),
                                   )
                                 }
                                 className="p-2 text-gray-400 hover:text-red-600"
@@ -9460,8 +9458,8 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                     }
 
                                     // Atualizar via dataSync se disponível
-                                    if (dataSync && dataSync.updateWork) {
-                                      dataSync.updateWork(work.id, {
+                                    if (dataSync && // dataSync.updateWork) {
+                                      // dataSync.updateWork(work.id, {
                                         status: "in_progress",
                                       });
                                     }
@@ -10174,7 +10172,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                             );
                           }
 
-                          dataSync.updateWork(editingWork.id, updateData);
+                          // dataSync.updateWork(editingWork.id, updateData);
 
                           // Notificar utilizadores atribuídos (novos ou todos)
                           if (
@@ -10454,7 +10452,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[11] as HTMLInputElement)
                             .value; // Observações
 
-                          dataSync.updatePool(editingPool.id, {
+                          // dataSync.updatePool(editingPool.id, {
                             name,
                             client,
                             location,
@@ -10703,7 +10701,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                           const observations = (inputs[10] as HTMLInputElement)
                             .value; // Observaç€s
 
-                          dataSync.updateMaintenance(editingMaintenance.id, {
+                          // dataSync.updateMaintenance(editingMaintenance.id, {
                             scheduledDate: scheduledDate
                               ? new Date(scheduledDate).toISOString()
                               : undefined,
@@ -12455,7 +12453,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               `Tem a certeza que deseja apagar a piscina "${selectedPool.name}"?\n\nEsta ação não pode ser desfeita.`,
                             )
                           ) {
-                            dataSync.deletePool(selectedPool.id);
+                            // dataSync.deletePool(selectedPool.id);
                             showNotification(
                               "Piscina Eliminada",
                               `A piscina "${selectedPool.name}" foi eliminada com sucesso`,
