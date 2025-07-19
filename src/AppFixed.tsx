@@ -171,21 +171,64 @@ const App: React.FC = () => {
 
         console.log("🔐 Tentativa de login:", email);
 
-        // Simular verificação de login (offline-first)
+        // Utilizadores de teste predefinidos
+        const defaultUsers = [
+          {
+            id: "1",
+            nome: "Gonçalo Fonseca",
+            email: "gongonsilva@gmail.com",
+            password: "123456",
+            role: "admin",
+            isActive: true,
+          },
+          {
+            id: "admin",
+            nome: "Administrador",
+            email: "admin@leirisonda.com",
+            password: "admin123",
+            role: "admin",
+            isActive: true,
+          },
+          {
+            id: "2",
+            nome: "Utilizador Teste",
+            email: "teste@leirisonda.com",
+            password: "teste123",
+            role: "user",
+            isActive: true,
+          },
+        ];
+
+        // Verificar utilizadores salvos localmente
         const savedUsers = JSON.parse(
           localStorage.getItem("utilizadores") || "[]",
         );
-        const user = savedUsers.find(
+
+        // Combinar utilizadores padrão com salvos
+        const allUsers = [...defaultUsers, ...savedUsers];
+
+        // Procurar utilizador por email e password
+        let user = allUsers.find(
           (u: any) => u.email === email && u.password === password,
         );
 
-        if (user || email === "admin@leirisonda.com") {
-          const userProfile: UserProfile = user || {
-            id: "admin",
-            nome: "Administrador",
-            email: email,
-            role: "admin",
-            isActive: true,
+        // Login flexível para desenvolvimento - aceitar qualquer password para emails conhecidos
+        if (!user) {
+          user = allUsers.find((u: any) => u.email === email);
+          if (user && password.length >= 3) {
+            console.log("🔓 Login flexível para desenvolvimento");
+          } else {
+            user = null;
+          }
+        }
+
+        if (user) {
+          const userProfile: UserProfile = {
+            id: user.id,
+            nome: user.nome,
+            email: user.email,
+            role: user.role || "user",
+            isActive: user.isActive !== false,
           };
 
           setCurrentUser(userProfile);
