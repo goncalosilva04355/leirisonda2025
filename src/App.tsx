@@ -76,11 +76,11 @@ import SyncStatusIndicator from "./components/SyncStatusIndicator";
 import SyncStatusIndicatorFixed from "./components/SyncStatusIndicatorFixed";
 import { FirebaseStatusDisplay } from "./components/FirebaseStatusDisplay";
 import DuplicateCleanupStatus from "./components/DuplicateCleanupStatus";
-import { simplifiedSyncService } from "./services/simplifiedSyncService";
+// import { simplifiedSyncService } from "./services/simplifiedSyncService";
 
-import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
-import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
-import FirestoreTest from "./components/FirestoreTest";
+// import { EditModeFirestoreStatus } from "./components/EditModeFirestoreStatus";
+// import FirestoreDiagnostic from "./components/FirestoreDiagnostic";
+// import FirestoreTest from "./components/FirestoreTest";
 
 // Limpar estados que causam modais indesejados
 // import "./utils/clearModalStates";
@@ -102,16 +102,16 @@ import {
   storageUtils,
 } from "./utils/storageUtils";
 
-import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
+// import { InstantSyncManagerSafe } from "./components/InstantSyncManagerSafe";
 import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProtectionFixed";
 
 // import "./utils/protectedLocalStorage"; // Ativar proteção automática
 
-import { fcmService } from "./services/fcmService";
-import NotificationCenter from "./components/NotificationCenter";
+// import { fcmService } from "./services/fcmService";
+// import NotificationCenter from "./components/NotificationCenter";
 
-import { syncManager } from "./utils/syncManager";
-import { clearQuotaProtection } from "./utils/clearQuotaProtection";
+// import { syncManager } from "./utils/syncManager";
+// import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import {
   isFirebaseReady,
   isFirestoreReady,
@@ -162,7 +162,7 @@ import { pushNotificationService } from "./services/pushNotificationService";
 // import { MobileFirebaseFix } from "./components/MobileFirebaseFix";
 // import { useForceFirestore } from "./hooks/useForceFirestore"; // DESABILITADO - problemas SDK
 // import "./utils/forceFirestore"; // FORÇA FIRESTORE A FUNCIONAR - DESABILITADO (tinha problemas)
-// import "./utils/testForceFirestore"; // Teste que força funcionamento - DESABILITADO
+// import "./utils/testForceFirestore"; // Teste que for��a funcionamento - DESABILITADO
 // import "./utils/firestoreDebugger"; // DEBUG detalhado dos problemas - DESABILITADO
 // import "./utils/ultraSimpleFirestore"; // ULTRA SIMPLES - DESABILITADO (problemas SDK)
 // import "./utils/emergencyUnblock"; // TEMPORARIAMENTE DESATIVADO
@@ -288,14 +288,14 @@ console.error = (...args) => {
 // import "./utils/testDirectAuth";
 
 // Página de diagnóstico
-import DiagnosticPage from "./components/DiagnosticPage";
+// import DiagnosticPage from "./components/DiagnosticPage";
 
 // Diagnóstico de autenticação
 // import "./utils/authDiagnostic";
 
 // Indicador de status da aplicação
-import AppStatusIndicator from "./components/AppStatusIndicator";
-import RenderTracker from "./components/RenderTracker";
+// import AppStatusIndicator from "./components/AppStatusIndicator";
+// import RenderTracker from "./components/RenderTracker";
 
 // DESENVOLVIMENTO = PRODUÇÃO - utilizador admin real
 const initialUsers = [
@@ -7796,7 +7796,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   <AlertCircle className="h-5 w-5 text-gray-600 mt-0.5" />
                                   <div className="flex-1">
                                     <h4 className="font-medium text-gray-900 mb-2">
-                                      Instru�����es
+                                      Instru������es
                                     </h4>
                                     <ul className="text-gray-700 text-sm space-y-1">
                                       <li>
@@ -11040,7 +11040,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   <span>Valores da água</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span>✓</span>
+                  <span>��</span>
                   <span>Produtos químicos utilizados</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -12224,7 +12224,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700">
-                            Localiza✅ão
+                            Localiza���ão
                           </label>
                           <button
                             onClick={() => {
