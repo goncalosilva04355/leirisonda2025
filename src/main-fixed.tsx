@@ -59,43 +59,7 @@ const LazyApp = React.lazy(() =>
 
 const AppWithSuspense: React.FC = () => {
   return (
-    <React.Suspense
-      fallback={
-        <div
-          style={{
-            minHeight: "100vh",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "system-ui",
-            color: "white",
-          }}
-        >
-          <div style={{ textAlign: "center" }}>
-            <div
-              style={{
-                width: "48px",
-                height: "48px",
-                border: "3px solid rgba(255, 255, 255, 0.3)",
-                borderTop: "3px solid white",
-                borderRadius: "50%",
-                animation: "spin 1s linear infinite",
-                margin: "0 auto 1rem",
-              }}
-            />
-            <h2 style={{ margin: 0, fontSize: "1.25rem" }}>🏊 Leirisonda</h2>
-            <p style={{ margin: "0.5rem 0 0", opacity: 0.8 }}>A carregar...</p>
-          </div>
-          <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
-        </div>
-      }
-    >
+    <React.Suspense fallback={<div />}>
       <LazyApp />
     </React.Suspense>
   );
