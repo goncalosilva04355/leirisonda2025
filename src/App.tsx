@@ -110,7 +110,7 @@ import { useDataProtectionFixed as useDataProtection } from "./hooks/useDataProt
 // import { fcmService } from "./services/fcmService";
 // import NotificationCenter from "./components/NotificationCenter";
 
-// import { syncManager } from "./utils/syncManager";
+import { syncManager } from "./utils/syncManager";
 // import { clearQuotaProtection } from "./utils/clearQuotaProtection";
 import {
   isFirebaseReady,
@@ -5386,7 +5386,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </div>
                     </div>
 
-                    {/* Detalhes do Furo de Água - Conditional */}
+                    {/* Detalhes do Furo de ��gua - Conditional */}
                     {selectedWorkType === "furo" && (
                       <div id="furo-details">
                         <div className="flex items-center space-x-3 mb-6">
@@ -8334,7 +8334,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                       </p>
                       <ul className="text-xs text-gray-500 space-y-1">
                         <li>���� Trabalhos realizados</li>
-                        <li>�� Técnicos responsáveis</li>
+                        <li>��� Técnicos responsáveis</li>
                         <li>������� Datas e dura🔥es</li>
                         <li>• Estados e observa��ões</li>
                       </ul>
