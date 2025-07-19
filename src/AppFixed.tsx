@@ -534,7 +534,7 @@ const App: React.FC = () => {
 
           {/* Dashboard Content - Mobile First Design */}
           <div className="px-4 py-4 space-y-4">
-            {/* Welcome Header Original */}
+            {/* Simple Welcome Header - ORIGINAL */}
             <div
               className="rounded-lg p-4 shadow-sm relative overflow-hidden"
               style={{
