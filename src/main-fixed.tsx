@@ -50,7 +50,7 @@ if (!rootElement) {
 
 // Carregar App principal da Leirisonda com tratamento de erros robusto
 console.log("🏊 Carregando aplicação completa da Leirisonda...");
-const LazyApp = React.lazy(() => import("./App"));
+const LazyApp = React.lazy(() => import("./AppFixed"));
 
 const AppWithSuspense: React.FC = () => {
   return (
