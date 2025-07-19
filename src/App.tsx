@@ -139,7 +139,7 @@ import { initializeAuthorizedUsers } from "./config/authorizedUsers";
 import { firestoreService } from "./services/firestoreServiceRestAdapter"; // REST API Adapter
 import { ultraSimpleOfflineService } from "./services/ultraSimpleOffline"; // Serviço ultra-simples
 // import { firebaseStorageService } from "./services/firebaseStorageService";
-import { autoSyncService } from "./services/autoSyncService";
+// import { autoSyncService } from "./services/autoSyncService"; // SDK - desabilitado para REST API
 // import { productionAutoSync } from "./services/productionAutoSync"; // TEMPORARIAMENTE DESATIVADO
 // import "./utils/testFirebaseBasic"; // Passo 1: Teste automático Firebase básico
 // import "./utils/testFirestore"; // Passo 3: Teste autom��tico Firestore - comentado temporariamente
@@ -354,7 +354,7 @@ function App() {
     try {
       return fn();
     } catch (error) {
-      console.warn(`⚠�� Safe execution failed in ${errorContext}:`, error);
+      console.warn(`⚠️ Safe execution failed in ${errorContext}:`, error);
       return null;
     }
   }, []);
@@ -1724,7 +1724,7 @@ function App() {
       }
     };
 
-    // Adicionar listeners para todas as coleç����������es
+    // Adicionar listeners para todas as coleç��������es
     const collections = [
       "obras",
       "piscinas",
@@ -2001,9 +2001,7 @@ function App() {
 
     // Validate required fields
     if (!maintenanceForm.poolId || !maintenanceForm.technician) {
-      alert(
-        "Por favor, preencha os campos obrigat€rios (Piscina e T����cnico).",
-      );
+      alert("Por favor, preencha os campos obrigat€rios (Piscina e T��cnico).");
       return;
     }
 
@@ -3581,7 +3579,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                                   👤 Cliente:
                                 </span>
                                 <span className="text-sm text-gray-900">
-                                  {work.client || "N����o especificado"}
+                                  {work.client || "N��o especificado"}
                                 </span>
                               </div>
                               {work.contact && (
@@ -3683,7 +3681,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                   ) : null;
                 })()}
 
-                {/* Próximas Manutenções */}
+                {/* Pr��ximas Manutenções */}
                 <div className="bg-white rounded-lg shadow-sm">
                   <div className="flex items-center p-4 border-b border-gray-100">
                     <button
@@ -8991,7 +8989,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Pessoa de Contacto (se aplic�����el)
+                            Pessoa de Contacto (se aplic���el)
                           </label>
                           <input
                             type="text"
@@ -10015,7 +10013,7 @@ ${index + 1}. ${maint.poolName} - ${maint.type}
                               Selecionar voltagem
                             </option>
                             <option value="230V">230V (monofásico)</option>
-                            <option value="400V">400V (trif����sico)</option>
+                            <option value="400V">400V (trif������sico)</option>
                           </select>
                         </div>
                       </div>
