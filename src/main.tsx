@@ -42,7 +42,7 @@ try {
 
   ReactDOM.createRoot(rootElement).render(
     <ErrorBoundary>
-      <App />
+      <AppMinimal />
     </ErrorBoundary>,
   );
   console.log("✅ Aplicação renderizada com sucesso!");
