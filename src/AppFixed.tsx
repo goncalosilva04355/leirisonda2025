@@ -89,6 +89,65 @@ const App: React.FC = () => {
   const [manutencoes, setManutencoes] = useState<any[]>([]);
   const [syncStatus, setSyncStatus] = useState("offline-ready");
 
+  // Estados e funções adicionais para dashboard original
+  const [globalSearchTerm, setGlobalSearchTerm] = useState("");
+  const [selectedWork, setSelectedWork] = useState<any>(null);
+  const [viewingWork, setViewingWork] = useState(false);
+  const [enablePhoneDialer, setEnablePhoneDialer] = useState(true);
+  const [enableMapsRedirect, setEnableMapsRedirect] = useState(true);
+
+  // Função para navegar para seções (compatibilidade)
+  const navigateToSection = (section: string) => {
+    setCurrentPage(section);
+  };
+
+  // Função para verificar se obra está atribuída ao utilizador atual
+  const isWorkAssignedToCurrentUser = (work: any) => {
+    if (!currentUser) return false;
+
+    return (
+      (work.assignedTo &&
+        (work.assignedTo === currentUser.nome ||
+          work.assignedTo
+            .toLowerCase()
+            .includes(currentUser.nome.toLowerCase()) ||
+          currentUser.nome
+            .toLowerCase()
+            .includes(work.assignedTo.toLowerCase()))) ||
+      (work.assignedUsers &&
+        work.assignedUsers.some(
+          (user: any) =>
+            user.name === currentUser.nome || user.id === currentUser.id,
+        )) ||
+      (work.assignedUserIds && work.assignedUserIds.includes(currentUser.id))
+    );
+  };
+
+  // Função para lidar com cliques em endereços
+  const handleAddressClick = (address: string) => {
+    if (enableMapsRedirect) {
+      const encodedAddress = encodeURIComponent(address);
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`,
+        "_blank",
+      );
+    }
+  };
+
+  // Verificar permissões (simplificado)
+  const hasPermission = (resource: string, action: string) => {
+    return currentUser?.role === "admin" || currentUser?.role === "super_admin";
+  };
+
+  // Dados para compatibilidade com código original
+  const works = obras;
+  const pools = piscinas;
+  const clients = clientes;
+  const maintenance = manutencoes;
+  const futureMaintenance = manutencoes.filter(
+    (m) => new Date(m.scheduledDate) > new Date(),
+  );
+
   // Estados da interface
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
