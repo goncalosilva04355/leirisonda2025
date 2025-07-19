@@ -48,11 +48,9 @@ if (!rootElement) {
   throw new Error("Root element not found");
 }
 
-// Usar AppSimple diretamente para evitar erros do App principal
-console.log(
-  "🔄 Carregando AppSimple diretamente devido a erros no App principal",
-);
-const LazyApp = React.lazy(() => import("./AppSimple"));
+// Carregar App principal da Leirisonda com tratamento de erros robusto
+console.log("🏊 Carregando aplicação completa da Leirisonda...");
+const LazyApp = React.lazy(() => import("./App"));
 
 const AppWithSuspense: React.FC = () => {
   return (
